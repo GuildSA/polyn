@@ -1,3 +1,12 @@
-bower_components/
+.DS_STORE
+
+# Generated files/folders
+*.pyc
+app/css/*
+dist
 build/
-node_modules/
+
+# Dev directories
+#bower_components/ # We're going to commit these vs ignoring!
+#node_modules/ # We're going to commit these vs ignoring!
+
