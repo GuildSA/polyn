@@ -19,6 +19,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/paper-badge/paper-badge.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
@@ -66,6 +67,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: black;
         font-weight: bold;
       }
+
+      paper-badge {
+        --paper-badge-margin-left: 60px;
+        --paper-badge-margin-bottom: 20px;
+      }
+
     </style>
 
     <app-location route="{{route}}"></app-location>
@@ -102,10 +109,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </app-toolbar>
 
             <paper-tabs selected="0" sticky>
-                <paper-tab>Home</paper-tab>
-                <paper-tab>Requests</paper-tab>
-                <paper-tab>Messages</paper-tab>
-                <paper-tab>Profile</paper-tab>
+              <paper-tab>Home</paper-tab>
+              <paper-tab>Requests</paper-tab>
+              <paper-tab>
+                <span>Messages</span>
+                <paper-badge for="_" label="1" sufffix></paper-badge>
+              </paper-tab>
+              <paper-tab>Profile</paper-tab>
             </paper-tabs>
             
         </app-header>
