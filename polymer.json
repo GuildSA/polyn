@@ -6,7 +6,7 @@
     "src/requests-view.html",
     "src/messages-view.html",
     "src/profile-view.html",
-    "src/my-view404.html"
+    "src/error404-view.html"
   ],
   "sources": [
     "src/**/*",
