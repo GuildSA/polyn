@@ -87,9 +87,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-drawer id="drawer" slot="drawer">
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="view1" href="/view1">View One</a>
-          <a name="view2" href="/view2">View Two</a>
-          <a name="view3" href="/view3">View Three</a>
+          <a name="my-view1" href="/my-view1">View One</a>
+          <a name="my-view2" href="/my-view2">View Two</a>
+          <a name="my-view3" href="/my-view3">View Three</a>
+          <a name="profile" href="/profile">View Four</a>
         </iron-selector>
       </app-drawer>
 
@@ -109,13 +110,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </app-toolbar>
 
             <paper-tabs selected="0" sticky>
-              <paper-tab>Home</paper-tab>
-              <paper-tab>Requests</paper-tab>
-              <paper-tab>
+              <paper-tab on-tap="onTapHomeTab">Home</paper-tab>
+              <paper-tab on-tap="onTapRequestsTab">Requests</paper-tab>
+              <paper-tab on-tap="onTapMessagesTab">
                 <span>Messages</span>
                 <paper-badge for="_" label="1" sufffix></paper-badge>
               </paper-tab>
-              <paper-tab>Profile</paper-tab>
+              <paper-tab on-tap="onTapProfileTab">Profile</paper-tab>
             </paper-tabs>
             
         </app-header>
@@ -125,12 +126,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             attr-for-selected="name"
             fallback-selection="view404"
             role="main">
-          <my-view1 name="view1"></my-view1>
-          <my-view2 name="view2"></my-view2>
-          <my-view3 name="view3"></my-view3>
-          <my-view404 name="view404"></my-view404>
-
+          <my-view1 name="my-view1"></my-view1>
+          <my-view2 name="my-view2"></my-view2>
+          <my-view3 name="my-view3"></my-view3>
+          <profile-view name="profile-view"></profile-view>
+          <my-view404 name="my-view404"></my-view404>
         </iron-pages>
+
       </app-header-layout>
     </app-drawer-layout>
 
@@ -170,6 +172,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         ];
       }
 
+      onTapHomeTab() {
+        this.page = 'my-view1';
+      }
+
+      onTapRequestsTab() {
+        this.page = 'my-view2';
+      }
+
+      onTapMessagesTab() {
+        this.page = 'my-view3';
+      }
+
+      onTapProfileTab() {
+        this.page = 'profile-view';
+      }
+
       onTapSearch() {
 
         //alert('You tapped on the search button!');
@@ -194,18 +212,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
         // If no page was found in the route data, page will be an empty string.
-        // Deault to 'view1' in that case.
-        this.page = page || 'view1';
+        // Deault to 'my-view1' in that case.
+        this.page = page || 'my-view1';
 
         // Close a non-persistent drawer when the page & route are changed.
-        if (!this.$.drawer.persistent) {
+        if(!this.$.drawer.persistent) {
           this.$.drawer.close();
         }
       }
 
       _pageChanged(page) {
         // Load page import on demand. Show 404 page if fails
-        var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
+
+        ///alert(page);
+
+        //var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
+        var resolvedPageUrl = this.resolveUrl(page + '.html');
+
         Polymer.importHref(
             resolvedPageUrl,
             null,
@@ -214,7 +237,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _showPage404() {
-        this.page = 'view404';
+        this.page = 'my-view404';
       }
 
     }
