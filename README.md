@@ -43,8 +43,8 @@ First, install [Polymer CLI](https://github.com/Polymer/polymer-cli) using
 
 ##### Initialize project from template
 
-    mkdir my-app
-    cd my-app
+    mkdir goodz-app
+    cd goodz-app
     polymer init starter-kit
 
 ### Start the development server
