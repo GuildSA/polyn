@@ -1,5 +1,7 @@
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="profile-view">
@@ -9,14 +11,44 @@
         display: block;
         padding: 10px;
       }
+
+      .column-layout {
+        display: flex;
+        flex-direction: column;
+      }
+
+      #profile-image {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        margin: auto;
+        flex: 1;
+      }
+
+      paper-button.signout {
+        background-color: var(--app-primary-color);
+        color: white;
+            --paper-button-raised-keyboard-focus: {
+              background-color: var(--paper-pink-a200) !important;
+              color: white !important;
+            };
+        flex: 1;
+      }
+
     </style>
 
-    <div class="card">
+    <div class="column-layout">
+        <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="./images/profile_test_image.png"></iron-image>
+        <paper-button class="custom signout" raised>Sign Out</paper-button>
+    <div>
+
+    <!--<div class="card">
       <div class="circle">4</div>
       <h1>Profile</h1>
       <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
       <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
-    </div>
+    </div>-->
+
   </template>
 
   <script>
