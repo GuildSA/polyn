@@ -1,5 +1,10 @@
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-behavior.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-request.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="requests-view">
@@ -9,21 +14,84 @@
         display: block;
         padding: 10px;
       }
+
+      #thumbnail-image {
+        width: 75px;
+        height: 75px;
+        border-radius: 50%;
+      }
+
+      #spinner {
+        position: absolute;
+        margin: auto;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+
     </style>
 
-    <div class="card">
-      <div class="circle">2</div>
-      <h1>Requests</h1>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.</p>
-      <p>Id nam odio natum malorum, tibique copiosae expetenda mel ea.Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.Id nam odio natum malorum, tibique copiosae expetenda mel ea.</p>
-    </div>
+    <paper-spinner id="spinner" active></paper-spinner>
+    <!--<paper-spinner id="spinner" active="{{loading}}" active></paper-spinner>-->
+
+    <iron-ajax
+      id="requestImages"
+      url="http://jsonplaceholder.typicode.com/photos"
+      handle-as="json"
+      loading="{{loading}}"
+      on-response="handleResponse"
+      debounce-duration="300"></iron-ajax>
+
+      <template is="dom-repeat" items="{{images}}">
+        <div class="card">
+          <!--<h1>{{item.thumbnailUrl}}</h1>-->
+          <iron-image sizing="contain" id="thumbnail-image" src={{item.thumbnailUrl}}></iron-image>
+        </div>
+      </template>
+
   </template>
 
   <script>
     class RequestsView extends Polymer.Element {
       static get is() { return 'requests-view'; }
+
+      static get properties() {
+        return {
+          images: {
+            type: Array
+          },
+
+          loading: {
+            type: Boolean,
+            readOnly: true,
+            notify: true,
+            value: false
+          }
+        };
+      }
+
+      ready() {
+        super.ready()
+
+        this.$.requestImages.generateRequest();
+      }
+
+      handleResponse(data) {
+
+        //console.log(data.detail.response)
+
+        // The test URL we're using comes back with the URLs for 5,000 images.
+        // That's too many to load at once for debugging, so just slice off
+        // the first 10.
+        //this.images = data.detail.response;
+        this.images = data.detail.response.slice(1, 10);
+
+        this.$.spinner.active = false
+      }
     }
 
     window.customElements.define(RequestsView.is, RequestsView);
+
   </script>
 </dom-module>
