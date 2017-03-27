@@ -143,7 +143,7 @@
   </template>
 
   <script>
-    class MyApp extends Polymer.Element {
+    class GoodzApp extends Polymer.Element {
 
       static get is() { return 'goodz-app'; }
 
@@ -187,12 +187,12 @@
 
       onTapOk() {
 
-        //alert("You typed: '" + this.someInputValue + "'")
+        alert("You typed: '" + this.someInputValue + "'")
 
         // Delay the alert for 1 second.
-        setTimeout(function() {
-          alert("You typed: '" + this.someInputValue + "'")
-          }, 1000);
+        // setTimeout(function() {
+        //   alert("You typed: '" + this.someInputValue + "'")
+        //   }, 1000);
       }
 
       _routePageChanged(page) {
@@ -230,7 +230,7 @@
 
     }
 
-    window.customElements.define(MyApp.is, MyApp);
+    window.customElements.define(GoodzApp.is, GoodzApp);
   </script>
 
 </dom-module>
