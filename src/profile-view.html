@@ -25,23 +25,32 @@
         flex: 1;
       }
 
+
+
       paper-button.signout {
         background-color: var(--app-primary-color);
         color: white;
+        position: absolute;
+        bottom: 2.5%; 
+        right:0;
+        left:0;
+        align-content: center;
+        
+        
             --paper-button-raised-keyboard-focus: {
               background-color: var(--paper-pink-a200) !important;
               color: white !important;
-            };
-        flex: 1;
+              };
       }
 
     </style>
 
-    <div class="column-layout">
-        <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="./images/profile_test_image.png"></iron-image>
-        <paper-button class="custom signout" raised>Sign Out</paper-button>
-    <div>
-
+     <div class="card">
+      <div class="column-layout">
+          <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="./images/profile_test_image.png"></iron-image>
+          <paper-button class="custom signout" raised>Sign Out</paper-button>
+      <div>
+    </div>
     <!--<div class="card">
       <div class="circle">4</div>
       <h1>Profile</h1>

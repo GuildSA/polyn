@@ -9,14 +9,75 @@
         display: block;
         padding: 10px;
       }
-    </style>
 
+      .masonry {
+        column-count: 3; 
+        column-gap: 1em;
+      }
+
+      .item {
+        
+        transition-timing-function: ease-out;
+        transition-duration: .75s;
+        background: #eee;
+        padding: 10 10 10 10;
+        display: inline-block;
+        margin: 0 0 1em;
+        width: 100%;
+        text-align: center;
+      }
+      .item:hover {      
+        
+        opacity: .55;
+      }
+
+      item:hover {
+        opacity: .75;
+      }
+    </style>
+    <!-- Home polymer card element 
     <div class="card">
       <div class="circle">1</div>
       <h1>Home</h1>
       <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
       <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
     </div>
+    -->
+    <div class="masonry"> 
+      <a href="myfile.htm"><img src ="images/test-images/comic.jpg" class="item"></a>
+      <img src="images/test-images/porcheGT.jpg" class="item">
+      <img src="images/test-images/dog-walker.jpg" class="item">
+      <img src="images/test-images/dark-souls.jpg" class="item">
+      <div class="item"><b>Apple iMac G4</b> - Looking for a apple imac G4 to use as target practice.</div>
+      <img src="images/test-images/peanut.jpg" class="item">
+      <img src="images/test-images/log-cabin.jpg" class="item">
+      <img src="images/test-images/fishing-rod.jpg" class="item">
+      <img src ="images/test-images/comic.jpg" class="item">
+      <img src="images/test-images/porcheGT.jpg" class="item">
+      <img src="images/test-images/dog-walker.jpg" class="item">
+      <img src="images/test-images/dark-souls.jpg" class="item">
+      <div class="item"><b>Apple iMac G4</b> - Looking for a apple imac G4 to use as target practice.</div>
+      <img src="images/test-images/peanut.jpg" class="item">
+      <img src="images/test-images/log-cabin.jpg" class="item">
+      <img src="images/test-images/fishing-rod.jpg" class="item">
+      <img src ="images/test-images/comic.jpg" class="item">
+      <img src="images/test-images/porcheGT.jpg" class="item">
+      <img src="images/test-images/dog-walker.jpg" class="item">
+      <img src="images/test-images/dark-souls.jpg" class="item">
+      <div class="item"><b>Apple iMac G4</b> - Looking for a apple imac G4 to use as target practice.</div>
+      <img src="images/test-images/peanut.jpg" class="item">
+      <img src="images/test-images/log-cabin.jpg" class="item">
+      <img src="images/test-images/fishing-rod.jpg" class="item">
+      <img src ="images/test-images/comic.jpg" class="item">
+      <img src="images/test-images/porcheGT.jpg" class="item">
+      <img src="images/test-images/dog-walker.jpg" class="item">
+      <img src="images/test-images/dark-souls.jpg" class="item">
+      <div class="item"><b>Apple iMac G4</b> - Looking for a apple imac G4 to use as target practice.</div>
+      <img src="images/test-images/peanut.jpg" class="item">
+      <img src="images/test-images/log-cabin.jpg" class="item">
+      <img src="images/test-images/fishing-rod.jpg" class="item">
+    </div>
+
   </template>
 
   <script>
