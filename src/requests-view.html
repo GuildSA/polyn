@@ -43,12 +43,14 @@
       on-response="handleResponse"
       debounce-duration="300"></iron-ajax>
 
-      <template is="dom-repeat" items="{{images}}">
-        <div class="card">
-          <!--<h1>{{item.thumbnailUrl}}</h1>-->
-          <iron-image sizing="contain" id="thumbnail-image" src={{item.thumbnailUrl}}></iron-image>
-        </div>
-      </template>
+      <dom-repeat items="{{images}}">
+        <template>
+          <div class="card">
+            <!--<h1>{{item.thumbnailUrl}}</h1>-->
+            <iron-image sizing="contain" id="thumbnail-image" src={{item.thumbnailUrl}}></iron-image>
+          </div>
+        </template>
+      </dom-repeat>
 
   </template>
 
