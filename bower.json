@@ -28,7 +28,7 @@
     "paper-spinner": "PolymerElements/paper-spinner#2.0-preview"
   },
   "resolutions": {
-    "polymer": "^2.0.0-rc.1"
+    "polymer": "^2.0.0-rc.3"
   },
   "devDependencies": {
     "web-component-tester": "6.0.0-prerelease.5"
