@@ -24,6 +24,7 @@
     "polymer": "Polymer/polymer#^2.0.0-rc.1"
   },
   "devDependencies": {
+    "iron-component-page": "polymerelements/iron-component-page#2.0-preview",
     "iron-demo-helpers": "polymerelements/iron-demo-helpers#2.0-preview",
     "iron-validator-behavior": "PolymerElements/iron-validator-behavior#2.0-preview",
     "paper-styles": "polymerelements/paper-styles#2.0-preview",
@@ -39,6 +40,7 @@
         "polymer": "Polymer/polymer#^1.1.0"
       },
       "devDependencies": {
+        "iron-component-page": "polymerelements/iron-component-page#^1.0.0",
         "iron-demo-helpers": "polymerelements/iron-demo-helpers#^1.0.0",
         "iron-validator-behavior": "PolymerElements/iron-validator-behavior#^1.0.0",
         "paper-styles": "polymerelements/paper-styles#^1.0.0",
@@ -48,11 +50,11 @@
       }
     }
   },
-  "_release": "9d06d7d7db",
+  "_release": "998f578542",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "9d06d7d7dbfd51cb219a1ae2656e46f7a3048cb1"
+    "commit": "998f578542843a217bf82f89e5798b51bb5975c3"
   },
   "_source": "https://github.com/PolymerElements/iron-input.git",
   "_target": "2.0-preview",

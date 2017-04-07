@@ -36,6 +36,7 @@
     "iron-form-element-behavior": "PolymerElements/iron-form-element-behavior#2.0-preview"
   },
   "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#2.0-preview",
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#2.0-preview",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#2.0-preview",
     "iron-icon": "PolymerElements/iron-icon#2.0-preview",
@@ -59,6 +60,7 @@
         "iron-form-element-behavior": "PolymerElements/iron-form-element-behavior#^1.0.0"
       },
       "devDependencies": {
+        "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
         "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
         "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.0",
         "iron-icon": "PolymerElements/iron-icon#^1.0.0",
@@ -72,14 +74,13 @@
       }
     }
   },
-  "_release": "1901d421e2",
+  "_release": "b175b4acfd",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "1901d421e227162d57ac8af63dbcf6b7530bb937"
+    "commit": "b175b4acfdaf242c4787a958fb4d5aa2b6d2f1e9"
   },
   "_source": "https://github.com/PolymerElements/paper-input.git",
   "_target": "2.0-preview",
-  "_originalSource": "PolymerElements/paper-input",
-  "_direct": true
+  "_originalSource": "PolymerElements/paper-input"
 }

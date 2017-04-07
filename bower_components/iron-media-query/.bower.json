@@ -40,11 +40,11 @@
     }
   },
   "main": "iron-media-query.html",
-  "_release": "6dc49cdc2b",
+  "_release": "a461378292",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "6dc49cdc2b7e7fc3d531bc26fa053a3175076e06"
+    "commit": "a4613782923654ca4fa340f38152f4ea46258a6d"
   },
   "_source": "https://github.com/PolymerElements/iron-media-query.git",
   "_target": "2.0-preview",

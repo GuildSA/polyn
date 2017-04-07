@@ -61,11 +61,11 @@
   "resolutions": {
     "polymer": "^2.0.0-rc.1"
   },
-  "_release": "8f4f7acc27",
+  "_release": "1a5d7b8f1e",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "8f4f7acc275acb89f8206129046f0ab335e7ca9d"
+    "commit": "1a5d7b8f1e86addaecd8b2d519d0b805697f425d"
   },
   "_source": "https://github.com/PolymerElements/app-route.git",
   "_target": "2.0-preview",

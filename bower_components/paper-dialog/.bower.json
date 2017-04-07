@@ -59,14 +59,13 @@
       }
     }
   },
-  "_release": "dd145aae58",
+  "_release": "e99689e4f8",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "dd145aae58879b367a8fd5e2635f4d336b659b96"
+    "commit": "e99689e4f8a46772917ca525ca4b13e194ed6133"
   },
   "_source": "https://github.com/PolymerElements/paper-dialog.git",
   "_target": "2.0-preview",
-  "_originalSource": "PolymerElements/paper-dialog",
-  "_direct": true
+  "_originalSource": "PolymerElements/paper-dialog"
 }

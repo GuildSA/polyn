@@ -18,7 +18,6 @@
   "main": "iron-image.html",
   "ignore": [],
   "dependencies": {
-    "iron-flex-layout": "PolymerElements/iron-flex-layout#2.0-preview",
     "polymer": "Polymer/polymer#^2.0.0-rc.1"
   },
   "devDependencies": {
@@ -31,7 +30,6 @@
   "variants": {
     "1.x": {
       "dependencies": {
-        "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.0",
         "polymer": "Polymer/polymer#^1.1.0"
       },
       "devDependencies": {
@@ -44,14 +42,13 @@
     }
   },
   "homepage": "https://github.com/PolymerElements/iron-image",
-  "_release": "0d79e38f19",
+  "_release": "fbbb3a3f8f",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "0d79e38f1969bba97aaff5856d49fdcc1c2efde1"
+    "commit": "fbbb3a3f8fcf54d22b572a57019046f3525de8e9"
   },
   "_source": "https://github.com/PolymerElements/iron-image.git",
   "_target": "2.0-preview",
-  "_originalSource": "PolymerElements/iron-image",
-  "_direct": true
+  "_originalSource": "PolymerElements/iron-image"
 }

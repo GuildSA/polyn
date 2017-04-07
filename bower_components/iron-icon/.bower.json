@@ -49,11 +49,11 @@
     }
   },
   "homepage": "https://github.com/PolymerElements/iron-icon",
-  "_release": "55fe529584",
+  "_release": "2c2090eb7d",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "55fe52958417f10428793039e625af21a3fc022c"
+    "commit": "2c2090eb7d6ee216d66fc8d8ab038f089d0088b2"
   },
   "_source": "https://github.com/PolymerElements/iron-icon.git",
   "_target": "2.0-preview",

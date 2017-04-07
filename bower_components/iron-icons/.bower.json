@@ -51,14 +51,13 @@
     "util",
     "update-icons.sh"
   ],
-  "_release": "bfd36eb23e",
+  "_release": "42b69480d8",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "bfd36eb23e62be9669399c28893287303d4aa47e"
+    "commit": "42b69480d85c4546157aded4d4887f80dc4bef35"
   },
   "_source": "https://github.com/PolymerElements/iron-icons.git",
   "_target": "2.0-preview",
-  "_originalSource": "PolymerElements/iron-icons",
-  "_direct": true
+  "_originalSource": "PolymerElements/iron-icons"
 }

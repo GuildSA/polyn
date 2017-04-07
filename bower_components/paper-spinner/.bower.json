@@ -50,14 +50,13 @@
       }
     }
   },
-  "_release": "fc94bdeca3",
+  "_release": "799eb747d6",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "fc94bdeca3fed19aa5258fd80cadeabf03083e9f"
+    "commit": "799eb747d656b02d0540486504196d15a93a34ae"
   },
   "_source": "https://github.com/PolymerElements/paper-spinner.git",
   "_target": "2.0-preview",
-  "_originalSource": "PolymerElements/paper-spinner",
-  "_direct": true
+  "_originalSource": "PolymerElements/paper-spinner"
 }

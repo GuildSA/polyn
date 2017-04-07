@@ -101,6 +101,15 @@ style this element.
         @apply --paper-font-subhead;
         @apply --paper-input-container-input;
       }
+      
+      input::-webkit-outer-spin-button,                                                                                                     
+      input::-webkit-inner-spin-button {                                                                                                    
+        @apply(--paper-input-container-input-webkit-spinner);                                                                                                                                                                                      
+      }
+      
+      input::-webkit-clear-button {
+        @apply(--paper-input-container-input-webkit-clear);  
+      }
 
       input::-webkit-input-placeholder {
         color: var(--paper-input-container-color, var(--secondary-text-color));
@@ -183,7 +192,7 @@ style this element.
         autocapitalize$="[[autocapitalize]]"
         autocorrect$="[[autocorrect]]"
         on-change="_onChange"
-        tabindex$="[[tabindex]]"
+        tabindex$="[[tabIndex]]"
         autosave$="[[autosave]]"
         results$="[[results]]"
         accept$="[[accept]]"
@@ -221,7 +230,7 @@ style this element.
         autocapitalize$="[[autocapitalize]]"
         autocorrect$="[[autocorrect]]"
         on-change="_onChange"
-        tabindex$="[[tabindex]]"
+        tabindex$="[[tabIndex]]"
         autosave$="[[autosave]]"
         results$="[[results]]"
         accept$="[[accept]]"
