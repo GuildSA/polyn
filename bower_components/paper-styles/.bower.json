@@ -45,11 +45,11 @@
       }
     }
   },
-  "_release": "2c649b0e7f",
+  "_release": "4434596deb",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "2c649b0e7f7a6088f3767b2cc72be3958c774828"
+    "commit": "4434596deb5bc158c45e6906b5756374e2c752ce"
   },
   "_source": "https://github.com/PolymerElements/paper-styles.git",
   "_target": "2.0-preview",

@@ -49,11 +49,11 @@
       }
     }
   },
-  "_release": "4b35ed6ecc",
+  "_release": "604a1eeef3",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "4b35ed6eccebbb220e2860d6718845ec983dbb73"
+    "commit": "604a1eeef3f1e27939ba3c7a34382ab8edcf01f5"
   },
   "_source": "https://github.com/PolymerElements/iron-selector.git",
   "_target": "2.0-preview",

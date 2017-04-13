@@ -25,7 +25,6 @@
     "iron-component-page": "PolymerElements/iron-component-page#2.0-preview",
     "note-app-elements": "polymerlabs/note-app-elements#2.0-preview",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0-rc.4",
-    "test-fixture": "PolymerElements/test-fixture#^3.0.0-rc.1",
     "web-component-tester": "Polymer/web-component-tester#^6.0.0-prerelease.6"
   },
   "variants": {
@@ -38,20 +37,18 @@
       "devDependencies": {
         "iron-component-page": "PolymerElements/iron-component-page#^1.0",
         "note-app-elements": "polymerlabs/note-app-elements",
-        "test-fixture": "polymerelements/test-fixture#^1.0.0",
         "web-component-tester": "^4.0.0",
         "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
       }
     }
   },
-  "_release": "67f46fd26b",
+  "_release": "bd40cf4601",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "67f46fd26b156f1ab928ef4f56059826ac303a1a"
+    "commit": "bd40cf46014b482f7bf516395b6b55ce1187c981"
   },
   "_source": "https://github.com/firebase/polymerfire.git",
   "_target": "2.0-preview",
-  "_originalSource": "polymerfire",
-  "_direct": true
+  "_originalSource": "polymerfire"
 }

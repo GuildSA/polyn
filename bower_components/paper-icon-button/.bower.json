@@ -31,7 +31,6 @@
     "iron-component-page": "PolymerElements/iron-component-page#2.0-preview",
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#2.0-preview",
     "iron-icons": "PolymerElements/iron-icons#2.0-preview",
-    "test-fixture": "PolymerElements/test-fixture#^3.0.0-rc.1",
     "web-component-tester": "Polymer/web-component-tester#^6.0.0-prerelease.6",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0-rc.1"
   },
@@ -48,18 +47,17 @@
         "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
         "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
         "iron-icons": "PolymerElements/iron-icons#^1.0.0",
-        "test-fixture": "PolymerElements/test-fixture#^1.0.0",
         "web-component-tester": "^4.0.0",
         "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
       }
     }
   },
   "homepage": "https://github.com/PolymerElements/paper-icon-button",
-  "_release": "a0dd988c7b",
+  "_release": "f180cd1842",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "a0dd988c7b2856847ff35ba35a92632ab7f32202"
+    "commit": "f180cd1842d6801c29f976010cc28d8e15085e53"
   },
   "_source": "https://github.com/PolymerElements/paper-icon-button.git",
   "_target": "2.0-preview",

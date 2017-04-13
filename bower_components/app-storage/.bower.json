@@ -54,11 +54,11 @@
       }
     }
   },
-  "_release": "1d81c7a02d",
+  "_release": "c1b3407343",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "1d81c7a02d58a28795689f684dda567020d6443c"
+    "commit": "c1b34073431d36f89059fc2b4ff1c9f074da0624"
   },
   "_source": "https://github.com/PolymerElements/app-storage.git",
   "_target": "2.0-preview",

@@ -50,11 +50,11 @@
       }
     }
   },
-  "_release": "d0e2c02ef2",
+  "_release": "99fa5d9eb1",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "d0e2c02ef2b4f4491af6e15e54319b83fb549c61"
+    "commit": "99fa5d9eb1a3fb74d4f63833a2ddb5313c9b1815"
   },
   "_source": "https://github.com/PolymerElements/iron-menu-behavior.git",
   "_target": "2.0-preview",

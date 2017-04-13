@@ -46,11 +46,11 @@
   },
   "ignore": [],
   "homepage": "https://github.com/PolymerElements/iron-pages",
-  "_release": "6e626eb6b7",
+  "_release": "512fbb3a57",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "6e626eb6b78404bab509f7e320589c684c4505b3"
+    "commit": "512fbb3a572bdab7f1e9211374e386ecc6705296"
   },
   "_source": "https://github.com/PolymerElements/iron-pages.git",
   "_target": "2.0-preview",
