@@ -1,20 +1,564 @@
 
+------------------------------------------------------------------------
 
+ -- Tool Setup --
+
+sudo npm install npm@latest -g
+sudo npm install -g bower
+sudo npm install -g polymer-cli@next
+
+------------------------------------------------------------------------
+
+ -- Polmer 2.0 Setup --
+
+polymer init
+? Which starter template would you like to use? polymer-2-starter-kit
+info:    Running template polymer-2-starter-kit...
+info:    Finding latest ^3.0.0 release of PolymerElements/polymer-starter-kit
+info:    Downloading v3.0.1 of PolymerElements/polymer-starter-kit
+info:    Unpacking template files
+info:    Finished writing template files
+
+I'm all done. Running bower install for you to install the required dependencies. If this fails, try running the command yourself.
+
+bower not-cached    https://github.com/PolymerElements/iron-iconset-svg.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/iron-iconset-svg.git#2.0-preview
+bower not-cached    https://github.com/PolymerElements/app-layout.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/app-layout.git#2.0-preview
+bower not-cached    https://github.com/PolymerElements/iron-flex-layout.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/iron-flex-layout.git#2.0-preview
+bower not-cached    https://github.com/PolymerElements/app-route.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/app-route.git#2.0-preview
+bower not-cached    https://github.com/PolymerElements/iron-icon.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/iron-icon.git#2.0-preview
+bower not-cached    https://github.com/PolymerElements/iron-selector.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/iron-selector.git#2.0-preview
+bower not-cached    https://github.com/PolymerElements/iron-media-query.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/iron-media-query.git#2.0-preview
+bower not-cached    https://github.com/PolymerElements/iron-localstorage.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/iron-localstorage.git#2.0-preview
+bower not-cached    https://github.com/PolymerElements/iron-pages.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/iron-pages.git#2.0-preview
+bower not-cached    https://github.com/PolymerElements/paper-icon-button.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/paper-icon-button.git#2.0-preview
+bower cached        https://github.com/webcomponents/webcomponentsjs.git#1.0.0-rc.8
+bower validate      1.0.0-rc.8 against https://github.com/webcomponents/webcomponentsjs.git#^1.0.0-rc.4
+bower cached        https://github.com/Polymer/polymer.git#2.0.0-rc.4
+bower validate      2.0.0-rc.4 against https://github.com/Polymer/polymer.git#^2.0.0-rc.1
+bower cached        https://github.com/Polymer/web-component-tester.git#6.0.0-prerelease.5
+bower validate      6.0.0-prerelease.5 against https://github.com/Polymer/web-component-tester.git#6.0.0-prerelease.5
+bower download      https://github.com/PolymerElements/iron-iconset-svg/archive/2.0-preview.tar.gz
+bower download      https://github.com/PolymerElements/iron-icon/archive/2.0-preview.tar.gz
+bower download      https://github.com/PolymerElements/iron-flex-layout/archive/2.0-preview.tar.gz
+bower download      https://github.com/PolymerElements/app-route/archive/2.0-preview.tar.gz
+bower download      https://github.com/PolymerElements/app-layout/archive/2.0-preview.tar.gz
+bower download      https://github.com/PolymerElements/iron-localstorage/archive/2.0-preview.tar.gz
+bower download      https://github.com/PolymerElements/iron-pages/archive/2.0-preview.tar.gz
+bower download      https://github.com/PolymerElements/iron-media-query/archive/2.0-preview.tar.gz
+bower download      https://github.com/PolymerElements/paper-icon-button/archive/2.0-preview.tar.gz
+bower download      https://github.com/PolymerElements/iron-selector/archive/2.0-preview.tar.gz
+bower extract       iron-iconset-svg#2.0-preview archive.tar.gz
+bower extract       iron-icon#2.0-preview archive.tar.gz
+bower extract       iron-flex-layout#2.0-preview archive.tar.gz
+bower extract       app-route#2.0-preview archive.tar.gz
+bower resolved      https://github.com/PolymerElements/iron-iconset-svg.git#4292d10351
+bower not-cached    https://github.com/PolymerElements/iron-meta.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/iron-meta.git#2.0-preview
+bower resolved      https://github.com/PolymerElements/iron-icon.git#473366dfb1
+bower resolved      https://github.com/PolymerElements/iron-flex-layout.git#19a506928a
+bower extract       iron-pages#2.0-preview archive.tar.gz
+bower cached        https://github.com/polymerelements/test-fixture.git#2.0.1
+bower validate      2.0.1 against https://github.com/polymerelements/test-fixture.git#^2.0.0
+bower cached        https://github.com/GoogleChrome/accessibility-developer-tools.git#2.12.0
+bower validate      2.12.0 against https://github.com/GoogleChrome/accessibility-developer-tools.git#^2.10.0
+bower cached        https://github.com/lodash/lodash.git#3.10.1
+bower validate      3.10.1 against https://github.com/lodash/lodash.git#^3.7.0
+bower cached        https://github.com/chaijs/chai.git#3.5.0
+bower validate      3.5.0 against https://github.com/chaijs/chai.git#^3.2.0
+bower cached        https://github.com/caolan/async.git#1.5.2
+bower validate      1.5.2 against https://github.com/caolan/async.git#^1.5.0
+bower cached        https://github.com/domenic/sinon-chai.git#2.9.0
+bower validate      2.9.0 against https://github.com/domenic/sinon-chai.git#^2.7.0
+bower cached        https://github.com/mochajs/mocha.git#3.2.0
+bower validate      3.2.0 against https://github.com/mochajs/mocha.git#^3.1.2
+bower cached        https://github.com/PolymerLabs/stacky.git#1.3.2
+bower validate      1.3.2 against https://github.com/PolymerLabs/stacky.git#^1.3.0
+bower cached        https://github.com/blittle/sinon.js.git#1.17.1
+bower validate      1.17.1 against https://github.com/blittle/sinon.js.git#^1.14.1
+bower extract       iron-media-query#2.0-preview archive.tar.gz
+bower extract       paper-icon-button#2.0-preview archive.tar.gz
+bower extract       iron-localstorage#2.0-preview archive.tar.gz
+bower cached        https://github.com/webcomponents/shadycss.git#1.0.0-rc.5
+bower validate      1.0.0-rc.5 against https://github.com/webcomponents/shadycss.git#^v1.0.0-rc.1
+bower extract       iron-selector#2.0-preview archive.tar.gz
+bower resolved      https://github.com/PolymerElements/iron-pages.git#512fbb3a57
+bower not-cached    https://github.com/PolymerElements/iron-resizable-behavior.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/iron-resizable-behavior.git#2.0-preview
+bower resolved      https://github.com/PolymerElements/iron-media-query.git#3549cbb4f2
+bower invalid-meta  for:/var/folders/1l/jxg83tg17gxdj6h8l_8qq1k40000gn/T/kharris/bower/96ee214801800cef2a43d1ca9d86297f-91650-q9hY1i/bower.json
+bower invalid-meta  The "main" field has to contain only 1 file per filetype; found multiple .html files: ["app-route.html","app-location.html","app-route-converter.html"]
+bower resolved      https://github.com/PolymerElements/app-route.git#90e3a4f193
+bower not-cached    https://github.com/PolymerElements/iron-location.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/iron-location.git#2.0-preview
+bower invalid-meta  for:/var/folders/1l/jxg83tg17gxdj6h8l_8qq1k40000gn/T/kharris/bower/1fd9eb93684502581598b0c2893ff88f-91650-UcFkAw/bower.json
+bower invalid-meta  The "main" field has to contain only 1 file per filetype; found multiple .html files: ["paper-icon-button.html","paper-icon-button-light.html"]
+bower resolved      https://github.com/PolymerElements/paper-icon-button.git#edb656ea2a
+bower not-cached    https://github.com/PolymerElements/paper-behaviors.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/paper-behaviors.git#2.0-preview
+bower not-cached    https://github.com/PolymerElements/paper-styles.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/paper-styles.git#2.0-preview
+bower resolved      https://github.com/PolymerElements/iron-localstorage.git#6502242500
+bower download      https://github.com/PolymerElements/iron-meta/archive/2.0-preview.tar.gz
+bower extract       app-layout#2.0-preview archive.tar.gz
+bower invalid-meta  for:/var/folders/1l/jxg83tg17gxdj6h8l_8qq1k40000gn/T/kharris/bower/2b5cad026ffbe623c5e102d04a5482a1-91650-peyLPc/bower.json
+bower invalid-meta  The "main" field has to contain only 1 file per filetype; found multiple .html files: ["iron-selector.html","iron-multi-selectable.html","iron-selectable.html","iron-selection.html"]
+bower resolved      https://github.com/PolymerElements/iron-selector.git#604a1eeef3
+bower resolved      https://github.com/PolymerElements/app-layout.git#da4a33b447
+bower not-cached    https://github.com/PolymerElements/iron-scroll-target-behavior.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/iron-scroll-target-behavior.git#2.0-preview
+bower extract       iron-meta#2.0-preview archive.tar.gz
+bower resolved      https://github.com/PolymerElements/iron-meta.git#9dd504a47d
+bower download      https://github.com/PolymerElements/iron-resizable-behavior/archive/2.0-preview.tar.gz
+bower download      https://github.com/PolymerElements/iron-location/archive/2.0-preview.tar.gz
+bower download      https://github.com/PolymerElements/paper-behaviors/archive/2.0-preview.tar.gz
+bower download      https://github.com/PolymerElements/paper-styles/archive/2.0-preview.tar.gz
+bower download      https://github.com/PolymerElements/iron-scroll-target-behavior/archive/2.0-preview.tar.gz
+bower extract       iron-resizable-behavior#2.0-preview archive.tar.gz
+bower resolved      https://github.com/PolymerElements/iron-resizable-behavior.git#9579a0758b
+bower extract       iron-location#2.0-preview archive.tar.gz
+bower extract       paper-behaviors#2.0-preview archive.tar.gz
+bower extract       paper-styles#2.0-preview archive.tar.gz
+bower invalid-meta  for:/var/folders/1l/jxg83tg17gxdj6h8l_8qq1k40000gn/T/kharris/bower/55863583333219e3aeaa111e082667ff-91650-P7fWae/bower.json
+bower invalid-meta  The "main" field has to contain only 1 file per filetype; found multiple .html files: ["iron-location.html","iron-query-params.html"]
+bower resolved      https://github.com/PolymerElements/iron-location.git#9c46ddfaad
+bower invalid-meta  for:/var/folders/1l/jxg83tg17gxdj6h8l_8qq1k40000gn/T/kharris/bower/476b583871c2ccef5587127f5eabb4de-91650-eoXkZ1/bower.json
+bower invalid-meta  The "main" field has to contain only 1 file per filetype; found multiple .html files: ["paper-button-behavior.html","paper-checked-element-behavior.html","paper-inky-focus-behavior.html"]
+bower resolved      https://github.com/PolymerElements/paper-behaviors.git#844fca7543
+bower not-cached    https://github.com/PolymerElements/iron-behaviors.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/iron-behaviors.git#2.0-preview
+bower not-cached    https://github.com/PolymerElements/iron-checked-element-behavior.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/iron-checked-element-behavior.git#2.0-preview
+bower not-cached    https://github.com/PolymerElements/paper-ripple.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/paper-ripple.git#2.0-preview
+bower resolved      https://github.com/PolymerElements/paper-styles.git#4434596deb
+bower cached        https://github.com/PolymerElements/font-roboto.git#1.0.2
+bower validate      1.0.2 against https://github.com/PolymerElements/font-roboto.git#^1.0.1
+bower extract       iron-scroll-target-behavior#2.0-preview archive.tar.gz
+bower resolved      https://github.com/PolymerElements/iron-scroll-target-behavior.git#d9ff86cdd7
+bower download      https://github.com/PolymerElements/iron-checked-element-behavior/archive/2.0-preview.tar.gz
+bower download      https://github.com/PolymerElements/iron-behaviors/archive/2.0-preview.tar.gz
+bower download      https://github.com/PolymerElements/paper-ripple/archive/2.0-preview.tar.gz
+bower extract       iron-checked-element-behavior#2.0-preview archive.tar.gz
+bower resolved      https://github.com/PolymerElements/iron-checked-element-behavior.git#48802b6a07
+bower not-cached    https://github.com/PolymerElements/iron-validatable-behavior.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/iron-validatable-behavior.git#2.0-preview
+bower not-cached    https://github.com/PolymerElements/iron-form-element-behavior.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/iron-form-element-behavior.git#2.0-preview
+bower extract       paper-ripple#2.0-preview archive.tar.gz
+bower extract       iron-behaviors#2.0-preview archive.tar.gz
+bower resolved      https://github.com/PolymerElements/paper-ripple.git#30c9621a50
+bower not-cached    https://github.com/PolymerElements/iron-a11y-keys-behavior.git#2.0-preview
+bower resolve       https://github.com/PolymerElements/iron-a11y-keys-behavior.git#2.0-preview
+bower invalid-meta  for:/var/folders/1l/jxg83tg17gxdj6h8l_8qq1k40000gn/T/kharris/bower/a0fbc0265707e4300e9778ed1e691132-91650-jOBtN9/bower.json
+bower invalid-meta  The "main" field has to contain only 1 file per filetype; found multiple .html files: ["iron-button-state.html","iron-control-state.html"]
+bower resolved      https://github.com/PolymerElements/iron-behaviors.git#c17bd2cdc6
+bower download      https://github.com/PolymerElements/iron-form-element-behavior/archive/2.0-preview.tar.gz
+bower download      https://github.com/PolymerElements/iron-validatable-behavior/archive/2.0-preview.tar.gz
+bower download      https://github.com/PolymerElements/iron-a11y-keys-behavior/archive/2.0-preview.tar.gz
+bower extract       iron-validatable-behavior#2.0-preview archive.tar.gz
+bower extract       iron-form-element-behavior#2.0-preview archive.tar.gz
+bower resolved      https://github.com/PolymerElements/iron-form-element-behavior.git#7498283632
+bower resolved      https://github.com/PolymerElements/iron-validatable-behavior.git#2ff13d1fec
+bower extract       iron-a11y-keys-behavior#2.0-preview archive.tar.gz
+bower resolved      https://github.com/PolymerElements/iron-a11y-keys-behavior.git#c8aeab392a
+bower extra-resolution      Unnecessary resolution: polymer#^2.0.0-rc.1
+bower install               webcomponentsjs#1.0.0-rc.8
+bower install               iron-iconset-svg#4292d10351
+bower install               web-component-tester#6.0.0-prerelease.5
+bower install               iron-icon#473366dfb1
+bower install               iron-flex-layout#19a506928a
+bower install               polymer#2.0.0-rc.4
+bower install               iron-pages#512fbb3a57
+bower install               iron-media-query#3549cbb4f2
+bower install               app-route#90e3a4f193
+bower install               paper-icon-button#edb656ea2a
+bower install               iron-localstorage#6502242500
+bower install               iron-selector#604a1eeef3
+bower install               test-fixture#2.0.1
+bower install               accessibility-developer-tools#2.12.0
+bower install               chai#3.5.0
+bower install               lodash#3.10.1
+bower install               app-layout#da4a33b447
+bower install               sinon-chai#2.9.0
+bower install               async#1.5.2
+bower install               iron-meta#9dd504a47d
+bower install               sinonjs#1.17.1
+bower install               stacky#1.3.2
+bower install               mocha#3.2.0
+bower install               shadycss#1.0.0-rc.5
+bower install               iron-resizable-behavior#9579a0758b
+bower install               iron-location#9c46ddfaad
+bower install               paper-behaviors#844fca7543
+bower install               paper-styles#4434596deb
+bower install               iron-scroll-target-behavior#d9ff86cdd7
+bower install               font-roboto#1.0.2
+bower install               iron-checked-element-behavior#48802b6a07
+bower install               paper-ripple#30c9621a50
+bower install               iron-behaviors#c17bd2cdc6
+bower install               iron-form-element-behavior#7498283632
+bower install               iron-validatable-behavior#2ff13d1fec
+bower install               iron-a11y-keys-behavior#c8aeab392a
+
+webcomponentsjs#1.0.0-rc.8 bower_components/webcomponentsjs
+
+iron-iconset-svg#4292d10351 bower_components/iron-iconset-svg
+├── iron-meta#9dd504a47d
+└── polymer#2.0.0-rc.4
+
+web-component-tester#6.0.0-prerelease.5 bower_components/web-component-tester
+├── accessibility-developer-tools#2.12.0
+├── async#1.5.2
+├── chai#3.5.0
+├── lodash#3.10.1
+├── mocha#3.2.0
+├── sinon-chai#2.9.0
+├── sinonjs#1.17.1
+├── stacky#1.3.2
+└── test-fixture#2.0.1
+
+iron-icon#473366dfb1 bower_components/iron-icon
+├── iron-flex-layout#19a506928a
+├── iron-meta#9dd504a47d
+└── polymer#2.0.0-rc.4
+
+iron-flex-layout#19a506928a bower_components/iron-flex-layout
+└── polymer#2.0.0-rc.4
+
+polymer#2.0.0-rc.4 bower_components/polymer
+├── shadycss#1.0.0-rc.5
+└── webcomponentsjs#1.0.0-rc.8
+
+iron-pages#512fbb3a57 bower_components/iron-pages
+├── iron-resizable-behavior#9579a0758b
+├── iron-selector#604a1eeef3
+└── polymer#2.0.0-rc.4
+
+iron-media-query#3549cbb4f2 bower_components/iron-media-query
+└── polymer#2.0.0-rc.4
+
+app-route#90e3a4f193 bower_components/app-route
+├── iron-location#9c46ddfaad
+└── polymer#2.0.0-rc.4
+
+paper-icon-button#edb656ea2a bower_components/paper-icon-button
+├── iron-icon#473366dfb1
+├── paper-behaviors#844fca7543
+├── paper-styles#4434596deb
+└── polymer#2.0.0-rc.4
+
+iron-localstorage#6502242500 bower_components/iron-localstorage
+└── polymer#2.0.0-rc.4
+
+iron-selector#604a1eeef3 bower_components/iron-selector
+└── polymer#2.0.0-rc.4
+
+test-fixture#2.0.1 bower_components/test-fixture
+
+accessibility-developer-tools#2.12.0 bower_components/accessibility-developer-tools
+
+chai#3.5.0 bower_components/chai
+
+lodash#3.10.1 bower_components/lodash
+
+app-layout#da4a33b447 bower_components/app-layout
+├── iron-flex-layout#19a506928a
+├── iron-media-query#3549cbb4f2
+├── iron-resizable-behavior#9579a0758b
+├── iron-scroll-target-behavior#d9ff86cdd7
+└── polymer#2.0.0-rc.4
+
+sinon-chai#2.9.0 bower_components/sinon-chai
+
+async#1.5.2 bower_components/async
+
+iron-meta#9dd504a47d bower_components/iron-meta
+└── polymer#2.0.0-rc.4
+
+sinonjs#1.17.1 bower_components/sinonjs
+
+stacky#1.3.2 bower_components/stacky
+
+mocha#3.2.0 bower_components/mocha
+
+shadycss#1.0.0-rc.5 bower_components/shadycss
+
+iron-resizable-behavior#9579a0758b bower_components/iron-resizable-behavior
+└── polymer#2.0.0-rc.4
+
+iron-location#9c46ddfaad bower_components/iron-location
+└── polymer#2.0.0-rc.4
+
+paper-behaviors#844fca7543 bower_components/paper-behaviors
+├── iron-behaviors#c17bd2cdc6
+├── iron-checked-element-behavior#48802b6a07
+├── paper-ripple#30c9621a50
+└── polymer#2.0.0-rc.4
+
+paper-styles#4434596deb bower_components/paper-styles
+├── font-roboto#1.0.2
+├── iron-flex-layout#19a506928a
+└── polymer#2.0.0-rc.4
+
+iron-scroll-target-behavior#d9ff86cdd7 bower_components/iron-scroll-target-behavior
+└── polymer#2.0.0-rc.4
+
+font-roboto#1.0.2 bower_components/font-roboto
+
+iron-checked-element-behavior#48802b6a07 bower_components/iron-checked-element-behavior
+├── iron-form-element-behavior#7498283632
+├── iron-validatable-behavior#2ff13d1fec
+└── polymer#2.0.0-rc.4
+
+paper-ripple#30c9621a50 bower_components/paper-ripple
+├── iron-a11y-keys-behavior#c8aeab392a
+└── polymer#2.0.0-rc.4
+
+iron-behaviors#c17bd2cdc6 bower_components/iron-behaviors
+├── iron-a11y-keys-behavior#c8aeab392a
+└── polymer#2.0.0-rc.4
+
+iron-form-element-behavior#7498283632 bower_components/iron-form-element-behavior
+└── polymer#2.0.0-rc.4
+
+iron-validatable-behavior#2ff13d1fec bower_components/iron-validatable-behavior
+├── iron-meta#9dd504a47d
+└── polymer#2.0.0-rc.4
+
+iron-a11y-keys-behavior#c8aeab392a bower_components/iron-a11y-keys-behavior
+└── polymer#2.0.0-rc.4
+
+
+------------------------------------------------------------------------
+
+ -- Firebase Setup --
 
 firebase init
 
+     🔥🔥🔥🔥🔥🔥🔥🔥 🔥🔥🔥🔥 🔥🔥🔥🔥🔥🔥🔥🔥  🔥🔥🔥🔥🔥🔥🔥🔥 🔥🔥🔥🔥🔥🔥🔥🔥     🔥🔥🔥     🔥🔥🔥🔥🔥🔥  🔥🔥🔥🔥🔥🔥🔥🔥
+     🔥🔥        🔥🔥  🔥🔥     🔥🔥 🔥🔥       🔥🔥     🔥🔥  🔥🔥   🔥🔥  🔥🔥       🔥🔥
+     🔥🔥🔥🔥🔥🔥    🔥🔥  🔥🔥🔥🔥🔥🔥🔥🔥  🔥🔥🔥🔥🔥🔥   🔥🔥🔥🔥🔥🔥🔥🔥  🔥🔥🔥🔥🔥🔥🔥🔥🔥  🔥🔥🔥🔥🔥🔥  🔥🔥🔥🔥🔥🔥
+     🔥🔥        🔥🔥  🔥🔥    🔥🔥  🔥🔥       🔥🔥     🔥🔥 🔥🔥     🔥🔥       🔥🔥 🔥🔥
+     🔥🔥       🔥🔥🔥🔥 🔥🔥     🔥🔥 🔥🔥🔥🔥🔥🔥🔥🔥 🔥🔥🔥🔥🔥🔥🔥🔥  🔥🔥     🔥🔥  🔥🔥🔥🔥🔥🔥  🔥🔥🔥🔥🔥🔥🔥🔥
+
+You're about to initialize a Firebase project in this directory:
+
+  /Users/kharris/Desktop/temp/temp
+
+? What Firebase CLI features do you want to setup for this directory? Database: Deploy Firebase Realtime Database
+ Rules, Functions: Configure and deploy Cloud Functions, Hosting: Configure and deploy Firebase Hosting sites
+
+=== Project Setup
+
+First, let's associate this project directory with a Firebase project.
+You can create multiple project aliases by running firebase use --add, 
+but for now we'll just set up a default project.
+
+? Select a default Firebase project for this directory: goodz (goodz-7e036)
+
+=== Database Setup
+
+Firebase Realtime Database Rules allow you to define how your data should be
+structured and when your data can be read from and written to.
+
+? What file should be used for Database Rules? database.rules.json
+✔  Database Rules for goodz-7e036 have been downloaded to database.rules.json.
+Future modifications to database.rules.json will update Database Rules when you run
+firebase deploy.
+
+=== Functions Setup
+
+A functions directory will be created in your project with a Node.js
+package pre-configured. Functions can be deployed with firebase deploy.
+
+✔  Wrote functions/package.json
+✔  Wrote functions/index.js
+? Do you want to install dependencies with npm now? Yes
+functions@ /Users/kharris/Desktop/temp/temp/functions
+├─┬ firebase-admin@4.1.4 
+│ ├─┬ @types/jsonwebtoken@7.2.0 
+│ │ └── @types/node@7.0.12  deduped
+│ ├── @types/node@7.0.12 
+│ ├── base64url@2.0.0 
+│ ├── buffer-equal-constant-time@1.0.1 
+│ ├─┬ ecdsa-sig-formatter@1.0.9 
+│ │ ├── base64url@2.0.0  deduped
+│ │ └── safe-buffer@5.0.1  deduped
+│ ├─┬ faye-websocket@0.9.3 
+│ │ └── websocket-driver@0.6.5  deduped
+│ ├── hoek@2.16.3 
+│ ├── isemail@1.2.0 
+│ ├─┬ joi@6.10.1 
+│ │ ├── hoek@2.16.3  deduped
+│ │ ├── isemail@1.2.0  deduped
+│ │ ├── moment@2.18.1  deduped
+│ │ └── topo@1.1.0  deduped
+│ ├─┬ jsonwebtoken@7.1.9 
+│ │ ├── joi@6.10.1  deduped
+│ │ ├── jws@3.1.4  deduped
+│ │ ├── lodash.once@4.1.1  deduped
+│ │ ├── ms@0.7.3  deduped
+│ │ └── xtend@4.0.1  deduped
+│ ├─┬ jwa@1.1.5 
+│ │ ├── base64url@2.0.0  deduped
+│ │ ├── buffer-equal-constant-time@1.0.1  deduped
+│ │ ├── ecdsa-sig-formatter@1.0.9  deduped
+│ │ └── safe-buffer@5.0.1  deduped
+│ ├─┬ jws@3.1.4 
+│ │ ├── base64url@2.0.0  deduped
+│ │ ├── jwa@1.1.5  deduped
+│ │ └── safe-buffer@5.0.1  deduped
+│ ├── lodash.once@4.1.1 
+│ ├── moment@2.18.1 
+│ ├── ms@0.7.3 
+│ ├── safe-buffer@5.0.1 
+│ ├─┬ topo@1.1.0 
+│ │ └── hoek@2.16.3  deduped
+│ ├─┬ websocket-driver@0.6.5 
+│ │ └── websocket-extensions@0.1.1  deduped
+│ ├── websocket-extensions@0.1.1 
+│ └── xtend@4.0.1 
+└─┬ firebase-functions@0.5.5 
+  ├─┬ @types/express@4.0.35 
+  │ ├─┬ @types/express-serve-static-core@4.0.44 
+  │ │ └── @types/node@7.0.12  deduped
+  │ └─┬ @types/serve-static@1.7.31 
+  │   ├── @types/express-serve-static-core@4.0.44  deduped
+  │   └── @types/mime@0.0.29 
+  ├─┬ @types/jsonwebtoken@7.2.0 
+  │ └── @types/node@7.0.12 
+  ├── @types/lodash@4.14.62 
+  ├─┬ @types/sha1@1.1.0 
+  │ └── @types/node@7.0.12  deduped
+  ├─┬ express@4.15.2 
+  │ ├─┬ accepts@1.3.3 
+  │ │ ├─┬ mime-types@2.1.15 
+  │ │ │ └── mime-db@1.27.0 
+  │ │ └── negotiator@0.6.1 
+  │ ├── array-flatten@1.1.1 
+  │ ├── content-disposition@0.5.2 
+  │ ├── content-type@1.0.2 
+  │ ├── cookie@0.3.1 
+  │ ├── cookie-signature@1.0.6 
+  │ ├─┬ debug@2.6.1 
+  │ │ └── ms@0.7.2  deduped
+  │ ├── depd@1.1.0 
+  │ ├── encodeurl@1.0.1 
+  │ ├── escape-html@1.0.3 
+  │ ├── etag@1.8.0 
+  │ ├─┬ finalhandler@1.0.1 
+  │ │ ├─┬ debug@2.6.3 
+  │ │ │ └── ms@0.7.2  deduped
+  │ │ ├── encodeurl@1.0.1  deduped
+  │ │ ├── escape-html@1.0.3  deduped
+  │ │ ├── on-finished@2.3.0  deduped
+  │ │ ├── parseurl@1.3.1  deduped
+  │ │ ├── statuses@1.3.1  deduped
+  │ │ └── unpipe@1.0.0 
+  │ ├── fresh@0.5.0 
+  │ ├── merge-descriptors@1.0.1 
+  │ ├── methods@1.1.2 
+  │ ├─┬ on-finished@2.3.0 
+  │ │ └── ee-first@1.1.1 
+  │ ├── parseurl@1.3.1 
+  │ ├── path-to-regexp@0.1.7 
+  │ ├─┬ proxy-addr@1.1.4 
+  │ │ ├── forwarded@0.1.0 
+  │ │ └── ipaddr.js@1.3.0 
+  │ ├── qs@6.4.0 
+  │ ├── range-parser@1.2.0 
+  │ ├─┬ send@0.15.1 
+  │ │ ├── debug@2.6.1  deduped
+  │ │ ├── depd@1.1.0  deduped
+  │ │ ├── destroy@1.0.4 
+  │ │ ├── encodeurl@1.0.1  deduped
+  │ │ ├── escape-html@1.0.3  deduped
+  │ │ ├── etag@1.8.0  deduped
+  │ │ ├── fresh@0.5.0  deduped
+  │ │ ├─┬ http-errors@1.6.1 
+  │ │ │ ├── depd@1.1.0  deduped
+  │ │ │ ├── inherits@2.0.3 
+  │ │ │ ├── setprototypeof@1.0.3  deduped
+  │ │ │ └── statuses@1.3.1  deduped
+  │ │ ├── mime@1.3.4 
+  │ │ ├── ms@0.7.2  deduped
+  │ │ ├── on-finished@2.3.0  deduped
+  │ │ ├── range-parser@1.2.0  deduped
+  │ │ └── statuses@1.3.1  deduped
+  │ ├─┬ serve-static@1.12.1 
+  │ │ ├── encodeurl@1.0.1  deduped
+  │ │ ├── escape-html@1.0.3  deduped
+  │ │ ├── parseurl@1.3.1  deduped
+  │ │ └── send@0.15.1  deduped
+  │ ├── setprototypeof@1.0.3 
+  │ ├── statuses@1.3.1 
+  │ ├─┬ type-is@1.6.15 
+  │ │ ├── media-typer@0.3.0 
+  │ │ └── mime-types@2.1.15  deduped
+  │ ├── utils-merge@1.0.0 
+  │ └── vary@1.1.1 
+  ├─┬ jsonwebtoken@7.3.0 
+  │ ├─┬ joi@6.10.1 
+  │ │ ├── hoek@2.16.3 
+  │ │ ├── isemail@1.2.0 
+  │ │ ├── moment@2.18.1 
+  │ │ └─┬ topo@1.1.0 
+  │ │   └── hoek@2.16.3  deduped
+  │ ├─┬ jws@3.1.4 
+  │ │ ├── base64url@2.0.0 
+  │ │ ├─┬ jwa@1.1.5 
+  │ │ │ ├── base64url@2.0.0  deduped
+  │ │ │ ├── buffer-equal-constant-time@1.0.1 
+  │ │ │ ├─┬ ecdsa-sig-formatter@1.0.9 
+  │ │ │ │ ├── base64url@2.0.0  deduped
+  │ │ │ │ └── safe-buffer@5.0.1  deduped
+  │ │ │ └── safe-buffer@5.0.1  deduped
+  │ │ └── safe-buffer@5.0.1 
+  │ ├── lodash.once@4.1.1 
+  │ ├── ms@0.7.2 
+  │ └── xtend@4.0.1 
+  ├── lodash@4.17.4 
+  └─┬ sha1@1.1.1 
+    ├── charenc@0.0.2 
+    └── crypt@0.0.2 
+
+=== Hosting Setup
+
+Your public directory is the folder (relative to your project directory) that
+will contain Hosting assets to be uploaded with firebase deploy. If you
+have a build process for your assets, use your build's output directory.
+
+? What do you want to use as your public directory? build/default
+? Configure as a single-page app (rewrite all urls to /index.html)? Yes
+✔  Wrote build/default/index.html
+
+i  Writing configuration info to firebase.json...
+i  Writing project information to .firebaserc...
+
+✔  Firebase initialization complete!
+
+------------------------------------------------------------------------
+
+ -- Misc. --
 
 polymer serve --open
 
 polymer build
 polymer serve build/default/ --open
+firebase deploy
 
 
 bower install --save PolymerElements/iron-image#2.0-preview
-
 bower install --save polymerfire#2.0-preview
 
 
-
-http://alfredo-perez.me/2017/01/07/creating-application-polymer-2-firebase/
 
