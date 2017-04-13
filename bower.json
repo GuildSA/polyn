@@ -25,7 +25,8 @@
     "paper-badge": "PolymerElements/paper-badge#2.0-preview",
     "iron-image": "PolymerElements/iron-image#2.0-preview",
     "iron-ajax": "PolymerElements/iron-ajax#2.0-preview",
-    "paper-spinner": "PolymerElements/paper-spinner#2.0-preview"
+    "paper-spinner": "PolymerElements/paper-spinner#2.0-preview",
+    "polymerfire": "2.0-preview"
   },
   "resolutions": {
     "polymer": "^2.0.0-rc.3"

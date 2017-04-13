@@ -1,0 +1,20 @@
+
+
+
+firebase init
+
+
+polymer serve --open
+
+polymer build
+polymer serve build/default/ --open
+
+
+bower install --save PolymerElements/iron-image#2.0-preview
+
+bower install --save polymerfire#2.0-preview
+
+
+
+http://alfredo-perez.me/2017/01/07/creating-application-polymer-2-firebase/
+
