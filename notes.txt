@@ -1,4 +1,29 @@
 
+
+
+
+I did the step below in Firebase for Goodz! so I could run the app using 
+"polymer serve --open"
+
+Error: This domain (127.0.0.1) is not authorized to run this operation. 
+Add it to the OAuth redirect domains list in the 
+Firebase console -> Auth section -> Sign in method tab.
+
+
+------------------------------------------------------------------------
+
+ -- Misc. --
+
+polymer serve --open
+
+polymer build
+polymer serve build/default/ --open
+firebase deploy
+
+
+bower install --save PolymerElements/iron-image#2.0-preview
+bower install --save polymerfire#2.0-preview
+
 ------------------------------------------------------------------------
 
  -- Tool Setup --
@@ -548,17 +573,7 @@ i  Writing project information to .firebaserc...
 
 ------------------------------------------------------------------------
 
- -- Misc. --
 
-polymer serve --open
-
-polymer build
-polymer serve build/default/ --open
-firebase deploy
-
-
-bower install --save PolymerElements/iron-image#2.0-preview
-bower install --save polymerfire#2.0-preview
 
 
 

@@ -55,6 +55,8 @@
     <!-- Load your application shell -->
     <link rel="import" href="/src/goodz-app.html">
 
+    <link rel="import" href="/bower_components/polymerfire/firebase-app.html">
+
     <!-- Add any global styles for body, document, etc. -->
     <style>
       body {
@@ -69,6 +71,16 @@
   <body>
     <goodz-app></goodz-app>
 
+    <firebase-app
+      name="goodz-app"
+      api-key="AIzaSyCAVFjt_ixkuSPZXPewhwpfY4sgErK5TUU"
+      auth-domain="goodz-7e036.firebaseapp.com"
+      database-url="https://goodz-7e036.firebaseio.com">
+      <!--projectId="goodz-7e036"
+      storageBucket="goodz-7e036.appspot.com"
+      messagingSenderId="432803910835"-->
+    </firebase-app>
+    
     <!--<paper-dialog id="simpleDialog" modal>
       <h2>Simple Dialog</h2>
       <p>Here's some important info to consider!</p>

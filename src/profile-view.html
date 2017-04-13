@@ -2,6 +2,8 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="profile-view">
@@ -25,44 +27,79 @@
         flex: 1;
       }
 
-
-
       paper-button.signout {
         background-color: var(--app-primary-color);
         color: white;
         position: absolute;
-        bottom: 2.5%; 
+        bottom: 2.5%;
         right:0;
         left:0;
         align-content: center;
-        
-        
-            --paper-button-raised-keyboard-focus: {
-              background-color: var(--paper-pink-a200) !important;
-              color: white !important;
-              };
+        --paper-button-raised-keyboard-focus: {
+          background-color: var(--paper-pink-a200) !important;
+          color: white !important;
+        };
+      }
+
+      .center {
+        margin: auto;
       }
 
     </style>
 
+    <firebase-auth
+        id="auth"
+        app-name="goodz-app"
+        user="{{user}}"
+        status-known="{{statusKnown}}"
+        provider="google"
+        on-error="handleError">
+    </firebase-auth>
+
      <div class="card">
       <div class="column-layout">
+
           <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="./images/profile_test_image.png"></iron-image>
-          <paper-button class="custom signout" raised>Sign Out</paper-button>
+
+          <template is="dom-if" if="[[user]]">
+            <div class="center">
+              <h1>Welcome [[user.displayName]]</h1>
+            </div>
+          </template>
+
+          <paper-button class="custom signout" on-tap="login" hidden$="[[user]]" raised>Sign In</paper-button>
+          <paper-button class="custom signout" on-tap="logout" hidden$="[[!user]]" raised>Sign Out</paper-button>
       <div>
     </div>
-    <!--<div class="card">
-      <div class="circle">4</div>
-      <h1>Profile</h1>
-      <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
-    </div>-->
 
   </template>
 
   <script>
     class ProfileView extends Polymer.Element {
       static get is() { return 'profile-view'; }
+
+      static get properties() {
+        return {
+            user: {
+                type: Object
+            },
+            statusKnown:{
+                type: Object
+            }
+        };
+      }
+
+      handleError(e, err) {
+          alert(err);
+      }
+
+      login() {
+          return this.$.auth.signInWithPopup();
+      }
+      
+      logout() {
+          return this.$.auth.signOut();
+      }
     }
 
     window.customElements.define(ProfileView.is, ProfileView);
