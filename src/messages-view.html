@@ -1,29 +1,61 @@
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="messages-view">
-  <template>
+    <template>
     <style include="shared-styles">
-      :host {
+        :host {
         display: block;
         padding: 10px;
-      }
+        }
     </style>
 
-    <div class="card">
+    <firebase-auth id="auth" app-name="goodz-app" user="{{user}}"></firebase-auth>
+
+    <firebase-query
+        id="query"
+        app-name="goodz-app"
+        path="/notes/[[user.uid]]"
+        data="{{notes}}">
+    </firebase-query>
+
+    <app-indexeddb-mirror
+        session="[[user.uid]]"
+        key="notes"
+        data="{{notes}}"
+        persisted-data="{{persistedNotes}}">
+    </app-indexeddb-mirror>
+
+    <template is="dom-repeat" items="[[persistedNotes]]" as="note">
+        <!--<li>[[note.title]]</li>-->
+
+        <div class="card">
+            <p>[[note.title]]</p>
+            <p>[[note.body]]</p>
+        </div>
+    </template>
+
+    <!--<div class="card">
       <div class="circle">3</div>
       <h1>Messages</h1>
       <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
       <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
-    </div>
+    </div>-->
   </template>
 
-  <script>
-    class MessagesView extends Polymer.Element {
-      static get is() { return 'messages-view'; }
-    }
+    <script>
+        class MessagesView extends Polymer.Element {
+            static get is() { return 'messages-view'; }
 
-    window.customElements.define(MessagesView.is, MessagesView);
-  </script>
+            handleError(e, err) {
+                alert(err);
+            }
+        }
+
+        window.customElements.define(MessagesView.is, MessagesView);
+    </script>
 </dom-module>

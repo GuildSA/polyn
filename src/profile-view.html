@@ -2,7 +2,6 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="shared-styles.html">
 
@@ -92,6 +91,26 @@
       handleError(e, err) {
           alert(err);
       }
+
+//http://stackoverflow.com/questions/31518237/getting-email-address-from-polymer-firebase-auth-element-with-google-authenticat
+//       // Currently supported providers are 'google', 'facebook', 'github', 'twitter'
+//       loginUsingProvider(name) {
+//           var provider = this.$.auth._providerFromName(name);
+//           // Twitter simple login doesn't have scopes.
+//           if(name != 'google') {
+//               provider.addScope('email');
+//           }
+//           this.$.auth.signInWithPopup(provider)
+//               .then(function(response) {
+//                   // success
+//                   return true
+//               }, function(error) {
+//                   // failure
+//               })
+//               .catch(function(exception) {
+//                   // Exception 
+//               });
+//       }
 
       login() {
           return this.$.auth.signInWithPopup();
