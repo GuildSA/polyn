@@ -30,14 +30,14 @@
         persisted-data="{{persistedNotes}}">
     </app-indexeddb-mirror>
 
-    <template is="dom-repeat" items="[[persistedNotes]]" as="note">
-        <!--<li>[[note.title]]</li>-->
-
-        <div class="card">
-            <p>[[note.title]]</p>
-            <p>[[note.body]]</p>
-        </div>
-    </template>
+    <dom-repeat items="[[persistedNotes]]" as="note">
+        <template>
+            <div class="card" on-tap="tappedCard">
+                <p>[[note.title]]</p>
+                <p>[[note.body]]</p>
+            </div>
+        </template>
+    </dom-repeat>
 
     <!--<div class="card">
       <div class="circle">3</div>
@@ -45,14 +45,24 @@
       <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
       <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
     </div>-->
+
   </template>
 
     <script>
         class MessagesView extends Polymer.Element {
             static get is() { return 'messages-view'; }
 
-            handleError(e, err) {
-                alert(err);
+            tappedCard(e) {
+
+                // Which index was clicked?
+                var index = e.model.index;
+                console.info(index + ' was clicked.');
+
+                // What object is stored at that index?
+                console.info(this.$.query.data[index]);
+
+                // What is the Firebase key for this data?
+                console.info(this.$.query.data[index].$key);
             }
         }
 
