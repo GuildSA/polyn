@@ -15,7 +15,7 @@
   "homepage": "https://github.com/PolymerElements/app-storage",
   "private": true,
   "dependencies": {
-    "polymer": "polymer/polymer#2.0.0-rc.3"
+    "polymer": "polymer/polymer#^2.0.0-rc.3"
   },
   "devDependencies": {
     "font-roboto": "polymerelements/font-roboto#^1.0.0",
@@ -54,11 +54,11 @@
       }
     }
   },
-  "_release": "c1b3407343",
+  "_release": "c44f17873a",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "c1b34073431d36f89059fc2b4ff1c9f074da0624"
+    "commit": "c44f17873ad84b96cd98929f48931201baef3ddc"
   },
   "_source": "https://github.com/PolymerElements/app-storage.git",
   "_target": "2.0-preview",

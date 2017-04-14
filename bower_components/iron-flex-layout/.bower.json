@@ -45,11 +45,11 @@
     "Flexbox layout guide": "GUIDE.md"
   },
   "homepage": "https://github.com/PolymerElements/iron-flex-layout",
-  "_release": "01b30ec5c4",
+  "_release": "bbf6198be5",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "01b30ec5c4d73acdaea6a2f336e5b66ebd04430f"
+    "commit": "bbf6198be548670873dd7c4c8c327fd278414fe7"
   },
   "_source": "https://github.com/PolymerElements/iron-flex-layout.git",
   "_target": "2.0-preview",

@@ -74,11 +74,11 @@
       }
     }
   },
-  "_release": "7a5a248157",
+  "_release": "21e2f12dc4",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "7a5a24815717cdc05643ebc9d52d103000b45642"
+    "commit": "21e2f12dc41ade11149540af8d26f7c5328ea41c"
   },
   "_source": "https://github.com/PolymerElements/paper-input.git",
   "_target": "2.0-preview",
