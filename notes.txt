@@ -24,6 +24,16 @@ firebase deploy
 bower install --save PolymerElements/iron-image#2.0-preview
 bower install --save polymerfire#2.0-preview
 
+npm outdated
+npm update
+npm install
+
+bower list
+
+cat bower_components/iron-pages/.bower.json
+
+
+
 ------------------------------------------------------------------------
 
  -- Tool Setup --
