@@ -17,6 +17,11 @@ Firebase console -> Auth section -> Sign in method tab.
 polymer serve --open
 
 polymer build
+
+// Fix for missing Backendless code:
+cd build/default/
+bower install
+
 polymer serve build/default/ --open
 firebase deploy
 
@@ -31,6 +36,8 @@ npm install
 bower list
 
 cat bower_components/iron-pages/.bower.json
+
+
 
 
 
