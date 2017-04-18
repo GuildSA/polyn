@@ -1,6 +1,6 @@
 {
   "name": "web-component-tester",
-  "version": "6.0.0-prerelease.5",
+  "version": "6.0.0-prerelease.8",
   "--private-wct--": {
     "client-side-version-range": "4 - 6 || ^6.0.0-prerelease.1"
   },
@@ -64,7 +64,7 @@
     "@types/minimatch": "^2.0.29",
     "@types/mocha": "^2.2.32",
     "@types/multer": "0.0.32",
-    "@types/node": "^4.0.30",
+    "@types/node": "4.0.30",
     "@types/nomnom": "0.0.28",
     "@types/semver": "^5.3.30",
     "@types/sinon": "^1.16.31",
@@ -77,13 +77,13 @@
     "chalk": "^1.1.1",
     "cleankill": "^1.0.0",
     "express": "^4.8.5",
-    "findup-sync": "^0.2.1",
-    "glob": "^5.0.15",
+    "findup-sync": "^0.4.3",
+    "glob": "^7.1.1",
     "lodash": "^3.0.1",
     "mocha": "^3.1.2",
     "multer": "^1.1.0",
     "nomnom": "^1.8.1",
-    "polyserve": "0.16.0-prerelease.9",
+    "polyserve": "^0.17",
     "promisify-node": "^0.4.0",
     "resolve": "^1.0.0",
     "semver": "^5.3.0",
@@ -125,6 +125,6 @@
     "watch": "^0.18.0"
   },
   "engines": {
-    "node": ">= 4.0"
+    "node": ">= 6.0"
   }
 }
