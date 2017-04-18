@@ -46,11 +46,11 @@
     }
   },
   "homepage": "https://github.com/PolymerElements/iron-a11y-announcer",
-  "_release": "8b5203efda",
+  "_release": "de40165499",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "8b5203efda5114404f3a6f26a1af96d46f107160"
+    "commit": "de40165499759358dc552794a5a95d8a5c7740a9"
   },
   "_source": "https://github.com/PolymerElements/iron-a11y-announcer.git",
   "_target": "2.0-preview",

@@ -23,8 +23,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../paper-dialog.html">
   <link rel="import" href="../../paper-button/paper-button.html">
   <link rel="import" href="../../paper-dialog-scrollable/paper-dialog-scrollable.html">
-  <link rel="import" href="../../paper-styles/color.html">
-  <link rel="import" href="../../paper-styles/demo-pages.html">
   <link rel="import" href="../../neon-animation/web-animations.html">
   <link rel="import" href="../../neon-animation/neon-animations.html">
   <link rel="import" href="../../paper-dropdown-menu/paper-dropdown-menu-light.html">
@@ -113,7 +111,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <paper-dialog id="dropdownDialog">
         <h2>Dialog Title</h2>
         <paper-dropdown-menu-light label="Value">
-          <paper-listbox class="dropdown-content">
+          <!--
+            support hybrid mode: 
+            paper-dropdown-menu-light 1.x distributes via <content select=".dropdown-content">
+            paper-dropdown-menu-light 2.x distributes via <slot name="dropdown-content">
+          -->
+          <paper-listbox class="dropdown-content" slot="dropdown-content">
             <paper-item>1</paper-item>
             <paper-item>2</paper-item>
             <paper-item>3</paper-item>
@@ -147,12 +150,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <h3>Styling and positioning</h3>
   <demo-snippet>
     <template>
-      <custom-style><style is="custom-style">
+      <style>
         paper-dialog.colored {
           border: 2px solid;
-          border-color: var(--paper-green-500);
-          background-color: var(--paper-light-green-50);
-          color: var(--paper-green-500);
+          border-color: #4caf50;
+          background-color: #f1f8e9;
+          color: #4caf50;
         }
 
         paper-dialog.size-position {
@@ -163,7 +166,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           height: 300px;
           overflow: auto;
         }
-      </style></custom-style>
+      </style>
       <paper-button raised onclick="colors.open()">colors</paper-button>
       <paper-button raised onclick="position.open()">size &amp; position</paper-button>
 

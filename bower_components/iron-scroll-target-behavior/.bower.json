@@ -40,11 +40,11 @@
       }
     }
   },
-  "_release": "d9ff86cdd7",
+  "_release": "ea07a153c1",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "d9ff86cdd795334cb8787df095079366ee829f65"
+    "commit": "ea07a153c1cbabcc5376b76fcb2262837efdf1a0"
   },
   "_source": "https://github.com/PolymerElements/iron-scroll-target-behavior.git",
   "_target": "2.0-preview",

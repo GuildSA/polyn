@@ -50,11 +50,11 @@
       }
     }
   },
-  "_release": "6f7c7bc09d",
+  "_release": "9109ec6a08",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "6f7c7bc09d64179921de6b425b9602b4cf9d0136"
+    "commit": "9109ec6a083fb2e78804262e7db93ac7dec7136c"
   },
   "_source": "https://github.com/PolymerElements/iron-input.git",
   "_target": "2.0-preview",

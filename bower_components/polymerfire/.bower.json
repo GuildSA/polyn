@@ -17,7 +17,7 @@
     "/test/"
   ],
   "dependencies": {
-    "polymer": "polymer/polymer#2.0.0-rc.3",
+    "polymer": "polymer/polymer#^2.0.0-rc.3",
     "firebase": ">= 3.5.1 < 4.0",
     "app-storage": "PolymerElements/app-storage#2.0-preview"
   },
@@ -42,11 +42,11 @@
       }
     }
   },
-  "_release": "43edcbc5d0",
+  "_release": "af8b1e6786",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "43edcbc5d05d4df91873e0c956f7d553c47d8813"
+    "commit": "af8b1e678698d4ff433dcb9b1f23ba6faa53404c"
   },
   "_source": "https://github.com/firebase/polymerfire.git",
   "_target": "2.0-preview",
