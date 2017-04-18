@@ -1,0 +1,138 @@
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="backendless-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+    </style>
+
+    <div class="card">
+      <h1>Backendless Test</h1>
+    </div>
+
+    <paper-input style="width:20em" id="email" label="Email"></paper-input>
+    <paper-input style="width:20em" id="password" label="Password"></paper-input>
+    <paper-button on-tap="onTapLogin" raised>Login</paper-button>
+    <paper-button on-tap="onTapLogout" raised>Logout</paper-button>
+
+    <br><br>
+
+    <paper-button on-tap="onTapListVenues" raised>List Venues</paper-button>
+
+    <dom-repeat items="[[venues]]" as="venue">
+        <template>
+            <div class="card">
+                <p>[[venue.title]]</p>
+            </div>
+        </template>
+    </dom-repeat>
+
+  </template>
+
+  <script>
+    class BackendlessView extends Polymer.Element {
+      static get is() { return 'backendless-view'; }
+
+      static get properties() {
+        return {
+          userToken: {
+            type: String
+          }
+        };
+      }
+
+      ready() {
+        super.ready()
+
+        this.venues = [];
+      }
+
+      addVenue(venue) {
+          this.push('venues', venue);
+      }
+
+      removeVenue(venue) {
+          var index = this.venues.indexOf(venue);
+          this.splice('venues', index, 1);
+      }
+
+      onTapLogin() {
+
+          console.log("onTapLoginhandler called!");
+          console.log("email: " + this.$.email.value);
+          console.log("password: " + this.$.password.value);
+
+          function userLoggedIn(user) {
+              console.log( "user has logged in" );
+          }
+
+          function gotError(err) {
+              console.log( "error message - " + err.message );
+              console.log( "error code - " + err.statusCode );
+          }
+
+          Backendless.UserService.login(this.$.email.value, this.$.password.value, true, new Backendless.Async(userLoggedIn, gotError));
+      }
+
+      onTapLogout() {
+
+          console.log("onTapLogout called!");
+
+          function onLogoutSuccess(user) {
+              console.log( "user has logged out" );
+          }
+
+          function onLogoutError(err) {
+              console.log( "error message - " + err.message );
+              console.log( "error code - " + err.statusCode );
+          }
+
+          Backendless.UserService.logout(new Backendless.Async(onLogoutSuccess, onLogoutError));
+      }
+
+      onTapListVenues() {
+
+          var self = this;
+
+          function handleResponse(venues) {
+
+              console.log("Loaded " + venues.data.length + " Venue objects");
+              console.log("Total Venues in the Backendless storage - " + venues.totalObjects);
+           
+              for(var i = 0; i < venues.data.length; i++) {
+                  console.log("Venue name = " + venues.data[i].title);
+
+                  self.addVenue(venues.data[i])
+              }
+          }
+         
+          function handleFault(backendlessFault) {
+
+              console.log( "Server reported an error - ");
+              console.log(backendlessFault.message);
+              console.log(backendlessFault.statusCode);
+          }
+
+          try {
+              var callback = new Backendless.Async(handleResponse, handleFault);
+              Backendless.Persistence.of(Venue).find(callback);
+          } catch(e) {
+              console.log(e.message)
+              throw e.message;
+          } finally{
+              console.log("============ Fetching first page using the ASYNC API ============");
+          }
+      }
+    }
+
+    window.customElements.define(BackendlessView.is, BackendlessView);
+
+  </script>
+</dom-module>

@@ -1,0 +1,32 @@
+{
+  "name": "backendless",
+  "version": "3.1.23",
+  "description": "Backendless JavaScript SDK for Node.js and the browser",
+  "main": "./libs/backendless.js",
+  "scripts": {
+    "test:tsc":"tsc ./tests/tsd.ts",
+    "build": "uglifyjs libs/backendless.js --mangle --source-map libs/backendless.min.map -o libs/backendless.min.js",
+    "update-libs": "git push origin `git subtree split --prefix libs master`:gh-pages --force"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Backendless/JS-SDK"
+  },
+  "bugs": {
+    "url": "http://support.backendless.com",
+    "email": "info@backendless.com"
+  },
+  "keywords": [
+    "cloud",
+    "mobile",
+    "api",
+    "baas",
+    "backendless.com"
+  ],
+  "author": "info@backendless.com",
+  "license": "ISC",
+  "devDependencies": {
+    "uglifyjs": "^2.4.10",
+    "typescript": "^1.8.9"
+  }
+}
