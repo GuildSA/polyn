@@ -45,11 +45,11 @@
       }
     }
   },
-  "_release": "7be5d6e15f",
+  "_release": "4d5ac4b7c8",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "7be5d6e15fab9c5cb66f270e459a68136386bf0d"
+    "commit": "4d5ac4b7c8823300a68a53d9a7e09ee6e70c6484"
   },
   "_source": "https://github.com/PolymerElements/iron-checked-element-behavior.git",
   "_target": "2.0-preview",
