@@ -1,50 +1,6 @@
 
-var APPLICATION_ID = '4BE04D0E-06FB-A8F0-FFB5-63FD97238000';
-var SECRET_KEY = 'A0D27272-DDD7-7525-FF80-C0ECE0BF8D00';
-var VERSION = 'v1';
+var APP_ID = '241AA7F2-D35A-9F48-FF5D-856098C84200';
+var API_KEY = 'D63F3664-C3FD-DEEF-FF12-61E65D799100';
 
-Backendless.initApp(APPLICATION_ID, SECRET_KEY, VERSION);
-
-// var user = new Backendless.User();
-// user.email = "polymer@backendless.com";
-// user.password = "pass";
-// Backendless.UserService.register(user);
-
-function Venue(args) {
-
-    args = args || {};
-
-    this.name = args.objectId || "";
-    this.name = args.venueCode || "";
-    this.name = args.venueItemName || "";
-    this.name = args.logoUrl || "";
-    this.name = args.title || "";
-    this.name = args.subTitle || "";
-    this.name = args.desc || "";
-    this.name = args.address || "";
-    this.name = args.location || null;
-    this.name = args.phone || "";
-    this.name = args.email || "";
-    this.name = args.webUrl || "";
-    this.name = args.geofences || "";
-    this.name = args.extras || "";
-}
-
-function VenueItem(args) {
-
-    args = args || {};
-
-    this.name = args.objectId || "";
-    this.name = args.venueCode || "";
-    this.name = args.logoUrl || "";
-    this.name = args.title || "";
-    this.name = args.subTitle || "";
-    this.name = args.desc || "";
-    this.name = args.address || "";
-    this.name = args.location || null;
-    this.name = args.phone || "";
-    this.name = args.email || "";
-    this.name = args.webUrl || "";
-    this.name = args.geofences || "";
-    this.name = args.extras || "";
-}
+Backendless.serverURL = 'https://api.backendless.com';
+Backendless.initApp(APP_ID, API_KEY);

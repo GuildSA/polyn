@@ -1,33 +1,14 @@
 {
   "name": "backendless",
-  "version": "3.1.23",
   "homepage": "https://github.com/Backendless/JS-SDK",
-  "authors": [
-    "Mark Piller <mark@backendless.com>"
-  ],
-  "main": "./libs/backendless.js",
-  "moduleType": [
-    "amd",
-    "globals"
-  ],
-  "keywords": [
-    "backendless"
-  ],
-  "license": "MIT",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
-  "_release": "3.1.23",
+  "version": "4.0.2-beta",
+  "_release": "4.0.2-beta",
   "_resolution": {
     "type": "version",
-    "tag": "v3.1.23",
-    "commit": "2ff6e0e641f142715fc321dc7514802dd40422d0"
+    "tag": "v4.0.2-beta",
+    "commit": "3f62370d68b51dfed3e7a8491564a3965297a48d"
   },
   "_source": "https://github.com/Backendless/JS-SDK.git",
-  "_target": "^3.1.23",
+  "_target": "^4.0.2-beta",
   "_originalSource": "backendless"
 }

@@ -54,11 +54,11 @@
       }
     }
   },
-  "_release": "9c46ddfaad",
+  "_release": "2992766190",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "9c46ddfaadfaa386d6743cd66802aed390bcef83"
+    "commit": "29927661903103981d95d560b1947afba0ff85a1"
   },
   "_source": "https://github.com/PolymerElements/iron-location.git",
   "_target": "2.0-preview",

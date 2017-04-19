@@ -2,20 +2,17 @@
 
     var APPLICATION_ID = '';
     var SECRET_KEY = '';
-    var VERSION = 'v1';
 
     var DEVICE_ID = 'fileServiceTest';
     var TEST_FOLDER = 'testFolder';
     var files = [];
 
-    if (!APPLICATION_ID || !SECRET_KEY || !VERSION)
-        alert("Missing application ID and secret key arguments. Login to Backendless Console, select your app and get the ID and key from the Manage > App Settings screen. Copy/paste the values into the Backendless.initApp call located in files-example.js");
+    if (!APPLICATION_ID || !SECRET_KEY)
+        alert('Missing application ID or secret key arguments. Login to Backendless Console, select your app and get the ID and key from the Manage > App Settings screen. Copy/paste the values into the Backendless.initApp call located in FilesExample.js');
 
     function init() {
         $('.carousel').carousel({interval: false});
-
-        Backendless.enablePromises();
-        Backendless.initApp(APPLICATION_ID, SECRET_KEY, VERSION);
+        Backendless.initApp(APPLICATION_ID, SECRET_KEY);
 
         initHandlers();
     }
@@ -63,15 +60,33 @@
         return Backendless.Persistence.of(FileItem).remove(id);
     }
 
+    function refreshCounter() {
+        var countContainer = $('#count');
+
+        countContainer.text('loading...');
+
+        Backendless.Persistence.of(FileItem).getObjectCount().then(
+            function (count) {
+                countContainer.text(count);
+            },
+            function(error) {
+                countContainer.text('-');
+                console.error(error);
+            }
+        );
+    }
+
     function onClickFileItem() {
         $(this).toggleClass('selectedThumbnail');
     }
 
     function refreshItemsList() {
-        getItemsFromPersistance().then(function(result) { renderItems(result.data); });
+        getItemsFromPersistance().then(renderItems);
     }
 
     function renderItems(items) {
+        refreshCounter();
+
         $('.thumbnails').empty();
 
         $.each(items, function (index, value) {
@@ -97,20 +112,19 @@
     }
 
     function getItemsFromPersistance() {
-        return Backendless.Persistence.of(FileItem).find().catch(function (e) {
-            alert(e.code == 1009 ? 'Please upload a file first' : e.message || e);
-            return { data: [] };
+        var db = Backendless.Persistence.of(FileItem);
+        var queryBuilder = new Backendless.DataQueryBuilder.create();
+
+        queryBuilder.setWhereClause('deviceId = \'' + DEVICE_ID + '\'');
+
+        return db.find(queryBuilder).catch(function (e) {
+            alert(e.code == 1009 ? 'Please upload a file first' : e.message);
+            return [];
         });
     }
 
     function uploadFile() {
-        if (files.length === 0) {
-            return;
-        }
-
-        $('#upload-btn').text('Uploading...');
-
-        var requests = files.map(function (file) {
+        var requests = files.map(function(file) {
             return Backendless.Files.upload(file, TEST_FOLDER, true).then(
                 function (result) {
                     return createNewItem(result.fileURL);
@@ -119,17 +133,15 @@
         });
 
         Promise.all(requests).then(
-            function () {
+            function(){
                 showInfo('Files successfully uploaded.');
                 files = [];
                 $('#list').empty();
             },
-            function (err) {
-                showInfo(err.message);
+            function(e){
+                showInfo(e.message);
             }
-        ).then(function(){
-            $('#upload-btn').text('Upload File');
-        });
+        );
     }
 
     function deleteSelectedFiles() {
@@ -140,8 +152,6 @@
         }
 
         var removeRequests = [];
-
-        $('#delete-btn').text('Deleting...');
 
         $selectedElements.each(function (index, element) {
             removeRequests.push(Backendless.Files.remove(element.src).then(
@@ -155,12 +165,10 @@
             function () {
                 showInfo('Objects successfully removed.');
             },
-            function (err) {
-                showInfo(err.message)
+            function (e) {
+                showInfo(e.message)
             }
-        ).then(function() {
-            $('#delete-btn').text('Delete Files');
-        });
+        );
     }
 
     function showInfo(text) {
