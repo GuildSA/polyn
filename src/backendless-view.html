@@ -70,7 +70,7 @@
             console.log("password: " + this.$.password.value);
 
             function userRegistered(user) {
-                console.log("user has been registered");
+                console.log("User has been registered!");
             }
 
             function gotError(err) {
@@ -93,7 +93,7 @@
 
             Backendless.UserService.login(this.$.email.value, this.$.password.value, true)
             .then(function(loggedInUser) {
-                console.log("user has logged in");
+                console.log("User has logged in!");
             })
             .catch(function(error) {
                 console.log("error message - " + err.message);
@@ -107,7 +107,7 @@
 
             Backendless.UserService.logout()
             .then(function() {
-                console.log( "user has logged out" );
+                console.log( "User has logged out!" );
             })
             .catch(function(error) {
                 console.log( "error message - " + err.message );
