@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="backendless-view">
@@ -40,6 +41,14 @@
 
     </div>
 
+    <paper-dialog id="errorDialog">
+      <h2>Error</h2>
+      <p id="errorMessage">Error message.</p>
+      <div class="buttons">
+        <paper-button on-tap="onTapOk" dialog-confirm autofocus>OK</paper-button>
+      </div>
+    </paper-dialog>
+
   </template>
 
   <script>
@@ -65,6 +74,8 @@
 
         onTapRegister() {
 
+            var self = this;
+
             console.log("onTapRegister called!");
             console.log("email: " + this.$.email.value);
             console.log("password: " + this.$.password.value);
@@ -76,6 +87,9 @@
             function gotError(err) {
                 console.log("error message - " + err.message);
                 console.log("error code - " + err.statusCode);
+
+                self.$.errorMessage.innerHTML = error.message
+                self.$.errorDialog.toggle();
             }
 
             var user = new Backendless.User();
@@ -87,6 +101,8 @@
 
         onTapLogin() {
 
+            var self = this;
+
             console.log("onTapLoginhandler called!");
             console.log("email: " + this.$.email.value);
             console.log("password: " + this.$.password.value);
@@ -96,12 +112,17 @@
                 console.log("User has logged in!");
             })
             .catch(function(error) {
-                console.log("error message - " + err.message);
-                console.log("error code - " + err.statusCode);
+                console.log("error message - " + error.message);
+                console.log("error code - " + error.statusCode);
+
+                self.$.errorMessage.innerHTML = error.message
+                self.$.errorDialog.toggle();
             });
         }
 
         onTapLogout() {
+
+            var self = this;
 
             console.log("onTapLogout called!");
 
@@ -110,8 +131,11 @@
                 console.log( "User has logged out!" );
             })
             .catch(function(error) {
-                console.log( "error message - " + err.message );
-                console.log( "error code - " + err.statusCode );
+                console.log( "error message - " + error.message );
+                console.log( "error code - " + error.statusCode );
+
+                self.$.errorMessage.innerHTML = error.message
+                self.$.errorDialog.toggle();
             });
         }
 
@@ -127,7 +151,11 @@
                 self.addTestTableEntry(obj)
             } )
             .catch(function(error) {
-                console.log("got error - " + error)
+                console.log("error message - " + error.message);
+                console.log("error code - " + error.statusCode);
+
+                self.$.errorMessage.innerHTML = error.message
+                self.$.errorDialog.toggle();
             })
         }
 
@@ -150,7 +178,11 @@
                 }
             })
             .catch(function(error) {
-                console.log("got error - " + error)
+                console.log("error message - " + error.message);
+                console.log("error code - " + error.statusCode);
+
+                self.$.errorMessage.innerHTML = error.message
+                self.$.errorDialog.toggle();
             });
         }
     }
