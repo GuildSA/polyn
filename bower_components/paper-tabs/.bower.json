@@ -63,11 +63,11 @@
   },
   "ignore": [],
   "homepage": "https://github.com/PolymerElements/paper-tabs",
-  "_release": "b22e865818",
+  "_release": "578db20ec7",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "b22e865818b35fecc7e5ead4bca969efadef6611"
+    "commit": "578db20ec76646868f89c2f3595870ce9d98c124"
   },
   "_source": "https://github.com/PolymerElements/paper-tabs.git",
   "_target": "2.0-preview",

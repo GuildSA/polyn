@@ -42,11 +42,11 @@
     }
   },
   "homepage": "https://github.com/PolymerElements/iron-image",
-  "_release": "5f616d8854",
+  "_release": "8e0460a410",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "5f616d88541dc3d766589bae84b82cc2f2e52068"
+    "commit": "8e0460a4105e021b34451f078a1cf742fb7f5f72"
   },
   "_source": "https://github.com/PolymerElements/iron-image.git",
   "_target": "2.0-preview",

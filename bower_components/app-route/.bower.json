@@ -56,11 +56,11 @@
       }
     }
   },
-  "_release": "fd791f05dd",
+  "_release": "ab796e9ccb",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "fd791f05dd632f51219debca317f5c8a59c807ca"
+    "commit": "ab796e9ccb712fe8b86a35832f19d7ea47d6c2f9"
   },
   "_source": "https://github.com/PolymerElements/app-route.git",
   "_target": "2.0-preview",

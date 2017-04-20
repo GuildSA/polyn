@@ -47,11 +47,11 @@
       }
     }
   },
-  "_release": "a9530a9596",
+  "_release": "df8a099d2a",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "a9530a9596b6eec4403871db51d29fec2274c350"
+    "commit": "df8a099d2a8d1be817b7a0cafaf121b0a772d8be"
   },
   "_source": "https://github.com/PolymerElements/iron-validatable-behavior.git",
   "_target": "2.0-preview",
