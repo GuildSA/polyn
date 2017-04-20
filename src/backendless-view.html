@@ -156,7 +156,7 @@
 
                 self.$.errorMessage.innerHTML = error.message
                 self.$.errorDialog.toggle();
-            })
+            });
         }
 
         onTapGetData() {
@@ -165,7 +165,30 @@
 
             console.log("onTapGetData called!");
 
-            Backendless.Data.of("TestTable").find()
+            // Backendless.Data.of("TestTable").find()
+            // .then(function(result) {
+
+            //     self.testTable = [];
+
+            //     console.log("Loaded " + result.length + " objects!");
+
+            //     for(var i = 0; i < result.length; i++) {
+            //         console.log("objectId = " + result[i].objectId);
+            //         self.addTestTableEntry(result[i])
+            //     }
+            // })
+            // .catch(function(error) {
+            //     console.log("error message - " + error.message);
+            //     console.log("error code - " + error.statusCode);
+
+            //     self.$.errorMessage.innerHTML = error.message
+            //     self.$.errorDialog.toggle();
+            // });
+
+            var queryBuilder = Backendless.DataQueryBuilder.create();
+            queryBuilder.setWhereClause("data LIKE '%Jen%'");
+
+            Backendless.Data.of("TestTable").find(queryBuilder)
             .then(function(result) {
 
                 self.testTable = [];
@@ -176,14 +199,17 @@
                     console.log("objectId = " + result[i].objectId);
                     self.addTestTableEntry(result[i])
                 }
+
             })
             .catch(function(error) {
+
                 console.log("error message - " + error.message);
                 console.log("error code - " + error.statusCode);
 
                 self.$.errorMessage.innerHTML = error.message
                 self.$.errorDialog.toggle();
             });
+
         }
     }
 
