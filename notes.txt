@@ -48,8 +48,11 @@ cat bower_components/iron-pages/.bower.json
  -- Tool Setup --
 
 sudo npm install npm@latest -g
+
 sudo npm install -g bower
-sudo npm install -g polymer-cli@next
+
+OLD WAY -> sudo npm install -g polymer-cli@next
+NEW WAY -> sudo npm i -g polymer-cli
 
 ------------------------------------------------------------------------
 

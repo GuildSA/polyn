@@ -2,7 +2,7 @@
   "name": "webcomponentsjs",
   "description": "Web components polyfill",
   "main": "webcomponents.js",
-  "version": "1.0.0-rc.10",
+  "version": "1.0.0-rc.11",
   "homepage": "http://webcomponents.org",
   "authors": [
     "The Polymer Authors"
@@ -20,7 +20,7 @@
   "license": "BSD-3-Clause",
   "ignore": [],
   "devDependencies": {
-    "web-component-tester": "^v6.0.0-prerelease.9",
+    "web-component-tester": "^v6.0.0-prerelease.10",
     "custom-elements": "webcomponents/custom-elements#^v1.0.0-rc.1",
     "es6-promise": "stefanpenner/es6-promise#^4.0.0",
     "html-imports": "webcomponents/html-imports#^v1.0.0-rc.2",
@@ -29,13 +29,13 @@
     "template": "webcomponents/template#^v1.0.0-rc.1",
     "webcomponents-platform": "webcomponents/webcomponents-platform#^v1.0.0-rc.1"
   },
-  "_release": "1.0.0-rc.10",
+  "_release": "1.0.0-rc.11",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.0-rc.10",
-    "commit": "1985dc773651acaa16d9d4f31aab78f46e33aab1"
+    "tag": "v1.0.0-rc.11",
+    "commit": "390737cf4004425a48c03158dc96232f5d7967f7"
   },
   "_source": "https://github.com/webcomponents/webcomponentsjs.git",
-  "_target": "^1.0.0-rc.10",
+  "_target": "^1.0.0-rc.11",
   "_originalSource": "webcomponents/webcomponentsjs"
 }

@@ -2,7 +2,7 @@
   "name": "webcomponentsjs",
   "description": "Web components polyfill",
   "main": "webcomponents.js",
-  "version": "1.0.0-rc.10",
+  "version": "1.0.0-rc.11",
   "homepage": "http://webcomponents.org",
   "authors": [
     "The Polymer Authors"
@@ -20,7 +20,7 @@
   "license": "BSD-3-Clause",
   "ignore": [],
   "devDependencies": {
-    "web-component-tester": "^v6.0.0-prerelease.9",
+    "web-component-tester": "^v6.0.0-prerelease.10",
     "custom-elements": "webcomponents/custom-elements#^v1.0.0-rc.1",
     "es6-promise": "stefanpenner/es6-promise#^4.0.0",
     "html-imports": "webcomponents/html-imports#^v1.0.0-rc.2",
