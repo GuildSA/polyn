@@ -1,0 +1,117 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/neon-animation/web-animations.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
+
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="animation-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+        background-color: lightblue;
+      }
+
+    </style>
+
+    <div class="card">
+      <h1>Neon Animation Test</h1>
+    </div>
+
+  </template>
+
+  <script>
+
+    class AnimationView extends Polymer.mixinBehaviors([
+        Polymer.NeonAnimatableBehavior,
+        Polymer.NeonAnimationRunnerBehavior
+      ], Polymer.Element) {
+
+      static get is() { return 'animation-view'; }
+
+      static get properties() {
+        return {
+
+          opened: {
+            type: Boolean
+          },
+
+          animationConfig: {
+            value: function() {
+              return {
+                'entry': {
+                  // Provided by neon-animation/animations/scale-up-animation.html
+                  name: 'scale-up-animation',
+                  node: this,
+                  timing: {delay: 500}
+                },
+                'exit': {
+                  // Provided by neon-animation/animations/fade-out-animation.html
+                  name: 'fade-out-animation',
+                  node: this
+                }
+              }
+            }
+          }
+
+        };
+      }
+
+      constructor() {
+          super()
+
+        console.log("constructor called!")
+
+          this.addEventListener('neon-animation-finish', e => this._onNeonAnimationFinish(e));
+      }
+
+      ready() {
+          super.ready();
+
+          console.log("ready called!")
+
+          // When possible, use afterNextRender to defer non-critical
+          // work until after first paint.
+          Polymer.RenderStatus.afterNextRender(this, function() {
+              console.log("afterNextRender called!")
+          });
+      }
+
+      attached() {
+          console.log("attached called!")
+
+          this.opened = true;
+          //this.style.display = 'inline-block';
+
+          // run scale-up-animation
+          this.playAnimation('entry');
+      }
+
+      detached() {
+          console.log("detached called!")
+
+          this.opened = false;
+          
+          // run fade-out-animation
+          this.playAnimation('exit');
+      }
+
+      attributeChanged() {
+          console.log("attributeChanged called!")
+      }
+
+      _onNeonAnimationFinish() {
+
+          console.log("_onNeonAnimationFinish called!")
+
+          if (!this.opened) {
+            this.style.display = 'none';
+          }
+      }
+    }
+
+    window.customElements.define(AnimationView.is, AnimationView);
+
+  </script>
+</dom-module>

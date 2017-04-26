@@ -28,6 +28,8 @@ firebase deploy
 
 bower install --save PolymerElements/iron-image#2.0-preview
 bower install --save polymerfire#2.0-preview
+bower install --save PolymerElements/neon-animation#2.0-preview
+bower install --save web-animations-js
 
 npm outdated
 npm update
