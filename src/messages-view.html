@@ -19,32 +19,27 @@
     <firebase-query
         id="query"
         app-name="goodz-app"
-        path="/notes/[[user.uid]]"
-        data="{{notes}}">
+        path="/users/[[user.uid]]/chats"
+        data="{{chats}}">
     </firebase-query>
 
     <app-indexeddb-mirror
         session="[[user.uid]]"
-        key="notes"
-        data="{{notes}}"
-        persisted-data="{{persistedNotes}}">
+        key="chats"
+        data="{{chats}}"
+        persisted-data="{{persistedChats}}">
     </app-indexeddb-mirror>
 
-    <dom-repeat items="[[persistedNotes]]" as="note">
+    <dom-repeat items="[[persistedChats]]" as="chat">
         <template>
             <div class="card" on-tap="tappedCard">
-                <p>[[note.title]]</p>
-                <p>[[note.body]]</p>
+                <p>subject: [[chat.subject]]</p>
+                <p>buyer: [[chat.buyer]]</p>
+                <p>seller: [[chat.seller]]</p>
+                <p>chatId: [[chat.chatId]]</p>
             </div>
         </template>
     </dom-repeat>
-
-    <!--<div class="card">
-      <div class="circle">3</div>
-      <h1>Messages</h1>
-      <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
-    </div>-->
 
   </template>
 

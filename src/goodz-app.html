@@ -1,4 +1,3 @@
-
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
@@ -95,12 +94,7 @@
           <app-toolbar>
             <paper-icon-button icon="custom-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>Goodz!</div>
-
-            <!--This only works if the dialog is in index.html. Why?-->
-            <!--<paper-icon-button raised onclick="simpleDialog.open()" icon="search"></paper-icon-button>-->
-
             <paper-icon-button on-tap="onTapSearch" icon="search"></paper-icon-button>
-
           </app-toolbar>
 
             <paper-tabs selected="0" sticky>
@@ -132,10 +126,6 @@
 
       </app-header-layout>
     </app-drawer-layout>
-
-    <!--<footer style="position:fixed;bottom:0">
-    Test Test Test
-    </footer>-->
 
     <paper-dialog id="testDialog" modal>
       <h2>Test Dialog</h2>
