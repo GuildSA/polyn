@@ -61,11 +61,11 @@
   },
   "ignore": [],
   "private": true,
-  "_release": "c298d0399e",
+  "_release": "1339cd831d",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "c298d0399ec2f63b971ae8f475def0114e2484e6"
+    "commit": "1339cd831d05b91f6a2e90b3a6c4005b077b0969"
   },
   "_source": "https://github.com/PolymerElements/app-layout.git",
   "_target": "2.0-preview",
