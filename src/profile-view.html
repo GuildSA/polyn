@@ -59,25 +59,25 @@
      <div class="card">
       <div class="column-layout">
 
-          <template is="dom-if" if="[[user.isAnonymous]]">
-              <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="./images/profile_placeholder.png"></iron-image>
+          <template is="dom-if" if="[[isAnonymous]]">
+              <iron-image sizing="contain" id="profile-image" alt="Anonymous Profile Image." src="./images/anonymous_profile.png"></iron-image>
           </template>
 
-          <template is="dom-if" if="[[!user.isAnonymous]]">
+          <template is="dom-if" if="[[!isAnonymous]]">
               <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="[[photoURL]]"></iron-image>
           </template>
 
-          <template is="dom-if" if="[[!user.isAnonymous]]">
+          <template is="dom-if" if="[[!isAnonymous]]">
             <div class="center">
-              <h1>Welcome [[user.displayName]]</h1>
+              <h1>Welcome [[displayName]]</h1>
             </div>
           </template>
 
-          <template is="dom-if" if="[[user.isAnonymous]]">
+          <template is="dom-if" if="[[isAnonymous]]">
             <paper-button class="custom signout" on-tap="login" raised>Sign In</paper-button>
           </template>
 
-          <template is="dom-if" if="[[!user.isAnonymous]]">
+          <template is="dom-if" if="[[!isAnonymous]]">
             <paper-button class="custom signout" on-tap="logout" raised>Sign Out</paper-button>
           </template>
       <div>
@@ -92,15 +92,23 @@
       static get properties() {
         return {
 
-photoURL: {
-  type: Object
-},
+            isAnonymous: {
+              type: String,
+              value: true
+            },
+            photoURL: {
+              type: String
+            },
+            displayName: {
+              type: String
+            },
 
             signedIn: {
               type: Object
             },
             user: {
-                type: Object
+                type: Object,
+                observer: '_userChanged'
             },
             statusKnown:{
                 type: Object
@@ -128,47 +136,80 @@ photoURL: {
         console.log("disconnectedCallback called!");
       }
 
+      _userChanged(user) {
+
+        console.log("_userChanged called!");
+
+        console.log("user: " + JSON.stringify(user, null, 4));
+
+        if(user != null) {
+
+            console.log("user.isAnonymous: " + this.user.isAnonymous);
+
+            if(user.isAnonymous == false) {
+
+              console.log("user.providerData: " + user.providerData);
+              console.log("user.providerData: " + JSON.stringify(user.providerData, null, 4));
+              console.log("user.providerData[0].photoURL: " + user.providerData[0].photoURL);
+
+              this.displayName = user.providerData[0].displayName;
+              this.photoURL = user.providerData[0].photoURL;
+            }           
+
+            this.isAnonymous = user.isAnonymous;
+
+        } else {
+
+            this.displayName = "";
+            this.photoURL = "";
+            this.isAnonymous = true;
+        }
+      }
+
       _linkGoogleAccount() {
+
+          console.log("_linkGoogleAccount called!");
 
           var provider = new firebase.auth.GoogleAuthProvider();
           var that = this;
 
           this.user.linkWithPopup(provider).then(function(result) {
-              console.log(result);
+              console.log("linkWithPopup result: " + JSON.stringify(result, null, 4));
 
-///////that.photoURL = that.user.providerData[0].photoURL;
+// TODO: These don't trigger a refresh like they should!
+              //that.notifyPath('user', that.user)
+              //that.set("user", result.user);
+// HACK:
+              that.user = result.user
+              that._userChanged(result.user)
 
           }, function(error) {
-              console.log(error);
+              console.log("linkWithPopup error: " + error);
           }); 
       }
 
       login() {
 
-console.log("signedIn: " + this.signedIn);
-console.log("user: " + JSON.stringify(this.user, null, 4));
-console.log("statusKnown: " + this.statusKnown);
+        console.log("_linkGloginoogleAccount called!");
 
-          if(this.user == null) {
+        if(this.user == null) {
 
-console.log("signInWithPopup");
+          console.log("signInWithPopup");
+          return this.$.auth.signInWithPopup();
 
-              return this.$.auth.signInWithPopup();
+        } else if(this.user.isAnonymous == true) {
 
-          } else {
+          console.log("Calling _linkGoogleAccount");
+          this._linkGoogleAccount();
 
-console.log("_linkGoogleAccount");
+        } else {
 
-            this._linkGoogleAccount()
-          }
+          console.log("Already logged into an account!");
+        }
       }
       
       logout() {
-
-console.log("signedIn: " + this.signedIn);
-console.log("user: " + JSON.stringify(this.user, null, 4));
-console.log("statusKnown: " + this.statusKnown);
-
+          console.log("logout called!");
           return this.$.auth.signOut();
       }
     }

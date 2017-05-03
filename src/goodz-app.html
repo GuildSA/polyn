@@ -190,23 +190,23 @@
       checkForAnonymousSignIn() {
 
         if(this.signedIn == false) {
-            console.log("Signing IN Anonymously");
+            console.log("!!! Signing IN Anonymously !!!");
             this.$.auth.signInAnonymously()
         } else {
-            console.log("Already Signed IN!");
 
-console.log("signedIn: " + this.signedIn);
-console.log("user: " + JSON.stringify(this.user, null, 4));
-console.log("statusKnown: " + this.statusKnown);
+            console.log("signedIn: " + this.signedIn);
+            console.log("user: " + JSON.stringify(this.user, null, 4));
+            console.log("statusKnown: " + this.statusKnown);
 
+            console.log("!!! Already Signed IN !!!");
         }
       }
 
       onTapHomeTab() {
 
         this.checkForAnonymousSignIn()
-//this.$.auth.signOut()
-
+        //this.$.auth.signOut()
+        
         this.page = 'home-view';
       }
 
@@ -258,11 +258,9 @@ console.log("statusKnown: " + this.statusKnown);
       _pageChanged(page) {
         // Load page import on demand. Show 404 page if fails
 
-console.log("page = " + page)
-
+        //console.log("page = " + page)
         var resolvedPageUrl = this.resolveUrl(page + '.html');
-
-console.log("resolvedPageUrl = " + resolvedPageUrl)
+        //console.log("resolvedPageUrl = " + resolvedPageUrl)
 
         Polymer.importHref(
             resolvedPageUrl,
