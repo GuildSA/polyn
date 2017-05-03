@@ -16,6 +16,7 @@
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="custom-icons.html">
 
 <dom-module id="goodz-app">
@@ -65,6 +66,15 @@
 
     </style>
 
+    <firebase-auth
+        id="auth"
+        app-name="goodz-app"
+        signed-in="{{signedIn}}"
+        user="{{user}}"
+        status-known="{{statusKnown}}"
+        on-error="handleError">
+    </firebase-auth>
+    
     <app-location route="{{route}}"></app-location>
     <app-route
         route="{{route}}"
@@ -150,6 +160,15 @@
             reflectToAttribute: true,
             observer: '_pageChanged',
           },
+          signedIn: {
+              type: Object
+            },
+            user: {
+                type: Object
+            },
+            statusKnown:{
+                type: Object
+            }
         };
       }
 
@@ -159,7 +178,35 @@
         ];
       }
 
+      handleError(e, err) {
+          alert(err);
+      }
+
+      // ready() {
+      //     super.ready();
+      //     console.log("ready called!")
+      // }
+
+      checkForAnonymousSignIn() {
+
+        if(this.signedIn == false) {
+            console.log("Signing IN Anonymously");
+            this.$.auth.signInAnonymously()
+        } else {
+            console.log("Already Signed IN!");
+
+console.log("signedIn: " + this.signedIn);
+console.log("user: " + JSON.stringify(this.user, null, 4));
+console.log("statusKnown: " + this.statusKnown);
+
+        }
+      }
+
       onTapHomeTab() {
+
+        this.checkForAnonymousSignIn()
+//this.$.auth.signOut()
+
         this.page = 'home-view';
       }
 
@@ -211,7 +258,11 @@
       _pageChanged(page) {
         // Load page import on demand. Show 404 page if fails
 
+console.log("page = " + page)
+
         var resolvedPageUrl = this.resolveUrl(page + '.html');
+
+console.log("resolvedPageUrl = " + resolvedPageUrl)
 
         Polymer.importHref(
             resolvedPageUrl,

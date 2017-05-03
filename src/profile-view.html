@@ -49,6 +49,7 @@
     <firebase-auth
         id="auth"
         app-name="goodz-app"
+        signed-in="{{signedIn}}"
         user="{{user}}"
         status-known="{{statusKnown}}"
         provider="google"
@@ -58,16 +59,27 @@
      <div class="card">
       <div class="column-layout">
 
-          <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="./images/profile_test_image.png"></iron-image>
+          <template is="dom-if" if="[[user.isAnonymous]]">
+              <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="./images/profile_placeholder.png"></iron-image>
+          </template>
 
-          <template is="dom-if" if="[[user]]">
+          <template is="dom-if" if="[[!user.isAnonymous]]">
+              <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="[[photoURL]]"></iron-image>
+          </template>
+
+          <template is="dom-if" if="[[!user.isAnonymous]]">
             <div class="center">
               <h1>Welcome [[user.displayName]]</h1>
             </div>
           </template>
 
-          <paper-button class="custom signout" on-tap="login" hidden$="[[user]]" raised>Sign In</paper-button>
-          <paper-button class="custom signout" on-tap="logout" hidden$="[[!user]]" raised>Sign Out</paper-button>
+          <template is="dom-if" if="[[user.isAnonymous]]">
+            <paper-button class="custom signout" on-tap="login" raised>Sign In</paper-button>
+          </template>
+
+          <template is="dom-if" if="[[!user.isAnonymous]]">
+            <paper-button class="custom signout" on-tap="logout" raised>Sign Out</paper-button>
+          </template>
       <div>
     </div>
 
@@ -79,6 +91,14 @@
 
       static get properties() {
         return {
+
+photoURL: {
+  type: Object
+},
+
+            signedIn: {
+              type: Object
+            },
             user: {
                 type: Object
             },
@@ -92,31 +112,63 @@
           alert(err);
       }
 
-//http://stackoverflow.com/questions/31518237/getting-email-address-from-polymer-firebase-auth-element-with-google-authenticat
-//       // Currently supported providers are 'google', 'facebook', 'github', 'twitter'
-//       loginUsingProvider(name) {
-//           var provider = this.$.auth._providerFromName(name);
-//           // Twitter simple login doesn't have scopes.
-//           if(name != 'google') {
-//               provider.addScope('email');
-//           }
-//           this.$.auth.signInWithPopup(provider)
-//               .then(function(response) {
-//                   // success
-//                   return true
-//               }, function(error) {
-//                   // failure
-//               })
-//               .catch(function(exception) {
-//                   // Exception 
-//               });
-//       }
+      ready() {
+          super.ready();
+          console.log("ready called!");
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        console.log("connectedCallback called!");
+      }
+
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        console.log("disconnectedCallback called!");
+      }
+
+      _linkGoogleAccount() {
+
+          var provider = new firebase.auth.GoogleAuthProvider();
+          var that = this;
+
+          this.user.linkWithPopup(provider).then(function(result) {
+              console.log(result);
+
+///////that.photoURL = that.user.providerData[0].photoURL;
+
+          }, function(error) {
+              console.log(error);
+          }); 
+      }
 
       login() {
-          return this.$.auth.signInWithPopup();
+
+console.log("signedIn: " + this.signedIn);
+console.log("user: " + JSON.stringify(this.user, null, 4));
+console.log("statusKnown: " + this.statusKnown);
+
+          if(this.user == null) {
+
+console.log("signInWithPopup");
+
+              return this.$.auth.signInWithPopup();
+
+          } else {
+
+console.log("_linkGoogleAccount");
+
+            this._linkGoogleAccount()
+          }
       }
       
       logout() {
+
+console.log("signedIn: " + this.signedIn);
+console.log("user: " + JSON.stringify(this.user, null, 4));
+console.log("statusKnown: " + this.statusKnown);
+
           return this.$.auth.signOut();
       }
     }
