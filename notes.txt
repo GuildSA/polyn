@@ -1,5 +1,23 @@
 
 
+https://css-tricks.com/the-difference-between-throttling-and-debouncing/
+
+https://www.captaincodeman.com/2017/04/06/tips-upgrading-polymer-2-0-imports-hybrid-mode
+
+
+Hello! Anybody knows how I can find dynamically created dom nodes 
+(via "dom-if") inside my component? They are not attached to 
+"this.$" via their ID and the way I found recommended somewhere 
+on stack exchange ("this.$$('#ID')") doesn't work since "this.$$" 
+is not defined. I also tried this.querySelector('#ID') to no avail.
+
+
+If I recall correctly, it's `this.shadowRoot.querySelector`
+
+
+------------------------------------------------------------------------
+
+
 
 
 I did the step below in Firebase for Goodz! so I could run the app using 
@@ -30,6 +48,8 @@ bower install --save PolymerElements/iron-image#2.0-preview
 bower install --save polymerfire#2.0-preview
 bower install --save PolymerElements/neon-animation#2.0-preview
 bower install --save web-animations-js
+
+bower install --save PolymerElements/iron-signals#2.0-preview   ??????
 
 npm outdated
 npm update
