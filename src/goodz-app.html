@@ -104,12 +104,8 @@
           <app-toolbar>
             <paper-icon-button icon="custom-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>Goodz!</div>
-
-<!--<paper-input id="searchInput" label="Search..." on-value-changed="_onValueChanged"></paper-input>-->
-<paper-input id="searchInput" label="Search..." value="{{searchText}}"></paper-input>
-
-            <paper-icon-button on-tap="_onTapSearch" icon="search"></paper-icon-button>
-            <!--<paper-icon-button id="searchBtn" icon="search"></paper-icon-button>-->
+            <paper-input id="searchInput" label="Search..." value="{{searchText}}"></paper-input>
+            <paper-icon-button on-tap="_onTapSearchIconBtn" icon="search"></paper-icon-button>
           </app-toolbar>
 
             <paper-tabs selected="0" sticky>
@@ -133,7 +129,7 @@
           <requests-view name="requests-view"></requests-view>
           <messages-view name="messages-view"></messages-view>
           <profile-view name="profile-view"></profile-view>
-<backendless-view id="backendlessView" name="backendless-view"></backendless-view>
+          <backendless-view id="backendlessView" name="backendless-view"></backendless-view>
           <pages-view name="pages-view"></pages-view>
           <animation-view name="animation-view"></animation-view>
           <error404-view name="error404-view"></error404-view>
@@ -142,12 +138,13 @@
       </app-header-layout>
     </app-drawer-layout>
 
-    <paper-dialog id="testDialog" modal>
-      <h2>Test Dialog</h2>
-      <p>This is a test to get some text out of an input.</p>
-      <paper-input id="someInput" label="Type something..." value="{{someInputValue}}"></paper-input>
+    <paper-dialog id="searchDialog" modal>
+      <h2>Search</h2>
+      <p>What would you like to search for?</p>
+      <paper-input label="Search..." value="{{searchDialogValue}}"></paper-input>
       <div class="buttons">
-        <paper-button on-tap="_onTapOk" dialog-confirm autofocus>OK</paper-button>
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button on-tap="_onTapSearchDialogBtn" dialog-confirm autofocus>Search</paper-button>
       </div>
     </paper-dialog>
 
@@ -235,24 +232,23 @@
       _searchTextChanged() {
         console.log("GoodzApp._searchTextChanged: " + this.$.searchInput.value);
 
-        // If the search text changes, let the BackendlessView know about it!
-        this.$.backendlessView.searchText = this.$.searchInput.value;
+        // if the BackendlessView is current and the search text changes - pass it on!
+        if(this.page == "backendless-view") {
+          this.$.backendlessView.searchText = this.$.searchInput.value;
+        }
       }
 
-      _onTapSearch() {
-
-        //alert('You tapped on the search button!');
-        this.$.testDialog.toggle();
+      _onTapSearchIconBtn() {
+        this.$.searchDialog.toggle();
       }
 
-      _onTapOk() {
+      _onTapSearchDialogBtn() {
+        console.log("GoodzApp._onTapSearchDialogBtn: " + this.$.searchInput.value);
 
-        alert("You typed: '" + this.someInputValue + "'");
-
-        // Delay the alert for 1 second.
-        // setTimeout(function() {
-        //   alert("You typed: '" + this.someInputValue + "'")
-        //   }, 1000);
+        // if the BackendlessView is current and the search text changes - pass it on!
+        if(this.page == "backendless-view") {
+          this.$.backendlessView.searchText = this.searchDialogValue;
+        }
       }
 
       _routePageChanged(page) {

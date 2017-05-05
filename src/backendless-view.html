@@ -15,18 +15,7 @@
     </style>
 
     <div class="card">
-      <h1>Backendless Test</h1>
-    </div>
-
-    <div class="card">
-        <paper-input id="email" label="Email"></paper-input>
-        <paper-input id="password" label="Password"></paper-input>
-        <paper-button on-tap="_onTapRegister" raised>Register</paper-button>
-        <paper-button on-tap="_onTapLogin" raised>Login</paper-button>
-        <paper-button on-tap="_onTapLogout" raised>Logout</paper-button>
-    </div>
-
-    <div class="card">
+      <h1>Backendless Data Test</h1>
 
         <paper-button on-tap="_onTapCreateData" raised>Create Data</paper-button>
         <paper-button on-tap="_onTapGetData" raised>Get Data</paper-button>
@@ -41,9 +30,19 @@
 
     </div>
 
+    <div class="card">
+        <h1>Backendless Login Test</h1>
+
+        <paper-input id="email" label="Email"></paper-input>
+        <paper-input id="password" label="Password"></paper-input>
+        <paper-button on-tap="_onTapRegister" raised>Register</paper-button>
+        <paper-button on-tap="_onTapLogin" raised>Login</paper-button>
+        <paper-button on-tap="_onTapLogout" raised>Logout</paper-button>
+    </div>
+
     <paper-dialog id="errorDialog">
       <h2>Error</h2>
-      <p id="errorMessage">Error message.</p>
+      <p id="errorMessage"></p>
       <div class="buttons">
         <paper-button dialog-confirm autofocus>OK</paper-button>
       </div>
@@ -74,7 +73,7 @@
             super.ready();
             this.testTable = [];
         }
-        
+
         _searchTextChanged() {
             console.log("BackendlessView._searchTextChanged: " + this.searchText);
 
@@ -83,7 +82,7 @@
         }
 
         _addTestTableEntry(testTableEntry) {
-            console.log("BackendlessView._addTestTableEntry");
+            console.log("BackendlessView._addTestTableEntry: " + testTableEntry.objectId);
 
             this.push('testTable', testTableEntry);
         }
@@ -179,26 +178,6 @@
 
             var self = this;
 
-            // Backendless.Data.of("TestTable").find()
-            // .then(function(result) {
-
-            //     self.testTable = [];
-
-            //     console.log("Loaded " + result.length + " objects!");
-
-            //     for(var i = 0; i < result.length; i++) {
-            //         console.log("objectId = " + result[i].objectId);
-            //         self.addTestTableEntry(result[i])
-            //     }
-            // })
-            // .catch(function(error) {
-            //     console.log("error message - " + error.message);
-            //     console.log("error code - " + error.statusCode);
-
-            //     self.$.errorMessage.innerHTML = error.message
-            //     self.$.errorDialog.toggle();
-            // });
-
             var queryBuilder = Backendless.DataQueryBuilder.create();
 
             if(this.searchText) {
@@ -213,7 +192,7 @@
                 console.log("  Loaded " + result.length + " objects!");
 
                 for(var i = 0; i < result.length; i++) {
-                    console.log("  objectId = " + result[i].objectId);
+                    //console.log("  objectId = " + result[i].objectId);
                     self._addTestTableEntry(result[i])
                 }
 

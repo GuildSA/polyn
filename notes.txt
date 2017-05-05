@@ -1,36 +1,24 @@
 
+------------------------------------------------------------------------
+
+ -- Research Links -- 
 
 https://css-tricks.com/the-difference-between-throttling-and-debouncing/
 
 https://www.captaincodeman.com/2017/04/06/tips-upgrading-polymer-2-0-imports-hybrid-mode
 
-
-Hello! Anybody knows how I can find dynamically created dom nodes 
-(via "dom-if") inside my component? They are not attached to 
-"this.$" via their ID and the way I found recommended somewhere 
-on stack exchange ("this.$$('#ID')") doesn't work since "this.$$" 
-is not defined. I also tried this.querySelector('#ID') to no avail.
-
-
-If I recall correctly, it's `this.shadowRoot.querySelector`
-
-
 ------------------------------------------------------------------------
 
-
-
-
-I did the step below in Firebase for Goodz! so I could run the app using 
-"polymer serve --open"
+I did the step below in the Firebase Console for Goodz! so I could run
+the app using "polymer serve --open"
 
 Error: This domain (127.0.0.1) is not authorized to run this operation. 
 Add it to the OAuth redirect domains list in the 
 Firebase console -> Auth section -> Sign in method tab.
 
-
 ------------------------------------------------------------------------
 
- -- Misc. --
+ -- Misc. CLI Commands --
 
 polymer serve --open
 
@@ -61,14 +49,41 @@ cat bower_components/iron-pages/.bower.json
 
 ------------------------------------------------------------------------
 
- -- Scraps -- 
+ -- Markup & Code Scraps -- 
 
-    <!--<div class="card">
-      <div class="circle">3</div>
-      <h1>Messages</h1>
-      <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
-    </div>-->
+  <div class="card">
+    <div class="circle">3</div>
+    <h1>Messages</h1>
+    <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
+    <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
+  </div>
+
+
+  // Delay the alert for 1 second.
+  setTimeout(function() {
+    alert("You typed: '" + this.someInputValue + "'")
+  }, 1000);
+
+
+  Backendless.Data.of("TestTable").find()
+  .then(function(result) {
+
+    self.testTable = [];
+
+    console.log("Loaded " + result.length + " objects!");
+
+    for(var i = 0; i < result.length; i++) {
+        console.log("objectId = " + result[i].objectId);
+        self.addTestTableEntry(result[i])
+    }
+  })
+  .catch(function(error) {
+    console.log("error message - " + error.message);
+    console.log("error code - " + error.statusCode);
+
+    self.$.errorMessage.innerHTML = error.message
+    self.$.errorDialog.toggle();
+  });
 
 ------------------------------------------------------------------------
 
