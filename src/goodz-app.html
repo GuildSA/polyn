@@ -72,7 +72,7 @@
         signed-in="{{signedIn}}"
         user="{{user}}"
         status-known="{{statusKnown}}"
-        on-error="handleError">
+        on-error="_handleError">
     </firebase-auth>
     
     <app-location route="{{route}}"></app-location>
@@ -104,7 +104,12 @@
           <app-toolbar>
             <paper-icon-button icon="custom-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>Goodz!</div>
-            <paper-icon-button on-tap="onTapSearch" icon="search"></paper-icon-button>
+
+<!--<paper-input id="searchInput" label="Search..." on-value-changed="_onValueChanged"></paper-input>-->
+<paper-input id="searchInput" label="Search..." value="{{searchText}}"></paper-input>
+
+            <paper-icon-button on-tap="_onTapSearch" icon="search"></paper-icon-button>
+            <!--<paper-icon-button id="searchBtn" icon="search"></paper-icon-button>-->
           </app-toolbar>
 
             <paper-tabs selected="0" sticky>
@@ -128,7 +133,7 @@
           <requests-view name="requests-view"></requests-view>
           <messages-view name="messages-view"></messages-view>
           <profile-view name="profile-view"></profile-view>
-          <backendless-view name="backendless-view"></backendless-view>
+<backendless-view id="backendlessView" name="backendless-view"></backendless-view>
           <pages-view name="pages-view"></pages-view>
           <animation-view name="animation-view"></animation-view>
           <error404-view name="error404-view"></error404-view>
@@ -142,7 +147,7 @@
       <p>This is a test to get some text out of an input.</p>
       <paper-input id="someInput" label="Type something..." value="{{someInputValue}}"></paper-input>
       <div class="buttons">
-        <paper-button on-tap="onTapOk" dialog-confirm autofocus>OK</paper-button>
+        <paper-button on-tap="_onTapOk" dialog-confirm autofocus>OK</paper-button>
       </div>
     </paper-dialog>
 
@@ -160,15 +165,20 @@
             reflectToAttribute: true,
             observer: '_pageChanged',
           },
+          searchText: {
+            type: String,
+            notify: true,
+            observer: '_searchTextChanged'
+          },
           signedIn: {
+            type: Object
+          },
+          user: {
               type: Object
-            },
-            user: {
-                type: Object
-            },
-            statusKnown:{
-                type: Object
-            }
+          },
+          statusKnown:{
+              type: Object
+          }
         };
       }
 
@@ -178,33 +188,33 @@
         ];
       }
 
-      handleError(e, err) {
-          alert(err);
+      _handleError(e, err) {
+        alert(err);
       }
 
-      // ready() {
-      //     super.ready();
-      //     console.log("ready called!")
-      // }
+      ready() {
+        super.ready();
+        console.log("GoodzApp.ready")
+      }
 
-      checkForAnonymousSignIn() {
+      _checkForAnonymousSignIn() {
+
+        console.log("GoodzApp._checkForAnonymousSignIn")
 
         if(this.signedIn == false) {
-            console.log("!!! Signing IN Anonymously !!!");
-            this.$.auth.signInAnonymously()
+          console.log("!!! Signing IN Anonymously !!!");
+          this.$.auth.signInAnonymously();
         } else {
-
-            console.log("signedIn: " + this.signedIn);
-            console.log("user: " + JSON.stringify(this.user, null, 4));
-            console.log("statusKnown: " + this.statusKnown);
-
-            console.log("!!! Already Signed IN !!!");
+          // console.log("signedIn: " + this.signedIn);
+          // console.log("user: " + JSON.stringify(this.user, null, 4));
+          // console.log("statusKnown: " + this.statusKnown);
+          // console.log("!!! Already Signed IN !!!");
         }
       }
 
       onTapHomeTab() {
 
-        this.checkForAnonymousSignIn()
+        this._checkForAnonymousSignIn()
         //this.$.auth.signOut()
         
         this.page = 'home-view';
@@ -222,15 +232,22 @@
         this.page = 'profile-view';
       }
 
-      onTapSearch() {
+      _searchTextChanged() {
+        console.log("GoodzApp._searchTextChanged: " + this.$.searchInput.value);
+
+        // If the search text changes, let the BackendlessView know about it!
+        this.$.backendlessView.searchText = this.$.searchInput.value;
+      }
+
+      _onTapSearch() {
 
         //alert('You tapped on the search button!');
         this.$.testDialog.toggle();
       }
 
-      onTapOk() {
+      _onTapOk() {
 
-        alert("You typed: '" + this.someInputValue + "'")
+        alert("You typed: '" + this.someInputValue + "'");
 
         // Delay the alert for 1 second.
         // setTimeout(function() {
@@ -239,9 +256,12 @@
       }
 
       _routePageChanged(page) {
+
+        console.log("GoodzApp._routePageChanged: " + page);
+
         // Polymer 2.0 will call with `undefined` on initialization.
         // Ignore until we are properly called with a string.
-        if (page === undefined) {
+        if(page === undefined) {
           return;
         }
 
@@ -256,11 +276,12 @@
       }
 
       _pageChanged(page) {
-        // Load page import on demand. Show 404 page if fails
 
-        //console.log("page = " + page)
+        console.log("GoodzApp._pageChanged: " + page);
+
+        // Load page import on demand. Show 404 page if fails
         var resolvedPageUrl = this.resolveUrl(page + '.html');
-        //console.log("resolvedPageUrl = " + resolvedPageUrl)
+        console.log("  resolved URL: " + resolvedPageUrl);
 
         Polymer.importHref(
             resolvedPageUrl,
