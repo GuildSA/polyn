@@ -261,6 +261,12 @@
           return;
         }
 
+        // Polymer 2.0 will also call with `components` for some 
+        // unknown reason, so ignore it as well and redirect to Home.
+        if(page == "components") {
+          page = "home-view"
+        }
+
         // If no page was found in the route data, page will be an empty string.
         // Deault to 'home-view' in that case.
         this.page = page || 'home-view';

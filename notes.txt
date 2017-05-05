@@ -18,6 +18,17 @@ Firebase console -> Auth section -> Sign in method tab.
 
 ------------------------------------------------------------------------
 
+ -- Tool Setup --
+
+sudo npm install npm@latest -g
+
+sudo npm install -g bower
+
+OLD WAY -> sudo npm install -g polymer-cli@next
+NEW WAY -> sudo npm i -g polymer-cli
+
+------------------------------------------------------------------------
+
  -- Misc. CLI Commands --
 
 polymer serve --open
@@ -84,17 +95,6 @@ cat bower_components/iron-pages/.bower.json
     self.$.errorMessage.innerHTML = error.message
     self.$.errorDialog.toggle();
   });
-
-------------------------------------------------------------------------
-
- -- Tool Setup --
-
-sudo npm install npm@latest -g
-
-sudo npm install -g bower
-
-OLD WAY -> sudo npm install -g polymer-cli@next
-NEW WAY -> sudo npm i -g polymer-cli
 
 ------------------------------------------------------------------------
 
