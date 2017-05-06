@@ -70,10 +70,24 @@ cat bower_components/iron-pages/.bower.json
   </div>
 
 
+
   // Delay the alert for 1 second.
   setTimeout(function() {
     alert("You typed: '" + this.someInputValue + "'")
   }, 1000);
+
+
+setTimeout(expression, timeout); runs the code/function once after the timeout.
+
+setInterval(expression, timeout); runs the code/function in intervals, with the length of the timeout between them.
+
+Example:
+
+var intervalID = setInterval(alert, 1000); // Will alert every second.
+// clearInterval(intervalID); // Will clear the timer.
+
+setTimeout(alert, 1000); // Will alert once, after a second.
+
 
 
   Backendless.Data.of("TestTable").find()
