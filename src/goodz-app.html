@@ -17,6 +17,16 @@
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+
+<!--<link rel="import" href="../src/home-view.html">
+<link rel="import" href="../src/requests-view.html">
+<link rel="import" href="../src/backendless-view.html">
+<link rel="import" href="../src/messages-view.html">
+<link rel="import" href="../src/profile-view.html">
+<link rel="import" href="../src/pages-view.html">
+<link rel="import" href="../src/animation-view.html">
+<link rel="import" href="../src/error404-view.html">-->
+
 <link rel="import" href="custom-icons.html">
 
 <dom-module id="goodz-app">
@@ -75,6 +85,16 @@
         on-error="_handleError">
     </firebase-auth>
     
+    <!--
+    <firebase-messaging id="messaging"
+        token="{{token}}"
+        on-message="_onHandleMessage"
+        custom-sw="service-worker.js">
+    </firebase-messaging>
+
+    <firebase-document path="/users/[[user.uid]]/token" data="[[token]]"></firebase-document>
+    -->
+
     <app-location route="{{route}}"></app-location>
     <app-route
         route="{{route}}"
@@ -185,13 +205,34 @@
         ];
       }
 
-      _handleError(e, err) {
-        alert(err);
-      }
-
       ready() {
         super.ready();
         console.log("GoodzApp.ready")
+
+        //this.$.messaging.activate();
+        //this.showNotificationPermission();
+      }
+
+      // showNotificationPermission() {
+
+      //   //const messaging = firebase.messaging();
+      //   //messaging.requestPermission()
+      //   this.$.messaging.requestPermission()
+      //     .then(() => {
+      //       console.log('Notification permission granted.')
+      //     })
+      //     .catch((err) => {
+      //       console.log('Unable to get permission to notify. ', err)
+      //     })
+      // }
+
+      // _onHandleMessage(message) {
+      //   console.log("GoodzApp._onHandleMessage" + message)
+      // }
+
+      _handleError(e, err) {
+        console.log("GoodzApp._handleError")
+        alert(err);
       }
 
       _checkForAnonymousSignIn() {
@@ -211,7 +252,7 @@
 
       onTapHomeTab() {
 
-        this._checkForAnonymousSignIn()
+        this._checkForAnonymousSignIn();
         //this.$.auth.signOut()
         
         this.page = 'home-view';
@@ -222,6 +263,9 @@
       }
 
       onTapMessagesTab() {
+
+        //this.showNotificationPermission();
+
         this.page = 'messages-view';
       }
 
