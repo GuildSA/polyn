@@ -32,7 +32,7 @@
 
     <dom-repeat items="[[persistedChats]]" as="chat">
         <template>
-            <div class="card" on-tap="tappedCard">
+            <div class="card" on-tap="_onTappedCard">
                 <p>subject: [[chat.subject]]</p>
                 <p>buyer: [[chat.buyer]]</p>
                 <p>seller: [[chat.seller]]</p>
@@ -47,7 +47,8 @@
         class MessagesView extends Polymer.Element {
             static get is() { return 'messages-view'; }
 
-            tappedCard(e) {
+            _onTappedCard(e) {
+                console.log("MessagesView._onTappedCard");
 
                 // Which index was clicked?
                 var index = e.model.index;
