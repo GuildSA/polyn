@@ -59,6 +59,11 @@
 
                 // What is the Firebase key for this data?
                 console.info(this.$.query.data[index].$key);
+
+                // Switch to the chat-view and pass the chatMessagesId.
+                var goodzApp = document.getElementById("goodzApp");
+                goodzApp.page = "chat-view";
+                goodzApp.$.ironPages.selectedItem.chatMessagesId = this.$.query.data[index].chatId;
             }
         }
 

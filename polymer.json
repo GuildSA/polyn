@@ -5,6 +5,7 @@
     "src/home-view.html",
     "src/requests-view.html",
     "src/messages-view.html",
+    "src/chat-view.html",
     "src/profile-view.html",
     "src/backendless-view.html",
     "src/pages-view.html",

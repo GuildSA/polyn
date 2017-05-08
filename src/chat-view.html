@@ -1,0 +1,68 @@
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="chat-view">
+    <template>
+    <style include="shared-styles">
+        :host {
+        display: block;
+        padding: 10px;
+        }
+    </style>
+
+    <firebase-auth id="auth" app-name="goodz-app" user="{{user}}"></firebase-auth>
+
+    <firebase-query
+        id="query"
+        app-name="goodz-app"
+        path="/chats/[[chatMessagesId]]"
+        data="{{chatMessages}}">
+    </firebase-query>
+
+    <app-indexeddb-mirror
+        session="[[user.uid]]"
+        key="chats/[[chatMessagesId]]"
+        data="{{chatMessages}}"
+        persisted-data="{{persistedChatMessages}}">
+    </app-indexeddb-mirror>
+
+    <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
+        <template>
+            <div class="card">
+                <p>[[chatMessage.text]]</p>
+            </div>
+        </template>
+    </dom-repeat>
+
+  </template>
+
+    <script>
+        class ChatView extends Polymer.Element {
+            static get is() { return 'chat-view'; }
+
+            static get properties() {
+                return {
+                    chatMessagesId: {
+                        type: String,
+                        observer: '_chatMessagesIdChanged'
+                    }
+                };
+            }
+
+            ready() {
+                super.ready();
+                console.log("ChatView.ready");
+            }
+
+            _chatMessagesIdChanged() {
+                console.log("ChatView._chatMessagesIdChanged: " + this.chatMessagesId);
+            }
+        }
+
+        window.customElements.define(ChatView.is, ChatView);
+    </script>
+</dom-module>
