@@ -214,7 +214,10 @@
         //this.$.messaging.activate();
         //this.showNotificationPermission();
 
-        this.messagesStack = [];
+        // Keep a stack of page views, one for each of our 4 tabs.
+        this.tabViewStacks = [
+          [],[],[],[]
+        ];
       }
 
       // showNotificationPermission() {
@@ -258,62 +261,103 @@
 
         console.log("GoodzApp._onTapToolbarNavBtn")
 
-        if(this.$.toolbarNavBtn.icon == "arrow-back") {
+        var selectedTab = this.$.tabs.selected;
 
-          if(this.page == 'chat-view') {
+        // If the current tab has any views in its stack, we need to do a back pop!
+        if(this.tabViewStacks[selectedTab].length > 0) {
 
-            var popped = this.messagesStack.pop();
-            console.log("  popped = " + popped)
+            var popped = this.tabViewStacks[selectedTab].pop();
+            console.log("  popped = " + popped.tagName.toLowerCase())
 
-            this.page = 'messages-view';
-            this.$.toolbarNavBtn.icon = "custom-icons:menu"
-          }
+            console.log("  length after pop = " + this.tabViewStacks[selectedTab].length);
+
+            if(this.tabViewStacks[selectedTab].length > 0) {
+
+              // If the tab's view stack is NOT empty - restore the next view.
+              var viewName = this.tabViewStacks[selectedTab][this.tabViewStacks[selectedTab].length - 1].tagName.toLowerCase();
+              console.log("  Element view to restore: " + viewName);
+              this.page = viewName;
+
+              this.$.toolbarNavBtn.icon = "arrow-back";
+
+            } else {
+
+              // If the tab's view stack is empty - restore the default view for the tab.
+              if(this.$.tabs.selected == 0) {
+                this.page = 'home-view';
+              } else if(this.$.tabs.selected == 1) {
+                this.page = 'requests-view';
+              } else if(this.$.tabs.selected == 2) {
+                this.page = 'messages-view';
+              } else if(this.$.tabs.selected == 3) {
+                this.page = 'profile-view';
+              }
+
+              this.$.toolbarNavBtn.icon = "custom-icons:menu"
+            }
 
         } else {
+
+          // If there's no view to pop off, so just open the fly out menu!
           this.$.drawer.open();
         }
       }
 
       pushPageOnCurrentTab(page) {
+        console.log("GoodzApp.pushPageViewOnCurrentTab: page = " + page + ", current tab = " + this.$.tabs.selected);
 
-        console.log("GoodzApp.pushPageViewOnCurrentTab: page = " + page + "tab = " + this.$.tabs.selected)
+        this.page = page;
+        this.$.toolbarNavBtn.icon = "arrow-back";
+        this.tabViewStacks[this.$.tabs.selected].push(this.$.ironPages.selectedItem);
 
-        // Messages tab!
-        if(this.$.tabs.selected == 2) {
-          this.page = page;
-          this.$.toolbarNavBtn.icon = "arrow-back";
-          this.messagesStack.push(this.$.ironPages.selectedItem);
-        }
-
-        // Retur the newly slected item or page so we can set some data on it of required.
+        // Return the newly selected item or page so we can set some data on it, of required.
         return this.$.ironPages.selectedItem;
       }
 
       onTapHomeTab() {
+        console.log("GoodzApp.onTapHomeTab: stack size = " + this.tabViewStacks[0].length + ", tab = " + this.$.tabs.selected);
 
+        // Home tab = index 0!
+        if(this.tabViewStacks[0].length > 0) {
+          this.$.toolbarNavBtn.icon = "arrow-back";
+          var viewName = this.tabViewStacks[0][this.tabViewStacks[0].length - 1].tagName.toLowerCase();
+          console.log("  Element view to restore: " + viewName);
+          this.page = viewName;
+        } else {
+          this.$.toolbarNavBtn.icon = "custom-icons:menu";
+          this.page = 'home-view';
+        }
+
+// TODO: We might want to delay the call to _checkForAnonymousSignIn until 
+// we know for sure the user is going to use the app vs just visiting it once.
         this._checkForAnonymousSignIn();
         //this.$.auth.signOut()
-        
-        this.page = 'home-view';
-        this.$.toolbarNavBtn.icon = "custom-icons:menu"
       }
 
       onTapRequestsTab() {
+        console.log("GoodzApp.onTapRequestsTab: stack size = " + this.tabViewStacks[1].length + ", tab = " + this.$.tabs.selected);
 
-        this.page = 'requests-view';
-        this.$.toolbarNavBtn.icon = "custom-icons:menu"
+        // Requests tab = index 1!
+        if(this.tabViewStacks[1].length > 0) {
+          this.$.toolbarNavBtn.icon = "arrow-back";
+          var viewName = this.tabViewStacks[1][this.tabViewStacks[1].length - 1].tagName.toLowerCase();
+          console.log("  Element view to restore: " + viewName);
+          this.page = viewName;
+        } else {
+          this.$.toolbarNavBtn.icon = "custom-icons:menu";
+          this.page = 'requests-view';
+        }
       }
 
       onTapMessagesTab() {
-
-        console.log("GoodzApp.onTapMessagesTab: stack size = " + this.messagesStack.length)
+        console.log("GoodzApp.onTapMessagesTab: stack size = " + this.tabViewStacks[2].length + ", tab = " + this.$.tabs.selected);
 
         //this.showNotificationPermission();
 
-        if(this.messagesStack.length > 0) {
+        // Messages tab = index 2!
+        if(this.tabViewStacks[2].length > 0) {
           this.$.toolbarNavBtn.icon = "arrow-back";
-          //this.page = 'chat-view';
-          var viewName = this.messagesStack[this.messagesStack.length - 1].tagName.toLowerCase();
+          var viewName = this.tabViewStacks[2][this.tabViewStacks[2].length - 1].tagName.toLowerCase();
           console.log("  Element view to restore: " + viewName);
           this.page = viewName;
         } else {
@@ -323,9 +367,18 @@
       }
 
       onTapProfileTab() {
+        console.log("GoodzApp.onTapProfileTab: stack size = " + this.tabViewStacks[3].length + ", tab = " + this.$.tabs.selected);
 
-        this.page = 'profile-view';
-        this.$.toolbarNavBtn.icon = "custom-icons:menu"
+        // Profile tab = index 3!
+        if(this.tabViewStacks[3].length > 0) {
+          this.$.toolbarNavBtn.icon = "arrow-back";
+          var viewName = this.tabViewStacks[3][this.tabViewStacks[3].length - 1].tagName.toLowerCase();
+          console.log("  Element view to restore: " + viewName);
+          this.page = viewName;
+        } else {
+          this.$.toolbarNavBtn.icon = "custom-icons:menu";
+          this.page = 'profile-view';
+        }
       }
 
       _searchTextChanged() {
