@@ -11,12 +11,11 @@
       }
 
       .masonry {
-        column-count: 3; 
+        column-count: 2; 
         column-gap: 1em;
       }
 
       .item {
-        
         transition-timing-function: ease-out;
         transition-duration: .75s;
         background: #eee;
@@ -26,8 +25,8 @@
         width: 100%;
         text-align: center;
       }
-      .item:hover {      
-        
+
+      .item:hover {
         opacity: .55;
       }
 
@@ -35,47 +34,21 @@
         opacity: .75;
       }
     </style>
-    <!-- Home polymer card element 
-    <div class="card">
-      <div class="circle">1</div>
-      <h1>Home</h1>
-      <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
-      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
-    </div>
-    -->
-    <div class="masonry"> 
-      <a href="myfile.htm"><img src ="images/test-images/comic.jpg" class="item"></a>
-      <img src="images/test-images/porcheGT.jpg" class="item">
-      <img src="images/test-images/dog-walker.jpg" class="item">
-      <img src="images/test-images/dark-souls.jpg" class="item">
-      <div class="item"><b>Apple iMac G4</b> - Looking for a apple imac G4 to use as target practice.</div>
-      <img src="images/test-images/peanut.jpg" class="item">
-      <img src="images/test-images/log-cabin.jpg" class="item">
-      <img src="images/test-images/fishing-rod.jpg" class="item">
-      <img src ="images/test-images/comic.jpg" class="item">
-      <img src="images/test-images/porcheGT.jpg" class="item">
-      <img src="images/test-images/dog-walker.jpg" class="item">
-      <img src="images/test-images/dark-souls.jpg" class="item">
-      <div class="item"><b>Apple iMac G4</b> - Looking for a apple imac G4 to use as target practice.</div>
-      <img src="images/test-images/peanut.jpg" class="item">
-      <img src="images/test-images/log-cabin.jpg" class="item">
-      <img src="images/test-images/fishing-rod.jpg" class="item">
-      <img src ="images/test-images/comic.jpg" class="item">
-      <img src="images/test-images/porcheGT.jpg" class="item">
-      <img src="images/test-images/dog-walker.jpg" class="item">
-      <img src="images/test-images/dark-souls.jpg" class="item">
-      <div class="item"><b>Apple iMac G4</b> - Looking for a apple imac G4 to use as target practice.</div>
-      <img src="images/test-images/peanut.jpg" class="item">
-      <img src="images/test-images/log-cabin.jpg" class="item">
-      <img src="images/test-images/fishing-rod.jpg" class="item">
-      <img src ="images/test-images/comic.jpg" class="item">
-      <img src="images/test-images/porcheGT.jpg" class="item">
-      <img src="images/test-images/dog-walker.jpg" class="item">
-      <img src="images/test-images/dark-souls.jpg" class="item">
-      <div class="item"><b>Apple iMac G4</b> - Looking for a apple imac G4 to use as target practice.</div>
-      <img src="images/test-images/peanut.jpg" class="item">
-      <img src="images/test-images/log-cabin.jpg" class="item">
-      <img src="images/test-images/fishing-rod.jpg" class="item">
+
+    <div class="masonry">
+      <img src ="images/test-images/good_records.jpg" class="item" on-click="_onClickBusiness">
+      <img src="images/test-images/spinster_records.jpg" class="item" on-click="_onClickBusiness">
+      <div class="item" on-click="_onClickItem"><b>Pink Floyd</b> - The Wall in sweet, premo condition! $150</div>
+      <img src="images/test-images/halfprice.jpg" class="item" on-click="_onClickBusiness">
+      <img src="images/test-images/groovenet.jpg" class="item" on-click="_onClickBusiness">
+      <div class="item" on-click="_onClickItem"><b>How long...</b> Will it take Andrew to notice my changes?</div>
+      <img src="images/test-images/vinyl_record_blue.jpg" class="item"on-click="_onClickItem">
+      <img src="images/test-images/off_the_record.jpg" class="item" on-click="_onClickBusiness">
+      <img src="images/test-images/vinyl_record_led_zepplin.jpg" class="item" on-click="_onClickItem">
+      <img src="images/test-images/recycled_books.jpg" class="item" on-click="_onClickBusiness">
+      <div class="item" on-click="_onClickItem"><b>Andrew</b> is a slacker! Probably becuase he's afraid of Javascript.</div>
+      <img src ="images/test-images/vinyl_record_red.jpg" class="item"on-click="_onClickItem">
+      <img src="images/test-images/josey_records.jpg" class="item" on-click="_onClickBusiness">
     </div>
 
   </template>
@@ -83,6 +56,18 @@
   <script>
     class HomeView extends Polymer.Element {
       static get is() { return 'home-view'; }
+
+      _onClickBusiness() {
+        var goodzApp = document.getElementById("goodzApp");
+        var businessView = goodzApp.pushPageOnCurrentTab("business-view");
+        businessView.businessId = 1;
+      }
+      
+      _onClickItem() {
+        var goodzApp = document.getElementById("goodzApp");
+        var itemView = goodzApp.pushPageOnCurrentTab("item-view");
+        itemView.itemId = 2;
+      }
     }
 
     window.customElements.define(HomeView.is, HomeView);

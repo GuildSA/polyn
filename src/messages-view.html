@@ -33,10 +33,10 @@
     <dom-repeat items="[[persistedChats]]" as="chat">
         <template>
             <div class="card" on-tap="_onTappedCard">
-                <p>subject: [[chat.subject]]</p>
-                <p>buyer: [[chat.buyer]]</p>
-                <p>seller: [[chat.seller]]</p>
-                <p>chatId: [[chat.chatId]]</p>
+                <p>[[chat.subject]]</p>
+                <!--<p>buyer: [[chat.buyer]]</p>-->
+                <p>Seller: [[chat.seller]]</p>
+                <!--<p>chatId: [[chat.chatId]]</p>-->
             </div>
         </template>
     </dom-repeat>
@@ -60,11 +60,8 @@
                 // What is the Firebase key for this data?
                 console.info(this.$.query.data[index].$key);
 
-                // Switch to the chat-view and pass the chatMessagesId.
+                // Push the chat-view and pass the chatMessagesId.
                 var goodzApp = document.getElementById("goodzApp");
-                // goodzApp.page = "chat-view";
-                // goodzApp.$.toolbarNavBtn.icon = "arrow-back"
-                // goodzApp.$.ironPages.selectedItem.chatMessagesId = this.$.query.data[index].chatId;
                 var chatView = goodzApp.pushPageOnCurrentTab("chat-view");
                 chatView.chatMessagesId = this.$.query.data[index].chatId;
             }

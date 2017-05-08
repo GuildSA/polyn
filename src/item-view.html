@@ -1,0 +1,77 @@
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="item-view">
+    <template>
+    <style include="shared-styles">
+        :host {
+        display: block;
+        padding: 10px;
+        }
+    </style>
+
+    <div class="card">
+        <div class="circle">[[itemId]]</div>
+        <h1>Something for Sale</h1>
+        <p>Put info about the item here.</p>
+        <paper-button raised>Request a Chat</paper-button>
+        <paper-button raised>Learn more About the Seller</paper-button>
+    </div>
+
+    <!--<firebase-auth id="auth" app-name="goodz-app" user="{{user}}"></firebase-auth>
+
+    <firebase-query
+        id="query"
+        app-name="goodz-app"
+        path="/chats/[[chatMessagesId]]"
+        data="{{chatMessages}}">
+    </firebase-query>
+
+    <app-indexeddb-mirror
+        session="[[user.uid]]"
+        key="chats/[[chatMessagesId]]"
+        data="{{chatMessages}}"
+        persisted-data="{{persistedChatMessages}}">
+    </app-indexeddb-mirror>
+
+    <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
+        <template>
+            <div class="card">
+                <p>[[chatMessage.text]]</p>
+            </div>
+        </template>
+    </dom-repeat>-->
+
+  </template>
+
+    <script>
+        class ItemView extends Polymer.Element {
+            static get is() { return 'item-view'; }
+
+            static get properties() {
+                return {
+                    itemId: {
+                        type: String,
+                        observer: '_itemIdChanged'
+                    }
+                };
+            }
+
+            ready() {
+                super.ready();
+                console.log("ItemView.ready");
+            }
+
+            _itemIdChanged() {
+                console.log("ItemView._itemIdChanged: " + this.itemId);
+            }
+        }
+
+        window.customElements.define(ItemView.is, ItemView);
+    </script>
+</dom-module>

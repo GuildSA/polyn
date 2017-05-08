@@ -1,0 +1,84 @@
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="business-view">
+    <template>
+    <style include="shared-styles">
+        :host {
+        display: block;
+        padding: 10px;
+        }
+    </style>
+
+    <div class="card">
+        <div class="circle">[[businessId]]</div>
+        <h1>Some Business</h1>
+        <p>Put info about the business here.</p>
+        <paper-button raised>Request a Chat</paper-button>
+        <p>If they have any listed items for sale... list them below</p>
+        <paper-button on-tap="_onTapItemDetail" raised>Check This Out</paper-button>
+    </div>
+
+    <!--<firebase-auth id="auth" app-name="goodz-app" user="{{user}}"></firebase-auth>
+
+    <firebase-query
+        id="query"
+        app-name="goodz-app"
+        path="/chats/[[chatMessagesId]]"
+        data="{{chatMessages}}">
+    </firebase-query>
+
+    <app-indexeddb-mirror
+        session="[[user.uid]]"
+        key="chats/[[chatMessagesId]]"
+        data="{{chatMessages}}"
+        persisted-data="{{persistedChatMessages}}">
+    </app-indexeddb-mirror>
+
+    <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
+        <template>
+            <div class="card">
+                <p>[[chatMessage.text]]</p>
+            </div>
+        </template>
+    </dom-repeat>-->
+
+  </template>
+
+    <script>
+        class BusinessView extends Polymer.Element {
+            static get is() { return 'business-view'; }
+
+            static get properties() {
+                return {
+                    businessId: {
+                        type: String,
+                        observer: '_businessIdChanged'
+                    }
+                };
+            }
+
+            ready() {
+                super.ready();
+                console.log("BusinessView.ready");
+            }
+
+            _businessIdChanged() {
+                console.log("BusinessView._businessIdChanged: " + this.businessId);
+            }
+
+            _onTapItemDetail() {
+                var goodzApp = document.getElementById("goodzApp");
+                var itemView = goodzApp.pushPageOnCurrentTab("item-view");
+                itemView.itemId = "3";
+            }
+        }
+
+        window.customElements.define(BusinessView.is, BusinessView);
+    </script>
+</dom-module>
