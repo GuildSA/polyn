@@ -128,7 +128,7 @@
             <paper-icon-button on-tap="_onTapSearchIconBtn" icon="search"></paper-icon-button>
           </app-toolbar>
 
-            <paper-tabs selected="0" sticky>
+            <paper-tabs id="tabs" selected="0" sticky>
               <paper-tab on-tap="onTapHomeTab">Home</paper-tab>
               <paper-tab on-tap="onTapRequestsTab">Requests</paper-tab>
               <paper-tab on-tap="onTapMessagesTab">
@@ -213,6 +213,8 @@
 
         //this.$.messaging.activate();
         //this.showNotificationPermission();
+
+        this.messagesStack = [];
       }
 
       // showNotificationPermission() {
@@ -242,28 +244,49 @@
         console.log("GoodzApp._checkForAnonymousSignIn")
 
         if(this.signedIn == false) {
-          console.log("!!! Signing IN Anonymously !!!");
+          console.log("  Signing IN Anonymously!");
           this.$.auth.signInAnonymously();
         } else {
           // console.log("signedIn: " + this.signedIn);
           // console.log("user: " + JSON.stringify(this.user, null, 4));
           // console.log("statusKnown: " + this.statusKnown);
-          // console.log("!!! Already Signed IN !!!");
+          console.log("  Already Signed IN.");
         }
       }
 
       _onTapToolbarNavBtn() {
 
+        console.log("GoodzApp._onTapToolbarNavBtn")
+
         if(this.$.toolbarNavBtn.icon == "arrow-back") {
 
           if(this.page == 'chat-view') {
+
+            var popped = this.messagesStack.pop();
+            console.log("  popped = " + popped)
+
             this.page = 'messages-view';
             this.$.toolbarNavBtn.icon = "custom-icons:menu"
           }
-          
+
         } else {
           this.$.drawer.open();
         }
+      }
+
+      pushPageOnCurrentTab(page) {
+
+        console.log("GoodzApp.pushPageViewOnCurrentTab: page = " + page + "tab = " + this.$.tabs.selected)
+
+        // Messages tab!
+        if(this.$.tabs.selected == 2) {
+          this.page = page;
+          this.$.toolbarNavBtn.icon = "arrow-back";
+          this.messagesStack.push(this.$.ironPages.selectedItem);
+        }
+
+        // Retur the newly slected item or page so we can set some data on it of required.
+        return this.$.ironPages.selectedItem;
       }
 
       onTapHomeTab() {
@@ -272,21 +295,37 @@
         //this.$.auth.signOut()
         
         this.page = 'home-view';
+        this.$.toolbarNavBtn.icon = "custom-icons:menu"
       }
 
       onTapRequestsTab() {
+
         this.page = 'requests-view';
+        this.$.toolbarNavBtn.icon = "custom-icons:menu"
       }
 
       onTapMessagesTab() {
 
+        console.log("GoodzApp.onTapMessagesTab: stack size = " + this.messagesStack.length)
+
         //this.showNotificationPermission();
 
-        this.page = 'messages-view';
+        if(this.messagesStack.length > 0) {
+          this.$.toolbarNavBtn.icon = "arrow-back";
+          //this.page = 'chat-view';
+          var viewName = this.messagesStack[this.messagesStack.length - 1].tagName.toLowerCase();
+          console.log("  Element view to restore: " + viewName);
+          this.page = viewName;
+        } else {
+          this.$.toolbarNavBtn.icon = "custom-icons:menu";
+          this.page = 'messages-view';
+        }
       }
 
       onTapProfileTab() {
+
         this.page = 'profile-view';
+        this.$.toolbarNavBtn.icon = "custom-icons:menu"
       }
 
       _searchTextChanged() {
