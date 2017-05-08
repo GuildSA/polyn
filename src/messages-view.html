@@ -63,6 +63,7 @@
                 // Switch to the chat-view and pass the chatMessagesId.
                 var goodzApp = document.getElementById("goodzApp");
                 goodzApp.page = "chat-view";
+                goodzApp.$.toolbarNavBtn.icon = "arrow-back"
                 goodzApp.$.ironPages.selectedItem.chatMessagesId = this.$.query.data[index].chatId;
             }
         }
