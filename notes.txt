@@ -37,10 +37,7 @@ sudo npm install -g firebase-tools
 polymer serve --open
 
 polymer build
-
-// Fix for missing Backendless code:
-cd build/default/
-bower install
+polymer build --add-service-worker
 
 polymer serve build/default/ --open
 firebase deploy
@@ -63,8 +60,60 @@ cat bower_components/iron-pages/.bower.json
 
 ------------------------------------------------------------------------
 
+Fix for missing code in bower_components after build:
+
+https://github.com/Polymer/polymer-cli/issues/347
+
+cd build/default/
+bower install
+OR...
+cp -rn bower_components build/default/
+
+
+
+  "builds": [{
+    "bundle": true,
+    "addServiceWorker": true,
+    "js": {"minify": true},
+    "css": {"minify": true},
+    "html": {"minify": true}
+  }],
+
+  
+------------------------------------------------------------------------
+
  -- Markup & Code Scraps -- 
 
+
+
+
+    <firebase-query
+        id="query"
+        app-name="goodz-app"
+        path="/users/[[user.uid]]/chats"
+        data="{{chats}}">
+    </firebase-query>
+
+    <app-indexeddb-mirror
+        session="[[user.uid]]"
+        key="chats"
+        data="{{chats}}"
+        persisted-data="{{persistedChats}}">
+    </app-indexeddb-mirror>
+
+    <dom-repeat items="[[persistedChats]]" as="chat">
+        <template>
+            <div class="card" on-tap="_onTappedCard">
+                <p>[[chat.subject]]</p>
+                <!--<p>buyer: [[chat.buyer]]</p>-->
+                <p>Seller: [[chat.seller]]</p>
+                <!--<p>chatId: [[chat.chatId]]</p>-->
+            </div>
+        </template>
+    </dom-repeat>
+
+
+    
   <div class="card">
     <div class="circle">3</div>
     <h1>Messages</h1>
