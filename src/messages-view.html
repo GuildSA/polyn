@@ -30,7 +30,7 @@
         persisted-data="{{persistedChats}}">
     </app-indexeddb-mirror>
 
-    <dom-repeat items="[[persistedChats]]" as="chat">
+    <dom-repeat items="[[persistedChats]]" as="chat" initial-count="5">
         <template>
             <div class="card" on-tap="_onTappedMessage">
                 <p>[[chat.subject]]</p>
