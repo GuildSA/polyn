@@ -18,6 +18,7 @@
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 
+<!-- The VSCode editor wants these but should we add them when the app works fine without them? -->
 <!--<link rel="import" href="../src/home-view.html">
 <link rel="import" href="../src/requests-view.html">
 <link rel="import" href="../src/backendless-view.html">
@@ -32,6 +33,7 @@
 <dom-module id="goodz-app">
   <template>
     <style>
+      /* These styles only apply to this element's private "shadow DOM" */
       :host {
         --app-primary-color: #551A8B;
         --app-secondary-color: black;
@@ -175,10 +177,13 @@
   </template>
 
   <script>
+    // Custom element that extends Polymer base class.
     class GoodzApp extends Polymer.Element {
 
+      // Stamp template from this dom-module into element's shadow DOM.
       static get is() { return 'goodz-app'; }
 
+      // Define property/attribute API:
       static get properties() {
         return {
           page: {
@@ -452,6 +457,7 @@
 
     }
 
+    // Register custom element class with browser.
     window.customElements.define(GoodzApp.is, GoodzApp);
   </script>
 
