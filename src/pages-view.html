@@ -42,7 +42,6 @@
 
       static get properties() {
         return {
-
           animationConfig: {
             value: function() {
               return {
@@ -59,42 +58,44 @@
               }
             }
           }
-
         };
       }
 
       constructor() {
         super()
-        console.log("constructor called!")
+        console.log("PagesView.constructor")
       }
 
       ready() {
         super.ready();
-        console.log("ready called!")
+        console.log("PagesView.ready")
       }
 
-      attached() {
-          console.log("attached called!")
+      connectedCallback() {
+        super.connectedCallback();
+          console.log("PagesView.connectedCallback")
           
           this.playAnimation('entry');
       }
 
-      detached() {
-          console.log("detached called!")
+      disconnectedCallback() {
+        super.disconnectedCallback();
+          console.log("PagesView.disconnectedCallback")
       }
 
-      attributeChanged() {
-          console.log("attributeChanged called!")
+      attributeChangedCallback() {
+        super.attributeChangedCallback();
+          console.log("PagesView.attributeChangedCallback")
       }
 
       _onBackClick() {
-        console.log("_onBackClick called!")
+        console.log("PagesView._onBackClick")
 
         this.playAnimation('exit');
       }
 
       _onNextClick() {
-        console.log("_onNextClick called!")
+        console.log("PagesView._onNextClick")
 
         this.playAnimation('entry');
       }

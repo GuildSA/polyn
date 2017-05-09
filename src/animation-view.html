@@ -32,11 +32,9 @@
 
       static get properties() {
         return {
-
           opened: {
             type: Boolean
           },
-
           animationConfig: {
             value: function() {
               return {
@@ -54,14 +52,12 @@
               }
             }
           }
-
         };
       }
 
       constructor() {
           super()
-
-        console.log("constructor called!")
+          console.log("AnimationView.constructor")
 
           this.addEventListener('neon-animation-finish', e => this._onNeonAnimationFinish(e));
       }
@@ -69,41 +65,42 @@
       ready() {
           super.ready();
 
-          console.log("ready called!")
+          console.log("AnimationView.ready")
 
           // When possible, use afterNextRender to defer non-critical
           // work until after first paint.
           Polymer.RenderStatus.afterNextRender(this, function() {
-              console.log("afterNextRender called!")
+              console.log("AnimationView.afterNextRender")
           });
       }
 
-      attached() {
-          console.log("attached called!")
+      connectedCallback() {
+        super.connectedCallback();
+          console.log("AnimationView.connectedCallback")
 
           this.opened = true;
           //this.style.display = 'inline-block';
 
-          // run scale-up-animation
+          // Play scale-up-animation.
           this.playAnimation('entry');
       }
 
-      detached() {
-          console.log("detached called!")
+      disconnectedCallback() {
+        super.disconnectedCallback();
+          console.log("AnimationView.disconnectedCallback")
 
           this.opened = false;
           
-          // run fade-out-animation
+          // Play fade-out-animation.
           this.playAnimation('exit');
       }
 
-      attributeChanged() {
-          console.log("attributeChanged called!")
+      attributeChangedCallback() {
+          console.log("AnimationView.attributeChangedCallback")
       }
 
       _onNeonAnimationFinish() {
-
-          console.log("_onNeonAnimationFinish called!")
+          console.log("AnimationView._onNeonAnimationFinish")
 
           if (!this.opened) {
             this.style.display = 'none';
