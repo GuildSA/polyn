@@ -281,7 +281,10 @@ app works fine without them? This might hurt lazy loading of imports!-->
             console.log("  length after pop = " + this.tabViewStacks[selectedTab].length);
 
 popped.show = false;
-popped.testMethod(42);
+
+if(popped.testMethod != undefined) {
+  popped.testMethod(42);
+}
 
             if(this.tabViewStacks[selectedTab].length > 0) {
 
@@ -326,7 +329,7 @@ popped.testMethod(42);
 
           this.$.ironPages.selectedItem.show = true;
 
-// TODO: Why is testMethod undefined in this case but not in the case abover for _onTapToolbarNavBtn?
+// TODO: Why is testMethod undefined in this case but not in the case above for _onTapToolbarNavBtn?
 //this.$.ironPages.selectedItem.testMethod(55);
 
 //}
