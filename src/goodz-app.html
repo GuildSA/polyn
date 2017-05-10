@@ -18,7 +18,8 @@
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 
-<!-- The VSCode editor wants these but should we add them when the app works fine without them? -->
+<!-- The VSCode editor wants these added but should we add them when the 
+app works fine without them? This might hurt lazy loading of imports!-->
 <!--<link rel="import" href="../src/home-view.html">
 <link rel="import" href="../src/requests-view.html">
 <link rel="import" href="../src/backendless-view.html">
@@ -177,6 +178,7 @@
   </template>
 
   <script>
+
     // Custom element that extends Polymer base class.
     class GoodzApp extends Polymer.Element {
 
@@ -210,7 +212,7 @@
 
       static get observers() {
         return [
-          '_routePageChanged(routeData.page)',
+          '_routePageChanged(routeData.page)', // If routeData on app-route changes - send routeData.page to  _routePageChanged
         ];
       }
 
@@ -228,7 +230,7 @@
       }
 
       // showNotificationPermission() {
-
+      //
       //   //const messaging = firebase.messaging();
       //   //messaging.requestPermission()
       //   this.$.messaging.requestPermission()
@@ -278,6 +280,9 @@
 
             console.log("  length after pop = " + this.tabViewStacks[selectedTab].length);
 
+popped.show = false;
+popped.testMethod(42);
+
             if(this.tabViewStacks[selectedTab].length > 0) {
 
               // If the tab's view stack is NOT empty - restore the next view.
@@ -317,7 +322,16 @@
         this.$.toolbarNavBtn.icon = "arrow-back";
         this.tabViewStacks[this.$.tabs.selected].push(this.$.ironPages.selectedItem);
 
-        // Return the newly selected item or page so we can set some data on it, of required.
+//if(this.$.ironPages.selectedItem.hasAttribute('show')) {
+
+          this.$.ironPages.selectedItem.show = true;
+
+// TODO: Why is testMethod undefined in this case but not in the case abover for _onTapToolbarNavBtn?
+//this.$.ironPages.selectedItem.testMethod(55);
+
+//}
+
+        // Return the newly selected item or page so we can set some data on it, if required.
         return this.$.ironPages.selectedItem;
       }
 

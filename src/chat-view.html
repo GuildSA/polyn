@@ -3,6 +3,8 @@
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../bower_components/neon-animation/web-animations.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="chat-view">
@@ -41,7 +43,10 @@
   </template>
 
     <script>
-        class ChatView extends Polymer.Element {
+        class ChatView extends Polymer.mixinBehaviors([
+                Polymer.NeonAnimatableBehavior,
+                Polymer.NeonAnimationRunnerBehavior
+            ], Polymer.Element) {
             static get is() { return 'chat-view'; }
 
             static get properties() {
@@ -49,14 +54,89 @@
                     chatMessagesId: {
                         type: String,
                         observer: '_chatMessagesIdChanged'
+                    },
+                    show: {
+                        type: Boolean,
+                        value: false,
+                        observer: '_showChanged'
+                    },
+                    animationConfig: {
+                        value: function() {
+                            return {
+                                'entry': {
+                                name: 'slide-from-right-animation',
+                                node: this,
+                                timing: {delay: 50}
+                                },
+                                'exit': {
+                                name: 'slide-right-animation',
+                                node: this,
+                                timing: {delay: 50}
+                                }
+                            }
+                        }
                     }
                 };
+            }
+
+            constructor() {
+                super()
+                console.log("ChatView.constructor")
+                
+                this.addEventListener('neon-animation-finish', e => this._onNeonAnimationFinish(e));
             }
 
             ready() {
                 super.ready();
                 console.log("ChatView.ready");
             }
+
+            attributeChangedCallback(name, old, value) {
+                console.log("ChatView.attributeChangedCallback: name = " + name + ", old = " + ", value = " + value);
+            }
+
+            testMethod(value) {
+                console.log("XXXXXX ChatView.testMethod: value = " + value);
+            }
+
+            _showChanged(newValue, oldValue) {
+                console.log("ChatView._showChanged: newValue = " + newValue + ", oldValue = " + oldValue);
+                //console.log("ChatView._showChanged: " + this.show)
+
+                if(this.show) {
+                    this.playAnimation('entry', 'entry');
+                } else {
+                    this.playAnimation('exit', 'exit');
+                }
+            }
+
+            _onNeonAnimationFinish(e) {
+                console.log("ChatView._onNeonAnimationFinish");
+                console.log("  e: " + JSON.stringify(e, null, 4));
+
+                switch(e.detail) {
+                    case 'entry':
+                        console.log("  entry finished!");
+                    break;
+                    case 'exit':
+                        console.log("  exit finished!");
+                    break;
+                }
+            }
+
+            // connectedCallback() {
+            //     super.connectedCallback();
+            //     console.log("ChatView.connectedCallback")
+                
+            //     //this.playAnimation('entry', 'entry');
+            // }
+
+            // disconnectedCallback() {
+            //     super.disconnectedCallback();
+            //     console.log("PagesView.disconnectedCallback")
+
+            //     this.playAnimation('exit', 'exit');
+            // }
 
             _chatMessagesIdChanged() {
                 console.log("ChatView._chatMessagesIdChanged: " + this.chatMessagesId);
