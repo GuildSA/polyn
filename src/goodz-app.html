@@ -219,10 +219,16 @@
 // Redux simple test...
       static get actions() {
         return {
-          add(name) {
+          addFriend(name) {
             return {
               type: 'ADD_FRIEND',
               friend: name
+            };
+          },
+          setCurrentSearchText(text) {
+            return {
+              type: 'SET_CURRENT_SEARCH_TEXT',
+              currentSearchText: text
             };
           }
         }
@@ -428,7 +434,10 @@ if(popped.testMethod != undefined) {
 
 // Redux simple test...
           if(this.$.searchInput.value) {
-            this.dispatch('add', this.$.searchInput.value);
+
+            this.dispatch('addFriend', this.$.searchInput.value);
+
+            this.dispatch('setCurrentSearchText', this.$.searchInput.value);
           }
 
 

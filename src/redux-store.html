@@ -3,6 +3,7 @@
 <script>
   const initialState = {
 // Redux simple test...
+    currentSearchText: "",
     friends: [],
 // Redux Thunk test...
     username: null,
@@ -16,6 +17,9 @@
     switch(action.type) {
 
 // Redux simple test...
+      case 'SET_CURRENT_SEARCH_TEXT':
+        return Object.assign({}, state, { currentSearchText: action.currentSearchText });
+
       case 'ADD_FRIEND':
         let friends = state.friends.slice(0);
         friends.push(action.friend);
@@ -52,7 +56,7 @@
                 type: 'SIGN_UP_COMPLETE',
                 username: username
               });
-            }, 3000);
+            }, 2000);
           }
         }
       };

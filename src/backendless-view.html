@@ -70,6 +70,11 @@
                     observer: '_searchTextChanged'
                 },
 // Redux simple test...
+                currentSearchText: {
+                  type: String,
+                  statePath: 'currentSearchText',
+                  computed: 'computeCurrentSearchText(currentSearchText)'
+                },
                 friends: {
                   type: Array,
                   statePath: 'friends'
@@ -93,18 +98,23 @@
         }
 
         ready() {
-
+            super.ready();
             console.log("BackendlessView.ready");
 
-            super.ready();
             this.testTable = [];
         }
 
 
 // Redux simple test...
+        computeCurrentSearchText(text) {
+            console.log("BackendlessView.computeCurrentSearchText: text = " + text);
+// TODO: How can we stop listening to this when the view is not shown?
+            return text;
+        }
+
+// Redux simple test...
         computeFriendCount(friends) {
             console.log("BackendlessView.computeFriendCount: friends = " + friends);
-
             return friends.length;
         }
 // Redux Thunk test...
@@ -117,10 +127,12 @@
         _usernameChanged() {
             console.log("BackendlessView._usernameChanged: " + this.username);
 
-            alert("Redux Thunk sent back: " + this.username);
+            if(this.username != null) {
+                alert("Redux Thunk sent back: " + this.username);
+            }
         }
 
-
+// TODO: Should we replace this with Redux?
         _searchTextChanged() {
             console.log("BackendlessView._searchTextChanged: " + this.searchText);
 
