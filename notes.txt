@@ -50,6 +50,9 @@ bower install --save web-animations-js
 
 bower install --save PolymerElements/iron-signals#2.0-preview   ??????
 
+npm install --save redux
+bower install --save polymer-redux#polymer-2
+
 npm outdated
 npm update
 npm install
