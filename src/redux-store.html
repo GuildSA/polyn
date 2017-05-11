@@ -2,7 +2,11 @@
 
 <script>
   const initialState = {
-    friends: []
+// Redux simple test...
+    friends: [],
+// Redux Thunk test...
+    username: null,
+    loading: false
   };
 
   const reducer = (state, action) => {
@@ -10,12 +14,49 @@
     if(!state) return initialState;
 
     switch(action.type) {
+
+// Redux simple test...
       case 'ADD_FRIEND':
         let friends = state.friends.slice(0);
         friends.push(action.friend);
         return Object.assign({}, state, { friends: friends });
+
+// Redux Thunk test...
+      case 'SIGN_UP_STARTED':
+        return Object.assign({}, state, { loading: true });
+
+      case 'SIGN_UP_COMPLETE':
+        return Object.assign({}, state, {
+          loading: false,
+          username: action.username
+        });
     }
   }
-  const store = Redux.createStore(reducer);
+  const store = Redux.createStore(
+    reducer,
+    Redux.applyMiddleware(ReduxThunk.default) // Redux Thunk test...
+  );
+
   const ReduxMixin = PolymerRedux(store);
+
+// Redux Thunk test...
+  const AsyncActionsMixin = superclass => class extends superclass {
+    static get actions() {
+      return {
+        signUpWithTimeout: function(username) {
+          return function(dispatch) {
+            dispatch({ type: 'SIGN_UP_STARTED' });
+            // Do async task
+            setTimeout(function() {
+              dispatch({
+                type: 'SIGN_UP_COMPLETE',
+                username: username
+              });
+            }, 3000);
+          }
+        }
+      };
+    }
+  };
+
 </script>

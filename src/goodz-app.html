@@ -216,7 +216,7 @@
         ];
       }
 
-// Redux test...
+// Redux simple test...
       static get actions() {
         return {
           add(name) {
@@ -426,15 +426,11 @@ if(popped.testMethod != undefined) {
         }
 
 
-
-        //addFriend() {
-        //  const input = this.$.field;
+// Redux simple test...
           if(this.$.searchInput.value) {
             this.dispatch('add', this.$.searchInput.value);
-            //input.value = '';
-            //input.focus();
           }
-        //}
+
 
       }
 
