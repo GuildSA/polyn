@@ -17,9 +17,9 @@
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../src/redux-store.html">
 
-<!-- The VSCode editor wants these added but should we add them when the 
-app works fine without them? This might hurt lazy loading of imports!-->
+<!-- TODO: Switch to using lazy-imports for these -->
 <!--<link rel="import" href="../src/home-view.html">
 <link rel="import" href="../src/requests-view.html">
 <link rel="import" href="../src/backendless-view.html">
@@ -180,7 +180,7 @@ app works fine without them? This might hurt lazy loading of imports!-->
   <script>
 
     // Custom element that extends Polymer base class.
-    class GoodzApp extends Polymer.Element {
+    class GoodzApp extends ReduxMixin(Polymer.Element) {
 
       // Stamp template from this dom-module into element's shadow DOM.
       static get is() { return 'goodz-app'; }
@@ -214,6 +214,18 @@ app works fine without them? This might hurt lazy loading of imports!-->
         return [
           '_routePageChanged(routeData.page)', // If routeData on app-route changes - send routeData.page to  _routePageChanged
         ];
+      }
+
+// Redux test...
+      static get actions() {
+        return {
+          add(name) {
+            return {
+              type: 'ADD_FRIEND',
+              friend: name
+            };
+          }
+        }
       }
 
       ready() {
@@ -412,6 +424,18 @@ if(popped.testMethod != undefined) {
         if(this.page == "backendless-view") {
           this.$.backendlessView.searchText = this.$.searchInput.value;
         }
+
+
+
+        //addFriend() {
+        //  const input = this.$.field;
+          if(this.$.searchInput.value) {
+            this.dispatch('add', this.$.searchInput.value);
+            //input.value = '';
+            //input.focus();
+          }
+        //}
+
       }
 
       _onTapSearchIconBtn() {

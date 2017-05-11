@@ -4,6 +4,7 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="../src/redux-store.html">
 
 <dom-module id="backendless-view">
   <template>
@@ -51,7 +52,7 @@
   </template>
 
   <script>
-    class BackendlessView extends Polymer.Element {
+    class BackendlessView extends ReduxMixin(Polymer.Element) {
         
         static get is() { return 'backendless-view'; }
 
@@ -62,6 +63,15 @@
                     notify: true,
                     reflectToAttribute: true,
                     observer: '_searchTextChanged'
+                },
+// Redux test...
+                friends: {
+                  type: Array,
+                  statePath: 'friends'
+                },
+                friendCount: {
+                  type: Number,
+                  computed: 'computeFriendCount(friends)'
                 }
             };
         }
@@ -72,6 +82,13 @@
 
             super.ready();
             this.testTable = [];
+        }
+
+// Redux test...
+        computeFriendCount(friends) {
+            console.log("BackendlessView.computeFriendCount: friends = " + friends)
+
+            return friends.length;
         }
 
         _searchTextChanged() {
