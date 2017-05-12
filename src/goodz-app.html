@@ -17,7 +17,7 @@
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
-<link rel="import" href="../src/redux-store.html">
+<!--<link rel="import" href="../src/redux-store.html">-->
 <link rel="import" href="custom-icons.html">
 
 <dom-module id="goodz-app">
@@ -169,7 +169,8 @@
   <script>
 
     // Custom element that extends Polymer base class.
-    class GoodzApp extends ReduxMixin(Polymer.Element) {
+    // class GoodzApp extends ReduxMixin(Polymer.Element) {
+    class GoodzApp extends Polymer.Element {
 
       // Stamp template from this dom-module into element's shadow DOM.
       static get is() { return 'goodz-app'; }
@@ -205,23 +206,23 @@
         ];
       }
 
-// Redux simple test...
-      static get actions() {
-        return {
-          addFriend(name) {
-            return {
-              type: 'ADD_FRIEND',
-              friend: name
-            };
-          },
-          setCurrentSearchText(text) {
-            return {
-              type: 'SET_CURRENT_SEARCH_TEXT',
-              currentSearchText: text
-            };
-          }
-        }
-      }
+// // Redux simple test...
+//       static get actions() {
+//         return {
+//           addFriend(name) {
+//             return {
+//               type: 'ADD_FRIEND',
+//               friend: name
+//             };
+//           },
+//           setCurrentSearchText(text) {
+//             return {
+//               type: 'SET_CURRENT_SEARCH_TEXT',
+//               currentSearchText: text
+//             };
+//           }
+//         }
+//       }
 
       ready() {
         super.ready();
@@ -421,13 +422,13 @@ if(popped.testMethod != undefined) {
         }
 
 
-// Redux simple test...
-          if(this.$.searchInput.value) {
+// // Redux simple test...
+//           if(this.$.searchInput.value) {
 
-            this.dispatch('addFriend', this.$.searchInput.value);
+//             this.dispatch('addFriend', this.$.searchInput.value);
 
-            this.dispatch('setCurrentSearchText', this.$.searchInput.value);
-          }
+//             this.dispatch('setCurrentSearchText', this.$.searchInput.value);
+//           }
 
 
       }

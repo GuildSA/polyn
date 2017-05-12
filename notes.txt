@@ -38,6 +38,7 @@ polymer serve --open
 
 polymer build
 polymer build --add-service-worker
+polymer build --js-compile
 
 polymer serve build/default/ --open
 firebase deploy
