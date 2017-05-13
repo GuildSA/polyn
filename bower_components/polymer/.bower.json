@@ -32,14 +32,14 @@
     "test-fixture": "3.0.0-rc.1"
   },
   "homepage": "https://github.com/Polymer/polymer",
-  "version": "2.0.0-rc.8",
-  "_release": "2.0.0-rc.8",
+  "version": "2.0.0-rc.9",
+  "_release": "2.0.0-rc.9",
   "_resolution": {
     "type": "version",
-    "tag": "v2.0.0-rc.8",
-    "commit": "a64bd95fbb977700288f7c10481a2322cf01604f"
+    "tag": "v2.0.0-rc.9",
+    "commit": "99abf955021d44d6ab5beab44b5b26a180986e23"
   },
   "_source": "https://github.com/Polymer/polymer.git",
-  "_target": "^2.0.0-rc.8",
+  "_target": "^2.0.0-rc.9",
   "_originalSource": "Polymer/polymer"
 }

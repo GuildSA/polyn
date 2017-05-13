@@ -40,11 +40,11 @@
       }
     }
   },
-  "_release": "42f0a8ad78",
+  "_release": "525d96a4d5",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "42f0a8ad789a5e2a25a2c144a800c59aae05db60"
+    "commit": "525d96a4d5b50f3eed228477cdbf901257f95c97"
   },
   "_source": "https://github.com/PolymerElements/iron-localstorage.git",
   "_target": "2.0-preview",

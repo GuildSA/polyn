@@ -5,7 +5,7 @@
   ],
   "license": "",
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.0-rc.8",
+    "polymer": "Polymer/polymer#^2.0.0-rc.9",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
     "web-animations-js": "^2.2.5",
     "app-layout": "PolymerElements/app-layout#2.0-preview",

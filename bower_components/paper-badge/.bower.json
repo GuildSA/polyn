@@ -52,11 +52,11 @@
       }
     }
   },
-  "_release": "f741859fce",
+  "_release": "a81e3b7735",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "f741859fceec2b0bcb21862496f6a13e0408646d"
+    "commit": "a81e3b7735a7dd3771efa2ee53c84b1db978020f"
   },
   "_source": "https://github.com/PolymerElements/paper-badge.git",
   "_target": "2.0-preview",
