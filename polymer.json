@@ -25,5 +25,12 @@
   ],
   "lint": {
     "rules": ["polymer-2"]
-  }
+  },
+  "builds": [{
+    "bundle": false,
+    "addServiceWorker": true,
+    "js": {"minify": false},
+    "css": {"minify": false},
+    "html": {"minify": false}
+  }]
 }
