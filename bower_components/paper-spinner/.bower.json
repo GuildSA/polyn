@@ -60,6 +60,6 @@
     "commit": "9667b7c6ae44986e4faa6c8c6ebed035fb2daaa5"
   },
   "_source": "https://github.com/PolymerElements/paper-spinner.git",
-  "_target": "*",
+  "_target": "^2.0.0",
   "_originalSource": "PolymerElements/paper-spinner"
 }

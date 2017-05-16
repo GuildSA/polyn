@@ -54,6 +54,6 @@
     "commit": "b6a91f55fc904150f4d6d792052a9577f8a3806a"
   },
   "_source": "https://github.com/PolymerElements/iron-localstorage.git",
-  "_target": "*",
+  "_target": "^2.0.0",
   "_originalSource": "PolymerElements/iron-localstorage"
 }

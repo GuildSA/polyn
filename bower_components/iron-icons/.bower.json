@@ -63,6 +63,6 @@
     "commit": "caca3514695136380ac98e3677f1c6ba38d9f82d"
   },
   "_source": "https://github.com/PolymerElements/iron-icons.git",
-  "_target": "*",
+  "_target": "^2.0.0",
   "_originalSource": "PolymerElements/iron-icons"
 }
