@@ -56,6 +56,7 @@
     "commit": "829e533a41ad12d6f2f9bf23019d5aa09fcb1e85"
   },
   "_source": "https://github.com/firebase/polymerfire.git",
-  "_target": "2.0",
-  "_originalSource": "polymerfire"
+  "_target": "^2.0.0",
+  "_originalSource": "polymerfire",
+  "_direct": true
 }
