@@ -51,6 +51,8 @@ build needs to be compiled to ES5:
 
 polymer build --js-compile
 
+!!! But... This doesn't generate a service-worker.js - only "polymer build" does.
+
 -----
 
 polymer serve build/default/ --open
