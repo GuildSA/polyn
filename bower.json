@@ -28,7 +28,7 @@
     "paper-badge": "PolymerElements/paper-badge",
     "paper-spinner": "PolymerElements/paper-spinner",
     "neon-animation": "PolymerElements/neon-animation",
-    "polymerfire": "2.0-preview",
+    "polymerfire": "2.0",
     "backendless": "^4.0.2-beta"
   },
   "devDependencies": {
