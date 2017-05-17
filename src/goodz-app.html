@@ -25,7 +25,7 @@
     <style>
       /* These styles only apply to this element's private "shadow DOM" */
       :host {
-        --app-primary-color: #551A8B;
+        --app-primary-color: #0391D8;
         --app-secondary-color: black;
 
         display: block;
@@ -115,7 +115,17 @@
         <app-header slot="header" condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button id="toolbarNavBtn" icon="custom-icons:menu" on-tap="_onTapToolbarNavBtn"></paper-icon-button>
-            <div main-title>Goodz!</div>
+            <div main-title>
+              <picture>
+                <source media="(max-width: 767px)" sizes="(max-width:767px) 50vw, 10vw"
+                srcset="/images/logo/polyn-logo-main-small.png">
+
+                <source media="(max-width: 1400px)" sizes="(max-width: 1400px) 100vw, 50vw"
+                srcset="/images/logo/polyn-logo-main-small.png">
+
+                <img src="/images/logo/polyn-logo-main-small.png">
+              </picture>
+            </div>
             <paper-input id="searchInput" label="Search..." value="{{searchText}}"></paper-input>
             <paper-icon-button on-tap="_onTapSearchIconBtn" icon="search"></paper-icon-button>
           </app-toolbar>
