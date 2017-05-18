@@ -14,11 +14,11 @@
         }
     </style>
 
-    <firebase-auth id="auth" app-name="goodz-app" user="{{user}}"></firebase-auth>
+    <firebase-auth id="auth" app-name="polyn-app" user="{{user}}"></firebase-auth>
 
     <firebase-query
         id="query"
-        app-name="goodz-app"
+        app-name="polyn-app"
         path="/users/[[user.uid]]/chats"
         data="{{chats}}">
     </firebase-query>
@@ -61,8 +61,8 @@
                 console.info(this.$.query.data[index].$key);
 
                 // Push the chat-view and pass the chatMessagesId.
-                var goodzApp = document.getElementById("goodzApp");
-                var chatView = goodzApp.pushPageOnCurrentTab("chat-view");
+                var polynApp = document.getElementById("polynApp");
+                var chatView = polynApp.pushPageOnCurrentTab("chat-view");
                 chatView.chatMessagesId = this.$.query.data[index].chatId;
             }
         }

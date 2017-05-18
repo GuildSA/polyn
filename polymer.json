@@ -1,6 +1,6 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/goodz-app.html",
+  "shell": "src/polyn-app.html",
   "fragments": [
     "src/home-view.html",
     "src/requests-view.html",

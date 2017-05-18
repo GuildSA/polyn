@@ -24,11 +24,11 @@
         <paper-button on-tap="_onTapItemDetail" raised>Check This Out</paper-button>
     </div>
 
-    <!--<firebase-auth id="auth" app-name="goodz-app" user="{{user}}"></firebase-auth>
+    <!--<firebase-auth id="auth" app-name="polyn-app" user="{{user}}"></firebase-auth>
 
     <firebase-query
         id="query"
-        app-name="goodz-app"
+        app-name="polyn-app"
         path="/chats/[[chatMessagesId]]"
         data="{{chatMessages}}">
     </firebase-query>
@@ -73,8 +73,8 @@
             }
 
             _onTapItemDetail() {
-                var goodzApp = document.getElementById("goodzApp");
-                var itemView = goodzApp.pushPageOnCurrentTab("item-view");
+                var polynApp = document.getElementById("polynApp");
+                var itemView = polynApp.pushPageOnCurrentTab("item-view");
                 itemView.itemId = "3";
             }
         }

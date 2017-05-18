@@ -58,14 +58,14 @@
       static get is() { return 'home-view'; }
 
       _onClickBusiness() {
-        var goodzApp = document.getElementById("goodzApp");
-        var businessView = goodzApp.pushPageOnCurrentTab("business-view");
+        var polynApp = document.getElementById("polynApp");
+        var businessView = polynApp.pushPageOnCurrentTab("business-view");
         businessView.businessId = 1;
       }
       
       _onClickItem() {
-        var goodzApp = document.getElementById("goodzApp");
-        var itemView = goodzApp.pushPageOnCurrentTab("item-view");
+        var polynApp = document.getElementById("polynApp");
+        var itemView = polynApp.pushPageOnCurrentTab("item-view");
         itemView.itemId = 2;
       }
     }

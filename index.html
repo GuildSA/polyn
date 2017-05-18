@@ -7,7 +7,13 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
     <title>polyn</title>
-    <meta name="description" content="The Goodz! app.">
+    <meta name="description" content="The polyn app.">
+
+    <!--
+      If deploying to a non-root path, replace href="/" with the full path to the project root.
+      For example: href="/polymer-starter-kit/relative-path-example/"
+    -->
+    <base href="/">
 
     <link rel="icon" href="/images/favicon.ico">
 
@@ -19,12 +25,12 @@
 
     <!-- Add to homescreen for Chrome on Android. Fallback for manifest.json -->
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Goodz!">
+    <meta name="application-name" content="polyn">
 
     <!-- Add to homescreen for Safari on iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Goodz!">
+    <meta name="apple-mobile-web-app-title" content="polyn">
     
     <!-- Homescreen icons -->
     <link rel="apple-touch-icon" href="/images/manifest/icon-48x48.png">
@@ -40,24 +46,28 @@
 
     <!-- Load and register pre-caching Service Worker -->
     <script>
+      // Register the base URL
+      const baseUrl = document.querySelector('base').href;
+
+      // Load and register pre-caching Service Worker
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/service-worker.js');
+          navigator.serviceWorker.register(baseUrl + 'service-worker.js');
         });
       }
     </script>
 
     <!-- Load webcomponents-loader.js to check and load any polyfills your browser needs -->
-    <!--<script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <script src="bower_components/webcomponentsjs/webcomponents-loader.js"></script>
 
 <!-- TODO: Should I use this or the loader above? The loader above causes issues with Firebase Auth.-->
-    <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <!--<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>-->
 
     <!--<script src="/node_modules/redux/dist/redux.js"></script>
     <script src="/node_modules/redux-thunk/dist/redux-thunk.js"></script>-->
 
     <!-- Load your application shell -->
-    <link rel="import" href="/src/goodz-app.html">
+    <link rel="import" href="/src/polyn-app.html">
 
     <link rel="import" href="/bower_components/polymerfire/firebase-app.html">
 
@@ -78,16 +88,20 @@
 
     <script src="/src/js/app.js"></script>
 
-    <goodz-app id="goodzApp"></goodz-app>
+    <polyn-app id="polynApp"></polyn-app>
 
     <firebase-app
-      name="goodz-app"
+      name="polyn-app"
       api-key="AIzaSyCAVFjt_ixkuSPZXPewhwpfY4sgErK5TUU"
       auth-domain="goodz-7e036.firebaseapp.com"
       database-url="https://goodz-7e036.firebaseio.com"
       storage-bucket="goodz-7e036.appspot.com"
       messaging-sender-id="432803910835">
     </firebase-app>
+
+    <noscript>
+      Please enable JavaScript to use this web app.
+    </noscript>
     
   </body>
 </html>

@@ -20,7 +20,19 @@
 <!--<link rel="import" href="../src/redux-store.html">-->
 <link rel="import" href="custom-icons.html">
 
-<dom-module id="goodz-app">
+<link rel="lazy-import" href="home-view.html">
+<link rel="lazy-import" href="requests-view.html">
+<link rel="lazy-import" href="messages-view.html">
+<link rel="lazy-import" href="profile-view.html">
+<link rel="lazy-import" href="chat-view.html">
+<link rel="lazy-import" href="business-view.html">
+<link rel="lazy-import" href="item-view.html">
+<link rel="lazy-import" href="error404-view.html">
+<link rel="lazy-import" href="backendless-view.html">
+<link rel="lazy-import" href="pages-view.html">
+<link rel="lazy-import" href="animation-view.html">
+
+<dom-module id="polyn-app">
   <template>
     <style>
       /* These styles only apply to this element's private "shadow DOM" */
@@ -70,7 +82,7 @@
 
     <firebase-auth
         id="auth"
-        app-name="goodz-app"
+        app-name="polyn-app"
         signed-in="{{signedIn}}"
         user="{{user}}"
         status-known="{{statusKnown}}"
@@ -178,12 +190,11 @@
 
   <script>
 
-    // Custom element that extends Polymer base class.
-    // class GoodzApp extends ReduxMixin(Polymer.Element) {
-    class GoodzApp extends Polymer.Element {
+    class PolynApp extends Polymer.Element {
+    // class PolynApp extends ReduxMixin(Polymer.Element) {
 
       // Stamp template from this dom-module into element's shadow DOM.
-      static get is() { return 'goodz-app'; }
+      static get is() { return 'polyn-app'; }
 
       // Define property/attribute API:
       static get properties() {
@@ -236,7 +247,7 @@
 
       ready() {
         super.ready();
-        console.log("GoodzApp.ready")
+        console.log("PolynApp.ready")
 
         //this.$.messaging.activate();
         //this.showNotificationPermission();
@@ -261,17 +272,17 @@
       // }
 
       // _onHandleMessage(message) {
-      //   console.log("GoodzApp._onHandleMessage" + message)
+      //   console.log("PolynApp._onHandleMessage" + message)
       // }
 
       _handleError(e, err) {
-        console.log("GoodzApp._handleError")
+        console.log("PolynApp._handleError")
         alert(err);
       }
 
       _checkForAnonymousSignIn() {
 
-        console.log("GoodzApp._checkForAnonymousSignIn")
+        console.log("PolynApp._checkForAnonymousSignIn")
 
         if(this.signedIn == false) {
           console.log("  Signing IN Anonymously!");
@@ -286,7 +297,7 @@
 
       _onTapToolbarNavBtn() {
 
-        console.log("GoodzApp._onTapToolbarNavBtn")
+        console.log("PolynApp._onTapToolbarNavBtn")
 
         var selectedTab = this.$.tabs.selected;
 
@@ -337,7 +348,7 @@ if(popped.testMethod != undefined) {
       }
 
       pushPageOnCurrentTab(page) {
-        console.log("GoodzApp.pushPageViewOnCurrentTab: page = " + page + ", current tab = " + this.$.tabs.selected);
+        console.log("PolynApp.pushPageViewOnCurrentTab: page = " + page + ", current tab = " + this.$.tabs.selected);
 
         this.page = page;
         this.$.toolbarNavBtn.icon = "arrow-back";
@@ -357,7 +368,7 @@ if(popped.testMethod != undefined) {
       }
 
       onTapHomeTab() {
-        console.log("GoodzApp.onTapHomeTab: stack size = " + this.tabViewStacks[0].length + ", tab = " + this.$.tabs.selected);
+        console.log("PolynApp.onTapHomeTab: stack size = " + this.tabViewStacks[0].length + ", tab = " + this.$.tabs.selected);
 
         // Home tab = index 0!
         if(this.tabViewStacks[0].length > 0) {
@@ -377,7 +388,7 @@ if(popped.testMethod != undefined) {
       }
 
       onTapRequestsTab() {
-        console.log("GoodzApp.onTapRequestsTab: stack size = " + this.tabViewStacks[1].length + ", tab = " + this.$.tabs.selected);
+        console.log("PolynApp.onTapRequestsTab: stack size = " + this.tabViewStacks[1].length + ", tab = " + this.$.tabs.selected);
 
         // Requests tab = index 1!
         if(this.tabViewStacks[1].length > 0) {
@@ -392,7 +403,7 @@ if(popped.testMethod != undefined) {
       }
 
       onTapMessagesTab() {
-        console.log("GoodzApp.onTapMessagesTab: stack size = " + this.tabViewStacks[2].length + ", tab = " + this.$.tabs.selected);
+        console.log("PolynApp.onTapMessagesTab: stack size = " + this.tabViewStacks[2].length + ", tab = " + this.$.tabs.selected);
 
         //this.showNotificationPermission();
 
@@ -409,7 +420,7 @@ if(popped.testMethod != undefined) {
       }
 
       onTapProfileTab() {
-        console.log("GoodzApp.onTapProfileTab: stack size = " + this.tabViewStacks[3].length + ", tab = " + this.$.tabs.selected);
+        console.log("PolynApp.onTapProfileTab: stack size = " + this.tabViewStacks[3].length + ", tab = " + this.$.tabs.selected);
 
         // Profile tab = index 3!
         if(this.tabViewStacks[3].length > 0) {
@@ -424,7 +435,7 @@ if(popped.testMethod != undefined) {
       }
 
       _searchTextChanged() {
-        console.log("GoodzApp._searchTextChanged: " + this.$.searchInput.value);
+        console.log("PolynApp._searchTextChanged: " + this.$.searchInput.value);
 
         // if the BackendlessView is current and the search text changes - pass it on!
         if(this.page == "backendless-view") {
@@ -448,7 +459,7 @@ if(popped.testMethod != undefined) {
       }
 
       _onTapSearchDialogBtn() {
-        console.log("GoodzApp._onTapSearchDialogBtn: " + this.$.searchInput.value);
+        console.log("PolynApp._onTapSearchDialogBtn: " + this.$.searchInput.value);
 
         // if the BackendlessView is current and the search text changes - pass it on!
         if(this.page == "backendless-view") {
@@ -458,7 +469,7 @@ if(popped.testMethod != undefined) {
 
       _routePageChanged(page) {
 
-        console.log("GoodzApp._routePageChanged: " + page);
+        console.log("PolynApp._routePageChanged: " + page);
 
         // Polymer 2.0 will call with `undefined` on initialization.
         // Ignore until we are properly called with a string.
@@ -484,7 +495,7 @@ if(popped.testMethod != undefined) {
 
       _pageChanged(page) {
 
-        console.log("GoodzApp._pageChanged: " + page);
+        console.log("PolynApp._pageChanged: " + page);
 
         // Load page import on demand. Show 404 page if fails
         var resolvedPageUrl = this.resolveUrl(page + '.html');
@@ -504,7 +515,7 @@ if(popped.testMethod != undefined) {
     }
 
     // Register custom element class with browser.
-    window.customElements.define(GoodzApp.is, GoodzApp);
+    window.customElements.define(PolynApp.is, PolynApp);
   </script>
 
 </dom-module>

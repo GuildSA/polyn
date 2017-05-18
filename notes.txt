@@ -111,7 +111,7 @@ So where this really bites me is that
 
     <firebase-query
         id="query"
-        app-name="goodz-app"
+        app-name="polyn-app"
         path="/users/[[user.uid]]/chats"
         data="{{chats}}">
     </firebase-query>
