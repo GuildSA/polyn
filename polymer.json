@@ -12,7 +12,6 @@
     "src/backendless-view.html",
     "src/pages-view.html",
     "src/animation-view.html",
-    "src/redux-view.html",
     "src/error404-view.html"
   ],
   "sources": [

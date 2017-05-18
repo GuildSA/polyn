@@ -31,7 +31,6 @@
 <link rel="lazy-import" href="backendless-view.html">
 <link rel="lazy-import" href="pages-view.html">
 <link rel="lazy-import" href="animation-view.html">
-<link rel="lazy-import" href="redux-view.html">
 
 <dom-module id="polyn-app">
   <template>
@@ -120,7 +119,6 @@
           <a name="backendless-view" href="backendless-view">Backendless</a>
           <a name="pages-view" href="pages-view">Pages</a>
           <a name="animation-view" href="animation-view">Animation</a>
-          <a name="redux-view" href="redux-view">Redux</a>
         </iron-selector>
       </app-drawer>
 
@@ -174,7 +172,6 @@
           <backendless-view id="backendlessView" name="backendless-view"></backendless-view>
           <pages-view name="pages-view"></pages-view>
           <animation-view name="animation-view"></animation-view>
-          <redux-view name="redux-view"></redux-view>
         </iron-pages>
 
       </app-header-layout>
@@ -243,6 +240,12 @@
 // Redux simple test...
       static get actions() {
         return {
+          addFriend(name) {
+            return {
+              type: 'ADD_FRIEND',
+              friend: name
+            };
+          },
           setCurrentSearchText(text) {
             return {
               type: 'SET_CURRENT_SEARCH_TEXT',
@@ -449,11 +452,16 @@ if(popped.testMethod != undefined) {
           this.$.backendlessView.searchText = this.$.searchInput.value;
         }
 
+
 // Redux simple test...
           if(this.$.searchInput.value) {
 
+            this.dispatch('addFriend', this.$.searchInput.value);
+
             this.dispatch('setCurrentSearchText', this.$.searchInput.value);
           }
+
+
       }
 
       _onTapSearchIconBtn() {
