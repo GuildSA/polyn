@@ -57,6 +57,7 @@ polymer build --js-compile
 
 polymer serve build/default/ --open
 firebase deploy
+firebase open hosting:site
 
 
 bower install --save PolymerElements/iron-image
@@ -84,10 +85,8 @@ Fix for missing code in bower_components after build:
 
 https://github.com/Polymer/polymer-cli/issues/347
 
-cd build/default/
-bower install
-OR...
 cp -rn bower_components build/default/
+cp -rn node_modules build/default/
 
 
 
