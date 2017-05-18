@@ -4,7 +4,6 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="shared-styles.html">
-<link rel="import" href="../src/redux-store.html">
 
 <dom-module id="backendless-view">
   <template>
@@ -41,11 +40,6 @@
         <paper-button on-tap="_onTapLogout" raised>Logout</paper-button>
     </div>
 
-    <div class="card">
-        <h1>Redux</h1>
-        <paper-button on-tap="_onTapTestReduxThunk" raised>Test Thunk</paper-button>
-    </div>
-
     <paper-dialog id="errorDialog">
       <h2>Error</h2>
       <p id="errorMessage"></p>
@@ -57,7 +51,7 @@
   </template>
 
   <script>
-    class BackendlessView extends ReduxMixin(AsyncActionsMixin(Polymer.Element)) {
+    class BackendlessView extends Polymer.Element {
         
         static get is() { return 'backendless-view'; }
 
@@ -68,32 +62,7 @@
                     notify: true,
                     reflectToAttribute: true,
                     observer: '_searchTextChanged'
-                },
-// Redux simple test...
-                currentSearchText: {
-                  type: String,
-                  statePath: 'currentSearchText',
-                  computed: 'computeCurrentSearchText(currentSearchText)'
-                },
-                friends: {
-                  type: Array,
-                  statePath: 'friends'
-                },
-                friendCount: {
-                  type: Number,
-                  computed: 'computeFriendCount(friends)'
-                },
-// Redux Thunk test...
-                loading: {
-                    type: Boolean,
-                    statePath: 'loading'
-                },
-                username: {
-                    type: String,
-                    statePath: 'username',
-                    observer: '_usernameChanged'
                 }
-
             };
         }
 
@@ -102,34 +71,6 @@
             console.log("BackendlessView.ready");
 
             this.testTable = [];
-        }
-
-
-// Redux simple test...
-        computeCurrentSearchText(text) {
-            console.log("BackendlessView.computeCurrentSearchText: text = " + text);
-// TODO: How can we stop listening to this when the view is not shown?
-            return text;
-        }
-
-// Redux simple test...
-        computeFriendCount(friends) {
-            console.log("BackendlessView.computeFriendCount: friends = " + friends);
-            return friends.length;
-        }
-// Redux Thunk test...
-        _onTapTestReduxThunk() {
-            console.log("BackendlessView._onTapTestReduxThunk");
-            const username = "Kevin";
-            this.dispatch('signUpWithTimeout', username);
-        }
-// Redux Thunk test...
-        _usernameChanged() {
-            console.log("BackendlessView._usernameChanged: " + this.username);
-
-            if(this.username != null) {
-                alert("Redux Thunk sent back: " + this.username);
-            }
         }
 
 // // TODO: Should we replace this with Redux?
