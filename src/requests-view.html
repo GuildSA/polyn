@@ -85,7 +85,7 @@
         // The test URL we're using comes back with the URLs for 5,000 images.
         // That's too many to load at once for debugging, so just slice off
         // the first 10.
-        //this.images = data.detail.response;
+        // this.images = data.detail.response;
         this.images = data.detail.response.slice(1, 10);
 
         this.$.spinner.active = false
