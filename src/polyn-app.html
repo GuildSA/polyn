@@ -102,7 +102,7 @@
     <app-location route="{{route}}"></app-location>
     <app-route
         route="{{route}}"
-        pattern="/:page"
+        pattern="[[rootPattern]]:page"
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
@@ -115,9 +115,9 @@
           <a name="requests-view" href="/requests-view">Requests</a>
           <a name="messages-view" href="/messages-view">Messages</a>
           <a name="profile-view" href="/profile-view">Profile</a>-->
-          <a name="backendless-view" href="/backendless-view">Backendless</a>
-          <a name="pages-view" href="/pages-view">Pages</a>
-          <a name="animation-view" href="/animation-view">Animation</a>
+          <a name="backendless-view" href="backendless-view">Backendless</a>
+          <a name="pages-view" href="pages-view">Pages</a>
+          <a name="animation-view" href="animation-view">Animation</a>
         </iron-selector>
       </app-drawer>
 
@@ -189,7 +189,6 @@
   </template>
 
   <script>
-
     class PolynApp extends Polymer.Element {
     // class PolynApp extends ReduxMixin(Polymer.Element) {
 
@@ -204,6 +203,9 @@
             reflectToAttribute: true,
             observer: '_pageChanged',
           },
+          rootPattern: String,
+          routeData: Object,
+          subroute: String,
           searchText: {
             type: String,
             notify: true,
@@ -225,6 +227,14 @@
         return [
           '_routePageChanged(routeData.page)', // If routeData on app-route changes - send routeData.page to  _routePageChanged
         ];
+      }
+
+      constructor() {
+        super();
+
+        // Get root pattern for app-route, for more info about `rootPath` see:
+        // https://www.polymer-project.org/2.0/docs/upgrade#urls-in-templates
+        this.rootPattern = (new URL(this.rootPath)).pathname;
       }
 
 // // Redux simple test...
@@ -468,7 +478,6 @@ if(popped.testMethod != undefined) {
       }
 
       _routePageChanged(page) {
-
         console.log("PolynApp._routePageChanged: " + page);
 
         // Polymer 2.0 will call with `undefined` on initialization.
@@ -494,7 +503,6 @@ if(popped.testMethod != undefined) {
       }
 
       _pageChanged(page) {
-
         console.log("PolynApp._pageChanged: " + page);
 
         // Load page import on demand. Show 404 page if fails
@@ -511,7 +519,6 @@ if(popped.testMethod != undefined) {
       _showPage404() {
         this.page = 'error404-view';
       }
-
     }
 
     // Register custom element class with browser.
