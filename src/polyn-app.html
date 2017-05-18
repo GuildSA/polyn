@@ -17,7 +17,7 @@
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
-<!--<link rel="import" href="../src/redux-store.html">-->
+<link rel="import" href="../src/redux-store.html">
 <link rel="import" href="custom-icons.html">
 
 <link rel="lazy-import" href="home-view.html">
@@ -104,7 +104,8 @@
         route="{{route}}"
         pattern="[[rootPattern]]:page"
         data="{{routeData}}"
-        tail="{{subroute}}"></app-route>
+        tail="{{subroute}}">
+    </app-route>
 
     <app-drawer-layout fullbleed>
       <!-- Drawer content -->
@@ -189,8 +190,7 @@
   </template>
 
   <script>
-    class PolynApp extends Polymer.Element {
-    // class PolynApp extends ReduxMixin(Polymer.Element) {
+    class PolynApp extends ReduxMixin(Polymer.Element) {
 
       // Stamp template from this dom-module into element's shadow DOM.
       static get is() { return 'polyn-app'; }
@@ -237,23 +237,23 @@
         this.rootPattern = (new URL(this.rootPath)).pathname;
       }
 
-// // Redux simple test...
-//       static get actions() {
-//         return {
-//           addFriend(name) {
-//             return {
-//               type: 'ADD_FRIEND',
-//               friend: name
-//             };
-//           },
-//           setCurrentSearchText(text) {
-//             return {
-//               type: 'SET_CURRENT_SEARCH_TEXT',
-//               currentSearchText: text
-//             };
-//           }
-//         }
-//       }
+// Redux simple test...
+      static get actions() {
+        return {
+          addFriend(name) {
+            return {
+              type: 'ADD_FRIEND',
+              friend: name
+            };
+          },
+          setCurrentSearchText(text) {
+            return {
+              type: 'SET_CURRENT_SEARCH_TEXT',
+              currentSearchText: text
+            };
+          }
+        }
+      }
 
       ready() {
         super.ready();
@@ -453,13 +453,13 @@ if(popped.testMethod != undefined) {
         }
 
 
-// // Redux simple test...
-//           if(this.$.searchInput.value) {
+// Redux simple test...
+          if(this.$.searchInput.value) {
 
-//             this.dispatch('addFriend', this.$.searchInput.value);
+            this.dispatch('addFriend', this.$.searchInput.value);
 
-//             this.dispatch('setCurrentSearchText', this.$.searchInput.value);
-//           }
+            this.dispatch('setCurrentSearchText', this.$.searchInput.value);
+          }
 
 
       }
