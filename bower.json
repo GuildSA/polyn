@@ -29,8 +29,7 @@
     "paper-spinner": "PolymerElements/paper-spinner#^2.0.0",
     "neon-animation": "PolymerElements/neon-animation#^2.0.0",
     "polymerfire": "^2.0.0",
-    "backendless": "^4.0.2-beta",
-    "polymer-redux": "polymer-2"
+    "backendless": "^4.0.2-beta"
   },
   "devDependencies": {
     "web-component-tester": "6.0.0"
