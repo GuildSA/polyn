@@ -1,25 +1,36 @@
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
 
 <dom-module id="error404-view">
   <template>
-    <style>
+    <style include="shared-styles">
       :host {
         display: block;
         padding: 10px 20px;
       }
+      
     </style>
 
-    <!--
-      If deploying in a folder replace href="/" with the full path to your site.
-      Such as: href=="http://polymerelements.github.io/polymer-starter-kit"
-    -->
-    Oops you hit a 404. <a href="/">Head back to home.</a>
+    <div class="card">
+      Oops you hit a 404. <a href="[[rootPath]]">Head back to home.</a>
+    </div>
+
+    <img src="images/test-images/grumpy_404.jpg">
+
   </template>
 
   <script>
     class Error404View extends Polymer.Element {
       static get is() { return 'error404-view'; }
+
+      static get properties() {
+        return {
+          // This shouldn't be neccessary, but the Analyzer isn't picking up
+          // Polymer.Element#rootPath
+          rootPath: String,
+        };
+      }
     }
 
     window.customElements.define(Error404View.is, Error404View);
