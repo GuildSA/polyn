@@ -115,12 +115,12 @@
     <app-drawer-layout fullbleed>
       <!-- Drawer content -->
       <app-drawer id="drawer" slot="drawer">
-        <app-toolbar>Tests</app-toolbar>
+        <app-toolbar>Research</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="ajax-view" href="ajax-view">AJAX + Spinner</a>
-          <a name="backendless-view" href="backendless-view">Backendless</a>
-          <a name="basicanim-view" href="basicanim-view">Basic Animation</a>
-          <a name="pageanim-view" href="pageanim-view">Page Animation</a>
+          <a name="ajax-view" on-tap="_onTapAjaxView">AJAX + Spinner</a>
+          <a name="backendless-view" on-tap="_onTapBackendlessView">Backendless</a>
+          <a name="basicanim-view" on-tap="_onTapBasicAnimView">Basic Animation</a>
+          <a name="pageanim-view" on-tap="_onTapPageAnimView">Page Animation</a>
         </iron-selector>
       </app-drawer>
 
@@ -309,6 +309,22 @@
           // console.log("statusKnown: " + this.statusKnown);
           console.log("  Already Signed IN.");
         }
+      }
+
+      _onTapAjaxView() {
+        this.page = 'ajax-view';
+      }
+
+      _onTapBackendlessView() {
+        this.page = 'backendless-view';
+      }
+
+      _onTapBasicAnimView() {
+        this.page = 'basicanim-view';
+      }
+
+      _onTapPageAnimView() {
+        this.page = 'pageanim-view';
       }
 
       _onTapToolbarNavBtn() {

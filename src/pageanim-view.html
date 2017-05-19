@@ -62,39 +62,39 @@
 
       constructor() {
         super()
-        console.log("PagesView.constructor")
+        console.log("PageAnimView.constructor")
       }
 
       ready() {
         super.ready();
-        console.log("PagesView.ready")
+        console.log("PageAnimView.ready")
       }
 
       connectedCallback() {
         super.connectedCallback();
-          console.log("PagesView.connectedCallback")
+          console.log("PageAnimView.connectedCallback")
           
           this.playAnimation('entry');
       }
 
       disconnectedCallback() {
         super.disconnectedCallback();
-          console.log("PagesView.disconnectedCallback")
+          console.log("PageAnimView.disconnectedCallback")
       }
 
       attributeChangedCallback() {
         super.attributeChangedCallback();
-          console.log("PagesView.attributeChangedCallback")
+          console.log("PageAnimView.attributeChangedCallback")
       }
 
       _onBackClick() {
-        console.log("PagesView._onBackClick")
+        console.log("PageAnimView._onBackClick")
 
         this.playAnimation('exit');
       }
 
       _onNextClick() {
-        console.log("PagesView._onNextClick")
+        console.log("PageAnimView._onNextClick")
 
         this.playAnimation('entry');
       }

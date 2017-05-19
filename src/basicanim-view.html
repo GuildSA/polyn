@@ -57,7 +57,7 @@
 
       constructor() {
           super()
-          console.log("AnimationView.constructor")
+          console.log("BasicAnimView.constructor")
 
           this.addEventListener('neon-animation-finish', e => this._onNeonAnimationFinish(e));
       }
@@ -65,18 +65,18 @@
       ready() {
           super.ready();
 
-          console.log("AnimationView.ready")
+          console.log("BasicAnimView.ready")
 
           // When possible, use afterNextRender to defer non-critical
           // work until after first paint.
           Polymer.RenderStatus.afterNextRender(this, function() {
-              console.log("AnimationView.afterNextRender")
+              console.log("BasicAnimView.afterNextRender")
           });
       }
 
       connectedCallback() {
         super.connectedCallback();
-          console.log("AnimationView.connectedCallback")
+          console.log("BasicAnimView.connectedCallback")
 
           this.opened = true;
           //this.style.display = 'inline-block';
@@ -87,7 +87,7 @@
 
       disconnectedCallback() {
         super.disconnectedCallback();
-          console.log("AnimationView.disconnectedCallback")
+          console.log("BasicAnimView.disconnectedCallback")
 
           this.opened = false;
           
@@ -96,11 +96,11 @@
       }
 
       attributeChangedCallback() {
-          console.log("AnimationView.attributeChangedCallback")
+          console.log("BasicAnimView.attributeChangedCallback")
       }
 
       _onNeonAnimationFinish() {
-          console.log("AnimationView._onNeonAnimationFinish")
+          console.log("BasicAnimView._onNeonAnimationFinish")
 
           if (!this.opened) {
             this.style.display = 'none';
