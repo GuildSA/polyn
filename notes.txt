@@ -58,6 +58,7 @@ polymer build --js-compile
 polymer serve build/default/ --open
 firebase deploy
 firebase open hosting:site
+firebase deploy --only functions
 
 
 bower install --save PolymerElements/iron-image
