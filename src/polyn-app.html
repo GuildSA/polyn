@@ -225,6 +225,10 @@
           },
           statusKnown:{
               type: Object
+          },
+          searchDialogValue: {
+            type: String,
+            value: ""
           }
         };
       }
@@ -325,11 +329,11 @@
 
             console.log("  length after pop = " + this.tabViewStacks[selectedTab].length);
 
-popped.show = false;
+            popped.show = false;
 
-if(popped.testMethod != undefined) {
-  popped.testMethod(42);
-}
+// if(popped.testMethod != undefined) {
+//   popped.testMethod(42);
+// }
 
             if(this.tabViewStacks[selectedTab].length > 0) {
 
@@ -457,17 +461,6 @@ if(popped.testMethod != undefined) {
         if(this.page == "backendless-view") {
           this.$.backendlessView.searchText = this.$.searchInput.value;
         }
-
-
-// // Redux simple test...
-//           if(this.$.searchInput.value) {
-
-//             this.dispatch('addFriend', this.$.searchInput.value);
-
-//             this.dispatch('setCurrentSearchText', this.$.searchInput.value);
-//           }
-
-
       }
 
       _onTapSearchIconBtn() {
