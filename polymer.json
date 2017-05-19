@@ -21,7 +21,8 @@
   ],
   "extraDependencies": [
     "manifest.json",
-    "bower_components/webcomponentsjs/*.js"
+    "bower_components/webcomponentsjs/*.js",
+    "bower_components/backendless/src/backendless.js"
   ],
   "lint": {
     "rules": ["polymer-2"]
