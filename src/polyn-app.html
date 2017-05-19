@@ -313,18 +313,34 @@
 
       _onTapAjaxView() {
         this.page = 'ajax-view';
+
+        if(!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
       }
 
       _onTapBackendlessView() {
         this.page = 'backendless-view';
+
+        if(!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
       }
 
       _onTapBasicAnimView() {
         this.page = 'basicanim-view';
+
+        if(!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
       }
 
       _onTapPageAnimView() {
         this.page = 'pageanim-view';
+
+        if(!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
       }
 
       _onTapToolbarNavBtn() {
