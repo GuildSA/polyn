@@ -4,7 +4,7 @@
 
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="animation-view">
+<dom-module id="basicanim-view">
   <template>
     <style include="shared-styles">
       :host {
@@ -16,19 +16,19 @@
     </style>
 
     <div class="card">
-      <h1>Neon Animation Test</h1>
+      <h1>Basic Neon Animation Tests</h1>
     </div>
 
   </template>
 
   <script>
 
-    class AnimationView extends Polymer.mixinBehaviors([
+    class BasicAnimView extends Polymer.mixinBehaviors([
         Polymer.NeonAnimatableBehavior,
         Polymer.NeonAnimationRunnerBehavior
       ], Polymer.Element) {
 
-      static get is() { return 'animation-view'; }
+      static get is() { return 'basicanim-view'; }
 
       static get properties() {
         return {
@@ -108,7 +108,7 @@
       }
     }
 
-    window.customElements.define(AnimationView.is, AnimationView);
+    window.customElements.define(BasicAnimView.is, BasicAnimView);
 
   </script>
 </dom-module>

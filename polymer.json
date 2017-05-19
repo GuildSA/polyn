@@ -3,15 +3,15 @@
   "shell": "src/polyn-app.html",
   "fragments": [
     "src/home-view.html",
-    "src/requests-view.html",
     "src/messages-view.html",
     "src/profile-view.html",
     "src/chat-view.html",
     "src/business-view.html",
     "src/item-view.html",
+    "src/ajax-view.html",
     "src/backendless-view.html",
-    "src/pages-view.html",
-    "src/animation-view.html",
+    "src/pageanim-view.html",
+    "src/basicanim-view.html",
     "src/error404-view.html"
   ],
   "sources": [

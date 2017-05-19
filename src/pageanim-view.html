@@ -10,7 +10,7 @@
 
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="pages-view">
+<dom-module id="pageanim-view">
   <template>
     <style include="shared-styles">
       :host {
@@ -32,12 +32,12 @@
 
   <script>
 
-    class PagesView extends Polymer.mixinBehaviors([
+    class PageAnimView extends Polymer.mixinBehaviors([
         Polymer.NeonAnimatableBehavior,
         Polymer.NeonAnimationRunnerBehavior
       ], Polymer.Element) {
 
-      static get is() { return 'pages-view'; }
+      static get is() { return 'pageanim-view'; }
 
       static get properties() {
         return {
@@ -100,7 +100,7 @@
       }
     }
 
-    window.customElements.define(PagesView.is, PagesView);
+    window.customElements.define(PageAnimView.is, PageAnimView);
 
   </script>
 </dom-module>

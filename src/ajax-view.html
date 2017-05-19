@@ -7,7 +7,7 @@
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="requests-view">
+<dom-module id="ajax-view">
   <template>
     <style include="shared-styles">
       :host {
@@ -54,8 +54,8 @@
   </template>
 
   <script>
-    class RequestsView extends Polymer.Element {
-      static get is() { return 'requests-view'; }
+    class AjaxView extends Polymer.Element {
+      static get is() { return 'ajax-view'; }
 
       static get properties() {
         return {
@@ -92,7 +92,7 @@
       }
     }
 
-    window.customElements.define(RequestsView.is, RequestsView);
+    window.customElements.define(AjaxView.is, AjaxView);
 
   </script>
 </dom-module>

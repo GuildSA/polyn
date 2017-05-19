@@ -20,7 +20,7 @@
 <link rel="import" href="custom-icons.html">
 
 <link rel="lazy-import" href="home-view.html">
-<link rel="lazy-import" href="requests-view.html">
+<link rel="lazy-import" href="ajax-view.html">
 <link rel="lazy-import" href="messages-view.html">
 <link rel="lazy-import" href="profile-view.html">
 <link rel="lazy-import" href="chat-view.html">
@@ -28,8 +28,8 @@
 <link rel="lazy-import" href="item-view.html">
 <link rel="lazy-import" href="error404-view.html">
 <link rel="lazy-import" href="backendless-view.html">
-<link rel="lazy-import" href="pages-view.html">
-<link rel="lazy-import" href="animation-view.html">
+<link rel="lazy-import" href="pageanim-view.html">
+<link rel="lazy-import" href="basicanim-view.html">
 
 <dom-module id="polyn-app">
   <template>
@@ -117,13 +117,10 @@
       <app-drawer id="drawer" slot="drawer">
         <app-toolbar>Tests</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <!--<a name="home-view" href="/home-view">Home</a>
-          <a name="requests-view" href="/requests-view">Requests</a>
-          <a name="messages-view" href="/messages-view">Messages</a>
-          <a name="profile-view" href="/profile-view">Profile</a>-->
+          <a name="ajax-view" href="ajax-view">AJAX + Spinner</a>
           <a name="backendless-view" href="backendless-view">Backendless</a>
-          <a name="pages-view" href="pages-view">Pages</a>
-          <a name="animation-view" href="animation-view">Animation</a>
+          <a name="basicanim-view" href="basicanim-view">Basic Animation</a>
+          <a name="pageanim-view" href="pageanim-view">Page Animation</a>
         </iron-selector>
       </app-drawer>
 
@@ -150,7 +147,6 @@
 
             <paper-tabs id="tabs" selected="0" sticky>
               <paper-tab on-tap="onTapHomeTab">Home</paper-tab>
-              <paper-tab on-tap="onTapRequestsTab">Requests</paper-tab>
               <paper-tab on-tap="onTapMessagesTab">
                 <span>Messages</span>
                 <paper-badge for="_" label="1" sufffix></paper-badge>
@@ -167,16 +163,16 @@
             fallback-selection="view404"
             role="main">
           <home-view name="home-view"></home-view>
-          <requests-view name="requests-view"></requests-view>
           <messages-view name="messages-view"></messages-view>
           <profile-view name="profile-view"></profile-view>
           <chat-view name="chat-view"></chat-view>
           <business-view name="business-view"></business-view>
           <item-view name="item-view"></item-view>
           <error404-view name="error404-view"></error404-view>
+          <ajax-view name="ajax-view"></ajax-view>
           <backendless-view id="backendlessView" name="backendless-view"></backendless-view>
-          <pages-view name="pages-view"></pages-view>
-          <animation-view name="animation-view"></animation-view>
+          <pageanim-view name="pageanim-view"></pageanim-view>
+          <basicanim-view name="basicanim-view"></basicanim-view>
         </iron-pages>
 
       </app-header-layout>
@@ -350,10 +346,8 @@
               if(this.$.tabs.selected == 0) {
                 this.page = 'home-view';
               } else if(this.$.tabs.selected == 1) {
-                this.page = 'requests-view';
-              } else if(this.$.tabs.selected == 2) {
                 this.page = 'messages-view';
-              } else if(this.$.tabs.selected == 3) {
+              } else if(this.$.tabs.selected == 2) {
                 this.page = 'profile-view';
               }
 
@@ -405,21 +399,6 @@
 // we know for sure the user is going to use the app vs just visiting it once.
         this._checkForAnonymousSignIn();
         //this.$.auth.signOut()
-      }
-
-      onTapRequestsTab() {
-        console.log("PolynApp.onTapRequestsTab: stack size = " + this.tabViewStacks[1].length + ", tab = " + this.$.tabs.selected);
-
-        // Requests tab = index 1!
-        if(this.tabViewStacks[1].length > 0) {
-          this.$.toolbarNavBtn.icon = "arrow-back";
-          var viewName = this.tabViewStacks[1][this.tabViewStacks[1].length - 1].tagName.toLowerCase();
-          console.log("  Element view to restore: " + viewName);
-          this.page = viewName;
-        } else {
-          this.$.toolbarNavBtn.icon = "custom-icons:menu";
-          this.page = 'requests-view';
-        }
       }
 
       onTapMessagesTab() {
