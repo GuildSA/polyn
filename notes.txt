@@ -9,7 +9,7 @@ https://www.captaincodeman.com/2017/04/06/tips-upgrading-polymer-2-0-imports-hyb
 
 ------------------------------------------------------------------------
 
-I did the step below in the Firebase Console for Goodz! so I could run
+I did the step below in the Firebase Console for Polyn so I could run
 the app using "polymer serve --open"
 
 Error: This domain (127.0.0.1) is not authorized to run this operation. 
