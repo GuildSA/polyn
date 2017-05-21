@@ -146,12 +146,12 @@
           </app-toolbar>
 
             <paper-tabs id="tabs" selected="0" sticky>
-              <paper-tab on-tap="onTapHomeTab">Home</paper-tab>
-              <paper-tab on-tap="onTapMessagesTab">
-                <span>Messages</span>
-                <paper-badge for="_" label="1" sufffix></paper-badge>
+             
+              <paper-tab on-tap="onTapHomeTab"><paper-icon-button id="home" icon="custom-icons:home" on-tap="onTapHomeTab"></paper-icon-button></paper-tab>
+              <paper-tab on-tap="onTapMessagesTab"><paper-icon-button id="home" icon="custom-icons:message" on-tap="onTapMessagesTab">
+                <paper-badge for="_" label="1" suffix></paper-badge>
               </paper-tab>
-              <paper-tab on-tap="onTapProfileTab">Profile</paper-tab>
+              <paper-tab on-tap="onTapProfileTab"><paper-icon-button id="home" icon="custom-icons:account-circle" on-tap="onTapProfileTab"></paper-icon-button></paper-tab>
             </paper-tabs>
             
         </app-header>
