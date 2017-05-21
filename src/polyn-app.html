@@ -148,9 +148,11 @@
             <paper-tabs id="tabs" selected="0" sticky>
              
               <paper-tab on-tap="onTapHomeTab"><paper-icon-button id="home" icon="custom-icons:home" on-tap="onTapHomeTab"></paper-icon-button></paper-tab>
-              <paper-tab on-tap="onTapMessagesTab"><paper-icon-button id="message" icon="custom-icons:message" on-tap="onTapMessagesTab">
+              <!-- TODO: Need to figure out how to move the badge closer to the messages icon -->
+              <paper-tab on-tap="onTapMessagesTab"><paper-icon-button id="messages" icon="custom-icons:message" on-tap="onTapMessagesTab"></paper-icon-button>
                 <paper-badge for="_" label="1" suffix></paper-badge>
               </paper-tab>
+              
               <paper-tab on-tap="onTapProfileTab"><paper-icon-button id="profile" icon="custom-icons:account-circle" on-tap="onTapProfileTab"></paper-icon-button></paper-tab>
             </paper-tabs>
             
