@@ -15,7 +15,7 @@
     </style>
 
     <div class="card">
-      <h1>Backendless Data Test</h1>
+      <h1>Data Test</h1>
 
         <paper-button on-tap="_onTapCreateData" raised>Create Data</paper-button>
         <paper-button on-tap="_onTapGetData" raised>Get Data</paper-button>
@@ -31,13 +31,23 @@
     </div>
 
     <div class="card">
-        <h1>Backendless Login Test</h1>
+        <h1>General User Tests</h1>
+        <paper-button on-tap="_onTapGetUser" raised>Get User</paper-button>
+        <paper-button on-tap="_onTapLogout" raised>Logout</paper-button>
+    </div>
 
+    <div class="card">
+        <h1>Login via Email Test</h1>
         <paper-input id="email" label="Email"></paper-input>
         <paper-input id="password" label="Password"></paper-input>
         <paper-button on-tap="_onTapRegister" raised>Register</paper-button>
         <paper-button on-tap="_onTapLogin" raised>Login</paper-button>
-        <paper-button on-tap="_onTapLogout" raised>Logout</paper-button>
+    </div>
+
+    <div class="card">
+        <h1>Login via Social Test</h1>
+        <paper-button on-tap="_onTapLoginViaFacebook" raised>Login via Facebook</paper-button>
+        <paper-button on-tap="_onTapLoginViaTwitter" raised>Login via Twitter</paper-button>
     </div>
 
     <paper-dialog id="errorDialog">
@@ -51,8 +61,26 @@
   </template>
 
   <script>
-      class BackendlessView extends Polymer.Element {
 
+    window.fbAsyncInit = function() {
+        FB.init({
+        appId      : '668353780029691',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v2.8'
+        });
+        FB.AppEvents.logPageView();   
+    };
+
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    class BackendlessView extends Polymer.Element {
         static get is() { return 'backendless-view'; }
 
         static get properties() {
@@ -82,79 +110,6 @@
             this._onTapGetData();
         }
 
-        _addTestTableEntry(testTableEntry) {
-            console.log("BackendlessView._addTestTableEntry: " + testTableEntry.objectId);
-
-            this.push('testTable', testTableEntry);
-        }
-
-        _onTapRegister() {
-            console.log("BackendlessView._onTapRegister");
-
-            var self = this;
-
-            console.log("  email: " + this.$.email.value);
-            console.log("  password: " + this.$.password.value);
-
-            function userRegistered(user) {
-                console.log(  "User has been registered!");
-            }
-
-            function gotError(err) {
-                console.log("  error message - " + err.message);
-                console.log("  error code - " + err.statusCode);
-
-                self.$.errorMessage.innerHTML = error.message;
-                self.$.errorDialog.toggle();
-            }
-
-            var user = new Backendless.User();
-            user.email = this.$.email.value;
-            user.password = this.$.password.value;
-
-            Backendless.UserService.register( user ).then( userRegistered ).catch( gotError );
-        }
-
-        _onTapLogin() {
-            console.log("BackendlessView._onTapLogin");
-
-            var self = this;
-
-            console.log("  email: " + this.$.email.value);
-            console.log("  password: " + this.$.password.value);
-
-            Backendless.UserService.login(this.$.email.value, this.$.password.value, true)
-            .then(function(loggedInUser) {
-                console.log("  User has logged in!");
-            })
-            .catch(function(error) {
-                console.log("  error message: " + error.message);
-                console.log("  error code: " + error.statusCode);
-
-                self.$.errorMessage.innerHTML = error.message
-                self.$.errorDialog.toggle();
-            });
-        }
-
-        _onTapLogout() {
-            console.log("BackendlessView._onTapLogout");
-
-            var self = this;
-
-            Backendless.UserService.logout()
-            .then(function() {
-                console.log( "  User has logged out!" );
-            })
-            .catch(function(error) {
-
-                console.log( "  error message: " + error.message );
-                console.log( "  error code: " + error.statusCode );
-
-                self.$.errorMessage.innerHTML = error.message;
-                self.$.errorDialog.toggle();
-            });
-        }
-
         _onTapCreateData() {
             console.log("BackendlessView._onTapCreateData");
 
@@ -164,11 +119,10 @@
             .then(function(obj) {
                 console.log("  object saved. objectId " + obj.objectId)
                 self.addTestTableEntry(obj)
-            } )
+            })
             .catch(function(error) {
                 console.log("  error message: " + error.message);
                 console.log("  error code: " + error.statusCode);
-
                 self.$.errorMessage.innerHTML = error.message;
                 self.$.errorDialog.toggle();
             });
@@ -196,18 +150,195 @@
                     //console.log("  objectId = " + result[i].objectId);
                     self._addTestTableEntry(result[i])
                 }
-
             })
             .catch(function(error) {
-
                 console.log("  error message: " + error.message);
                 console.log("  error code: " + error.statusCode);
-
                 self.$.errorMessage.innerHTML = error.message;
                 self.$.errorDialog.toggle();
             });
         }
 
+        _addTestTableEntry(testTableEntry) {
+            console.log("BackendlessView._addTestTableEntry: " + testTableEntry.objectId);
+
+            this.push('testTable', testTableEntry);
+        }
+
+        _onTapRegister() {
+            console.log("BackendlessView._onTapRegister");
+
+            var self = this;
+
+            console.log("  email: " + this.$.email.value);
+            console.log("  password: " + this.$.password.value);
+
+            function userRegistered(user) {
+                console.log(  "User has been registered!");
+            }
+
+            function gotError(err) {
+                console.log("  error message - " + err.message);
+                console.log("  error code - " + err.statusCode);
+                self.$.errorMessage.innerHTML = error.message;
+                self.$.errorDialog.toggle();
+            }
+
+            var user = new Backendless.User();
+            user.email = this.$.email.value;
+            user.password = this.$.password.value;
+
+            Backendless.UserService.register( user ).then( userRegistered ).catch( gotError );
+        }
+
+        _onTapLogin() {
+            console.log("BackendlessView._onTapLogin");
+
+            var self = this;
+
+            console.log("  email: " + this.$.email.value);
+            console.log("  password: " + this.$.password.value);
+
+            Backendless.UserService.login(this.$.email.value, this.$.password.value, true)
+            .then(function(loggedInUser) {
+                console.log("  User has logged in!");
+            })
+            .catch(function(error) {
+                console.log("  error message: " + error.message);
+                console.log("  error code: " + error.statusCode);
+                self.$.errorMessage.innerHTML = error.message
+                self.$.errorDialog.toggle();
+            });
+        }
+
+        _onTapLogout() {
+            console.log("BackendlessView._onTapLogout");
+
+            var self = this;
+
+            Backendless.UserService.logout()
+            .then(function() {
+                console.log( "  User has logged out!" );
+            })
+            .catch(function(error) {
+                console.log( "  error message: " + error.message );
+                console.log( "  error code: " + error.statusCode );
+                self.$.errorMessage.innerHTML = error.message;
+                self.$.errorDialog.toggle();
+            });
+        }
+
+        _onTapGetUser() {
+            console.log("BackendlessView._onTapGetUser");
+
+            Backendless.UserService.isValidLogin()
+            .then(function(result) {
+                console.log("  result: " + result);
+
+                if(result == true) {
+                    console.log( "  User is logged in!" );
+
+                    Backendless.UserService.getCurrentUser()
+                    .then(function(result) {
+                        //console.log("  result: " + JSON.stringify(result));
+                        console.log("  objectId: " + result.objectId);
+                        //console.log("  first_name: " + result.first_name);
+                        //console.log("  last_name: " + result.last_name);
+                        console.log("  email: " + result.email);
+                        console.log("  id: " + result.id);
+                    })
+                    .catch(function(error) {
+                        console.log( "  error message: " + error.message );
+                        console.log( "  error code: " + error.statusCode );
+                        self.$.errorMessage.innerHTML = error.message;
+                        self.$.errorDialog.toggle();
+                    });
+                } else {
+                    console.log( "  User is NOT logged in." );
+                }
+            })
+            .catch(function(error) {
+                console.log("  error: " + error);
+            });
+        }
+
+        _onTapLoginViaFacebook() {
+            console.log("BackendlessView._onTapLoginViaFacebook");
+
+            Backendless.UserService.isValidLogin()
+            .then(function(result) {
+                console.log("  result: " + result);
+
+                if(result == true) {
+                    console.log( "  User is already logged in!" );
+                } else {
+
+                    console.log( "  User is NOT logged in. Log in via Facebook!" );
+
+                    //var facebookFieldsMapping = {"first_name":"first_name", "last_name":"last_name", "email":"email"};
+                    var facebookFieldsMapping = {};
+                    var permissions = ["email"];
+                    
+                    Backendless.UserService.loginWithFacebook(facebookFieldsMapping, permissions, true) 
+                    .then(function(result) {
+
+                        console.log("  objectId: " + result.objectId);
+                        //console.log("  first_name: " + result.first_name);
+                        //console.log("  last_name: " + result.last_name);
+                        console.log("  email: " + result.email);
+                        console.log("  id: " + result.id);
+                    })
+                    .catch(function(error) {
+                        console.log( "  error message: " + error.message );
+                        console.log( "  error code: " + error.statusCode );
+                        self.$.errorMessage.innerHTML = error.message;
+                        self.$.errorDialog.toggle();
+                    });
+                }
+            })
+            .catch(function(error) {
+                console.log("  error: " + error);
+            });
+        }
+
+        _onTapLoginViaTwitter() {
+            console.log("BackendlessView._onTapLoginViaTwitter");
+
+            Backendless.UserService.isValidLogin()
+            .then(function(result) {
+                console.log("  result: " + result);
+
+                if(result == true) {
+                    console.log( "  User is already logged in!" );
+                } else {
+
+                    console.log( "  User is NOT logged in. Log in via Twitter!" );
+                    
+                    //var twitterFieldsMapping = {"first_name":"first_name", "last_name":"last_name", "email":"email"};
+                    var twitterFieldsMapping = {};
+                    
+                    Backendless.UserService.loginWithTwitter(twitterFieldsMapping, true) 
+                    .then(function(result) {
+
+                        console.log("  objectId: " + result.objectId);
+                        //console.log("  first_name: " + result.first_name);
+                        //console.log("  last_name: " + result.last_name);
+                        console.log("  email: " + result.email);
+                        console.log("  id: " + result.id);
+                    })
+                    .catch(function(error) {
+                        console.log("  error: " + error);
+                        // console.log( "  error message: " + error.message );
+                        // console.log( "  error code: " + error.statusCode );
+                        // self.$.errorMessage.innerHTML = error.message;
+                        // self.$.errorDialog.toggle();
+                    });
+                }
+            })
+            .catch(function(error) {
+                console.log("  error: " + error);
+            });
+        }
     }
 
     window.customElements.define(BackendlessView.is, BackendlessView);
