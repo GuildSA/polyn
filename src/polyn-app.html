@@ -359,10 +359,6 @@
 
             popped.show = false;
 
-// if(popped.testMethod != undefined) {
-//   popped.testMethod(42);
-// }
-
             if(this.tabViewStacks[selectedTab].length > 0) {
 
               // If the tab's view stack is NOT empty - restore the next view.
@@ -399,15 +395,11 @@
         this.page = page;
         this.$.toolbarNavBtn.icon = "arrow-back";
         this.tabViewStacks[this.$.tabs.selected].push(this.$.ironPages.selectedItem);
-
-//if(this.$.ironPages.selectedItem.hasAttribute('show')) {
-
+ 
+// TODO: What's the best practice here for checking for an Attribute?
+        //if(this.$.ironPages.selectedItem.hasAttribute('show')) {
           this.$.ironPages.selectedItem.show = true;
-
-// TODO: Why is testMethod undefined in this case but not in the case above for _onTapToolbarNavBtn?
-//this.$.ironPages.selectedItem.testMethod(55);
-
-//}
+        //}
 
         // Return the newly selected item or page so we can set some data on it, if required.
         return this.$.ironPages.selectedItem;
@@ -429,7 +421,7 @@
 
 // TODO: We might want to delay the call to _checkForAnonymousSignIn until 
 // we know for sure the user is going to use the app vs just visiting it once.
-        this._checkForAnonymousSignIn();
+        //this._checkForAnonymousSignIn();
         //this.$.auth.signOut()
       }
 
