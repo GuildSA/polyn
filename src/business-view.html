@@ -4,6 +4,7 @@
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="business-view">
@@ -13,12 +14,16 @@
         display: block;
         padding: 10px;
         }
+
+        
     </style>
 
     <div class="card">
+        <iron-image style="width:100%; height:400px; background-color: lightgray;"
+  sizing="cover" preload fade src="http://lorempixel.com/600/400"></iron-image>
         <div class="circle">[[businessId]]</div>
-        <h1>Some Business</h1>
-        <p>Put info about the business here.</p>
+        <h1>Spinster Records</h1>
+        <p>Spinster Records a vinyl record and lifestyle store located in North Oak Cliff, just south of downtown Dallas, Texas. </p>
         <paper-button raised>Request a Chat</paper-button>
         <p>If they have any listed items for sale... list them below</p>
         <paper-button on-tap="_onTapItemDetail" raised>Check This Out</paper-button>
