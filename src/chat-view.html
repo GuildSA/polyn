@@ -5,6 +5,7 @@
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../bower_components/neon-animation/web-animations.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animations.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="chat-view">
@@ -39,6 +40,12 @@
             </div>
         </template>
     </dom-repeat>
+       <!-- Code for Message bar -->
+             <paper-input label="Message..."></paper-input>
+             <button id="submit" type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+              Send
+            </button>
+
 
   </template>
 
