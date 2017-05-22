@@ -72,9 +72,19 @@
         font-weight: bold;
       }
 
+      .logo {
+        position: absolute;
+        text-align: center;
+        top: 15px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+      }
+
       paper-badge {
         --paper-badge-background: #F57951;
-        --paper-badge-margin-left: 60px;
+        --paper-badge-margin-left: 30px;
         --paper-badge-margin-bottom: 20px;
       }
 
@@ -130,7 +140,7 @@
         <app-header slot="header" condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button id="toolbarNavBtn" icon="custom-icons:menu" on-tap="_onTapToolbarNavBtn"></paper-icon-button>
-            <div main-title>
+            <div class="logo" main-title>
               <picture>
                 <source media="(max-width: 767px)" sizes="(max-width:767px) 50vw, 10vw"
                 srcset="/images/logo/polyn-logo-main-small.png">
@@ -141,14 +151,14 @@
                 <img src="/images/logo/polyn-logo-main-small.png">
               </picture>
             </div>
-            <paper-input id="searchInput" label="Search..." value="{{searchText}}"></paper-input>
-            <paper-icon-button on-tap="_onTapSearchIconBtn" icon="search"></paper-icon-button>
+            <!--<paper-input id="searchInput" label="Search..." value="{{searchText}}"></paper-input>
+            <paper-icon-button on-tap="_onTapSearchIconBtn" icon="search"></paper-icon-button>-->
           </app-toolbar>
 
             <paper-tabs id="tabs" selected="0" sticky>
              
               <paper-tab on-tap="onTapHomeTab"><paper-icon-button id="home" icon="custom-icons:home" on-tap="onTapHomeTab"></paper-icon-button></paper-tab>
-              <!-- TODO: Need to figure out how to move the badge closer to the messages icon -->
+             
               <paper-tab on-tap="onTapMessagesTab"><paper-icon-button id="messages" icon="custom-icons:question-answer" on-tap="onTapMessagesTab"></paper-icon-button>
                 <paper-badge for="_" label="1" suffix></paper-badge>
               </paper-tab>
