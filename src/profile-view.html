@@ -26,11 +26,10 @@
         flex: 1;
       }
 
-      paper-button.signout {
+      paper-button.bluebtn {
         background-color: var(--app-primary-color);
         color: white;
-        position: absolute;
-        bottom: 2.5%;
+        margin-bottom: 8px;
         right:0;
         left:0;
         align-content: center;
@@ -38,6 +37,11 @@
           background-color: var(--paper-pink-a200) !important;
           color: white !important;
         };
+      }
+
+      .bottom {
+        position: absolute;
+        bottom: 2.5%;
       }
 
       .center {
@@ -74,11 +78,13 @@
           </template>
 
           <template is="dom-if" if="[[isAnonymous]]">
-            <paper-button class="custom signout" on-tap="_login" raised>Sign In</paper-button>
+            <paper-button class="custom bluebtn" on-tap="_signInUsingGmail" raised>Sign In Using Gmail</paper-button>
+            <paper-button class="custom bluebtn" on-tap="_signInUsingFacebook" raised>Sign In Using Facebook</paper-button>
+            <paper-button class="custom bluebtn" on-tap="_signInUsingTwitter" raised>Sign In Using Twitter</paper-button>
           </template>
 
           <template is="dom-if" if="[[!isAnonymous]]">
-            <paper-button class="custom signout" on-tap="_logout" raised>Sign Out</paper-button>
+            <paper-button class="custom bluebtn bottom" on-tap="_signOut" raised>Sign Out</paper-button>
           </template>
       <div>
     </div>
@@ -201,8 +207,8 @@
           }); 
       }
 
-      _login() {
-        console.log("ProfileView._login");
+      _signInUsingGmail() {
+        console.log("ProfileView._signInUsingGmail");
 
         if(this.user == null) {
           console.log("  signInWithPopup");
@@ -210,12 +216,35 @@
         } else if(this.user.isAnonymous == true) {
           this._linkGoogleAccount();
         } else {
-
           console.log("  Already logged into an account!");
         }
       }
       
-      _logout() {
+      _signInUsingFacebook() {
+        console.log("ProfileView._signInUsingFacebook");
+
+        if(this.user == null) {
+          console.log("  signInWithPopup");
+          this.$.auth.provider = "facebook"
+          return this.$.auth.signInWithPopup();
+        } else {
+          console.log("  Already logged into an account!");
+        }
+      }
+
+      _signInUsingTwitter() {
+        console.log("ProfileView._signInUsingTwitter");
+
+        if(this.user == null) {
+          console.log("  signInWithPopup");
+          this.$.auth.provider = "twitter"
+          return this.$.auth.signInWithPopup();
+        } else {
+          console.log("  Already logged into an account!");
+        }
+      }
+
+      _signOut() {
           console.log("ProfileView._logout");
 
           return this.$.auth.signOut();

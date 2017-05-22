@@ -1,4 +1,13 @@
 
+
+ --- Twitter Callback URLs --
+
+We can only test with one at a time!
+https://apps.twitter.com/
+
+Backendless: https://api.backendless.com
+Firebase:    https://goodz-7e036.firebaseapp.com/__/auth/handler
+
 ------------------------------------------------------------------------
 
  -- Research Links -- 
