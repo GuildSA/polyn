@@ -1,12 +1,24 @@
 
 
+
+ -- Firebase --
+
+ {
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null"
+  }
+}
+
+------------------------------------------------------------------------
+
  --- Twitter Callback URLs --
 
 We can only test with one at a time!
 https://apps.twitter.com/
 
 Backendless: https://api.backendless.com
-Firebase:    https://goodz-7e036.firebaseapp.com/__/auth/handler
+Firebase:    https://polyn-3c431.firebaseapp.com/__/auth/handler
 
 ------------------------------------------------------------------------
 
@@ -100,14 +112,24 @@ cp -rn node_modules build/default/
 
 
 
-  "builds": [{
-    "bundle": true,
-    "addServiceWorker": true,
+"builds": [{
+  "bundle": true,
+  "addServiceWorker": true,
+  "js": {"minify": true},
+  "css": {"minify": true},
+  "html": {"minify": true}
+}],
+
+"builds": [{
+    "name": "default",
     "js": {"minify": true},
     "css": {"minify": true},
-    "html": {"minify": true}
+    "html": {"minify": true},
+    "bundle": true,
+    "addServiceWorker": true,
+    "addPushManifest": true,
+    "insertPrefetchLinks": true
   }],
-
   
 ------------------------------------------------------------------------
 
