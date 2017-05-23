@@ -7,68 +7,71 @@
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="messages-view">
+  <template>
+  <style include="shared-styles">
+    :host {
+      display: block;
+      padding: 10px;
+    }
+  </style>
+
+  <firebase-auth 
+    id="auth" 
+    app-name="polyn-app" 
+    user="{{user}}">
+  </firebase-auth>
+
+  <firebase-query
+    id="query"
+    app-name="polyn-app"
+    path="/users/[[user.uid]]/chats"
+    data="{{chats}}">
+  </firebase-query>
+
+  <app-indexeddb-mirror
+    session="[[user.uid]]"
+    key="chats"
+    data="{{chats}}"
+    persisted-data="{{persistedChats}}">
+  </app-indexeddb-mirror>
+
+  <dom-repeat items="[[persistedChats]]" as="chat" initial-count="5">
     <template>
-    <style include="shared-styles">
-        :host {
-        display: block;
-        padding: 10px;
-        }
-    </style>
-
-    <firebase-auth id="auth" app-name="polyn-app" user="{{user}}"></firebase-auth>
-
-    <firebase-query
-        id="query"
-        app-name="polyn-app"
-        path="/users/[[user.uid]]/chats"
-        data="{{chats}}">
-    </firebase-query>
-
-    <app-indexeddb-mirror
-        session="[[user.uid]]"
-        key="chats"
-        data="{{chats}}"
-        persisted-data="{{persistedChats}}">
-    </app-indexeddb-mirror>
-
-    <dom-repeat items="[[persistedChats]]" as="chat" initial-count="5">
-        <template>
-            <div class="card" on-tap="_onTappedMessage">
-                <h2>[[chat.subject]]</h2>
-                <!--<p>buyer: [[chat.buyer]]</p>-->
-                <p>Seller: [[chat.seller]]</p>
-                <!--<p>chatId: [[chat.chatId]]</p>-->
-            </div>
-             
-        </template>
-    </dom-repeat>
+      <div class="card" on-tap="_onTappedMessage">
+        <h2>[[chat.subject]]</h2>
+        <!--<p>buyer: [[chat.buyer]]</p>-->
+        <p>Seller: [[chat.seller]]</p>
+        <!--<p>chatId: [[chat.chatId]]</p>-->
+      </div>
+    </template>
+  </dom-repeat>
 
   </template>
 
     <script>
-        class MessagesView extends Polymer.GestureEventListeners(Polymer.Element) {
-            static get is() { return 'messages-view'; }
+      class MessagesView extends Polymer.GestureEventListeners(Polymer.Element) {
+        static get is() { return 'messages-view'; }
 
-            _onTappedMessage(e) {
-                console.log("MessagesView._onTappedMessage");
+        _onTappedMessage(e) {
+          console.log("MessagesView._onTappedMessage");
 
-                // Which index was clicked?
-                var index = e.model.index;
-                console.info(index + ' was clicked.');
+          // Which index was clicked?
+          var index = e.model.index;
+          console.info(index + ' was clicked.');
 
-                // What object is stored at that index?
-                console.info(this.$.query.data[index]);
+          // What object is stored at that index?
+          console.info(this.$.query.data[index]);
 
-                // What is the Firebase key for this data?
-                console.info(this.$.query.data[index].$key);
+          // What is the Firebase key for this data?
+          console.info(this.$.query.data[index].$key);
 
-                // Push the chat-view and pass the chatMessagesId.
-                var polynApp = document.getElementById("polynApp");
-                var chatView = polynApp.pushPageOnCurrentTab("chat-view");
-                chatView.chatMessagesId = this.$.query.data[index].chatId;
-            }
-        }
+          // Push the chat-view and pass the chatMessagesId.
+          var polynApp = document.getElementById("polynApp");
+          var chatView = polynApp.pushPageOnCurrentTab("chat-view");
+          chatView.chatMessagesId = this.$.query.data[index].chatId;
+      }
+    }
 
-        window.customElements.define(MessagesView.is, MessagesView);
-    </script>
+    window.customElements.define(MessagesView.is, MessagesView);
+  </script>
 </dom-module>
