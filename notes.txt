@@ -135,7 +135,28 @@ cp -rn node_modules build/default/
 
  -- Markup & Code Scraps -- 
 
+// TODO: Using firebase-document to create new keys with data is awkward, but it may 
+// still be useful for simply listening to existing keys.
+        // this.$.fbdocument.path = "/test/" + newKey;
+        // this.$.fbdocument.data = chat;
 
+        // this.$.fbdocument.path = "/test";
+        // //this.$.fbdocument.data = "xxxx";
+        //this.$.fbdocument.data = chat;
+
+        // this.$.fbdocument.setStoredValue("/test", chat)
+        // .then(function() {
+        //     console.log(" saveValue");
+        // })
+        // .catch(function(error) {
+        //     console.log("  error: " + error);
+        // });
+
+        // this.testData = {
+        //     username: "Kevin",
+        //     email: "x@x.com"
+        // };
+        
 So where this really bites me is that 
 `document.querySelector('my-element')` finds nothing, but 
 `document.getElementsByTagName('my-element')` does.

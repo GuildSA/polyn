@@ -37,12 +37,11 @@
       data="{{chatMessages}}">
     </firebase-query>
 
-    <!--<firebase-document
+    <firebase-document
       app-name="polyn-app"
-      id="fbdocument"
-      path="/test"
-      data="{{testData}}">
-    </firebase-document>-->
+      id="usersdata"
+      data="{{usersData}}">
+    </firebase-document>
 
     <app-indexeddb-mirror 
       session="[[user.uid]]" 
@@ -75,17 +74,20 @@
 
       static get properties() {
         return {
-          user: {
-            type: Object
-          },
           chatMessagesId: {
             type: String,
             observer: '_chatMessagesIdChanged'
           },
-          testData: {
-            type: String,
-            observer: '_testDataChanged'
+
+          user: {
+            type: Object,
+            observer: '_userChanged'
           },
+          usersData: {
+            type: String,
+            observer: '_usersDataChanged'
+          },
+
           show: {
             type: Boolean,
             value: false,
@@ -126,6 +128,22 @@
         console.log("ChatView.attributeChangedCallback: name = " + name + ", old = " + ", value = " + value);
       }
       
+      _chatMessagesIdChanged() {
+        console.log("ChatView._chatMessagesIdChanged: " + this.chatMessagesId);
+      }
+
+      _userChanged(user) {
+        console.log("ChatView._userChanged: " + JSON.stringify(user, null, 4));
+
+// TODO: Restructure the user data! It pulls down all the chats everytime and we don't need that here!
+        // As soon as we get the user - get the users data so we can learn more about them!
+        this.$.usersdata.path = "/users/" + user.uid
+      }
+
+      _usersDataChanged(e) {
+        console.log("ChatView._usersDataChanged: " + JSON.stringify(e, null, 4));
+      }
+
       _onTapSendDialogBtn() {
         console.log("ChatView._onTapSendDialogBtn: message = " + this.$.message.value);
 
@@ -140,52 +158,21 @@
         var text = this.$.message.value;
 
         var newKey = firebase.app("polyn-app").database().ref().child("chats/" + this.chatMessagesId).push().key;
-        console.log(" newKey: " + newKey);
+        //console.log(" newKey: " + newKey);
 
-// TODO: Get the user's screen name vs displayName.
         var chatMessage = {
-          name: this.user.uid,
-          senderId: this.user.displayName,
+          name: this.usersData.name,
+          senderId: this.user.uid,
           text: text,
           timeStamp: firebase.database.ServerValue.TIMESTAMP
         };
 
+        // Write the new chat message under a new key, which is under the existing chat mnessage thread id.
         firebase.app("polyn-app").database().ref("chats/" + this.chatMessagesId + "/" + newKey).set(chatMessage);
 
+        // Empty the message input.
         this.$.message.value = "";
-
-
-
-// TODO: Using firebase-document to create new keys with data is awkward, but it may 
-// still be useful for simply listening to existing keys.
-        // this.$.fbdocument.path = "/test/" + newKey;
-        // this.$.fbdocument.data = chat;
-
-        // this.$.fbdocument.path = "/test";
-        // //this.$.fbdocument.data = "xxxx";
-        //this.$.fbdocument.data = chat;
-
-        // this.$.fbdocument.setStoredValue("/test", chat)
-        // .then(function() {
-        //     console.log(" saveValue");
-        // })
-        // .catch(function(error) {
-        //     console.log("  error: " + error);
-        // });
-
-        // this.testData = {
-        //     username: "Kevin",
-        //     email: "x@x.com"
-        // };
       }
-
-      _testDataChanged(e) {
-        console.log("ChatView._testDataChanged: " + JSON.stringify(e, null, 4));
-      }
-
-      // testMethod(value) {
-      //     console.log("ChatView.testMethod: value = " + value);
-      // }
 
       _showChanged(newValue, oldValue) {
         console.log("ChatView._showChanged: newValue = " + newValue + ", oldValue = " + oldValue);
@@ -225,10 +212,6 @@
 
       //     this.playAnimation('exit', 'exit');
       // }
-
-      _chatMessagesIdChanged() {
-        console.log("ChatView._chatMessagesIdChanged: " + this.chatMessagesId);
-      }
     }
 
     window.customElements.define(ChatView.is, ChatView);
