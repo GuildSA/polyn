@@ -46,7 +46,7 @@
   </template>
 
     <script>
-        class MessagesView extends Polymer.Element {
+        class MessagesView extends Polymer.GestureEventListeners(Polymer.Element) {
             static get is() { return 'messages-view'; }
 
             _onTappedMessage(e) {

@@ -165,7 +165,7 @@
   </template>
 
   <script>
-    class HomeView extends Polymer.Element {
+    class HomeView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'home-view'; }
 
       _onClickBusiness() {
