@@ -1,155 +1,236 @@
-
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+
+<!--<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-database-script.html">-->
+
 <link rel="import" href="../bower_components/neon-animation/web-animations.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animations.html">
-<link rel="import" href="../bower_components/paper-input/paper-input.html">
+
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="chat-view">
-    <template>
+  <template>
     <style include="shared-styles">
-        :host {
+      :host {
         display: block;
         padding: 10px;
-        }
+      }
     </style>
 
-    <firebase-auth id="auth" app-name="polyn-app" user="{{user}}"></firebase-auth>
+    <firebase-auth 
+      id="auth" 
+      app-name="polyn-app" 
+      user="{{user}}">
+    </firebase-auth>
 
-    <firebase-query
-        id="query"
-        app-name="polyn-app"
-        path="/chats/[[chatMessagesId]]"
-        data="{{chatMessages}}">
+    <firebase-query 
+      id="query" 
+      app-name="polyn-app" 
+      path="/chats/[[chatMessagesId]]" 
+      data="{{chatMessages}}">
     </firebase-query>
 
-    <app-indexeddb-mirror
-        session="[[user.uid]]"
-        key="chats/[[chatMessagesId]]"
-        data="{{chatMessages}}"
-        persisted-data="{{persistedChatMessages}}">
+    <!--<firebase-document
+      app-name="polyn-app"
+      id="fbdocument"
+      path="/test"
+      data="{{testData}}">
+    </firebase-document>-->
+
+    <app-indexeddb-mirror 
+      session="[[user.uid]]" 
+      key="chats/[[chatMessagesId]]" 
+      data="{{chatMessages}}" 
+      persisted-data="{{persistedChatMessages}}">
     </app-indexeddb-mirror>
 
     <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
-        <template>
-            <div class="card">
-                <p>[[chatMessage.text]]</p>
-            </div>
-        </template>
+      <template>
+        <div class="card">
+          <p>[[chatMessage.text]]</p>
+        </div>
+      </template>
     </dom-repeat>
-       <!-- Code for Message bar -->
-             <paper-input label="Message..."></paper-input>
-             <button id="submit" type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-              Send
-            </button>
 
+    <!-- Code for Message bar -->
+    <paper-input id="message" label="Message..."></paper-input>
+    <paper-button on-tap="_onTapSendDialogBtn" dialog-confirm autofocus raised>Send</paper-button>
 
   </template>
 
-    <script>
-        class ChatView extends Polymer.mixinBehaviors([
-                Polymer.NeonAnimatableBehavior,
-                Polymer.NeonAnimationRunnerBehavior
-            ], Polymer.Element) {
-            static get is() { return 'chat-view'; }
+  <script>
+    class ChatView extends Polymer.mixinBehaviors([
+      Polymer.NeonAnimatableBehavior,
+      Polymer.NeonAnimationRunnerBehavior
+    ], Polymer.Element) {
 
-            static get properties() {
-                return {
-                    chatMessagesId: {
-                        type: String,
-                        observer: '_chatMessagesIdChanged'
-                    },
-                    show: {
-                        type: Boolean,
-                        value: false,
-                        observer: '_showChanged'
-                    },
-                    animationConfig: {
-                        value: function() {
-                            return {
-                                'entry': {
-                                name: 'slide-from-right-animation',
-                                node: this,
-                                timing: {delay: 50}
-                                },
-                                'exit': {
-                                name: 'slide-right-animation',
-                                node: this,
-                                timing: {delay: 50}
-                                }
-                            }
-                        }
-                    }
-                };
-            }
+      static get is() { return 'chat-view'; }
 
-            constructor() {
-                super()
-                console.log("ChatView.constructor")
-                
-                this.addEventListener('neon-animation-finish', e => this._onNeonAnimationFinish(e));
-            }
-
-            ready() {
-                super.ready();
-                console.log("ChatView.ready");
-            }
-
-            attributeChangedCallback(name, old, value) {
-                console.log("ChatView.attributeChangedCallback: name = " + name + ", old = " + ", value = " + value);
-            }
-
-            // testMethod(value) {
-            //     console.log("ChatView.testMethod: value = " + value);
-            // }
-
-            _showChanged(newValue, oldValue) {
-                console.log("ChatView._showChanged: newValue = " + newValue + ", oldValue = " + oldValue);
-                //console.log("ChatView._showChanged: " + this.show)
-
-                if(this.show) {
-                    this.playAnimation('entry', 'entry');
-                } else {
-                    this.playAnimation('exit', 'exit');
+      static get properties() {
+        return {
+          user: {
+            type: Object
+          },
+          chatMessagesId: {
+            type: String,
+            observer: '_chatMessagesIdChanged'
+          },
+          testData: {
+            type: String,
+            observer: '_testDataChanged'
+          },
+          show: {
+            type: Boolean,
+            value: false,
+            observer: '_showChanged'
+          },
+          animationConfig: {
+            value: function () {
+              return {
+                'entry': {
+                  name: 'slide-from-right-animation',
+                  node: this,
+                  timing: { delay: 50 }
+                },
+                'exit': {
+                  name: 'slide-right-animation',
+                  node: this,
+                  timing: { delay: 50 }
                 }
+              }
             }
+          }
+        };
+      }
 
-            _onNeonAnimationFinish(e) {
-                console.log("ChatView._onNeonAnimationFinish");
-                console.log("  e: " + JSON.stringify(e, null, 4));
+      constructor() {
+        super()
+        console.log("ChatView.constructor")
 
-                switch(e.detail) {
-                    case 'entry':
-                        console.log("  entry finished!");
-                    break;
-                    case 'exit':
-                        console.log("  exit finished!");
-                    break;
-                }
-            }
+        this.addEventListener('neon-animation-finish', e => this._onNeonAnimationFinish(e));
+      }
+      
+      ready() {
+        super.ready();
+        console.log("ChatView.ready");
+      }
+      
+      attributeChangedCallback(name, old, value) {
+        console.log("ChatView.attributeChangedCallback: name = " + name + ", old = " + ", value = " + value);
+      }
+      
+      _onTapSendDialogBtn() {
+        console.log("ChatView._onTapSendDialogBtn: message = " + this.$.message.value);
 
-            // connectedCallback() {
-            //     super.connectedCallback();
-            //     console.log("ChatView.connectedCallback")
-                
-            //     //this.playAnimation('entry', 'entry');
-            // }
+        // console.log("user " + JSON.stringify(this.user, null, 4));
+        // console.log("this.user.uid " + this.user.uid);
+        // console.log("this.user.displayName " + this.user.displayName);
 
-            // disconnectedCallback() {
-            //     super.disconnectedCallback();
-            //     console.log("PagesView.disconnectedCallback")
-
-            //     this.playAnimation('exit', 'exit');
-            // }
-
-            _chatMessagesIdChanged() {
-                console.log("ChatView._chatMessagesIdChanged: " + this.chatMessagesId);
-            }
+        if(!this.$.message.value) {
+          return;
         }
 
-        window.customElements.define(ChatView.is, ChatView);
-    </script>
+        var text = this.$.message.value;
+
+        var newKey = firebase.app("polyn-app").database().ref().child("chats/" + this.chatMessagesId).push().key;
+        console.log(" newKey: " + newKey);
+
+// TODO: Get the user's screen name vs displayName.
+        var chatMessage = {
+          name: this.user.uid,
+          senderId: this.user.displayName,
+          text: text,
+          timeStamp: firebase.database.ServerValue.TIMESTAMP
+        };
+
+        firebase.app("polyn-app").database().ref("chats/" + this.chatMessagesId + "/" + newKey).set(chatMessage);
+
+        this.$.message.value = "";
+
+
+
+// TODO: Using firebase-document to create new keys with data is awkward, but it may 
+// still be useful for simply listening to existing keys.
+        // this.$.fbdocument.path = "/test/" + newKey;
+        // this.$.fbdocument.data = chat;
+
+        // this.$.fbdocument.path = "/test";
+        // //this.$.fbdocument.data = "xxxx";
+        //this.$.fbdocument.data = chat;
+
+        // this.$.fbdocument.setStoredValue("/test", chat)
+        // .then(function() {
+        //     console.log(" saveValue");
+        // })
+        // .catch(function(error) {
+        //     console.log("  error: " + error);
+        // });
+
+        // this.testData = {
+        //     username: "Kevin",
+        //     email: "x@x.com"
+        // };
+      }
+
+      _testDataChanged(e) {
+        console.log("ChatView._testDataChanged: " + JSON.stringify(e, null, 4));
+      }
+
+      // testMethod(value) {
+      //     console.log("ChatView.testMethod: value = " + value);
+      // }
+
+      _showChanged(newValue, oldValue) {
+        console.log("ChatView._showChanged: newValue = " + newValue + ", oldValue = " + oldValue);
+        //console.log("ChatView._showChanged: " + this.show)
+
+        if(this.show) {
+          this.playAnimation('entry', 'entry');
+        } else {
+          this.playAnimation('exit', 'exit');
+        }
+      }
+      
+      _onNeonAnimationFinish(e) {
+        console.log("ChatView._onNeonAnimationFinish");
+        console.log("  e: " + JSON.stringify(e, null, 4));
+
+        switch(e.detail) {
+          case 'entry':
+            console.log("  entry finished!");
+          break;
+          case 'exit':
+            console.log("  exit finished!");
+          break;
+        }
+      }
+
+      // connectedCallback() {
+      //     super.connectedCallback();
+      //     console.log("ChatView.connectedCallback")
+
+      //     //this.playAnimation('entry', 'entry');
+      // }
+
+      // disconnectedCallback() {
+      //     super.disconnectedCallback();
+      //     console.log("PagesView.disconnectedCallback")
+
+      //     this.playAnimation('exit', 'exit');
+      // }
+
+      _chatMessagesIdChanged() {
+        console.log("ChatView._chatMessagesIdChanged: " + this.chatMessagesId);
+      }
+    }
+
+    window.customElements.define(ChatView.is, ChatView);
+  </script>
 </dom-module>
