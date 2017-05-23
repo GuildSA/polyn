@@ -135,15 +135,15 @@
       <iron-image style="width:100%; height:300px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/josey_records.jpg" class="item" on-click="_onClickBusiness" ></iron-image>
       <iron-image style="width:100%; height:200px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/andrew.jpg" class="item" on-click="_onClickBusiness" ></iron-image>-->
    
-      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Good-Records.png" class="item" on-click="_onClickBusiness" ></iron-image>
-      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Bills-Records.png" class="item" on-click="_onClickBusiness" ></iron-image>
-      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/business-image-polyn.png" class="item" on-click="_onClickBusiness" ></iron-image>
-      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Bills-Records.png" class="item" on-click="_onClickBusiness" ></iron-image>
-      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/business-image-polyn.png" class="item" on-click="_onClickBusiness" ></iron-image>
-      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/business-image-polyn.png" class="item" on-click="_onClickBusiness" ></iron-image>
-      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Spinster-Records.png" class="item" on-click="_onClickBusiness" ></iron-image>
-      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Spinster-Records.png" class="item" on-click="_onClickBusiness" ></iron-image>
-      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/business-image-polyn.png" class="item" on-click="_onClickBusiness" ></iron-image>
+      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Good-Records.png" class="item" on-tap="_onTapBusiness" ></iron-image>
+      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Bills-Records.png" class="item" on-tap="_onTapBusiness" ></iron-image>
+      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/business-image-polyn.png" class="item" on-tap="_onTapBusiness" ></iron-image>
+      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Bills-Records.png" class="item" on-tap="_onTapBusiness" ></iron-image>
+      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/business-image-polyn.png" class="item" on-tap="_onTapBusiness" ></iron-image>
+      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/business-image-polyn.png" class="item" on-tap="_onTapBusiness" ></iron-image>
+      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Spinster-Records.png" class="item" on-tap="_onTapBusiness" ></iron-image>
+      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Spinster-Records.png" class="item" on-tap="_onTapBusiness" ></iron-image>
+      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/business-image-polyn.png" class="item" on-tap="_onTapBusiness" ></iron-image>
 
 
       <!--<img src ="images/test-images/good_records.jpg" class="item" on-click="_onClickBusiness">
@@ -168,7 +168,7 @@
     class HomeView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'home-view'; }
 
-      _onClickBusiness() {
+      _onTapBusiness() {
         var polynApp = document.getElementById("polynApp");
         var businessView = polynApp.pushPageOnCurrentTab("business-view");
         businessView.businessId = 1;
