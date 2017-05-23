@@ -30,6 +30,8 @@
   "builds": [{
     "bundle": false,
     "addServiceWorker": true,
+    "addPushManifest": true,
+    "insertPrefetchLinks": true,
     "js": {"minify": false},
     "css": {"minify": false},
     "html": {"minify": false}
