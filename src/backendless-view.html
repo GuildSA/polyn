@@ -3,9 +3,8 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="backendless.html">
 <link rel="import" href="shared-styles.html">
-
-<script src="../bower_components/backendless/src/backendless.js"></script>
 
 <dom-module id="backendless-view">
   <template>
@@ -103,13 +102,6 @@
         ready() {
             super.ready();
             console.log("BackendlessView.ready");
-
-// TODO: I moved these lines from src/js/app.js to prevent Backendless from slowing down the initial load.
-            var APP_ID = '241AA7F2-D35A-9F48-FF5D-856098C84200';
-            var API_KEY = 'D63F3664-C3FD-DEEF-FF12-61E65D799100';
-            
-            Backendless.serverURL = 'https://api.backendless.com';
-            Backendless.initApp(APP_ID, API_KEY);
         }
         
         _searchTextChanged() {
