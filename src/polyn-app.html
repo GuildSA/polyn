@@ -79,7 +79,6 @@
         bottom: 0;
         left: 0;
         right: 0;
-
       }
 
       paper-badge {
@@ -92,7 +91,6 @@
         --paper-tab-ink: #00559C;
         --paper-tabs-selection-bar-color: #FFA138;
       }
-
 
     </style>
 
@@ -280,9 +278,9 @@
         //this.$.messaging.activate();
         //this.showNotificationPermission();
 
-        // Keep a stack of page views, one for each of our 4 tabs.
+        // Keep a stack of page views, one for each of our 3 tabs.
         this.tabViewStacks = [
-          [],[],[],[]
+          [],[],[]
         ];
       }
 
@@ -438,14 +436,14 @@
       }
 
       onTapMessagesTab() {
-        console.log("PolynApp.onTapMessagesTab: stack size = " + this.tabViewStacks[2].length + ", tab = " + this.$.tabs.selected);
+        console.log("PolynApp.onTapMessagesTab: stack size = " + this.tabViewStacks[1].length + ", tab = " + this.$.tabs.selected);
 
         //this.showNotificationPermission();
 
-        // Messages tab = index 2!
-        if(this.tabViewStacks[2].length > 0) {
+        // Messages tab = index 1!
+        if(this.tabViewStacks[1].length > 0) {
           this.$.toolbarNavBtn.icon = "arrow-back";
-          var viewName = this.tabViewStacks[2][this.tabViewStacks[2].length - 1].tagName.toLowerCase();
+          var viewName = this.tabViewStacks[1][this.tabViewStacks[1].length - 1].tagName.toLowerCase();
           console.log("  Element view to restore: " + viewName);
           this.page = viewName;
         } else {
@@ -455,12 +453,12 @@
       }
 
       onTapProfileTab() {
-        console.log("PolynApp.onTapProfileTab: stack size = " + this.tabViewStacks[3].length + ", tab = " + this.$.tabs.selected);
+        console.log("PolynApp.onTapProfileTab: stack size = " + this.tabViewStacks[2].length + ", tab = " + this.$.tabs.selected);
 
-        // Profile tab = index 3!
-        if(this.tabViewStacks[3].length > 0) {
+        // Profile tab = index 2!
+        if(this.tabViewStacks[2].length > 0) {
           this.$.toolbarNavBtn.icon = "arrow-back";
-          var viewName = this.tabViewStacks[3][this.tabViewStacks[3].length - 1].tagName.toLowerCase();
+          var viewName = this.tabViewStacks[2][this.tabViewStacks[2].length - 1].tagName.toLowerCase();
           console.log("  Element view to restore: " + viewName);
           this.page = viewName;
         } else {
