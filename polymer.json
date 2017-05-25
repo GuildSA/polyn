@@ -24,7 +24,8 @@
   "extraDependencies": [
     "manifest.json",
     "bower_components/webcomponentsjs/*.js",
-    "bower_components/backendless/src/backendless.js"
+    "bower_components/backendless/src/backendless.js",
+    "bower_components/three.js/build/three.js"
   ],
   "lint": {
     "rules": ["polymer-2"]
