@@ -30,6 +30,7 @@
 <link rel="lazy-import" href="backendless-view.html">
 <link rel="lazy-import" href="pageanim-view.html">
 <link rel="lazy-import" href="basicanim-view.html">
+<link rel="lazy-import" href="threejs-view.html">
 <link rel="lazy-import" href="chatstart-view.html">
 
 <dom-module id="polyn-app">
@@ -133,6 +134,7 @@
           <a name="backendless-view" on-tap="_onTapBackendlessView">Backendless</a>
           <a name="basicanim-view" on-tap="_onTapBasicAnimView">Basic Animation</a>
           <a name="pageanim-view" on-tap="_onTapPageAnimView">Page Animation</a>
+          <a name="threejs-view" on-tap="_onTapThreeJSView">ThreeJS</a>
           <a name="chatstart-view" on-tap="_onTapChatStartView">Chat Start</a>
         </iron-selector>
       </app-drawer>
@@ -188,6 +190,7 @@
           <backendless-view id="backendlessView" name="backendless-view"></backendless-view>
           <pageanim-view name="pageanim-view"></pageanim-view>
           <basicanim-view name="basicanim-view"></basicanim-view>
+          <threejs-view name="threejs-view"></threejs-view>
           <chatstart-view name="chatstart-view"></chatstart-view>
         </iron-pages>
 
@@ -329,7 +332,6 @@
 
       _onTapAjaxView() {
         this.page = 'ajax-view';
-
         if(!this.$.drawer.persistent) {
           this.$.drawer.close();
         }
@@ -337,7 +339,6 @@
 
       _onTapBackendlessView() {
         this.page = 'backendless-view';
-
         if(!this.$.drawer.persistent) {
           this.$.drawer.close();
         }
@@ -345,7 +346,6 @@
 
       _onTapBasicAnimView() {
         this.page = 'basicanim-view';
-
         if(!this.$.drawer.persistent) {
           this.$.drawer.close();
         }
@@ -353,7 +353,13 @@
 
       _onTapPageAnimView() {
         this.page = 'pageanim-view';
+        if(!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      }
 
+      _onTapThreeJSView() {
+        this.page = 'threejs-view';
         if(!this.$.drawer.persistent) {
           this.$.drawer.close();
         }
@@ -361,7 +367,6 @@
 
       _onTapChatStartView() {
         this.page = 'chatstart-view';
-
         if(!this.$.drawer.persistent) {
           this.$.drawer.close();
         }

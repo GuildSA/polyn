@@ -12,6 +12,7 @@
     "src/backendless-view.html",
     "src/pageanim-view.html",
     "src/basicanim-view.html",
+    "src/threejs-view.html",
     "src/chatstart-view.html",
     "src/error404-view.html"
   ],
