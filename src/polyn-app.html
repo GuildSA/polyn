@@ -5,12 +5,12 @@
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<!--<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">-->
 <link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/paper-badge/paper-badge.html">
-<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<!--<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">-->
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
@@ -191,7 +191,7 @@
       </app-header-layout>
     </app-drawer-layout>
 
-    <paper-dialog id="searchDialog" modal>
+    <!--<paper-dialog id="searchDialog" modal>
       <h2>Search</h2>
       <p>What would you like to search for?</p>
       <paper-input label="Search..." value="{{searchDialogValue}}"></paper-input>
@@ -199,7 +199,7 @@
         <paper-button dialog-dismiss>Cancel</paper-button>
         <paper-button on-tap="_onTapSearchDialogBtn" dialog-confirm autofocus>Search</paper-button>
       </div>
-    </paper-dialog>
+    </paper-dialog>-->
 
   </template>
 
@@ -487,9 +487,9 @@
         }
       }
 
-      _onTapSearchIconBtn() {
-        this.$.searchDialog.toggle();
-      }
+      // _onTapSearchIconBtn() {
+      //   this.$.searchDialog.toggle();
+      // }
 
       _onTapSearchDialogBtn() {
         console.log("PolynApp._onTapSearchDialogBtn: " + this.$.searchInput.value);
