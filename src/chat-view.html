@@ -5,14 +5,6 @@
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
-
-<!--<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-database-script.html">-->
-
-<link rel="import" href="../bower_components/neon-animation/web-animations.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
-
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="chat-view">
@@ -65,10 +57,7 @@
   </template>
 
   <script>
-    class ChatView extends Polymer.mixinBehaviors([
-      Polymer.NeonAnimatableBehavior,
-      Polymer.NeonAnimationRunnerBehavior
-    ], Polymer.Element) {
+    class ChatView extends Polymer.Element {
 
       static get is() { return 'chat-view'; }
 
@@ -78,7 +67,6 @@
             type: String,
             observer: '_chatMessagesIdChanged'
           },
-
           user: {
             type: Object,
             observer: '_userChanged'
@@ -86,48 +74,10 @@
           usersInfo: {
             type: String,
             observer: '_usersInfoChanged'
-          },
-
-          show: {
-            type: Boolean,
-            value: false,
-            observer: '_showChanged'
-          },
-          animationConfig: {
-            value: function () {
-              return {
-                'entry': {
-                  name: 'slide-from-right-animation',
-                  node: this,
-                  timing: { delay: 50 }
-                },
-                'exit': {
-                  name: 'slide-right-animation',
-                  node: this,
-                  timing: { delay: 50 }
-                }
-              }
-            }
           }
         };
       }
 
-      constructor() {
-        super()
-        console.log("ChatView.constructor")
-
-        this.addEventListener('neon-animation-finish', e => this._onNeonAnimationFinish(e));
-      }
-      
-      ready() {
-        super.ready();
-        console.log("ChatView.ready");
-      }
-      
-      attributeChangedCallback(name, old, value) {
-        console.log("ChatView.attributeChangedCallback: name = " + name + ", old = " + ", value = " + value);
-      }
-      
       _chatMessagesIdChanged() {
         console.log("ChatView._chatMessagesIdChanged: " + this.chatMessagesId);
       }
@@ -135,9 +85,10 @@
       _userChanged(user) {
         console.log("ChatView._userChanged: " + JSON.stringify(user, null, 4));
 
-// TODO: Restructure the user data! It pulls down all the chats everytime and we don't need that here!
-        // As soon as we get the user - get the users data so we can learn more about them!
-        this.$.usersinfo.path = "/users/" + user.uid + "/info";
+        // As soon as we get the user - get the users info so we can learn more about them!
+        if(user && user.uid) {
+          this.$.usersinfo.path = "/users/" + user.uid + "/info";
+        }
       }
 
       _usersInfoChanged(e) {
@@ -173,45 +124,6 @@
         // Empty the message input.
         this.$.message.value = "";
       }
-
-      _showChanged(newValue, oldValue) {
-        console.log("ChatView._showChanged: newValue = " + newValue + ", oldValue = " + oldValue);
-        //console.log("ChatView._showChanged: " + this.show)
-
-        if(this.show) {
-          this.playAnimation('entry', 'entry');
-        } else {
-          this.playAnimation('exit', 'exit');
-        }
-      }
-      
-      _onNeonAnimationFinish(e) {
-        console.log("ChatView._onNeonAnimationFinish");
-        console.log("  e: " + JSON.stringify(e, null, 4));
-
-        switch(e.detail) {
-          case 'entry':
-            console.log("  entry finished!");
-          break;
-          case 'exit':
-            console.log("  exit finished!");
-          break;
-        }
-      }
-
-      // connectedCallback() {
-      //     super.connectedCallback();
-      //     console.log("ChatView.connectedCallback")
-
-      //     //this.playAnimation('entry', 'entry');
-      // }
-
-      // disconnectedCallback() {
-      //     super.disconnectedCallback();
-      //     console.log("PagesView.disconnectedCallback")
-
-      //     this.playAnimation('exit', 'exit');
-      // }
     }
 
     window.customElements.define(ChatView.is, ChatView);

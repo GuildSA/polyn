@@ -378,8 +378,6 @@
 
             console.log("  length after pop = " + this.tabViewStacks[selectedTab].length);
 
-            popped.show = false;
-
             if(this.tabViewStacks[selectedTab].length > 0) {
 
               // If the tab's view stack is NOT empty - restore the next view.
@@ -417,11 +415,6 @@
         this.$.toolbarNavBtn.icon = "arrow-back";
         this.tabViewStacks[this.$.tabs.selected].push(this.$.ironPages.selectedItem);
  
-// TODO: What's the best practice here for checking for an Attribute?
-        //if(this.$.ironPages.selectedItem.hasAttribute('show')) {
-          this.$.ironPages.selectedItem.show = true;
-        //}
-
         // Return the newly selected item or page so we can set some data on it, if required.
         return this.$.ironPages.selectedItem;
       }
