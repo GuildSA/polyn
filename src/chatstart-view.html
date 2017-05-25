@@ -1,0 +1,185 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="chatstart-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+    </style>
+
+    <firebase-auth 
+      id="auth" 
+      app-name="polyn-app" 
+      user="{{user}}">
+    </firebase-auth>
+
+    <firebase-query 
+      id="query" 
+      app-name="polyn-app" 
+      path="/users"
+      data="{{users}}">
+    </firebase-query>
+
+    <firebase-document
+      app-name="polyn-app"
+      id="usersinfo"
+      data="{{usersInfo}}">
+    </firebase-document>
+
+    <firebase-document
+      app-name="polyn-app"
+      id="sellersinfo"
+      data="{{sellersInfo}}">
+    </firebase-document>
+
+    <app-indexeddb-mirror 
+      session="[[user.uid]]" 
+      key="users"
+      data="{{users}}" 
+      persisted-data="{{persistedUsers}}">
+    </app-indexeddb-mirror>
+
+    <dom-repeat items="[[persistedUsers]]" as="user">
+      <template>
+        <div class="card" on-tap="_onTapUser">
+          <p>[[user.info.name]]</p>
+          <p>[[user.$key]]</p>
+        </div>
+      </template>
+    </dom-repeat>
+
+    <paper-dialog id="chatStartDialog">
+      <h2>Start Chat</h2>
+      <p id="promptMessage"></p>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button on-tap="_onTapStartChatDialogBtn" dialog-confirm autofocus>Start Chatting</paper-button>
+      </div>
+    </paper-dialog>
+
+  </template>
+
+  <script>
+    class ChatStartView extends Polymer.GestureEventListeners(Polymer.Element) {
+
+      static get is() { return 'chatstart-view'; }
+
+      static get properties() {
+        return {
+          user: {
+            type: Object,
+            observer: '_userChanged'
+          },
+          usersInfo: {
+            type: String,
+            observer: '_usersInfoChanged'
+          },
+          sellersInfo: {
+            type: String,
+            observer: '_sellersInfoChanged'
+          }
+        };
+      }
+
+      _userChanged(user) {
+        console.log("ChatStartView._userChanged: " + JSON.stringify(user, null, 4));
+
+        // As soon as we get the user - get the users info so we can learn more about them!
+        if(user && user.uid) {
+          this.$.usersinfo.path = "/users/" + user.uid + "/info";
+        }
+      }
+
+      _usersInfoChanged(e) {
+        console.log("ChatView._usersInfoChanged: " + JSON.stringify(e, null, 4));
+
+        // As soon as we get the user's info - check for a sellerId. If a sellerId is 
+        // present - get the users seller info so we can learn more about their business!
+        if(this.usersInfo.sellerId) {
+          this.$.sellersinfo.path = "/sellers/" + this.usersInfo.sellerId;
+        }
+      }
+
+      _sellersInfoChanged(e) {
+        console.log("ChatView._sellersInfoChanged: " + JSON.stringify(e, null, 4));
+      }
+
+      _onTapUser(e) {
+        console.log("ChatStartView._onTapUser");
+
+        // Which index was clicked?
+        var index = e.model.index;
+        console.info(index + ' was clicked.');
+
+        // What object is stored at that index?
+        console.info(this.$.query.data[index]);
+
+        // What is the Firebase key for this data?
+        console.info(this.$.query.data[index].$key);
+
+        this.selectedUser = this.$.query.data[index];
+
+        this.$.promptMessage.innerHTML = "What would you like to start a chat with " + this.$.query.data[index].name + "?" 
+        this.$.chatStartDialog.toggle();
+      }
+
+      _onTapStartChatDialogBtn() {
+        console.log("ChatStartView._onTapStartChatDialogBtn");
+
+        console.info("  Your user id = " + this.user.uid);
+        console.info("  Your name = " + this.usersInfo.name);
+        console.info("  Other user's id = " + this.selectedUser.$key);
+        console.info("  Other user's id name = " + this.selectedUser.info.name);
+
+        var sellersFullName = this.usersInfo.name;
+
+        // If the seller's business has a name - add it as well.
+        if(this.sellersInfo.name) {
+          sellersFullName = sellersFullName + " @ " + this.sellersInfo.name;
+        }
+
+        console.info("  sellersFullName = " + sellersFullName);
+
+        // Create the chat session and add the first message!
+        var chatMsg = {
+          name: sellersFullName,
+          senderId: this.user.uid,
+          text: "First chat message!",
+          timeStamp: firebase.database.ServerValue.TIMESTAMP
+        };
+
+        var chatSessionId = firebase.app("polyn-app").database().ref().child("chats").push().key;
+        var chatMsgId = firebase.app("polyn-app").database().ref().child("chats/" + chatSessionId).push().key;
+        firebase.app("polyn-app").database().ref("chats/" + chatSessionId + "/" + chatMsgId).set(chatMsg);
+
+        // Add info about the new chat session to both users involved in the chat!
+        var chatsEntry = {
+          buyer: this.selectedUser.info.name,
+          seller: sellersFullName,
+          chatId: chatSessionId,
+          subject: "Test Chat",
+          timeStamp: firebase.database.ServerValue.TIMESTAMP
+        };
+
+        // Add the chat entry to the seller.
+        var chatEntryId = firebase.app("polyn-app").database().ref().child("users/" + this.user.uid + "/chats").push().key;
+        firebase.app("polyn-app").database().ref("users/" + this.user.uid + "/chats/" + chatEntryId).set(chatsEntry);
+
+        // Add the chat entry to the buyer.
+        chatEntryId = firebase.app("polyn-app").database().ref().child("users/" + this.selectedUser.$key + "/chats").push().key;
+        firebase.app("polyn-app").database().ref("users/" + this.selectedUser.$key + "/chats/" + chatEntryId).set(chatsEntry);
+      }
+    }
+
+    window.customElements.define(ChatStartView.is, ChatStartView);
+  </script>
+</dom-module>

@@ -53,8 +53,12 @@ sudo npm install -g firebase-tools
 
 sudo npm install -g lighthouse
 
-lighthouse http://localhost:8080 --view
+To test after firebase deploy do this:
 lighthouse https://polyn-3c431.firebaseapp.com/ --view
+
+To test locally do this:
+polymer serve --open
+lighthouse http://127.0.0.1:8081/components/polyn-app/ --view 
 
 ------------------------------------------------------------------------
 

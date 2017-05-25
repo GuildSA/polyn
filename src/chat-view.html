@@ -39,8 +39,8 @@
 
     <firebase-document
       app-name="polyn-app"
-      id="usersdata"
-      data="{{usersData}}">
+      id="usersinfo"
+      data="{{usersInfo}}">
     </firebase-document>
 
     <app-indexeddb-mirror 
@@ -83,9 +83,9 @@
             type: Object,
             observer: '_userChanged'
           },
-          usersData: {
+          usersInfo: {
             type: String,
-            observer: '_usersDataChanged'
+            observer: '_usersInfoChanged'
           },
 
           show: {
@@ -137,11 +137,11 @@
 
 // TODO: Restructure the user data! It pulls down all the chats everytime and we don't need that here!
         // As soon as we get the user - get the users data so we can learn more about them!
-        this.$.usersdata.path = "/users/" + user.uid
+        this.$.usersinfo.path = "/users/" + user.uid + "/info";
       }
 
-      _usersDataChanged(e) {
-        console.log("ChatView._usersDataChanged: " + JSON.stringify(e, null, 4));
+      _usersInfoChanged(e) {
+        console.log("ChatView._usersInfoChanged: " + JSON.stringify(e, null, 4));
       }
 
       _onTapSendDialogBtn() {
@@ -161,7 +161,7 @@
         //console.log(" newKey: " + newKey);
 
         var chatMessage = {
-          name: this.usersData.name,
+          name: this.usersInfo.name,
           senderId: this.user.uid,
           text: text,
           timeStamp: firebase.database.ServerValue.TIMESTAMP
