@@ -3,19 +3,17 @@
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="profile-view">
   <template>
+
     <style include="shared-styles">
       :host {
         display: block;
         padding: 10px;
-      }
-
-      .column-layout {
-        display: flex;
-        flex-direction: column;
       }
 
       #profile-image {
@@ -46,17 +44,14 @@
 
       .center {
         margin: auto;
+        align-content: center;
       }
-      .sign-in-stack {
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        bottom: 2.5%;
-        width: 85%;
-        align-self: center;
-        
+      .flex-center {
+        @apply(--layout-vertical);
+        @apply(--layout-center-justified);
       }
-      
+
+
 
     </style>
 
@@ -70,26 +65,29 @@
         on-error="_handleError">
     </firebase-auth>
 
-     <div class="card">
-      <div class="column-layout">
-
-          <template is="dom-if" if="[[isAnonymous]]">
-              <iron-image sizing="contain" id="profile-image" alt="Anonymous Profile Image." src="./images/anonymous_profile.png"></iron-image>
-          </template>
-
-          <template is="dom-if" if="[[!isAnonymous]]">
-              <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="[[photoURL]]"></iron-image>
-          </template>
-
-          <template is="dom-if" if="[[!isAnonymous]]">
-            <div class="center">
-              <h1>Welcome [[displayName]]</h1>
-            </div>
-          </template>
-
+     
+     
+        <div class="card flex-center">
           
+           <template is="dom-if" if="[[isAnonymous]]">
+              <iron-image sizing="contain" id="profile-image" alt="Anonymous Profile Image." src="./images/anonymous_profile.png"></iron-image>
+           </template>
+
+            <template is="dom-if" if="[[!isAnonymous]]">
+              <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="[[photoURL]]"></iron-image>
+            </template>
+
+            <template is="dom-if" if="[[!isAnonymous]]">
+              <div class="center">
+                <h1>Welcome [[displayName]]</h1>
+              </div>
+            </template>
+
+        </div>
+         
+
           <template is="dom-if" if="[[isAnonymous]]">
-            <div class="sign-in-stack">
+            <div class="flex-center">
             <paper-button class="custom bluebtn" on-tap="_signInUsingGmail" raised>Sign In Using Gmail</paper-button>
             <paper-button class="custom bluebtn" on-tap="_signInUsingFacebook" raised>Sign In Using Facebook</paper-button>
             <paper-button class="custom bluebtn" on-tap="_signInUsingTwitter" raised>Sign In Using Twitter</paper-button>
