@@ -47,11 +47,9 @@
         align-content: center;
       }
       .flex-center {
-        @apply(--layout-vertical);
-        @apply(--layout-center-justified);
+        @apply --layout-vertical;
+        @apply --layout-center-justified;
       }
-
-
 
     </style>
 
@@ -129,7 +127,7 @@
             observer: '_userChanged'
           },
           statusKnown:{
-              type: Object
+            type: Object
           }
         };
       }
