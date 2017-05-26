@@ -2,6 +2,8 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 
 <dom-module id="home-view">
   <template>
@@ -120,6 +122,14 @@
         padding: 10px; 
       }
 
+      paper-fab {
+        --paper-fab-background: var(--app-secondary-color);
+        bottom: 2.5%;
+        right: 2.5%;
+        position: fixed;
+
+      }
+
     </style>
 
     <div class="masonry">
@@ -144,6 +154,7 @@
       <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Spinster-Records.png" class="item" on-tap="_onTapBusiness" ></iron-image>
       <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Spinster-Records.png" class="item" on-tap="_onTapBusiness" ></iron-image>
       <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/business-image-polyn.png" class="item" on-tap="_onTapBusiness" ></iron-image>
+      <paper-fab id="fab" icon="message"></paper-fab>
 
 
       <!--<img src ="images/test-images/good_records.jpg" class="item" on-click="_onClickBusiness">

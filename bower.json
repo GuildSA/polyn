@@ -30,7 +30,8 @@
     "neon-animation": "PolymerElements/neon-animation#^2.0.0",
     "polymerfire": "^2.0.0",
     "backendless": "^4.0.2-beta",
-    "three.js": "threejs#*"
+    "three.js": "threejs#*",
+    "paper-fab": "^2.0.0"
   },
   "devDependencies": {
     "web-component-tester": "6.0.0"

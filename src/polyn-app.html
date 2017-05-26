@@ -15,8 +15,8 @@
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="custom-icons.html">
 
 <link rel="lazy-import" href="home-view.html">
@@ -42,7 +42,7 @@
       /* These styles only apply to this element's private "shadow DOM" */
       :host {
         --app-primary-color: #0391D8;
-        --app-secondary-color: black;
+        --app-secondary-color: #F57951;
 
         display: block;
       }
@@ -88,8 +88,8 @@
 
       paper-badge {
         --paper-badge-background: #F57951;
-        --paper-badge-margin-left: -15px;
-        --paper-badge-margin-bottom: -20px;
+        --paper-badge-margin-left: -10px;
+        --paper-badge-margin-bottom: 0px;
       }
 
       paper-tabs {
@@ -159,16 +159,18 @@
             <!--<paper-input id="searchInput" label="Search..." value="{{searchText}}"></paper-input>
             <paper-icon-button on-tap="_onTapSearchIconBtn" icon="search"></paper-icon-button>-->
           </app-toolbar>
+           
 
             <paper-tabs id="tabs" selected="0" sticky>
              
-              <paper-tab on-tap="onTapHomeTab"><paper-icon-button id="home" noink icon="custom-icons:home" on-tap="onTapHomeTab"></paper-icon-button></paper-tab>
+              <paper-tab on-tap="onTapHomeTab"><iron-icon id="home" noink icon="custom-icons:home" on-tap="onTapHomeTab"></iron-icon></paper-tab>
              
-              <paper-tab on-tap="onTapMessagesTab"><paper-icon-button id="messages" noink icon="custom-icons:question-answer" on-tap="onTapMessagesTab"></paper-icon-button>
+             
+              <paper-tab on-tap="onTapMessagesTab"><iron-icon id="messages" noink icon="custom-icons:question-answer" on-tap="onTapMessagesTab"></iron-icon>
                 <paper-badge for="messages" label="1" suffix></paper-badge>
               </paper-tab>
               
-              <paper-tab on-tap="onTapProfileTab"><paper-icon-button id="profile" noink icon="custom-icons:account-circle" on-tap="onTapProfileTab"></paper-icon-button></paper-tab>
+              <paper-tab on-tap="onTapProfileTab"><iron-icon id="profile" noink icon="custom-icons:account-circle" on-tap="onTapProfileTab"></iron-icon></paper-tab>
             </paper-tabs>
             
         </app-header>
@@ -208,6 +210,8 @@
     </paper-dialog>-->
 
   </template>
+
+ 
 
   <script>
     class PolynApp extends Polymer.Element {
