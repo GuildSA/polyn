@@ -1,12 +1,4 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/neon-animation/web-animations.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
-
-<!--
-<link rel="import" href="../bower_components/neon-animation/neon-animatable.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animatable-behavior.html">
-<link rel="import" href="../bower_components/neon-animation/neon-shared-element-animatable-behavior.html">
--->
 
 <link rel="import" href="shared-styles.html">
 
@@ -25,40 +17,21 @@
     </div>
 
     <div class="card">
-      <h1>Neon Animation Page Test</h1>
+      <h1>Animation Page Test</h1>
     </div>
 
   </template>
 
   <script>
 
-    class PageAnimView extends Polymer.mixinBehaviors([
-        Polymer.NeonAnimatableBehavior,
-        Polymer.NeonAnimationRunnerBehavior
-      ], Polymer.Element) {
+    class PageAnimView extends Polymer.Element {
 
       static get is() { return 'pageanim-view'; }
 
-      static get properties() {
-        return {
-          animationConfig: {
-            value: function() {
-              return {
-                'entry': {
-                  name: 'slide-from-right-animation',
-                  node: this,
-                  timing: {delay: 500}
-                },
-                'exit': {
-                  name: 'slide-right-animation',
-                  node: this,
-                  timing: {delay: 500}
-                }
-              }
-            }
-          }
-        };
-      }
+      // static get properties() {
+      //   return {
+      //   };
+      // }
 
       constructor() {
         super()
@@ -72,14 +45,12 @@
 
       connectedCallback() {
         super.connectedCallback();
-          console.log("PageAnimView.connectedCallback")
-          
-          this.playAnimation('entry');
+        console.log("PageAnimView.connectedCallback")
       }
 
       disconnectedCallback() {
         super.disconnectedCallback();
-          console.log("PageAnimView.disconnectedCallback")
+        console.log("PageAnimView.disconnectedCallback")
       }
 
       attributeChangedCallback() {
@@ -89,14 +60,10 @@
 
       _onBackClick() {
         console.log("PageAnimView._onBackClick")
-
-        this.playAnimation('exit');
       }
 
       _onNextClick() {
         console.log("PageAnimView._onNextClick")
-
-        this.playAnimation('entry');
       }
     }
 

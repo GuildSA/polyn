@@ -1,6 +1,4 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/neon-animation/web-animations.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
 
 <link rel="import" href="shared-styles.html">
 
@@ -10,56 +8,31 @@
       :host {
         display: block;
         padding: 10px;
-        background-color: lightblue;
       }
 
     </style>
 
     <div class="card">
-      <h1>Basic Neon Animation Tests</h1>
+      <h1>Basic Animation Tests</h1>
     </div>
 
   </template>
 
   <script>
 
-    class BasicAnimView extends Polymer.mixinBehaviors([
-        Polymer.NeonAnimatableBehavior,
-        Polymer.NeonAnimationRunnerBehavior
-      ], Polymer.Element) {
+    class BasicAnimView extends Polymer.Element {
 
       static get is() { return 'basicanim-view'; }
 
-      static get properties() {
-        return {
-          opened: {
-            type: Boolean
-          },
-          animationConfig: {
-            value: function() {
-              return {
-                'entry': {
-                  // Provided by neon-animation/animations/scale-up-animation.html
-                  name: 'scale-up-animation',
-                  node: this,
-                  timing: {delay: 500}
-                },
-                'exit': {
-                  // Provided by neon-animation/animations/fade-out-animation.html
-                  name: 'fade-out-animation',
-                  node: this
-                }
-              }
-            }
-          }
-        };
-      }
+      // static get properties() {
+      //   return {
+      //     }
+      //   };
+      // }
 
       constructor() {
           super()
           console.log("BasicAnimView.constructor")
-
-          this.addEventListener('neon-animation-finish', e => this._onNeonAnimationFinish(e));
       }
 
       ready() {
@@ -77,34 +50,15 @@
       connectedCallback() {
         super.connectedCallback();
           console.log("BasicAnimView.connectedCallback")
-
-          this.opened = true;
-          //this.style.display = 'inline-block';
-
-          // Play scale-up-animation.
-          this.playAnimation('entry');
       }
 
       disconnectedCallback() {
         super.disconnectedCallback();
           console.log("BasicAnimView.disconnectedCallback")
-
-          this.opened = false;
-          
-          // Play fade-out-animation.
-          this.playAnimation('exit');
       }
 
       attributeChangedCallback() {
           console.log("BasicAnimView.attributeChangedCallback")
-      }
-
-      _onNeonAnimationFinish() {
-          console.log("BasicAnimView._onNeonAnimationFinish")
-
-          if (!this.opened) {
-            this.style.display = 'none';
-          }
       }
     }
 
