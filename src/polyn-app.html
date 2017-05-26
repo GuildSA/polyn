@@ -30,6 +30,7 @@
 <link rel="lazy-import" href="backendless-view.html">
 <link rel="lazy-import" href="pageanim-view.html">
 <link rel="lazy-import" href="basicanim-view.html">
+<link rel="lazy-import" href="threejs-view.html">
 <link rel="lazy-import" href="chatstart-view.html">
 
 <dom-module id="polyn-app">
@@ -133,6 +134,7 @@
           <a name="backendless-view" on-tap="_onTapBackendlessView">Backendless</a>
           <a name="basicanim-view" on-tap="_onTapBasicAnimView">Basic Animation</a>
           <a name="pageanim-view" on-tap="_onTapPageAnimView">Page Animation</a>
+          <a name="threejs-view" on-tap="_onTapThreeJSView">ThreeJS</a>
           <a name="chatstart-view" on-tap="_onTapChatStartView">Chat Start</a>
         </iron-selector>
       </app-drawer>
@@ -146,12 +148,12 @@
             <div class="logo" main-title>
               <picture>
                 <source media="(max-width: 767px)" sizes="(max-width:767px) 50vw, 10vw"
-                srcset="/images/logo/VinylRecords-small-noborder.webp">
+                srcset="/images/logo/VinylRecords-small-noborder.png">
 
                 <source media="(max-width: 1400px)" sizes="(max-width: 1400px) 100vw, 50vw"
-                srcset="/images/logo/VinylRecords-medium-noborder.webp">
+                srcset="/images/logo/VinylRecords-medium-noborder.png">
 
-                <img src="/images/logo/VinylRecords-medium-noborder.webp">
+                <img src="/images/logo/VinylRecords-medium-noborder.png">
               </picture>
             </div>
             <!--<paper-input id="searchInput" label="Search..." value="{{searchText}}"></paper-input>
@@ -190,6 +192,7 @@
           <backendless-view id="backendlessView" name="backendless-view"></backendless-view>
           <pageanim-view name="pageanim-view"></pageanim-view>
           <basicanim-view name="basicanim-view"></basicanim-view>
+          <threejs-view name="threejs-view"></threejs-view>
           <chatstart-view name="chatstart-view"></chatstart-view>
         </iron-pages>
 
@@ -359,6 +362,13 @@
         }
       }
 
+      _onTapThreeJSView() {
+        this.page = 'threejs-view';
+        if(!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      }
+
       _onTapChatStartView() {
         this.page = 'chatstart-view';
         if(!this.$.drawer.persistent) {
@@ -387,7 +397,7 @@
               console.log("  Element view to restore: " + viewName);
               this.page = viewName;
 
-              this.$.toolbarNavBtn.icon = "custom-icons:arrow-back";
+              this.$.toolbarNavBtn.icon = "arrow-back";
 
             } else {
 
@@ -414,7 +424,7 @@
         console.log("PolynApp.pushPageViewOnCurrentTab: page = " + page + ", current tab = " + this.$.tabs.selected);
 
         this.page = page;
-        this.$.toolbarNavBtn.icon = "custom-icons:arrow-back";
+        this.$.toolbarNavBtn.icon = "arrow-back";
         this.tabViewStacks[this.$.tabs.selected].push(this.$.ironPages.selectedItem);
  
         // Return the newly selected item or page so we can set some data on it, if required.
@@ -426,7 +436,7 @@
 
         // Home tab = index 0!
         if(this.tabViewStacks[0].length > 0) {
-          this.$.toolbarNavBtn.icon = "custom-icons:arrow-back";
+          this.$.toolbarNavBtn.icon = "arrow-back";
           var viewName = this.tabViewStacks[0][this.tabViewStacks[0].length - 1].tagName.toLowerCase();
           console.log("  Element view to restore: " + viewName);
           this.page = viewName;
@@ -448,7 +458,7 @@
 
         // Messages tab = index 1!
         if(this.tabViewStacks[1].length > 0) {
-          this.$.toolbarNavBtn.icon = "custom-icons:arrow-back";
+          this.$.toolbarNavBtn.icon = "arrow-back";
           var viewName = this.tabViewStacks[1][this.tabViewStacks[1].length - 1].tagName.toLowerCase();
           console.log("  Element view to restore: " + viewName);
           this.page = viewName;
@@ -463,7 +473,7 @@
 
         // Profile tab = index 2!
         if(this.tabViewStacks[2].length > 0) {
-          this.$.toolbarNavBtn.icon = "custom-icons:arrow-back";
+          this.$.toolbarNavBtn.icon = "arrow-back";
           var viewName = this.tabViewStacks[2][this.tabViewStacks[2].length - 1].tagName.toLowerCase();
           console.log("  Element view to restore: " + viewName);
           this.page = viewName;
