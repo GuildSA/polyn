@@ -155,7 +155,7 @@
       <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Spinster-Records.png" class="item" on-tap="_onTapBusiness" ></iron-image>
       <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Spinster-Records.png" class="item" on-tap="_onTapBusiness" ></iron-image>
       <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/business-image-polyn.png" class="item" on-tap="_onTapBusiness" ></iron-image>
-      <paper-fab id="fab" icon="message"></paper-fab>
+      <paper-fab id="fab" icon="message" on-tap="_onTapCreateMessage"></paper-fab>
 
 
       <!--<img src ="images/test-images/good_records.jpg" class="item" on-click="_onClickBusiness">
@@ -190,6 +190,13 @@
         var polynApp = document.getElementById("polynApp");
         var itemView = polynApp.pushPageOnCurrentTab("item-view");
         itemView.itemId = 2;
+      }
+
+      _onTapCreateMessage() {
+        console.log("HomeView._onTapCreateMessage");
+
+        //var polynApp = document.getElementById("polynApp");
+        //polynApp.showNotificationPermission();
       }
     }
 

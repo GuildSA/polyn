@@ -299,15 +299,14 @@
           console.log("BasicAnimView.afterNextRender")
 
 // TODO: Postpone this until really needed!
-          this.$.messaging.activate();
-          this._showNotificationPermission();
+          this.showNotificationPermission();
         });
       }
 
-      _showNotificationPermission() {
+      showNotificationPermission() {
 
-        //const messaging = firebase.messaging();
-        //messaging.requestPermission()
+        this.$.messaging.activate();
+        
         this.$.messaging.requestPermission()
           .then(() => {
             console.log('Notification Message permission granted!');
@@ -469,8 +468,6 @@
 
       onTapMessagesTab() {
         console.log("PolynApp.onTapMessagesTab: stack size = " + this.tabViewStacks[1].length + ", tab = " + this.$.tabs.selected);
-
-        //this.showNotificationPermission();
 
         // Messages tab = index 1!
         if(this.tabViewStacks[1].length > 0) {

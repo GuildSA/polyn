@@ -1,6 +1,4 @@
 
-
-
  -- Firebase --
 
  {
@@ -10,66 +8,36 @@
   }
 }
 
- -- Firebase Messaging --
-
-Example Curl:
-
-curl -X POST --header "Authorization: key=<API_ACCESS_KEY>" --Header "Content-Type: application/json" https://fcm.googleapis.com/fcm/send -d "{\"to\":\"<YOUR_DEVICE_ID_TOKEN>\",\"notification\":{\"body\":\"Firebase\"} \"priority":\"10"}"
-
+ -- Firebase Cloud Messaging --
 
 A Real Curl example filled in:
 
-Using Server Key: 
+Firebase Server Key: 
 AAAA4BRpWD8:APA91bH9yM7xDd4XyQeeMNw9zZh58hYHuRGKBQ5xReRJ9M6drXbrk-TwOKF3S5lDDgHKz0g_BF02L0ESFfeDNff9cd75OxpoEO6DUsFJjR5HWZnjVqxh3rpfjw-PJXGfVR7GTOBk8sjS
 
-Using a user's Token (use a real one!):
-frmtiTSUmCM:APA91bHa95mnzN6B4TTAMwXfyDEgSXJXR5qV1LqqqWy8zXCg7sqXijqQaGVoluaHkIV6LFt4Fj4x62hyedltbU3F9vz1cKL5fB1aSsLRypPZXASMyIqKHnCjGYWQVqYgJdrU5SpBgrQf
+Token for kharris@guildsa.org on Pixel
+fuZ_iI_jX3o:APA91bFUpYGju6QBR1V2mMhGV5J7HzQNw0qO-VJdl8ULJEfwz5_RCYghvAp9f9802OP4mH0l-2Y4JfPFxlS1eQbQXI_4E9XZwHOtCtf2X1EHjMDqy83afwfFfXjfUI_apWQuLp1fP75P
 
+Token for kharris@guildsa.com in desktop browser:
+c-2nCgxrEAU:APA91bFE_-CToSYrFsSf_9JHwMJB9Z33vnuCg16kJz8EZz7Mx643SoUUtfnLnk9FvNDiQ4TgET_DQihA_vOKMlSqKaG3VziEwK4F_dtb_DVQjDP4oxSvUbB1bj5Pb57IgXnDVHuITnOn
 
-curl -X POST --header "Authorization: key=AAAA4BRpWD8:APA91bH9yM7xDd4XyQeeMNw9zZh58hYHuRGKBQ5xReRJ9M6drXbrk-TwOKF3S5lDDgHKz0g_BF02L0ESFfeDNff9cd75OxpoEO6DUsFJjR5HWZnjVqxh3rpfjw-PJXGfVR7GTOBk8sjS" --Header "Content-Type: application/json" https://fcm.googleapis.com/fcm/send -d "{\"to\":\"frmtiTSUmCM:APA91bHa95mnzN6B4TTAMwXfyDEgSXJXR5qV1LqqqWy8zXCg7sqXijqQaGVoluaHkIV6LFt4Fj4x62hyedltbU3F9vz1cKL5fB1aSsLRypPZXASMyIqKHnCjGYWQVqYgJdrU5SpBgrQf\",\"notification\":{\"body\":\"Firebase Test\"} \"priority":\"10"}"
-
-
-
-
-
-
-curl -X POST -H "Authorization: key=YOUR-SERVER-KEY" -H "Content-Type: application/json" -d '{
-  "notification": {
-    "title": "Portugal vs. Denmark",
-    "body": "5 to 1",
-    "icon": "firebase-logo.png",
-    "click_action": "http://localhost:8081"
-  },
-  "to": "YOUR-IID-TOKEN"
-}' "https://fcm.googleapis.com/fcm/send"
-
-
-
-curl -X POST -H "Authorization: key=AAAA4BRpWD8:APA91bH9yM7xDd4XyQeeMNw9zZh58hYHuRGKBQ5xReRJ9M6drXbrk-TwOKF3S5lDDgHKz0g_BF02L0ESFfeDNff9cd75OxpoEO6DUsFJjR5HWZnjVqxh3rpfjw-PJXGfVR7GTOBk8sjS" -H "Content-Type: application/json" -d '{"notification": {"title": "Portugal vs. Denmark","body": "5 to 1","icon": "firebase-logo.png","click_action": "http://localhost:8081"},"to": "frmtiTSUmCM:APA91bHa95mnzN6B4TTAMwXfyDEgSXJXR5qV1LqqqWy8zXCg7sqXijqQaGVoluaHkIV6LFt4Fj4x62hyedltbU3F9vz1cKL5fB1aSsLRypPZXASMyIqKHnCjGYWQVqYgJdrU5SpBgrQf"}' "https://fcm.googleapis.com/fcm/send"
-
-curl -X POST -H "Authorization: key=AAAA4BRpWD8:APA91bH9yM7xDd4XyQeeMNw9zZh58hYHuRGKBQ5xReRJ9M6drXbrk-TwOKF3S5lDDgHKz0g_BF02L0ESFfeDNff9cd75OxpoEO6DUsFJjR5HWZnjVqxh3rpfjw-PJXGfVR7GTOBk8sjS" -H "Content-Type: application/json" -d '{"notification": {"title": "Some Title","body": "Some body text"}, "priority": "high", "to": "frmtiTSUmCM:APA91bHa95mnzN6B4TTAMwXfyDEgSXJXR5qV1LqqqWy8zXCg7sqXijqQaGVoluaHkIV6LFt4Fj4x62hyedltbU3F9vz1cKL5fB1aSsLRypPZXASMyIqKHnCjGYWQVqYgJdrU5SpBgrQf"}' "https://fcm.googleapis.com/fcm/send"
-
-
-
-
-curl -X POST -H "Authorization: key=AAAA4BRpWD8:APA91bH9yM7xDd4XyQeeMNw9zZh58hYHuRGKBQ5xReRJ9M6drXbrk-TwOKF3S5lDDgHKz0g_BF02L0ESFfeDNff9cd75OxpoEO6DUsFJjR5HWZnjVqxh3rpfjw-PJXGfVR7GTOBk8sjS" -H "Content-Type: application/json" -d '{"notification": {"title": "Some Title", "body": "Some body text"}, "priority": "high", "to": "frmtiTSUmCM:APA91bHa95mnzN6B4TTAMwXfyDEgSXJXR5qV1LqqqWy8zXCg7sqXijqQaGVoluaHkIV6LFt4Fj4x62hyedltbU3F9vz1cKL5fB1aSsLRypPZXASMyIqKHnCjGYWQVqYgJdrU5SpBgrQf"}' "https://fcm.googleapis.com/fcm/send"
-
-
-
-curl -X POST -H "Authorization: key=AAAA4BRpWD8:APA91bH9yM7xDd4XyQeeMNw9zZh58hYHuRGKBQ5xReRJ9M6drXbrk-TwOKF3S5lDDgHKz0g_BF02L0ESFfeDNff9cd75OxpoEO6DUsFJjR5HWZnjVqxh3rpfjw-PJXGfVR7GTOBk8sjS" -H "Content-Type: application/json" -d '{"to": "frmtiTSUmCM:APA91bHa95mnzN6B4TTAMwXfyDEgSXJXR5qV1LqqqWy8zXCg7sqXijqQaGVoluaHkIV6LFt4Fj4x62hyedltbU3F9vz1cKL5fB1aSsLRypPZXASMyIqKHnCjGYWQVqYgJdrU5SpBgrQf"}' "https://fcm.googleapis.com/fcm/send"
-
-
-
-
-
-curl --header "Authorization: key=AAAA4BRpWD8:APA91bH9yM7xDd4XyQeeMNw9zZh58hYHuRGKBQ5xReRJ9M6drXbrk-TwOKF3S5lDDgHKz0g_BF02L0ESFfeDNff9cd75OxpoEO6DUsFJjR5HWZnjVqxh3rpfjw-PJXGfVR7GTOBk8sjS" \
---header Content-Type:"application/json" \
-https://fcm.googleapis.com/fcm/send \
--d "{\"registration_ids\":[\"frmtiTSUmCM:APA91bHa95mnzN6B4TTAMwXfyDEgSXJXR5qV1LqqqWy8zXCg7sqXijqQaGVoluaHkIV6LFt4Fj4x62hyedltbU3F9vz1cKL5fB1aSsLRypPZXASMyIqKHnCjGYWQVqYgJdrU5SpBgrQf\"]}"
-
-
-
-    
+curl -H "Content-Type: application/json" \
+     -H "Authorization: key=AAAA4BRpWD8:APA91bH9yM7xDd4XyQeeMNw9zZh58hYHuRGKBQ5xReRJ9M6drXbrk-TwOKF3S5lDDgHKz0g_BF02L0ESFfeDNff9cd75OxpoEO6DUsFJjR5HWZnjVqxh3rpfjw-PJXGfVR7GTOBk8sjS" \
+     -d '{
+          "to": "fuZ_iI_jX3o:APA91bFUpYGju6QBR1V2mMhGV5J7HzQNw0qO-VJdl8ULJEfwz5_RCYghvAp9f9802OP4mH0l-2Y4JfPFxlS1eQbQXI_4E9XZwHOtCtf2X1EHjMDqy83afwfFfXjfUI_apWQuLp1fP75P",
+          "notification": {
+             "title": "My title text!",
+             "body": "My body text!",
+             "icon": "/images/profile_placeholder.png",
+             "click_action": "https://polyn-3c431.firebaseapp.com/"
+           },
+           "data": {
+             "myData1": "First data",
+             "myData2": "Second data"
+          },
+          "priority": 10
+         }' \
+     https://fcm.googleapis.com/fcm/send
 
 ------------------------------------------------------------------------
 
