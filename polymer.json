@@ -12,7 +12,6 @@
     "src/backendless-view.html",
     "src/pageanim-view.html",
     "src/basicanim-view.html",
-    "src/threejs-view.html",
     "src/chatstart-view.html",
     "src/error404-view.html"
   ],
@@ -24,8 +23,7 @@
   "extraDependencies": [
     "manifest.json",
     "bower_components/webcomponentsjs/*.js",
-    "bower_components/backendless/src/backendless.js",
-    "bower_components/three.js/build/three.js"
+    "bower_components/backendless/src/backendless.js"
   ],
   "lint": {
     "rules": ["polymer-2"]
