@@ -397,7 +397,7 @@
               console.log("  Element view to restore: " + viewName);
               this.page = viewName;
 
-              this.$.toolbarNavBtn.icon = "arrow-back";
+              this.$.toolbarNavBtn.icon = "custom-icons:arrow-back";
 
             } else {
 
@@ -424,7 +424,7 @@
         console.log("PolynApp.pushPageViewOnCurrentTab: page = " + page + ", current tab = " + this.$.tabs.selected);
 
         this.page = page;
-        this.$.toolbarNavBtn.icon = "arrow-back";
+        this.$.toolbarNavBtn.icon = "custom-icons:arrow-back";
         this.tabViewStacks[this.$.tabs.selected].push(this.$.ironPages.selectedItem);
  
         // Return the newly selected item or page so we can set some data on it, if required.
@@ -436,7 +436,7 @@
 
         // Home tab = index 0!
         if(this.tabViewStacks[0].length > 0) {
-          this.$.toolbarNavBtn.icon = "arrow-back";
+          this.$.toolbarNavBtn.icon = "custom-icons:arrow-back";
           var viewName = this.tabViewStacks[0][this.tabViewStacks[0].length - 1].tagName.toLowerCase();
           console.log("  Element view to restore: " + viewName);
           this.page = viewName;
@@ -458,7 +458,7 @@
 
         // Messages tab = index 1!
         if(this.tabViewStacks[1].length > 0) {
-          this.$.toolbarNavBtn.icon = "arrow-back";
+          this.$.toolbarNavBtn.icon = "custom-icons:arrow-back";
           var viewName = this.tabViewStacks[1][this.tabViewStacks[1].length - 1].tagName.toLowerCase();
           console.log("  Element view to restore: " + viewName);
           this.page = viewName;
@@ -473,7 +473,7 @@
 
         // Profile tab = index 2!
         if(this.tabViewStacks[2].length > 0) {
-          this.$.toolbarNavBtn.icon = "arrow-back";
+          this.$.toolbarNavBtn.icon = "custom-icons:arrow-back";
           var viewName = this.tabViewStacks[2][this.tabViewStacks[2].length - 1].tagName.toLowerCase();
           console.log("  Element view to restore: " + viewName);
           this.page = viewName;
