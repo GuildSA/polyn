@@ -22,6 +22,7 @@
   ],
   "extraDependencies": [
     "manifest.json",
+    "firebase-messaging-sw.js",
     "bower_components/webcomponentsjs/*.js",
     "bower_components/backendless/src/backendless.js"
   ],

@@ -107,16 +107,19 @@
         on-error="_handleError">
     </firebase-auth>
     
-    <!--
-    <firebase-messaging id="messaging"
-        token="{{token}}"
-        on-message="_onHandleMessage"
-        custom-sw="service-worker.js">
+    <firebase-messaging
+      id="messaging"
+      app-name="polyn-app"
+      token="{{token}}"
+      on-message="_onHandleMessage">
     </firebase-messaging>
 
-    <firebase-document path="/users/[[user.uid]]/token" data="[[token]]"></firebase-document>
-    -->
-
+    <firebase-document
+      app-name="polyn-app"
+      path="/users/[[user.uid]]/token"
+      data="[[token]]">
+    </firebase-document>
+    
     <app-location route="{{route}}"></app-location>
     <app-route
         route="{{route}}"
@@ -237,10 +240,10 @@
             type: Object
           },
           user: {
-              type: Object
+            type: Object
           },
           statusKnown:{
-              type: Object
+            type: Object
           },
           searchDialogValue: {
             type: String,
@@ -285,31 +288,54 @@
         super.ready();
         console.log("PolynApp.ready")
 
-        //this.$.messaging.activate();
-        //this.showNotificationPermission();
-
         // Keep a stack of page views, one for each of our 3 tabs.
         this.tabViewStacks = [
           [],[],[]
         ];
+
+        // When possible, use afterNextRender to defer non-critical
+        // work until after first paint.
+        Polymer.RenderStatus.afterNextRender(this, function() {
+          console.log("BasicAnimView.afterNextRender")
+
+// TODO: Postpone this until really needed!
+          this.$.messaging.activate();
+          this._showNotificationPermission();
+        });
       }
 
-      // showNotificationPermission() {
-      //
-      //   //const messaging = firebase.messaging();
-      //   //messaging.requestPermission()
-      //   this.$.messaging.requestPermission()
-      //     .then(() => {
-      //       console.log('Notification permission granted.')
-      //     })
-      //     .catch((err) => {
-      //       console.log('Unable to get permission to notify. ', err)
-      //     })
-      // }
+      _showNotificationPermission() {
 
-      // _onHandleMessage(message) {
-      //   console.log("PolynApp._onHandleMessage" + message)
-      // }
+        //const messaging = firebase.messaging();
+        //messaging.requestPermission()
+        this.$.messaging.requestPermission()
+          .then(() => {
+            console.log('Notification Message permission granted!');
+          })
+          .catch((err) => {
+            console.log('Notification Message permission denied!');
+          });
+      }
+
+      _onHandleMessage(payload) {
+        console.log("PolynApp._onHandleMessage:")
+        console.log("  " + JSON.stringify(payload));
+
+        // Example Payload:
+        // {
+        //     "isTrusted": false,
+        //     "detail": {
+        //         "message": {
+        //             "from": "962415122495",
+        //             "collapse_key": "do_not_collapse",
+        //             "notification": {
+        //                 "body": "Firebase"
+        //             }
+        //         }
+        //     }
+        // }
+
+      }
 
       _handleError(e, err) {
         console.log("PolynApp._handleError")
