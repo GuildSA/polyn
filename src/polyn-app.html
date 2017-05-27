@@ -5,17 +5,13 @@
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<!--<link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/paper-input/paper-input.html">-->
 <link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/paper-badge/paper-badge.html">
-<!--<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">-->
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="custom-icons.html">
 
@@ -98,34 +94,12 @@
 
     </style>
 
-    <firebase-auth
-        id="auth"
-        app-name="polyn-app"
-        signed-in="{{signedIn}}"
-        user="{{user}}"
-        status-known="{{statusKnown}}"
-        on-error="_handleError">
-    </firebase-auth>
-    
-    <firebase-messaging
-      id="messaging"
-      app-name="polyn-app"
-      token="{{token}}"
-      on-message="_onHandleMessage">
-    </firebase-messaging>
-
-    <firebase-document
-      app-name="polyn-app"
-      path="/users/[[user.uid]]/token"
-      data="[[token]]">
-    </firebase-document>
-    
     <app-location route="{{route}}"></app-location>
     <app-route
-        route="{{route}}"
-        pattern="[[rootPattern]]:page"
-        data="{{routeData}}"
-        tail="{{subroute}}"></app-route>
+      route="{{route}}"
+      pattern="[[rootPattern]]:page"
+      data="{{routeData}}"
+      tail="{{subroute}}"></app-route>
 
     <app-drawer-layout fullbleed>
       <!-- Drawer content -->
@@ -157,21 +131,17 @@
                 <img src="/images/logo/VinylRecords-medium-noborder.png">
               </picture>
             </div>
-            <!--<paper-input id="searchInput" label="Search..." value="{{searchText}}"></paper-input>
-            <paper-icon-button on-tap="_onTapSearchIconBtn" icon="search"></paper-icon-button>-->
           </app-toolbar>
            
-
             <paper-tabs id="tabs" selected="0" sticky>
              
-              <paper-tab on-tap="onTapHomeTab"><iron-icon id="home" noink icon="custom-icons:home" on-tap="onTapHomeTab"></iron-icon></paper-tab>
+              <paper-tab on-tap="_onTapHomeTab"><iron-icon id="home" noink icon="custom-icons:home" on-tap="_onTapHomeTab"></iron-icon></paper-tab>
              
-             
-              <paper-tab on-tap="onTapMessagesTab"><iron-icon id="messages" noink icon="custom-icons:question-answer" on-tap="onTapMessagesTab"></iron-icon>
+              <paper-tab on-tap="_onTapMessagesTab"><iron-icon id="messages" noink icon="custom-icons:question-answer" on-tap="_onTapMessagesTab"></iron-icon>
                 <paper-badge for="messages" label="1" suffix></paper-badge>
               </paper-tab>
               
-              <paper-tab on-tap="onTapProfileTab"><iron-icon id="profile" noink icon="custom-icons:account-circle" on-tap="onTapProfileTab"></iron-icon></paper-tab>
+              <paper-tab on-tap="_onTapProfileTab"><iron-icon id="profile" noink icon="custom-icons:account-circle" on-tap="_onTapProfileTab"></iron-icon></paper-tab>
             </paper-tabs>
             
         </app-header>
@@ -199,23 +169,10 @@
       </app-header-layout>
     </app-drawer-layout>
 
-    <!--<paper-dialog id="searchDialog" modal>
-      <h2>Search</h2>
-      <p>What would you like to search for?</p>
-      <paper-input label="Search..." value="{{searchDialogValue}}"></paper-input>
-      <div class="buttons">
-        <paper-button dialog-dismiss>Cancel</paper-button>
-        <paper-button on-tap="_onTapSearchDialogBtn" dialog-confirm autofocus>Search</paper-button>
-      </div>
-    </paper-dialog>-->
-
   </template>
-
- 
 
   <script>
     class PolynApp extends Polymer.Element {
-    // class PolynApp extends ReduxMixin(Polymer.Element) {
 
       // Stamp template from this dom-module into element's shadow DOM.
       static get is() { return 'polyn-app'; }
@@ -230,25 +187,7 @@
           },
           rootPattern: String,
           routeData: Object,
-          subroute: String,
-          // searchText: {
-          //   type: String,
-          //   notify: true,
-          //   observer: '_searchTextChanged'
-          // },
-          signedIn: {
-            type: Object
-          },
-          user: {
-            type: Object
-          },
-          statusKnown:{
-            type: Object
-          }
-          // searchDialogValue: {
-          //   type: String,
-          //   value: ""
-          // }
+          subroute: String
         };
       }
 
@@ -266,24 +205,6 @@
         this.rootPattern = (new URL(this.rootPath)).pathname;
       }
 
-// // Redux simple test...
-//       static get actions() {
-//         return {
-//           addFriend(name) {
-//             return {
-//               type: 'ADD_FRIEND',
-//               friend: name
-//             };
-//           },
-//           setCurrentSearchText(text) {
-//             return {
-//               type: 'SET_CURRENT_SEARCH_TEXT',
-//               currentSearchText: text
-//             };
-//           }
-//         }
-//       }
-
       ready() {
         super.ready();
         console.log("PolynApp.ready")
@@ -299,57 +220,20 @@
         // });
       }
 
-      showNotificationPermission() {
+      // _checkForAnonymousSignIn() {
 
-        this.$.messaging.activate();
-        this.$.messaging.requestPermission()
-          .then(() => {
-            console.log('Notification Message permission granted!');
-          })
-          .catch((err) => {
-            console.log('Notification Message permission denied!');
-          });
-      }
+      //   console.log("PolynApp._checkForAnonymousSignIn")
 
-      _onHandleMessage(payload) {
-        console.log("PolynApp._onHandleMessage:")
-        console.log("  " + JSON.stringify(payload));
-
-        // Example Payload:
-        // {
-        //     "isTrusted": false,
-        //     "detail": {
-        //         "message": {
-        //             "from": "962415122495",
-        //             "collapse_key": "do_not_collapse",
-        //             "notification": {
-        //                 "body": "Firebase"
-        //             }
-        //         }
-        //     }
-        // }
-
-      }
-
-      _handleError(e, err) {
-        console.log("PolynApp._handleError")
-        alert(err);
-      }
-
-      _checkForAnonymousSignIn() {
-
-        console.log("PolynApp._checkForAnonymousSignIn")
-
-        if(this.signedIn == false) {
-          console.log("  Signing IN Anonymously!");
-          this.$.auth.signInAnonymously();
-        } else {
-          // console.log("signedIn: " + this.signedIn);
-          // console.log("user: " + JSON.stringify(this.user, null, 4));
-          // console.log("statusKnown: " + this.statusKnown);
-          console.log("  Already Signed IN.");
-        }
-      }
+      //   if(this.signedIn == false) {
+      //     console.log("  Signing IN Anonymously!");
+      //     this.$.auth.signInAnonymously();
+      //   } else {
+      //     // console.log("signedIn: " + this.signedIn);
+      //     // console.log("user: " + JSON.stringify(this.user, null, 4));
+      //     // console.log("statusKnown: " + this.statusKnown);
+      //     console.log("  Already Signed IN.");
+      //   }
+      // }
 
       _onTapAjaxView() {
         this.page = 'ajax-view';
@@ -387,7 +271,6 @@
       }
 
       _onTapToolbarNavBtn() {
-
         console.log("PolynApp._onTapToolbarNavBtn")
 
         var selectedTab = this.$.tabs.selected;
@@ -441,8 +324,8 @@
         return this.$.ironPages.selectedItem;
       }
 
-      onTapHomeTab() {
-        console.log("PolynApp.onTapHomeTab: stack size = " + this.tabViewStacks[0].length + ", tab = " + this.$.tabs.selected);
+      _onTapHomeTab() {
+        console.log("PolynApp._onTapHomeTab: stack size = " + this.tabViewStacks[0].length + ", tab = " + this.$.tabs.selected);
 
         // Home tab = index 0!
         if(this.tabViewStacks[0].length > 0) {
@@ -454,15 +337,10 @@
           this.$.toolbarNavBtn.icon = "custom-icons:menu";
           this.page = 'home-view';
         }
-
-// TODO: We might want to delay the call to _checkForAnonymousSignIn until 
-// we know for sure the user is going to use the app vs just visiting it once.
-        //this._checkForAnonymousSignIn();
-        //this.$.auth.signOut()
       }
 
-      onTapMessagesTab() {
-        console.log("PolynApp.onTapMessagesTab: stack size = " + this.tabViewStacks[1].length + ", tab = " + this.$.tabs.selected);
+      _onTapMessagesTab() {
+        console.log("PolynApp._onTapMessagesTab: stack size = " + this.tabViewStacks[1].length + ", tab = " + this.$.tabs.selected);
 
         // Messages tab = index 1!
         if(this.tabViewStacks[1].length > 0) {
@@ -476,8 +354,8 @@
         }
       }
 
-      onTapProfileTab() {
-        console.log("PolynApp.onTapProfileTab: stack size = " + this.tabViewStacks[2].length + ", tab = " + this.$.tabs.selected);
+      _onTapProfileTab() {
+        console.log("PolynApp._onTapProfileTab: stack size = " + this.tabViewStacks[2].length + ", tab = " + this.$.tabs.selected);
 
         // Profile tab = index 2!
         if(this.tabViewStacks[2].length > 0) {
@@ -490,18 +368,6 @@
           this.page = 'profile-view';
         }
       }
-
-      // _searchTextChanged() {
-      //   console.log("PolynApp._searchTextChanged: " + this.$.searchInput.value);
-      // }
-
-      // _onTapSearchIconBtn() {
-      //   this.$.searchDialog.toggle();
-      // }
-
-      // _onTapSearchDialogBtn() {
-      //   console.log("PolynApp._onTapSearchDialogBtn: " + this.$.searchInput.value);
-      // }
 
       _routePageChanged(page) {
         console.log("PolynApp._routePageChanged: " + page);
