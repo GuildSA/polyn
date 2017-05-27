@@ -9,7 +9,7 @@
     "src/business-view.html",
     "src/item-view.html",
     "src/ajax-view.html",
-    "src/backendless-view.html",
+    "src/messaging-view.html",
     "src/pageanim-view.html",
     "src/basicanim-view.html",
     "src/chatstart-view.html",
@@ -23,8 +23,7 @@
   "extraDependencies": [
     "manifest.json",
     "firebase-messaging-sw.js",
-    "bower_components/webcomponentsjs/*.js",
-    "bower_components/backendless/src/backendless.js"
+    "bower_components/webcomponentsjs/*.js"
   ],
   "lint": {
     "rules": ["polymer-2"]

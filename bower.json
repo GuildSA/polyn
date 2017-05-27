@@ -28,7 +28,6 @@
     "paper-badge": "PolymerElements/paper-badge#^2.0.0",
     "paper-spinner": "PolymerElements/paper-spinner#^2.0.0",
     "polymerfire": "^2.0.0",
-    "backendless": "^4.0.2-beta",
     "paper-fab": "^2.0.0"
   },
   "devDependencies": {

@@ -41,16 +41,6 @@ curl -H "Content-Type: application/json" \
 
 ------------------------------------------------------------------------
 
- --- Twitter Callback URLs --
-
-We can only test with one at a time!
-https://apps.twitter.com/
-
-Backendless: https://api.backendless.com
-Firebase:    https://polyn-3c431.firebaseapp.com/__/auth/handler
-
-------------------------------------------------------------------------
-
  -- Research Links -- 
 
 https://css-tricks.com/the-difference-between-throttling-and-debouncing/
@@ -251,27 +241,5 @@ var intervalID = setInterval(alert, 1000); // Will alert every second.
 // clearInterval(intervalID); // Will clear the timer.
 
 setTimeout(alert, 1000); // Will alert once, after a second.
-
-
-
-  Backendless.Data.of("TestTable").find()
-  .then(function(result) {
-
-    self.testTable = [];
-
-    console.log("Loaded " + result.length + " objects!");
-
-    for(var i = 0; i < result.length; i++) {
-        console.log("objectId = " + result[i].objectId);
-        self.addTestTableEntry(result[i])
-    }
-  })
-  .catch(function(error) {
-    console.log("error message - " + error.message);
-    console.log("error code - " + error.statusCode);
-
-    self.$.errorMessage.innerHTML = error.message
-    self.$.errorDialog.toggle();
-  });
 
 ------------------------------------------------------------------------

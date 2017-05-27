@@ -27,7 +27,7 @@
 <link rel="lazy-import" href="business-view.html">
 <link rel="lazy-import" href="item-view.html">
 <link rel="lazy-import" href="error404-view.html">
-<link rel="lazy-import" href="backendless-view.html">
+<link rel="lazy-import" href="messaging-view.html">
 <link rel="lazy-import" href="pageanim-view.html">
 <link rel="lazy-import" href="basicanim-view.html">
 <link rel="lazy-import" href="chatstart-view.html">
@@ -132,11 +132,11 @@
       <app-drawer id="drawer" slot="drawer">
         <app-toolbar>Research</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+          <a name="messaging-view" on-tap="_onTapMessagingView">Messaging</a>
+          <a name="chatstart-view" on-tap="_onTapChatStartView">Chat Start</a>
           <a name="ajax-view" on-tap="_onTapAjaxView">AJAX + Spinner</a>
-          <a name="backendless-view" on-tap="_onTapBackendlessView">Backendless</a>
           <a name="basicanim-view" on-tap="_onTapBasicAnimView">Basic Animation</a>
           <a name="pageanim-view" on-tap="_onTapPageAnimView">Page Animation</a>
-          <a name="chatstart-view" on-tap="_onTapChatStartView">Chat Start</a>
         </iron-selector>
       </app-drawer>
 
@@ -190,7 +190,7 @@
           <item-view name="item-view"></item-view>
           <error404-view name="error404-view"></error404-view>
           <ajax-view name="ajax-view"></ajax-view>
-          <backendless-view id="backendlessView" name="backendless-view"></backendless-view>
+          <messaging-view name="messaging-view"></messaging-view>
           <pageanim-view name="pageanim-view"></pageanim-view>
           <basicanim-view name="basicanim-view"></basicanim-view>
           <chatstart-view name="chatstart-view"></chatstart-view>
@@ -231,11 +231,11 @@
           rootPattern: String,
           routeData: Object,
           subroute: String,
-          searchText: {
-            type: String,
-            notify: true,
-            observer: '_searchTextChanged'
-          },
+          // searchText: {
+          //   type: String,
+          //   notify: true,
+          //   observer: '_searchTextChanged'
+          // },
           signedIn: {
             type: Object
           },
@@ -244,11 +244,11 @@
           },
           statusKnown:{
             type: Object
-          },
-          searchDialogValue: {
-            type: String,
-            value: ""
           }
+          // searchDialogValue: {
+          //   type: String,
+          //   value: ""
+          // }
         };
       }
 
@@ -293,20 +293,15 @@
           [],[],[]
         ];
 
-        // When possible, use afterNextRender to defer non-critical
-        // work until after first paint.
-        Polymer.RenderStatus.afterNextRender(this, function() {
-          console.log("BasicAnimView.afterNextRender")
-
-// TODO: Postpone this until really needed!
-          this.showNotificationPermission();
-        });
+        // // When possible, use afterNextRender to defer non-critical work until after first paint.
+        // Polymer.RenderStatus.afterNextRender(this, function() {
+        //   console.log("BasicAnimView.afterNextRender")
+        // });
       }
 
       showNotificationPermission() {
 
         this.$.messaging.activate();
-        
         this.$.messaging.requestPermission()
           .then(() => {
             console.log('Notification Message permission granted!');
@@ -363,8 +358,8 @@
         }
       }
 
-      _onTapBackendlessView() {
-        this.page = 'backendless-view';
+      _onTapMessagingView() {
+        this.page = 'messaging-view';
         if(!this.$.drawer.persistent) {
           this.$.drawer.close();
         }
@@ -496,27 +491,17 @@
         }
       }
 
-      _searchTextChanged() {
-        console.log("PolynApp._searchTextChanged: " + this.$.searchInput.value);
-
-        // if the BackendlessView is current and the search text changes - pass it on!
-        if(this.page == "backendless-view") {
-          this.$.backendlessView.searchText = this.$.searchInput.value;
-        }
-      }
+      // _searchTextChanged() {
+      //   console.log("PolynApp._searchTextChanged: " + this.$.searchInput.value);
+      // }
 
       // _onTapSearchIconBtn() {
       //   this.$.searchDialog.toggle();
       // }
 
-      _onTapSearchDialogBtn() {
-        console.log("PolynApp._onTapSearchDialogBtn: " + this.$.searchInput.value);
-
-        // if the BackendlessView is current and the search text changes - pass it on!
-        if(this.page == "backendless-view") {
-          this.$.backendlessView.searchText = this.searchDialogValue;
-        }
-      }
+      // _onTapSearchDialogBtn() {
+      //   console.log("PolynApp._onTapSearchDialogBtn: " + this.$.searchInput.value);
+      // }
 
       _routePageChanged(page) {
         console.log("PolynApp._routePageChanged: " + page);

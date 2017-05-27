@@ -1,0 +1,47 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="messaging-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+    </style>
+
+    <div class="card">
+        <h1>Firebase Cloud Messaging</h1>
+        <paper-button on-tap="_requestNotificationPermission" raised>Request Notification Permission</paper-button>
+    </div>
+
+    <paper-dialog id="errorDialog">
+      <h2>Error</h2>
+      <p id="errorMessage"></p>
+      <div class="buttons">
+        <paper-button dialog-confirm autofocus>OK</paper-button>
+      </div>
+    </paper-dialog>
+
+  </template>
+
+  <script>
+
+    class MessagingView extends Polymer.Element {
+        static get is() { return 'messaging-view'; }
+
+        _requestNotificationPermission() {
+          console.log("MessagingView._searchTextChanged");
+
+          var polynApp = document.getElementById("polynApp");
+          polynApp.showNotificationPermission();
+        }
+    }
+
+    window.customElements.define(MessagingView.is, MessagingView);
+
+  </script>
+</dom-module>
