@@ -58,7 +58,6 @@
       // Detect whether or not the user accepted or declined the offer to "Add to Homescreen".
       window.addEventListener('beforeinstallprompt', function(e) {
 
-        //  https://developers.google.com/web/fundamentals/getting-started/primers/promises
         e.userChoice.then(function(choiceResult) {
 
           console.log(choiceResult.outcome);
@@ -79,8 +78,6 @@
     <!-- Load your application shell -->
     <link rel="import" href="/src/polyn-app.html">
 
-    <link rel="import" href="/bower_components/polymerfire/firebase-app.html">
-
     <!-- Add any global styles for body, document, etc. -->
     <style>
       body {
@@ -95,15 +92,6 @@
   <body>
 
     <polyn-app id="polynApp"></polyn-app>
-    
-    <firebase-app
-      name="polyn-app"
-      api-key="AIzaSyAG_5v0huYbA9mp72MyQaWtC4Iud4bj-ZY"
-      auth-domain="polyn-3c431.firebaseapp.com"
-      database-url="https://polyn-3c431.firebaseio.com"
-      storage-bucket="polyn-3c431.appspot.com"
-      messaging-sender-id="962415122495">
-    </firebase-app>
 
     <noscript>
       Please enable JavaScript to use this web app.
