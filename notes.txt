@@ -1,6 +1,13 @@
 
  -- Firebase --
 
+
+
+firebase deploy --only hosting
+firebase deploy --only functions
+
+
+
  {
   "rules": {
     ".read": "auth != null",
