@@ -1,0 +1,132 @@
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-behavior.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-request.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="functions-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+
+      #thumbnail-image {
+        width: 75px;
+        height: 75px;
+        border-radius: 50%;
+      }
+
+      #spinner {
+        position: absolute;
+        margin: auto;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+    </style>
+
+    <iron-ajax
+      id="requestHelloWorld"
+      url="https://us-central1-polyn-3c431.cloudfunctions.net/helloWorld"
+      method="GET"
+      handle-as="text"
+      loading="{{loading}}"
+      on-response="_handleTextResponse"
+      on-error="_handleTextError"
+      debounce-duration="300"></iron-ajax>
+
+    <iron-ajax
+      id="requestWithTextParameter"
+      url="https://us-central1-polyn-3c431.cloudfunctions.net/addMessage"
+      method="POST"
+      loading="{{loading}}"
+      on-response="_handleTextParameterResponse"
+      on-error="_handleTextParameterError"
+      debounce-duration="300"></iron-ajax>
+
+    <paper-spinner id="spinner" active="[[loading]]" active></paper-spinner>
+
+    <div class="card">
+      <h1>Firebase Functions</h1>
+      <paper-button on-tap="_onTapRequestText" raised>Request Text</paper-button>
+      <paper-button on-tap="_onTapSendTextParameter" raised>Send Text Parameter</paper-button>
+    </div>
+
+  </template>
+
+  <script>
+    class FunctionsView extends Polymer.Element {
+      static get is() { return 'functions-view'; }
+
+      static get properties() {
+        return {
+          loading: {
+            type: Boolean,
+            notify: true,
+            value: false
+          }
+        };
+      }
+
+      ready() {
+        super.ready();
+      }
+
+      _onTapRequestText() {
+        console.log("FunctionsView._onTapRequestText");
+
+        this.$.requestHelloWorld.generateRequest();
+      }
+
+      _handleTextResponse(data) {
+        console.log("FunctionsView._handleTextResponse");
+
+        console.log("  response = " + data.detail.response);
+      }
+
+      _handleTextError(e) {
+        console.log("FunctionsView._handleTextError");
+        console.log("  status = ", e.status, e.statusText);
+      }
+
+       _onTapSendTextParameter() {
+        console.log("FunctionsView._onTapSendTextParameter");
+
+        var params = {
+          text: "something to uppercase!"
+        };
+        this.$.requestWithTextParameter.params = params;
+
+        // var body = {
+        //   text: "something to uppercase!"
+        // };
+        // this.$.requestWithTextParameter.body = JSON.stringify(body)
+
+        this.$.requestWithTextParameter.generateRequest();
+      }
+
+      _handleTextParameterResponse(data) {
+        console.log("FunctionsView._handleTextParameterResponse");
+
+        //console.log(data.detail.response);
+        console.log("  status = " + data.detail.status);
+      }
+
+      _handleTextParameterError(e) {
+        console.log("FunctionsView._handleTextParameterError");
+        console.log("  status = ", e.status, e.statusText);
+      }
+
+    }
+
+    window.customElements.define(FunctionsView.is, FunctionsView);
+
+  </script>
+</dom-module>

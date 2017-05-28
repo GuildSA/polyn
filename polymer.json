@@ -9,6 +9,7 @@
     "src/business-view.html",
     "src/item-view.html",
     "src/ajax-view.html",
+    "src/functions-view.html",
     "src/messaging-view.html",
     "src/pageanim-view.html",
     "src/basicanim-view.html",

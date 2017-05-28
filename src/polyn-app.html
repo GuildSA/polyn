@@ -17,6 +17,7 @@
 
 <link rel="lazy-import" href="home-view.html">
 <link rel="lazy-import" href="ajax-view.html">
+<link rel="lazy-import" href="functions-view.html">
 <link rel="lazy-import" href="messages-view.html">
 <link rel="lazy-import" href="profile-view.html">
 <link rel="lazy-import" href="chat-view.html">
@@ -108,6 +109,7 @@
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="messaging-view" on-tap="_onTapMessagingView">Messaging</a>
           <a name="chatstart-view" on-tap="_onTapChatStartView">Chat Start</a>
+          <a name="functions-view" on-tap="_onTapFunctionsView">Cloud Functions</a>
           <a name="ajax-view" on-tap="_onTapAjaxView">AJAX + Spinner</a>
           <a name="basicanim-view" on-tap="_onTapBasicAnimView">Basic Animation</a>
           <a name="pageanim-view" on-tap="_onTapPageAnimView">Page Animation</a>
@@ -160,6 +162,7 @@
           <item-view name="item-view"></item-view>
           <error404-view name="error404-view"></error404-view>
           <ajax-view name="ajax-view"></ajax-view>
+          <functions-view name="functions-view"></functions-view>
           <messaging-view name="messaging-view"></messaging-view>
           <pageanim-view name="pageanim-view"></pageanim-view>
           <basicanim-view name="basicanim-view"></basicanim-view>
@@ -237,6 +240,13 @@
 
       _onTapAjaxView() {
         this.page = 'ajax-view';
+        if(!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      }
+
+      _onTapFunctionsView() {
+        this.page = 'functions-view';
         if(!this.$.drawer.persistent) {
           this.$.drawer.close();
         }
