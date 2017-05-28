@@ -67,3 +67,35 @@ exports.makeUppercase = functions.database.ref('/messages/{pushId}/original').on
 // Notes:
 // https://github.com/firebase/functions-samples
 // https://codelabs.developers.google.com/codelabs/firebase-cloud-functions/#9
+
+
+
+// Take the text parameter passed to this HTTP endpoint and insert it into the
+// Realtime Database under the path /messages/:pushId/original
+exports.sendMessage = functions.https.onRequest((req, res) => {
+
+  const registrationToken = req.query.token;
+  const title = req.query.title;
+  const body = req.query.body;
+
+  let payload = {
+    notification: {
+      title: title,
+      body: body,
+      icon: "/images/profile_placeholder.png"
+    }
+  };
+  
+  cors(req, res, () => {
+    return admin.messaging().sendToDevice(registrationToken, payload)
+      .then(function(response) {
+        console.log("Successfully sent message:", response);
+        res.status(200).end();
+      })
+      .catch(function(error) {
+        console.log("Error sending message:", error);
+        res.status(500).end();
+      });
+  });
+
+});

@@ -51,12 +51,22 @@
       on-error="_handleTextParameterError"
       debounce-duration="300"></iron-ajax>
 
+    <iron-ajax
+      id="sendMessage"
+      url="https://us-central1-polyn-3c431.cloudfunctions.net/sendMessage"
+      method="POST"
+      loading="{{loading}}"
+      on-response="_handleSendMessageResponse"
+      on-error="_handleSendMessageError"
+      debounce-duration="300"></iron-ajax>
+
     <paper-spinner id="spinner" active="[[loading]]" active></paper-spinner>
 
     <div class="card">
       <h1>Firebase Functions</h1>
       <paper-button on-tap="_onTapRequestText" raised>Request Text</paper-button>
       <paper-button on-tap="_onTapSendTextParameter" raised>Send Text Parameter</paper-button>
+      <paper-button on-tap="_onTapSendMessage" raised>Send Message</paper-button>
     </div>
 
   </template>
@@ -124,6 +134,28 @@
         console.log("  status = ", e.status, e.statusText);
       }
 
+      _onTapSendMessage() {
+
+        var params = {
+          token: "eghA8E9WrLA:APA91bFPKuWYMhZ5JZ5_UEUk6Odcbn8wDB-k9kH5nr2oN1gj5chRNodptIgGkuEIpXF7mf_As7hQZGL5ANIrKuHCIHSV2ArEllnlphAJ0qMaN3gz1axA29Ng_I-zk80SnRB5eRX9P1av",
+          title: "Firebase Test Message",
+          body: "The message body to send!",
+          click_action: "https://polyn-3c431.firebaseapp.com/"
+        };
+
+        this.$.sendMessage.params = params;
+        this.$.sendMessage.generateRequest();
+      }
+
+      _handleSendMessageResponse(data) {
+        console.log("FunctionsView._handleSendMessageResponse");
+        console.log("  status = " + data.detail.status);
+      }
+
+      _handleSendMessageError(e) {
+        console.log("FunctionsView._handleSendMessageError");
+        console.log("  status = ", e.status, e.statusText);
+      }
     }
 
     window.customElements.define(FunctionsView.is, FunctionsView);
