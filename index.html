@@ -78,6 +78,8 @@
     <!-- Load your application shell -->
     <link rel="import" href="/src/polyn-app.html">
 
+    <link rel="import" href="/bower_components/polymerfire/firebase-app.html">
+
     <!-- Add any global styles for body, document, etc. -->
     <style>
       body {
@@ -91,6 +93,15 @@
   </head>
   <body>
 
+    <firebase-app
+      name="polyn-app"
+      api-key="AIzaSyAG_5v0huYbA9mp72MyQaWtC4Iud4bj-ZY"
+      auth-domain="polyn-3c431.firebaseapp.com"
+      database-url="https://polyn-3c431.firebaseio.com"
+      storage-bucket="polyn-3c431.appspot.com"
+      messaging-sender-id="962415122495">
+    </firebase-app>
+    
     <polyn-app id="polynApp"></polyn-app>
 
     <noscript>
