@@ -69,7 +69,7 @@ exports.sendMessage = functions.https.onRequest((req, res) => {
     notification: {
       title: title,
       body: body,
-      icon: "/images/firebase-logo.png",
+      icon: "/images/polyn-msg.png",
       clickAction: "https://polyn-3c431.firebaseapp.com/"
     }
   };
