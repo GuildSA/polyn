@@ -54,50 +54,49 @@
     </style>
 
     <firebase-auth
-        id="auth"
-        app-name="polyn-app"
-        signed-in="{{signedIn}}"
-        user="{{user}}"
-        status-known="{{statusKnown}}"
-        on-error="_handleError">
+      id="auth"
+      app-name="polyn-app"
+      signed-in="{{signedIn}}"
+      user="{{user}}"
+      status-known="{{statusKnown}}"
+      on-error="_handleError">
     </firebase-auth>
 
-     
-     
-        <div class="card flex-center">
-          
-           <template is="dom-if" if="[[isAnonymous]]">
-              <iron-image sizing="contain" id="profile-image" alt="Anonymous Profile Image." src="./images/anonymous_profile.png"></iron-image>
-           </template>
+    <firebase-document
+      app-name="polyn-app"
+      id="usersinfo"
+      data="{{usersInfo}}">
+    </firebase-document>
 
-            <template is="dom-if" if="[[!isAnonymous]]">
-              <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="[[photoURL]]"></iron-image>
-            </template>
+    <div class="card flex-center">
 
-            <template is="dom-if" if="[[!isAnonymous]]">
-              <div class="center">
-                <h1>Welcome [[displayName]]</h1>
-              </div>
-            </template>
+      <template is="dom-if" if="[[isAnonymous]]">
+        <iron-image sizing="contain" id="profile-image" alt="Anonymous Profile Image." src="./images/anonymous_profile.png"></iron-image>
+      </template>
 
+      <template is="dom-if" if="[[!isAnonymous]]">
+        <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="[[photoURL]]"></iron-image>
+      </template>
+
+      <template is="dom-if" if="[[!isAnonymous]]">
+        <div class="center">
+          <h1>Welcome [[displayName]]</h1>
         </div>
-         
+      </template>
 
-          <template is="dom-if" if="[[isAnonymous]]">
-            <div class="flex-center">
-            <paper-button class="custom bluebtn" on-tap="_signInUsingGmail" raised>Sign In Using Gmail</paper-button>
-            <paper-button class="custom bluebtn" on-tap="_signInUsingFacebook" raised>Sign In Using Facebook</paper-button>
-            <paper-button class="custom bluebtn" on-tap="_signInUsingTwitter" raised>Sign In Using Twitter</paper-button>
-            </div>
-          </template>
-
-          
-
-          <template is="dom-if" if="[[!isAnonymous]]">
-            <paper-button class="custom bluebtn bottom" on-tap="_signOut" raised>Sign Out</paper-button>
-          </template>
-      <div>
     </div>
+
+    <template is="dom-if" if="[[isAnonymous]]">
+      <div class="flex-center">
+        <paper-button class="custom bluebtn" on-tap="_signInUsingGmail" raised>Sign In Using Gmail</paper-button>
+        <paper-button class="custom bluebtn" on-tap="_signInUsingFacebook" raised>Sign In Using Facebook</paper-button>
+        <paper-button class="custom bluebtn" on-tap="_signInUsingTwitter" raised>Sign In Using Twitter</paper-button>
+      </div>
+    </template>
+
+    <template is="dom-if" if="[[!isAnonymous]]">
+      <paper-button class="custom bluebtn bottom" on-tap="_signOut" raised>Sign Out</paper-button>
+    </template>
 
   </template>
 
@@ -127,6 +126,12 @@
           },
           statusKnown:{
             type: Object
+          },
+          usersInfo: {
+            type: String,
+            notify: true,
+            reflectToAttribute: true,
+            observer: '_usersInfoChanged'
           }
         };
       }
@@ -134,6 +139,8 @@
       ready() {
         super.ready();
         console.log("ProfileView.ready");
+
+        //this.usersInfoUpdated = false;
       }
 
       connectedCallback() {
@@ -152,14 +159,29 @@
 
       _userChanged(user) {
         console.log("ProfileView._userChanged");
-
-        // console.log("user: " + JSON.stringify(user, null, 4));
+        console.log("user: " + JSON.stringify(user, null, 4));
 
         if(user != null) {
 
             console.log("  user.isAnonymous: " + this.user.isAnonymous);
 
             if(user.isAnonymous == false) {
+
+              // As soon as we get the user - get the users info so we can add to it!!
+              if(user && user.uid) {
+
+                // this.$.usersinfo.path = "/users/" + user.uid + "/info";
+
+                if(user.providerData[0].displayName) {
+                  this.$.usersinfo.path = "/users/" + user.uid + "/info/name";
+                  this.$.usersinfo.data = this.user.providerData[0].displayName;
+                }
+
+                if(this.user.providerData[0].email) {
+                  this.$.usersinfo.path = "/users/" + user.uid + "/info/email";
+                  this.$.usersinfo.data = this.user.providerData[0].email;
+                }
+              }
 
               // console.log("user.providerData: " + user.providerData);
               // console.log("user " + JSON.stringify(user, null, 4));
@@ -183,24 +205,64 @@
         }
       }
 
+      _usersInfoChanged(usersInfo) {
+        console.log("ProfileView._usersInfoChanged: " + JSON.stringify(usersInfo, null, 4));
+
+        if(!usersInfo) {
+           console.log(" usersInfo = null");
+          return;
+        }
+
+// TODO: How can we get the data and then change it safely?
+
+        // if(this.usersInfoUpdated) {
+        //   return;
+        // }
+
+        //if(!usersInfo.name || !usersInfo.email) {
+
+          //this.displayName = user.providerData[0].displayName;
+          //this.photoURL = user.providerData[0].photoURL;
+
+//           var info = {};
+
+//           //if(!usersInfo.name) {
+//             info.name = this.user.providerData[0].displayName;
+//           //}
+
+//           //if(!usersInfo.email) {
+//             info.email = this.user.providerData[0].email;
+//           //}
+
+//           //if(!usersInfo.token) {
+//             info.token = this.usersInfo.token;
+//           //}
+
+// this.usersInfoUpdated = true;
+
+//           this.$.usersinfo.data = info;
+
+        //}
+      }
+
 //      _linkGoogleAccount() {
 //           console.log("ProfileView._linkGoogleAccount");
-
+//
 //           var provider = new firebase.auth.GoogleAuthProvider();
 //           var self = this;
-
+//
 //           self.user.linkWithPopup(provider).then(function(result) {
 //             console.log("  result: " + JSON.stringify(result, null, 4));
-
+//
 // // TODO: These don't trigger a refresh like they should!
 //             //that.notifyPath('user', that.user)
 //             //that.set("user", result.user);
 // // HACK:
 //             self.user = result.user
 //             self._userChanged(result.user)
-
+//
 //           }, function(error) {
-
+//
 // // TODO: Find a solution to "Error: This credential is already associated with a different user account."
 //             if(error.code == "auth/credential-already-in-use") {
 // // HACK: To fix this issue I'm basically abandoning the user's anonymous login in favor of their 
@@ -211,7 +273,7 @@
 //               }, function(error) {
 //                 console.log("  error: " + error);
 //               });
-
+//
 //             } else {
 //               console.log("  error: " + error);
 //             }

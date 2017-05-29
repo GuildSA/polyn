@@ -22,10 +22,10 @@ A Real Curl example filled in:
 Firebase Server Key: 
 AAAA4BRpWD8:APA91bH9yM7xDd4XyQeeMNw9zZh58hYHuRGKBQ5xReRJ9M6drXbrk-TwOKF3S5lDDgHKz0g_BF02L0ESFfeDNff9cd75OxpoEO6DUsFJjR5HWZnjVqxh3rpfjw-PJXGfVR7GTOBk8sjS
 
-Token for kharris@guildsa.org on Pixel
-fuZ_iI_jX3o:APA91bFUpYGju6QBR1V2mMhGV5J7HzQNw0qO-VJdl8ULJEfwz5_RCYghvAp9f9802OP4mH0l-2Y4JfPFxlS1eQbQXI_4E9XZwHOtCtf2X1EHjMDqy83afwfFfXjfUI_apWQuLp1fP75P
+Token for Pixel phone.
+eghA8E9WrLA:APA91bFPKuWYMhZ5JZ5_UEUk6Odcbn8wDB-k9kH5nr2oN1gj5chRNodptIgGkuEIpXF7mf_As7hQZGL5ANIrKuHCIHSV2ArEllnlphAJ0qMaN3gz1axA29Ng_I-zk80SnRB5eRX9P1av
 
-Token for kharris@guildsa.com in desktop browser:
+Token for desktop Chrome:
 c-2nCgxrEAU:APA91bFE_-CToSYrFsSf_9JHwMJB9Z33vnuCg16kJz8EZz7Mx643SoUUtfnLnk9FvNDiQ4TgET_DQihA_vOKMlSqKaG3VziEwK4F_dtb_DVQjDP4oxSvUbB1bj5Pb57IgXnDVHuITnOn
 
 curl -H "Content-Type: application/json" \
