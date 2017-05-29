@@ -1,7 +1,9 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-behavior.html">
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
@@ -17,15 +19,15 @@
     </style>
 
     <firebase-auth 
-      id="auth" 
-      app-name="polyn-app" 
+      id="auth"
+      app-name="polyn-app"
       user="{{user}}">
     </firebase-auth>
 
-    <firebase-query 
-      id="query" 
-      app-name="polyn-app" 
-      path="/chats/[[chatMessagesId]]" 
+    <firebase-query
+      id="query"
+      app-name="polyn-app"
+      path="/chats/[[chatMessagesId]]"
       data="{{chatMessages}}">
     </firebase-query>
 
@@ -35,12 +37,37 @@
       data="{{usersInfo}}">
     </firebase-document>
 
+    <firebase-document
+      app-name="polyn-app"
+      id="chatinfo"
+      path="/users/[[user.uid]]/chats/[[chatInfoId]]"
+      data="{{chatInfo}}">
+    </firebase-document>
+
+    <firebase-document
+      app-name="polyn-app"
+      id="otherusersinfo"
+      data="{{otherUsersInfo}}">
+    </firebase-document>
+
     <app-indexeddb-mirror 
       session="[[user.uid]]" 
       key="chats/[[chatMessagesId]]" 
       data="{{chatMessages}}" 
       persisted-data="{{persistedChatMessages}}">
     </app-indexeddb-mirror>
+
+    <iron-ajax
+      id="sendMessage"
+      url="https://us-central1-polyn-3c431.cloudfunctions.net/sendMessage"
+      method="POST"
+      loading="{{loading}}"
+      on-response="_handleSendMessageResponse"
+      on-error="_handleSendMessageError"
+      debounce-duration="300">
+    </iron-ajax>
+
+    <paper-spinner id="spinner" active="[[loading]]" active></paper-spinner>
 
     <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
       <template>
@@ -67,13 +94,30 @@
             type: String,
             observer: '_chatMessagesIdChanged'
           },
+          chatInfoId: {
+            type: String,
+            observer: '_chatInfoIdChanged'
+          },
           user: {
             type: Object,
             observer: '_userChanged'
           },
           usersInfo: {
-            type: String,
+            type: Object,
             observer: '_usersInfoChanged'
+          },
+          chatInfo: {
+            type: Object,
+            observer: '_chatInfoChanged'
+          },
+          otherUsersInfo: {
+            type: Object,
+            observer: '_otherUsersInfoChanged'
+          },
+          loading: {
+            type: Boolean,
+            notify: true,
+            value: false
           }
         };
       }
@@ -82,10 +126,16 @@
         console.log("ChatView._chatMessagesIdChanged: " + this.chatMessagesId);
       }
 
-      _userChanged(user) {
-        console.log("ChatView._userChanged: " + JSON.stringify(user, null, 4));
+      _chatInfoIdChanged() {
+        console.log("ChatView._chatInfoIdChanged: " + this.chatInfoId);
+      }
 
-        // As soon as we get the user - get the users info so we can learn more about them!
+      _userChanged(user) {
+        console.log("ChatView._userChanged");
+        //console.log("ChatView._userChanged: " + JSON.stringify(user, null, 4));
+
+        // As soon as we get the user - get the users info so we can 
+        // learn more about them!
         if(user && user.uid) {
           this.$.usersinfo.path = "/users/" + user.uid + "/info";
         }
@@ -93,6 +143,32 @@
 
       _usersInfoChanged(e) {
         console.log("ChatView._usersInfoChanged: " + JSON.stringify(e, null, 4));
+      }
+
+      _chatInfoChanged(e) {
+        console.log("ChatView._chatInfoChanged: " + JSON.stringify(e, null, 4));
+
+        if(!this.user || !this.chatInfo) {
+          return;
+        }
+
+        // As soon as we get the user and the chat info - get the other 
+        // users info so we know who we're chatting with.
+        var otherUsersId;
+
+        if(this.user.uid == this.chatInfo.buyerId) {
+          otherUsersId = this.chatInfo.sellerId; // The other user is the seller.
+        } else {
+          otherUsersId = this.chatInfo.buyerId; // The other user is the buyer.
+        }
+
+        if(otherUsersId) {
+          this.$.otherusersinfo.path = "/users/" + otherUsersId + "/info";
+        }
+      }
+
+      _otherUsersInfoChanged(e) {
+        console.log("ChatView._otherUsersInfoChanged: " + JSON.stringify(e, null, 4));
       }
 
       _onTapSendDialogBtn() {
@@ -123,6 +199,34 @@
 
         // Empty the message input.
         this.$.message.value = "";
+
+        if(this.otherUsersInfo.token) {
+
+          var params = {
+            token: this.otherUsersInfo.token,
+            title: this.usersInfo.name + " sent you a message.",
+            body: text,
+            icon: "/images/firebase-logo.png",
+            click_action: "https://polyn-3c431.firebaseapp.com/"
+          };
+
+          console.log("  Sending message: " + JSON.stringify(params, null, 4));
+
+          this.$.sendMessage.params = params;
+          this.$.sendMessage.generateRequest();
+        } else {
+          console.log("  No token found for: " + this.otherUsersInfo.name);
+        }
+      }
+
+      _handleSendMessageResponse(data) {
+        console.log("ChatView._handleSendMessageResponse");
+        console.log("  status = " + data.detail.status);
+      }
+
+      _handleSendMessageError(e) {
+        console.log("ChatView._handleSendMessageError");
+        console.log("  status = ", e.status, e.statusText);
       }
     }
 

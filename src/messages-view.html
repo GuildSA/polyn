@@ -68,6 +68,7 @@
           // Push the chat-view and pass the chatMessagesId.
           var polynApp = document.getElementById("polynApp");
           var chatView = polynApp.pushPageOnCurrentTab("chat-view");
+          chatView.chatInfoId = this.$.query.data[index].$key;
           chatView.chatMessagesId = this.$.query.data[index].chatId;
       }
     }

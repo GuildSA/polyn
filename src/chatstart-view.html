@@ -52,6 +52,7 @@
       <template>
         <div class="card" on-tap="_onTapUser">
           <p>[[user.info.name]]</p>
+          <p>[[user.info.email]]</p>
           <p>[[user.$key]]</p>
         </div>
       </template>
@@ -164,8 +165,10 @@
 
         // Add info about the new chat session to both users involved in the chat!
         var chatsEntry = {
-          buyer: this.selectedUser.info.name,
           seller: sellersFullName,
+          sellerId: this.user.uid,
+          buyer: this.selectedUser.info.name,
+          buyerId: this.selectedUser.$key,
           chatId: chatSessionId,
           subject: "Test Chat",
           timeStamp: firebase.database.ServerValue.TIMESTAMP

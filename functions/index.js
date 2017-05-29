@@ -82,7 +82,7 @@ exports.sendMessage = functions.https.onRequest((req, res) => {
     notification: {
       title: title,
       body: body,
-      icon: "/images/profile_placeholder.png"
+      icon: "/images/firebase-logo.png"
     }
   };
   
