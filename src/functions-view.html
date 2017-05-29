@@ -40,7 +40,8 @@
       loading="{{loading}}"
       on-response="_handleTextResponse"
       on-error="_handleTextError"
-      debounce-duration="300"></iron-ajax>
+      debounce-duration="300">
+    </iron-ajax>
 
     <iron-ajax
       id="requestWithTextParameter"
@@ -49,7 +50,8 @@
       loading="{{loading}}"
       on-response="_handleTextParameterResponse"
       on-error="_handleTextParameterError"
-      debounce-duration="300"></iron-ajax>
+      debounce-duration="300">
+    </iron-ajax>
 
     <iron-ajax
       id="sendMessage"
@@ -58,7 +60,8 @@
       loading="{{loading}}"
       on-response="_handleSendMessageResponse"
       on-error="_handleSendMessageError"
-      debounce-duration="300"></iron-ajax>
+      debounce-duration="300">
+    </iron-ajax>
 
     <paper-spinner id="spinner" active="[[loading]]" active></paper-spinner>
 

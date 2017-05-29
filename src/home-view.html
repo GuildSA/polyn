@@ -2,8 +2,12 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-request.html">
 <link rel="import" href="../bower_components/iron-iconset-svg/iron-iconset-svg.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-behavior.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="home-view">
@@ -131,6 +135,8 @@
 
     </style>
 
+    <paper-spinner id="spinner" active="[[loading]]" active></paper-spinner>
+
     <div class="masonry">
       <!--<iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/business-image-polyn.png" class="item" on-click="_onClickBusiness" ></iron-image>
       <iron-image style="width:100%; height:300px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/spinster_records.jpg" class="item" on-click="_onClickBusiness" ></iron-image>
@@ -172,11 +178,31 @@
       <img src="images/test-images/andrew.jpg" class="item" on-click="_onClickItem">-->
     </div>
 
+    <iron-ajax
+      id="sendRequet"
+      url="https://us-central1-polyn-3c431.cloudfunctions.net/sendRequest"
+      method="POST"
+      loading="{{loading}}"
+      on-response="_handleSendRequestResponse"
+      on-error="_handleSendRequestError"
+      debounce-duration="300">
+    </iron-ajax>
+
   </template>
 
   <script>
     class HomeView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'home-view'; }
+
+      static get properties() {
+        return {
+          loading: {
+            type: Boolean,
+            notify: true,
+            value: false
+          }
+        };
+      }
 
       _onTapBusiness() {
         var polynApp = document.getElementById("polynApp");
@@ -193,8 +219,24 @@
       _onTapCreateMessage() {
         console.log("HomeView._onTapCreateMessage");
 
-// TODO: Write a cloud function that creates a new Request here.
+        var params = {
+          categoryPath: "collectables/sub/vinylRecords",
+          title: "Action Comics No. 1",
+          body: "I have a lot money and really want this comic book for my kid!",
+        };
 
+        this.$.sendRequet.params = params;
+        this.$.sendRequet.generateRequest();
+      }
+
+      _handleSendRequestResponse(data) {
+        console.log("FunctionsView._handleSendRequestResponse");
+        console.log("  status = " + data.detail.status);
+      }
+
+      _handleSendRequestError(e) {
+        console.log("FunctionsView._handleSendRequestError");
+        console.log("  status = ", e.status, e.statusText);
       }
     }
 

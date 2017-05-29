@@ -59,19 +59,6 @@ exports.makeUppercase = functions.database.ref('/messages/{pushId}/original').on
     return event.data.ref.parent.child('uppercase').set(uppercase);
 });
 
-
-// How to test:
-// Function URL (helloWorld): https://us-central1-polyn-3c431.cloudfunctions.net/helloWorld
-// Function URL (addMessage): https://us-central1-polyn-3c431.cloudfunctions.net/addMessage
-
-// Notes:
-// https://github.com/firebase/functions-samples
-// https://codelabs.developers.google.com/codelabs/firebase-cloud-functions/#9
-
-
-
-// Take the text parameter passed to this HTTP endpoint and insert it into the
-// Realtime Database under the path /messages/:pushId/original
 exports.sendMessage = functions.https.onRequest((req, res) => {
 
   const registrationToken = req.query.token;
@@ -82,7 +69,8 @@ exports.sendMessage = functions.https.onRequest((req, res) => {
     notification: {
       title: title,
       body: body,
-      icon: "/images/firebase-logo.png"
+      icon: "/images/firebase-logo.png",
+      clickAction: "https://polyn-3c431.firebaseapp.com/"
     }
   };
   
@@ -97,5 +85,35 @@ exports.sendMessage = functions.https.onRequest((req, res) => {
         res.status(500).end();
       });
   });
-
 });
+
+exports.sendRequest = functions.https.onRequest((req, res) => {
+
+  const categoryPath = req.query.categoryPath;
+  const title = req.query.title;
+  const body = req.query.body;
+
+  let request = {
+      title: title,
+      body: body,
+  };
+
+  // Push it into the Realtime Database then send a response
+  admin.database().ref('/requests/' + categoryPath + '/requests').push(request).then(snapshot => {
+
+    cors(req, res, () => {
+      //res.redirect(303, snapshot.ref); // Redirect with 303 SEE OTHER to the URL of the pushed object in the Firebase console.
+      //res.send("SUCCESS");
+      res.status(200).end();
+    });
+  });
+});
+
+// How to test:
+// Function URL (helloWorld): https://us-central1-polyn-3c431.cloudfunctions.net/helloWorld
+// Function URL (addMessage): https://us-central1-polyn-3c431.cloudfunctions.net/addMessage
+
+// Notes:
+// https://github.com/firebase/functions-samples
+// https://codelabs.developers.google.com/codelabs/firebase-cloud-functions/#9
+
