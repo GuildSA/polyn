@@ -70,7 +70,7 @@ exports.sendMessage = functions.https.onRequest((req, res) => {
       title: title,
       body: body,
       icon: "/images/polyn-msg.png",
-      clickAction: "https://polyn-3c431.firebaseapp.com/"
+      clickAction: "https://vinylrecords.io/"
     }
   };
   
@@ -96,6 +96,7 @@ exports.sendRequest = functions.https.onRequest((req, res) => {
   let request = {
       title: title,
       body: body,
+      timeStamp: admin.database.ServerValue.TIMESTAMP
   };
 
   // Push it into the Realtime Database then send a response

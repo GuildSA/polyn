@@ -185,7 +185,6 @@
         var text = this.$.message.value;
 
         var newKey = firebase.app("polyn-app").database().ref().child("chats/" + this.chatMessagesId).push().key;
-        //console.log(" newKey: " + newKey);
 
         var chatMessage = {
           name: this.usersInfo.name,
@@ -207,7 +206,7 @@
             title: this.usersInfo.name + " sent you a message.",
             body: text,
             icon: "/images/polyn-msg.png",
-            click_action: "https://polyn-3c431.firebaseapp.com/"
+            click_action: "https://vinylrecords.io/"
           };
 
           console.log("  Sending message: " + JSON.stringify(params, null, 4));

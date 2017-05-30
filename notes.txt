@@ -81,6 +81,7 @@ sudo npm install -g lighthouse
 
 To test after firebase deploy do this:
 lighthouse https://polyn-3c431.firebaseapp.com/ --view
+lighthouse https://vinylrecords.io/ --view
 
 To test locally do this:
 polymer serve --open
