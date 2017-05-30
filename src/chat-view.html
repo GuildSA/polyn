@@ -7,6 +7,8 @@
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html"
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="chat-view">
@@ -14,6 +16,27 @@
     <style include="shared-styles">
       :host {
         display: block;
+        padding: 10px;
+      }
+
+      .message-container {
+        display: flex;
+        align-items: center;
+        width: 100%;
+      }
+
+      .profile-pic {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+      }
+
+      .flex-horizontal {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+      }
+
+      .username {
         padding: 10px;
       }
     </style>
@@ -71,15 +94,27 @@
 
     <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
       <template>
+       <div class="message-container"> 
         <div class="card">
           <p>[[chatMessage.text]]</p>
-        </div>
+
+            <div class="flex-horizontal">
+              <div class="user-photo">
+                <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="profile-pic" preload fade src="images/anonymous_profile.png" class="item" on-tap="_onTapBusiness" ></iron-image> 
+              </div>
+              <div class="username">
+                Username 
+              </div>           
+            </div>
+          </div>
       </template>
     </dom-repeat>
+  
 
     <!-- Code for Message bar -->
     <paper-input id="message" label="Message..."></paper-input>
     <paper-button on-tap="_onTapSendDialogBtn" dialog-confirm autofocus raised>Send</paper-button>
+      </div>
 
   </template>
 
