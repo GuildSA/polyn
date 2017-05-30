@@ -19,10 +19,31 @@
         padding: 10px;
       }
 
-      .message-container {
+      .flex-horizontal {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        @apply --layout-end-justified;
+      }
+
+      #message {
+         --paper-input-container-focus-color: #70C187;
+      }
+
+      .message-container-main {
         display: flex;
         align-items: center;
         width: 100%;
+      }
+
+      .message-sender-container {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        @apply --layout-around-justified;
+        background: white;
+        border-radius: 5px;
+        max-width: 400px;
+        margin: auto;
+            
       }
 
       .profile-pic {
@@ -31,10 +52,9 @@
         border-radius: 50%;
       }
 
-      .flex-horizontal {
-        @apply --layout-horizontal;
-        @apply --layout-center;
-        @apply --layout-end-justified;
+      #send-button {
+        background-color: #70C187;
+        color: white; 
       }
 
       .username {
@@ -95,7 +115,7 @@
 
     <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
       <template>
-       <div class="message-container"> 
+       <div class="message-container-main"> 
         <div class="card">
           <p>[[chatMessage.text]]</p>
 
@@ -112,10 +132,10 @@
       </template>
     </dom-repeat>
   
-
-    <!-- Code for Message bar -->
-    <paper-input id="message" label="Message..."></paper-input>
-    <paper-button on-tap="_onTapSendDialogBtn" dialog-confirm autofocus raised>Send</paper-button>
+    <div class="message-sender-container">
+      <paper-input id="message" label="Message..."></paper-input>
+      <paper-button id="send-button" on-tap="_onTapSendDialogBtn" dialog-confirm autofocus raised>Send</paper-button>
+    </div>
       
 
   </template>
