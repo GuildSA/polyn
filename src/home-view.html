@@ -21,112 +21,25 @@
         padding: 10px;
       }
 
-      .masonry {
-        column-count: 2; 
-        column-gap: 1em;
-      }
-
       .item {
         transition-timing-function: ease-out;
         transition-duration: .75s;
         background: #eee;
-        padding: 10 10 10 10;
-        display: inline-block;
-        margin: 0 0 1em;
         width: 100%;
-        text-align: center;
       }
+
 
       .item:hover {
-        opacity: .55;
-      }
-
-      item:hover {
         opacity: .75;
       }
 
-      .wrapper {
-        width: 95%;
-        margin: 3em auto;
-      }
-
-      .masonry {
-        margin: 1.5em 0;
-        padding: 0;
-        -moz-column-gap: 1.5em;
-        -webkit-column-gap: 1.5em;
-        column-gap: 1.5em;
-        font-size: .85em;
-      }
-
-      .item {
-        display: inline-block;
-        background: #fff;
-        padding: 1em;
-        margin: 0 0 1.5em;
+      .main-container {
+        display: flex;
+        align-items: center;
         width: 100%;
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        box-shadow: 2px 2px 4px 0 #ccc;
-        border-bottom: 1px solid #eee;
-      }
-
-      @media only screen and (min-width: 400px) {
-        .masonry {
-          -moz-column-count: 1;
-          -webkit-column-count: 1;
-          column-count: 1;
-        }
-      }
-
-      @media only screen and (min-width: 700px) {
-        .masonry {
-          -moz-column-count: 3;
-          -webkit-column-count: 3;
-          column-count: 3;
-        }
-      }
-
-      @media only screen and (min-width: 900px) {
-        .masonry {
-          -moz-column-count: 3;
-          -webkit-column-count: 3;
-          column-count: 3;
-        }
-      }
-
-      @media only screen and (min-width: 1100px) {
-        .masonry {
-          -moz-column-count: 3;
-          -webkit-column-count: 3;
-          column-count: 3;
-        }
-      }
-
-      @media only screen and (min-width: 1280px) {
-        .wrapper {
-          width: 1260px;
-        }
-      }
-
-      .image {
-        position: relative; 
-      }
-
-      h2 { 
-        position: absolute; 
-        top: 200px; 
-        left: 0; 
-        width: 100%; 
-      }
-      h2 span { 
-        color: white; 
-        font: bold 24px/45px Helvetica, Sans-Serif; 
-        letter-spacing: -1px;  
-        background: rgb(0, 0, 0); /* fallback color */
-        background: rgba(0, 0, 0, 0.7);
-        padding: 10px; 
+        @apply --layout-wrap;
+        @apply --layout-center;
+        @apply --layout-around-justified;
       }
 
       paper-fab {
@@ -136,50 +49,71 @@
         position: fixed;
       }
 
+      .profile-pic {
+        
+        border-radius: 5%;
+        display: flex;
+        @apply --layout-vertical
+      }
+
+      .business-description {
+        margin: 0%;
+        
+      }
+
     </style>
 
     <paper-spinner id="spinner" active="[[loading]]" active></paper-spinner>
 
-    <div class="masonry">
-      <!--<iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/business-image-polyn.png" class="item" on-click="_onClickBusiness" ></iron-image>
-      <iron-image style="width:100%; height:300px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/spinster_records.jpg" class="item" on-click="_onClickBusiness" ></iron-image>
-      <iron-image style="width:100%; height:375px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/halfprice.jpg" class="item" on-click="_onClickBusiness" ></iron-image>
-      <iron-image style="width:100%; height:250px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/groovenet.jpg" class="item" on-click="_onClickBusiness" ></iron-image>
-      <iron-image style="width:100%; height:300px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/vinyl_record_blue.jpg" class="item" on-click="_onClickBusiness" ></iron-image>
-      <iron-image style="width:100%; height:400px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/off_the_record.jpg" class="item" on-click="_onClickBusiness" ></iron-image>
-      <iron-image style="width:100%; height:275px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/vinyl_record_led_zepplin.jpg" class="item" on-click="_onClickBusiness" ></iron-image>
-      <iron-image style="width:100%; height:200px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/recycled_books.jpg" class="item" on-click="_onClickBusiness" ></iron-image>
-      <iron-image style="width:100%; height:450px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/vinyl_record_red.jpg" class="item" on-click="_onClickBusiness" ></iron-image>
-      <iron-image style="width:100%; height:300px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/josey_records.jpg" class="item" on-click="_onClickBusiness" ></iron-image>
-      <iron-image style="width:100%; height:200px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/andrew.jpg" class="item" on-click="_onClickBusiness" ></iron-image>-->
-   
-      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Good-Records.png" class="item" on-tap="_onTapBusiness" ></iron-image>
-      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Bills-Records.png" class="item" on-tap="_onTapBusiness" ></iron-image>
-      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/business-image-polyn.png" class="item" on-tap="_onTapBusiness" ></iron-image>
-      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Bills-Records.png" class="item" on-tap="_onTapBusiness" ></iron-image>
-      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/business-image-polyn.png" class="item" on-tap="_onTapBusiness" ></iron-image>
-      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/business-image-polyn.png" class="item" on-tap="_onTapBusiness" ></iron-image>
-      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Spinster-Records.png" class="item" on-tap="_onTapBusiness" ></iron-image>
-      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/Spinster-Records.png" class="item" on-tap="_onTapBusiness" ></iron-image>
-      <iron-image style="width:100%; height:500px; background-color: lightgray;" sizing="cover" class="item" preload fade src="images/test-images/business-image-polyn.png" class="item" on-tap="_onTapBusiness" ></iron-image>
-      <paper-fab id="fab" icon="message" on-tap="_onTapCreateMessage"></paper-fab>
-
-
-      <!--<img src ="images/test-images/good_records.jpg" class="item" on-click="_onClickBusiness">
-      <img src="images/test-images/spinster_records.jpg" class="item" on-click="_onClickBusiness">
-      <div class="item" on-click="_onClickItem"><b>Pink Floyd</b> - The Wall in sweet, premo condition! $150</div>
-      <img src="images/test-images/halfprice.jpg" class="item" on-click="_onClickBusiness">
-      <img src="images/test-images/groovenet.jpg" class="item" on-click="_onClickBusiness">
-      <div class="item" on-click="_onClickItem"><b>How long...</b> Will it take Kevin to notice my changes?</div>
-      <img src="images/test-images/vinyl_record_blue.jpg" class="item"on-click="_onClickItem">
-      <img src="images/test-images/off_the_record.jpg" class="item" on-click="_onClickBusiness">
-      <img src="images/test-images/vinyl_record_led_zepplin.jpg" class="item" on-click="_onClickItem">
-      <img src="images/test-images/recycled_books.jpg" class="item" on-click="_onClickBusiness">
-      <div class="item" on-click="_onClickItem"><b>Kevin</b> is a slacker! Probably becuase he's afraid of Javascript.</div>
-      <img src ="images/test-images/vinyl_record_red.jpg" class="item"on-click="_onClickItem">
-      <img src="images/test-images/josey_records.jpg" class="item" on-click="_onClickBusiness">
-      <img src="images/test-images/andrew.jpg" class="item" on-click="_onClickItem">-->
+    <!-- TODO: We can use a dom-repeat for these business-cards -->
+    <div class="main-container">
+      <div class="card">
+        <div class="business-image item">
+          <iron-image style="height:25vh; background-color: lightgray;" sizing="cover" class="profile-pic" preload fade src="images/RecordStoreDayLogo.jpg" class="item" on-tap="_onTapBusiness" ></iron-image>
+        </div>
+        <div class="business-description">
+         <h2> Good Records</h2>
+          <p>2.3 miles away</p> 
+          <p>(214) 752-4663</p>
+          <p>www.goodrecords.com</p>
+        </div>
+      </div>
+    <div class="card">
+        <div class="business-image item">
+          <iron-image style="height:25vh; background-color: lightgray;" sizing="cover" class="profile-pic" preload fade src="images/RecordStoreDayLogo.jpg" class="item" on-tap="_onTapBusiness" ></iron-image>
+        </div>
+        <div class="business-description">
+          <h2> Good Records</h2>
+          <p>2.3 miles away</p> 
+          <p>(214) 752-4663</p>
+          <p>www.goodrecords.com</p>
+        </div>
+      </div>
+    <div class="card">
+        <div class="business-image">
+          <iron-image style="height:25vh; background-color: lightgray;" sizing="cover" class="profile-pic" preload fade src="images/RecordStoreDayLogo.jpg" class="item" on-tap="_onTapBusiness" ></iron-image>
+        </div>
+        <div class="business-description">
+          <h2> Good Records</h2>
+          <p>2.3 miles away</p> 
+          <p>(214) 752-4663</p>
+          <p>www.goodrecords.com</p>
+        </div>
+      </div>
+      <div class="card">
+      <div class="business-image">
+        <iron-image style="height:25vh; background-color: lightgray;" sizing="cover" class="profile-pic" preload fade src="images/RecordStoreDayLogo.jpg" class="item" on-tap="_onTapBusiness" ></iron-image>
+      </div>
+      <div class="business-description">
+        <h2> Good Records</h2>
+          <p>2.3 miles away</p> 
+          <p>(214) 752-4663</p>
+          <p>www.goodrecords.com</p>
+      </div>
     </div>
+  </div>
+
+    <paper-fab id="fab" icon="message" on-tap="_onTapCreateMessage"></paper-fab>
 
     <iron-ajax
       id="sendRequet"
