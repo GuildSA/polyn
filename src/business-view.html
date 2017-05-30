@@ -8,82 +8,79 @@
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="business-view">
+  <template>
+  <style include="shared-styles">
+    :host {
+      display: block;
+      padding: 10px;
+    }
+  </style>
+
+  <div class="card">
+    <iron-image style="width:100%; height:400px; background-color: lightgray;" sizing="cover" preload fade src="http://lorempixel.com/600/400"></iron-image>
+    <div class="circle">[[businessId]]</div>
+    <h1>Spinster Records</h1>
+    <p>Spinster Records a vinyl record and lifestyle store located in North Oak Cliff, just south of downtown Dallas, Texas. </p>
+    <paper-button raised>Request a Chat</paper-button>
+    <p>If they have any listed items for sale... list them below</p>
+    <paper-button on-tap="_onTapItemDetail" raised>Check This Out</paper-button>
+  </div>
+
+  <!--<firebase-auth id="auth" app-name="polyn-app" user="{{user}}"></firebase-auth>
+
+  <firebase-query
+    id="query"
+    app-name="polyn-app"
+    path="/chats/[[chatMessagesId]]"
+    data="{{chatMessages}}">
+  </firebase-query>
+
+  <app-indexeddb-mirror
+    session="[[user.uid]]"
+    key="chats/[[chatMessagesId]]"
+    data="{{chatMessages}}"
+    persisted-data="{{persistedChatMessages}}">
+  </app-indexeddb-mirror>
+
+  <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
     <template>
-    <style include="shared-styles">
-        :host {
-        display: block;
-        padding: 10px;
-        }
+      <div class="card">
+        <p>[[chatMessage.text]]</p>
+      </div>
+    </template>
+  </dom-repeat>-->
 
-        
-    </style>
+</template>
 
-    <div class="card">
-        <iron-image style="width:100%; height:400px; background-color: lightgray;"
-  sizing="cover" preload fade src="http://lorempixel.com/600/400"></iron-image>
-        <div class="circle">[[businessId]]</div>
-        <h1>Spinster Records</h1>
-        <p>Spinster Records a vinyl record and lifestyle store located in North Oak Cliff, just south of downtown Dallas, Texas. </p>
-        <paper-button raised>Request a Chat</paper-button>
-        <p>If they have any listed items for sale... list them below</p>
-        <paper-button on-tap="_onTapItemDetail" raised>Check This Out</paper-button>
-    </div>
+  <script>
+    class BusinessView extends Polymer.Element {
+      static get is() { return 'business-view'; }
 
-    <!--<firebase-auth id="auth" app-name="polyn-app" user="{{user}}"></firebase-auth>
+      static get properties() {
+        return {
+          businessId: {
+            type: String,
+            observer: '_businessIdChanged'
+          }
+        };
+      }
 
-    <firebase-query
-        id="query"
-        app-name="polyn-app"
-        path="/chats/[[chatMessagesId]]"
-        data="{{chatMessages}}">
-    </firebase-query>
+      ready() {
+        super.ready();
+        console.log("BusinessView.ready");
+      }
 
-    <app-indexeddb-mirror
-        session="[[user.uid]]"
-        key="chats/[[chatMessagesId]]"
-        data="{{chatMessages}}"
-        persisted-data="{{persistedChatMessages}}">
-    </app-indexeddb-mirror>
+      _businessIdChanged() {
+        console.log("BusinessView._businessIdChanged: " + this.businessId);
+      }
 
-    <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
-        <template>
-            <div class="card">
-                <p>[[chatMessage.text]]</p>
-            </div>
-        </template>
-    </dom-repeat>-->
+      _onTapItemDetail() {
+        var polynApp = document.getElementById("polynApp");
+        var itemView = polynApp.pushPageOnCurrentTab("item-view");
+        itemView.itemId = "3";
+      }
+    }
 
-  </template>
-
-    <script>
-        class BusinessView extends Polymer.Element {
-            static get is() { return 'business-view'; }
-
-            static get properties() {
-                return {
-                    businessId: {
-                        type: String,
-                        observer: '_businessIdChanged'
-                    }
-                };
-            }
-
-            ready() {
-                super.ready();
-                console.log("BusinessView.ready");
-            }
-
-            _businessIdChanged() {
-                console.log("BusinessView._businessIdChanged: " + this.businessId);
-            }
-
-            _onTapItemDetail() {
-                var polynApp = document.getElementById("polynApp");
-                var itemView = polynApp.pushPageOnCurrentTab("item-view");
-                itemView.itemId = "3";
-            }
-        }
-
-        window.customElements.define(BusinessView.is, BusinessView);
-    </script>
+    window.customElements.define(BusinessView.is, BusinessView);
+  </script>
 </dom-module>
