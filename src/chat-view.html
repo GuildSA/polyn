@@ -25,7 +25,7 @@
         @apply --layout-end-justified;
       }
 
-      #message {
+       #message {
          --paper-input-container-focus-color: #70C187;
       }
 
@@ -55,6 +55,13 @@
       #send-button {
         background-color: #70C187;
         color: white; 
+      }
+
+      .title {
+        @apply --layout-horizontal;
+        position: relative;
+        background-color: white; 
+        top: 0%;
       }
 
       .username {
@@ -112,6 +119,10 @@
     </iron-ajax>
 
     <paper-spinner id="spinner" active="[[loading]]" active></paper-spinner>
+
+    <div class="title">
+      Conversation between you and @Seller 
+    </div>
 
     <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
       <template>
