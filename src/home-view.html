@@ -8,6 +8,9 @@
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-behavior.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="home-view">
@@ -188,6 +191,16 @@
       debounce-duration="300">
     </iron-ajax>
 
+    <paper-dialog id="requestDialog">
+      <p>What is your request?</p>
+      <paper-input label="Short Description..." value="{{titleDialogValue}}"></paper-input>
+      <paper-input label="Long Description..." value="{{bodyDialogValue}}"></paper-input>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button on-tap="_onTapRequestDialogBtn" dialog-confirm autofocus>Request</paper-button>
+      </div>
+    </paper-dialog>
+
   </template>
 
   <script>
@@ -200,6 +213,14 @@
             type: Boolean,
             notify: true,
             value: false
+          },
+          titleDialogValue: {
+            type: String,
+            value: ""
+          },
+          bodyDialogValue: {
+            type: String,
+            value: ""
           }
         };
       }
@@ -219,10 +240,16 @@
       _onTapCreateMessage() {
         console.log("HomeView._onTapCreateMessage");
 
+        this.$.requestDialog.toggle();
+      }
+
+      _onTapRequestDialogBtn() {
+        console.log("HomeView._onTapRequestDialogBtn: " + this.titleDialogValue);
+
         var params = {
-          categoryPath: "collectables/sub/vinylRecords",
-          title: "Action Comics No. 1",
-          body: "I have a lot money and really want this comic book for my kid!",
+          categoryPath: "collectables/sub/vinylRecords" ,
+          title: this.titleDialogValue,
+          body: this.bodyDialogValue,
         };
 
         this.$.sendRequet.params = params;
@@ -230,12 +257,12 @@
       }
 
       _handleSendRequestResponse(data) {
-        console.log("FunctionsView._handleSendRequestResponse");
+        console.log("HomeView._handleSendRequestResponse");
         console.log("  status = " + data.detail.status);
       }
 
       _handleSendRequestError(e) {
-        console.log("FunctionsView._handleSendRequestError");
+        console.log("HomeView._handleSendRequestError");
         console.log("  status = ", e.status, e.statusText);
       }
     }
