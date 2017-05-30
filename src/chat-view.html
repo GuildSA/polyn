@@ -19,6 +19,16 @@
         padding: 10px;
       }
 
+      .business-pic {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+      }
+
+      .business-name {
+        padding: 10px;
+      }
+
       .flex-horizontal {
         @apply --layout-horizontal;
         @apply --layout-center;
@@ -59,9 +69,10 @@
 
       .title {
         @apply --layout-horizontal;
-        position: relative;
+        @apply --layout-center-justified; 
+        @apply --layout-center;
         background-color: white; 
-        top: 0%;
+        
       }
 
       .username {
@@ -121,8 +132,14 @@
     <paper-spinner id="spinner" active="[[loading]]" active></paper-spinner>
 
     <div class="title">
-      Conversation between you and @Seller 
-    </div>
+      <div class="business-photo">
+        <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="profile-pic" preload fade src="images/RecordStoreDayLogo.jpg" class="item" on-tap="_onTapBusiness" ></iron-image>
+      </div>
+      <div class="business-name">
+        Conversation between you and @Seller 
+      <p style="margin: 0px;">www.recordStoreWebsite.com</p>
+      </div>
+     </div>
 
     <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
       <template>
@@ -131,9 +148,8 @@
           <p>[[chatMessage.text]]</p>
 
             <div class="flex-horizontal">
-              
               <div class="user-photo">
-                <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="profile-pic" preload fade src="images/anonymous_profile.png" class="item" on-tap="_onTapBusiness" ></iron-image> 
+                <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="images/anonymous_profile.png" class="item" on-tap="_onTapBusiness" ></iron-image> 
               </div>
               <div class="username">
                 Username 
