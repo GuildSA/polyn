@@ -13,6 +13,8 @@
     <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
         display: flex;
+        /*background-color: lightblue;*/
+        height: 100%;
       }
 
       #profile-image {
@@ -27,6 +29,10 @@
         margin-left: 24px;
         margin-right: 24px;
         margin-bottom: 8px;
+      }
+
+     .bottom {
+        margin-top: auto
       }
 
     </style>
@@ -65,7 +71,7 @@
       </div>
 
       <template is="dom-if" if="[[isAnonymous]]">
-        <div class="layout vertical">
+        <div class="layout vertical bottom">
           <paper-button class="custom bluebtn" on-tap="_signInUsingGmail" raised>Sign In Using Gmail</paper-button>
           <paper-button class="custom bluebtn" on-tap="_signInUsingFacebook" raised>Sign In Using Facebook</paper-button>
           <paper-button class="custom bluebtn" on-tap="_signInUsingTwitter" raised>Sign In Using Twitter</paper-button>
@@ -73,7 +79,7 @@
       </template>
 
       <template is="dom-if" if="[[!isAnonymous]]">
-        <div class="layout vertical">
+        <div class="layout vertical bottom">
           <paper-button class="custom bluebtn" on-tap="_signOut" raised>Sign Out</paper-button>
         </div>
       </template>
