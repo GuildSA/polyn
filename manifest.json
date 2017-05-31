@@ -1,6 +1,6 @@
 {
   "name": "Vinyl Records",
-  "short_name": "Vinyl Records",
+  "short_name": "Vinyl",
   "start_url": "/index.html",
   "display": "standalone",
   "orientation": "portrait",
