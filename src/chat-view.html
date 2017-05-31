@@ -112,6 +112,18 @@
       data="{{otherUsersInfo}}">
     </firebase-document>
 
+    <firebase-messaging
+      id="messaging"
+      app-name="polyn-app"
+      token="{{token}}">
+    </firebase-messaging>
+
+    <firebase-document
+      app-name="polyn-app"
+      path="/users/[[user.uid]]/info/token"
+      data="[[token]]">
+    </firebase-document>
+
     <app-indexeddb-mirror 
       session="[[user.uid]]" 
       key="chats/[[chatMessagesId]]" 
@@ -251,8 +263,32 @@
         }
       }
 
-      _otherUsersInfoChanged(e) {
-        console.log("ChatView._otherUsersInfoChanged: " + JSON.stringify(e, null, 4));
+      _otherUsersInfoChanged(usersInfo) {
+        console.log("ChatView._otherUsersInfoChanged: " + JSON.stringify(usersInfo, null, 4));
+
+// TODO: Is this the best way to check for an empty JSON object?
+        if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
+           console.log(" usersInfo = null");
+          return;
+        }
+
+        // If the user has no token - we should prompt for permisssion!
+        if(!usersInfo.token) {
+          this._requestNotificationPermission();
+        }
+      }
+
+      _requestNotificationPermission() {
+        console.log("ChatView._requestNotificationPermission");
+
+        this.$.messaging.activate();
+        this.$.messaging.requestPermission()
+        .then(() => {
+          console.log('Notification Message permission granted!');
+        })
+        .catch((err) => {
+          console.log('Notification Message permission denied!');
+        });
       }
 
       _onTapSendDialogBtn() {
