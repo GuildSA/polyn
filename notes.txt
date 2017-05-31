@@ -171,6 +171,32 @@ cp -rn node_modules build/default/
 
  -- Markup & Code Scraps -- 
     
+
+      :host {
+        display: flex;
+
+        /*background-color: lightblue;*/
+
+        /*margin: 0;*/
+        /*height: 100vh;*/
+
+        /*height: 100%;*/
+      }
+
+
+      /*.container {
+        @apply --layout-flex;
+        @apply --layout-vertical;
+      }*/
+
+      /*.horizontal-center {
+        @apply --layout-flex;
+        @apply --layout-horizontal;
+        @apply --layout-center-justified;
+      }*/
+
+
+
 So where this really bites me is that 
 `document.querySelector('my-element')` finds nothing, but 
 `document.getElementsByTagName('my-element')` does.

@@ -10,45 +10,23 @@
 <dom-module id="profile-view">
   <template>
 
-    <style include="shared-styles">
+    <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
-        display: block;
-        padding: 10px;
+        display: flex;
       }
 
       #profile-image {
         width: 200px;
         height: 200px;
         border-radius: 50%;
-        margin: auto;
-        flex: 1;
       }
 
       paper-button.bluebtn {
         background-color: var(--app-primary-color);
         color: white;
+        margin-left: 24px;
+        margin-right: 24px;
         margin-bottom: 8px;
-        right:0;
-        left:0;
-        align-content: center;
-        --paper-button-raised-keyboard-focus: {
-          background-color: var(--paper-pink-a200) !important;
-          color: white !important;
-        };
-      }
-
-      .bottom {
-        position: absolute;
-        bottom: 2.5%;
-      }
-
-      .center {
-        margin: auto;
-        align-content: center;
-      }
-      .flex-center {
-        @apply --layout-vertical;
-        @apply --layout-center-justified;
       }
 
     </style>
@@ -68,35 +46,39 @@
       data="{{usersInfo}}">
     </firebase-document>
 
-    <div class="card flex-center">
+    <div class="flex layout vertical">
+
+      <div class="card">
+        <template is="dom-if" if="[[isAnonymous]]">
+          <div class="layout horizontal center-justified">
+            <iron-image sizing="contain" id="profile-image" alt="Anonymous Profile Image." src="./images/anonymous_profile.png"></iron-image>
+          </div>
+        </template>
+        <template is="dom-if" if="[[!isAnonymous]]">
+          <div class="layout horizontal center-justified">
+            <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="[[photoURL]]"></iron-image>
+          </div>
+          <div class="layout horizontal center-justified">
+            <h1>Welcome [[displayName]]</h1>
+          </div>
+        </template>
+      </div>
 
       <template is="dom-if" if="[[isAnonymous]]">
-        <iron-image sizing="contain" id="profile-image" alt="Anonymous Profile Image." src="./images/anonymous_profile.png"></iron-image>
+        <div class="layout vertical">
+          <paper-button class="custom bluebtn" on-tap="_signInUsingGmail" raised>Sign In Using Gmail</paper-button>
+          <paper-button class="custom bluebtn" on-tap="_signInUsingFacebook" raised>Sign In Using Facebook</paper-button>
+          <paper-button class="custom bluebtn" on-tap="_signInUsingTwitter" raised>Sign In Using Twitter</paper-button>
+        </div>
       </template>
 
       <template is="dom-if" if="[[!isAnonymous]]">
-        <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="[[photoURL]]"></iron-image>
-      </template>
-
-      <template is="dom-if" if="[[!isAnonymous]]">
-        <div class="center">
-          <h1>Welcome [[displayName]]</h1>
+        <div class="layout vertical">
+          <paper-button class="custom bluebtn" on-tap="_signOut" raised>Sign Out</paper-button>
         </div>
       </template>
 
     </div>
-
-    <template is="dom-if" if="[[isAnonymous]]">
-      <div class="flex-center">
-        <paper-button class="custom bluebtn" on-tap="_signInUsingGmail" raised>Sign In Using Gmail</paper-button>
-        <paper-button class="custom bluebtn" on-tap="_signInUsingFacebook" raised>Sign In Using Facebook</paper-button>
-        <paper-button class="custom bluebtn" on-tap="_signInUsingTwitter" raised>Sign In Using Twitter</paper-button>
-      </div>
-    </template>
-
-    <template is="dom-if" if="[[!isAnonymous]]">
-      <paper-button class="custom bluebtn bottom" on-tap="_signOut" raised>Sign Out</paper-button>
-    </template>
 
   </template>
 
