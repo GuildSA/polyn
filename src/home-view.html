@@ -12,6 +12,7 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="custom-icons.html">
 
 <dom-module id="home-view">
   <template>
@@ -117,7 +118,7 @@
     </div>
   </div>
 
-    <paper-fab id="fab" icon="message" on-tap="_onTapCreateMessage"></paper-fab>
+    <paper-fab id="fab" icon="custom-icons:message" on-tap="_onTapCreateMessage"></paper-fab>
 
     <iron-ajax
       id="sendRequet"
