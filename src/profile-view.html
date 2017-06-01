@@ -46,12 +46,6 @@
       on-error="_handleError">
     </firebase-auth>
 
-    <firebase-document
-      app-name="polyn-app"
-      id="usersinfo"
-      data="{{usersInfo}}">
-    </firebase-document>
-
     <div class="flex layout vertical">
 
       <div class="card">
@@ -80,6 +74,7 @@
 
       <template is="dom-if" if="[[!isAnonymous]]">
         <div class="layout vertical bottom">
+          <paper-button id="registerbusiness" class="custom bluebtn" on-tap="_onTapRegisterBusiness" raised>Register Your Business</paper-button>
           <paper-button class="custom bluebtn" on-tap="_signOut" raised>Sign Out</paper-button>
         </div>
       </template>
@@ -114,31 +109,8 @@
           },
           statusKnown:{
             type: Object
-          },
-          usersInfo: {
-            type: String,
-            notify: true,
-            reflectToAttribute: true,
-            observer: '_usersInfoChanged'
           }
         };
-      }
-
-      ready() {
-        super.ready();
-        console.log("ProfileView.ready");
-
-        //this.usersInfoUpdated = false;
-      }
-
-      connectedCallback() {
-        super.connectedCallback();
-        console.log("ProfileView.connectedCallback");
-      }
-
-      disconnectedCallback() {
-        super.disconnectedCallback();
-        console.log("ProfileView.disconnectedCallback");
       }
 
       _handleError(e, err) {
@@ -151,24 +123,13 @@
 
         if(user != null) {
 
-            console.log("  user.isAnonymous: " + this.user.isAnonymous);
+            console.log("  user.isAnonymous = " + user.isAnonymous);
 
             if(user.isAnonymous == false) {
 
-              // As soon as we get the user - get the users info so we can add to it!!
-              if(user && user.uid) {
-
-                // this.$.usersinfo.path = "/users/" + user.uid + "/info";
-
-                if(user.providerData[0].displayName) {
-                  this.$.usersinfo.path = "/users/" + user.uid + "/info/name";
-                  this.$.usersinfo.data = this.user.providerData[0].displayName;
-                }
-
-                if(this.user.providerData[0].email) {
-                  this.$.usersinfo.path = "/users/" + user.uid + "/info/email";
-                  this.$.usersinfo.data = this.user.providerData[0].email;
-                }
+              if(user.uid) {
+                // As soon as we get the user - get the users info data.
+                this._verifyUserInfo(user);
               }
 
               // console.log("user.providerData: " + user.providerData);
@@ -193,95 +154,50 @@
         }
       }
 
-      _usersInfoChanged(usersInfo) {
-        console.log("ProfileView._usersInfoChanged: " + JSON.stringify(usersInfo, null, 4));
+      _verifyUserInfo(user) {
+        console.log("ProfileView._verifyUserInfo");
 
-        if(!usersInfo) {
-           console.log(" usersInfo = null");
-          return;
-        }
+        // var self = this;
 
-// TODO: How can we get the data and then change it safely?
+        const refPath = "/users/" + user.uid + "/info";
 
-        // if(this.usersInfoUpdated) {
-        //   return;
-        // }
+        firebase.app("polyn-app").database().ref(refPath).once('value').then(function(snapshot) {
 
-        //if(!usersInfo.name || !usersInfo.email) {
+          var usersInfo = snapshot.val();
+          
+          console.log("  usersInfo: " + JSON.stringify(usersInfo, null, 4));
 
-          //this.displayName = user.providerData[0].displayName;
-          //this.photoURL = user.providerData[0].photoURL;
+          var info = {};
 
-//           var info = {};
+          // If name or email is missing - add them!
+          if(!usersInfo.name || !usersInfo.email) {
 
-//           //if(!usersInfo.name) {
-//             info.name = this.user.providerData[0].displayName;
-//           //}
+            if(!usersInfo.name) {
+              info.name = user.providerData[0].displayName;
+            }
 
-//           //if(!usersInfo.email) {
-//             info.email = this.user.providerData[0].email;
-//           //}
+            if(!usersInfo.email) {
+              info.email = user.providerData[0].email;
+            }
 
-//           //if(!usersInfo.token) {
-//             info.token = this.usersInfo.token;
-//           //}
+            // If we have a token - preserve it.
+            if(usersInfo.token) {
+              info.token = usersInfo.token;
+            }
 
-// this.usersInfoUpdated = true;
+            firebase.app("polyn-app").database().ref(refPath).update(info);
 
-//           this.$.usersinfo.data = info;
+          } else {
 
-        //}
+            // if(usersInfo.sellerId) {
+            //   console.log("XXXXXX " + self.$.registerbusiness);
+            //   self.$.registerbusiness.hidden = true;
+            // }
+          }
+
+        });
       }
 
-//      _linkGoogleAccount() {
-//           console.log("ProfileView._linkGoogleAccount");
-//
-//           var provider = new firebase.auth.GoogleAuthProvider();
-//           var self = this;
-//
-//           self.user.linkWithPopup(provider).then(function(result) {
-//             console.log("  result: " + JSON.stringify(result, null, 4));
-//
-// // TODO: These don't trigger a refresh like they should!
-//             //that.notifyPath('user', that.user)
-//             //that.set("user", result.user);
-// // HACK:
-//             self.user = result.user
-//             self._userChanged(result.user)
-//
-//           }, function(error) {
-//
-// // TODO: Find a solution to "Error: This credential is already associated with a different user account."
-//             if(error.code == "auth/credential-already-in-use") {
-// // HACK: To fix this issue I'm basically abandoning the user's anonymous login in favor of their 
-// // Google login, but this UI flow forces the users to pick their Google account twice to pull this off.
-// // Is there a better way to do this?
-//               self.$.auth.signInWithRedirect(provider).then(function(result) {
-//                 console.log("  result: " + JSON.stringify(result, null, 4));
-//               }, function(error) {
-//                 console.log("  error: " + error);
-//               });
-//
-//             } else {
-//               console.log("  error: " + error);
-//             }
-//           }); 
-//       }
-
-      _signInUsingGmail() {
-        console.log("ProfileView._signInUsingGmail");
-
-        if(this.user == null) {
-          console.log("  signInWithPopup");
-          this.$.auth.provider = "google";
-          return this.$.auth.signInWithPopup();
-        // } else if(this.user.isAnonymous == true) {
-        //   this._linkGoogleAccount();
-        } else {
-          console.log("  Already logged into an account!");
-        }
-      }
-      
       _signInUsingFacebook() {
         console.log("ProfileView._signInUsingFacebook");
 
@@ -307,9 +223,38 @@
       }
 
       _signOut() {
-          console.log("ProfileView._logout");
-
+          console.log("ProfileView._signOut");
           return this.$.auth.signOut();
+      }
+
+      _onTapRegisterBusiness() {
+        console.log("ProfileView._onTapRegisterBusiness");
+
+        const refPath = "/users/" + this.user.uid + "/info";
+
+        firebase.app("polyn-app").database().ref(refPath).once('value').then(function(snapshot) {
+
+          var usersInfo = snapshot.val();
+          
+          console.log("  sellerId: " + usersInfo.sellerId);
+
+          if(!usersInfo.sellerId) {
+
+            var newSellerKey = firebase.app("polyn-app").database().ref().child("sellers/").push().key;
+            console.log("  newKey: " + newSellerKey);
+
+            var newSellerData = {
+              name: usersInfo.name,
+              email: usersInfo.email
+            };
+
+            firebase.app("polyn-app").database().ref("sellers/" + newSellerKey).set(newSellerData).then(function() {
+              const refPathSellerId = refPath + "/sellerId";
+              firebase.app("polyn-app").database().ref(refPathSellerId).set(newSellerKey);
+            });
+          }
+        });
+
       }
     }
 

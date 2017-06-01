@@ -171,6 +171,70 @@ cp -rn node_modules build/default/
 
  -- Markup & Code Scraps -- 
     
+      // ready() {
+      //   super.ready();
+      //   console.log("ProfileView.ready");
+      // }
+
+      // connectedCallback() {
+      //   super.connectedCallback();
+      //   console.log("ProfileView.connectedCallback");
+      // }
+
+      // disconnectedCallback() {
+      //   super.disconnectedCallback();
+      //   console.log("ProfileView.disconnectedCallback");
+      // }
+
+
+//      _linkGoogleAccount() {
+//           console.log("ProfileView._linkGoogleAccount");
+//
+//           var provider = new firebase.auth.GoogleAuthProvider();
+//           var self = this;
+//
+//           self.user.linkWithPopup(provider).then(function(result) {
+//             console.log("  result: " + JSON.stringify(result, null, 4));
+//
+// // TODO: These don't trigger a refresh like they should!
+//             //that.notifyPath('user', that.user)
+//             //that.set("user", result.user);
+// // HACK:
+//             self.user = result.user
+//             self._userChanged(result.user)
+//
+//           }, function(error) {
+//
+// // TODO: Find a solution to "Error: This credential is already associated with a different user account."
+//             if(error.code == "auth/credential-already-in-use") {
+// // HACK: To fix this issue I'm basically abandoning the user's anonymous login in favor of their 
+// // Google login, but this UI flow forces the users to pick their Google account twice to pull this off.
+// // Is there a better way to do this?
+//               self.$.auth.signInWithRedirect(provider).then(function(result) {
+//                 console.log("  result: " + JSON.stringify(result, null, 4));
+//               }, function(error) {
+//                 console.log("  error: " + error);
+//               });
+//
+//             } else {
+//               console.log("  error: " + error);
+//             }
+//           }); 
+//       }
+
+      _signInUsingGmail() {
+        console.log("ProfileView._signInUsingGmail");
+
+        if(this.user == null) {
+          console.log("  signInWithPopup");
+          this.$.auth.provider = "google";
+          return this.$.auth.signInWithPopup();
+        // } else if(this.user.isAnonymous == true) {
+        //   this._linkGoogleAccount();
+        } else {
+          console.log("  Already logged into an account!");
+        }
+      }
 
       :host {
         display: flex;
