@@ -66,16 +66,16 @@
 
       <template is="dom-if" if="[[isAnonymous]]">
         <div class="layout vertical bottom">
-          <paper-button class="custom bluebtn" on-tap="_signInUsingGmail" raised>Sign In Using Gmail</paper-button>
-          <paper-button class="custom bluebtn" on-tap="_signInUsingFacebook" raised>Sign In Using Facebook</paper-button>
-          <paper-button class="custom bluebtn" on-tap="_signInUsingTwitter" raised>Sign In Using Twitter</paper-button>
+          <paper-button class="custom bluebtn" on-tap="_onTapSignInUsingGmail" raised>Sign In Using Gmail</paper-button>
+          <paper-button class="custom bluebtn" on-tap="_onTapSignInUsingFacebook" raised>Sign In Using Facebook</paper-button>
+          <paper-button class="custom bluebtn" on-tap="_onTapSignInUsingTwitter" raised>Sign In Using Twitter</paper-button>
         </div>
       </template>
 
       <template is="dom-if" if="[[!isAnonymous]]">
         <div class="layout vertical bottom">
           <paper-button id="registerbusiness" class="custom bluebtn" on-tap="_onTapRegisterBusiness" raised>Register Your Business</paper-button>
-          <paper-button class="custom bluebtn" on-tap="_signOut" raised>Sign Out</paper-button>
+          <paper-button class="custom bluebtn" on-tap="_onTapSignOut" raised>Sign Out</paper-button>
         </div>
       </template>
 
@@ -198,11 +198,21 @@
         });
       }
 
-      _signInUsingFacebook() {
-        console.log("ProfileView._signInUsingFacebook");
+      _onTapSignInUsingGmail() {
+        console.log("ProfileView._onTapSignInUsingGmail");
 
         if(this.user == null) {
-          console.log("  signInWithPopup");
+          this.$.auth.provider = "google";
+          return this.$.auth.signInWithPopup();
+        } else {
+          console.log("  Already logged into an account!");
+        }
+      }
+
+      _onTapSignInUsingFacebook() {
+        console.log("ProfileView._onTapSignInUsingFacebook");
+
+        if(this.user == null) {
           this.$.auth.provider = "facebook";
           return this.$.auth.signInWithPopup();
         } else {
@@ -210,11 +220,10 @@
         }
       }
 
-      _signInUsingTwitter() {
-        console.log("ProfileView._signInUsingTwitter");
+      _onTapSignInUsingTwitter() {
+        console.log("ProfileView._onTapSignInUsingTwitter");
 
         if(this.user == null) {
-          console.log("  signInWithPopup");
           this.$.auth.provider = "twitter";
           return this.$.auth.signInWithPopup();
         } else {
@@ -222,8 +231,8 @@
         }
       }
 
-      _signOut() {
-          console.log("ProfileView._signOut");
+      _onTapSignOut() {
+          console.log("ProfileView._onTapSignOut");
           return this.$.auth.signOut();
       }
 
