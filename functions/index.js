@@ -16,11 +16,9 @@ admin.initializeApp(functions.config().firebase);
 
 exports.helloWorld = functions.https.onRequest((req, res) => {
 
-// NOTE: The use of cors helped here but not really needed once we told
-// iron-ajax that the request is a GET. 
-  //cors(req, res, () => {
+  cors(req, res, () => {
      res.send("Hello from Firebase!");
-  //});
+  });
 });
 
 
