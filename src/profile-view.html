@@ -13,8 +13,8 @@
     <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
         display: flex;
-        /*background-color: lightblue;*/
-        height: 100%;
+        background-color: lightblue;
+        /*height: 100%;*/
       }
 
       #profile-image {
@@ -31,9 +31,9 @@
         margin-bottom: 8px;
       }
 
-     .bottom {
+     /*.bottom {
         margin-top: auto
-      }
+      }*/
 
     </style>
 
@@ -65,7 +65,7 @@
       </div>
 
       <template is="dom-if" if="[[isAnonymous]]">
-        <div class="layout vertical bottom">
+        <div class="layout vertical">
           <paper-button class="custom bluebtn" on-tap="_onTapSignInUsingGmail" raised>Sign In Using Gmail</paper-button>
           <paper-button class="custom bluebtn" on-tap="_onTapSignInUsingFacebook" raised>Sign In Using Facebook</paper-button>
           <paper-button class="custom bluebtn" on-tap="_onTapSignInUsingTwitter" raised>Sign In Using Twitter</paper-button>
@@ -73,7 +73,7 @@
       </template>
 
       <template is="dom-if" if="[[!isAnonymous]]">
-        <div class="layout vertical bottom">
+        <div class="layout vertical">
           <paper-button id="registerbusiness" class="custom bluebtn" on-tap="_onTapRegisterBusiness" raised>Register Your Business</paper-button>
           <paper-button class="custom bluebtn" on-tap="_onTapAddToCategory" raised>Add Business To Category</paper-button>
           <paper-button class="custom bluebtn" on-tap="_onTapRemoveFromCategory" raised>Remove Business From Category</paper-button>
