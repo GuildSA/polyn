@@ -6,9 +6,12 @@ var HTML5GeoLocation = (function() {
 
   var firebaseRef;
   var geoFire;
+  var usersGeolocationCallback
 
   /* Uses the HTML5 geolocation API to get the current user's location */
-  var getLocation = function(usersLocationPath) {
+  var getLocation = function(usersLocationPath, callback) {
+
+    usersGeolocationCallback = callback;
 
     firebaseRef = firebase.app("polyn-app").database().ref(usersLocationPath);
     // Create a new GeoFire instance at the random Firebase location
@@ -36,6 +39,10 @@ var HTML5GeoLocation = (function() {
       // When the user disconnects from Firebase (e.g. closes the app, exits the browser),
       // remove their GeoFire entry
       firebaseRef.child(locationKey).onDisconnect().remove();
+
+      if(usersGeolocationCallback) {
+        usersGeolocationCallback(location);
+      }
 
       log("Added handler to remove user from GeoFire when you leave this page.");
     }).catch(function(error) {

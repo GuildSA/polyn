@@ -18,11 +18,11 @@
 
   <div id="log"></div>
 
-  <!--<firebase-auth 
+  <firebase-auth 
     id="auth" 
     app-name="polyn-app" 
     user="{{user}}">
-  </firebase-auth>-->
+  </firebase-auth>
 
   <!--<firebase-query
     id="query"
@@ -53,13 +53,31 @@
       class GeofireView extends Polymer.GestureEventListeners(Polymer.Element) {
         static get is() { return 'geofire-view'; }
 
-      connectedCallback() {
-        super.connectedCallback();
-        console.log("GeofireView.connectedCallback");
+      static get properties() {
+        return {
+          user: {
+            type: Object,
+            observer: '_userChanged'
+          }
+        };
+      }
 
-        // Ask for location permissions.
-        HTML5GeoLocation.getLocation("users/SeEVOohmNfRBXc2W9NmfUMOVGEi2/info");
+      _geolocationCallback(location) {
+        console.log("GeofireView._geolocationCallback");
 
+        var latitude = location.coords.latitude;
+        var longitude = location.coords.longitude;
+        //console.log("Retrieved user's location: [" + latitude + ", " + longitude + "]");
+        alert("User Location is lat: " + latitude + ", long: " + longitude + "");
+      }
+
+      _userChanged(user) {
+        console.log("GeofireView._userChanged");
+
+        if(user && user.uid) {
+          // Ask for location permissions.
+          HTML5GeoLocation.getLocation("users/" + user.uid + "/info", this._geolocationCallback);
+        }
       }
 
       //   _onTappedMessage(e) {
