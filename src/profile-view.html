@@ -243,6 +243,11 @@
 
       _onTapRegisterBusiness() {
         console.log("ProfileView._onTapRegisterBusiness");
+        this._registerNewSeller("collectables/sub/vinylRecords");
+      }
+
+      _registerNewSeller(targetCategory) {
+        console.log("ProfileView._registerNewSeller: " + targetCategory);
 
         if(!this.user.uid) {
           console.log("  Error: User is not defined!");
@@ -256,7 +261,6 @@
         firebase.app("polyn-app").database().ref(refPathInfo).once('value').then(function(snapshot) {
 
           var usersInfo = snapshot.val();
-          
           //console.log("  sellerId: " + usersInfo.sellerId);
 
           // If the user doesn't already have a 'sellerId' in 'info' - create one.
@@ -277,7 +281,7 @@
               const refPathSellerId = refPathInfo + "/sellerId";
               firebase.app("polyn-app").database().ref(refPathSellerId).set(newSellerKey);
 
-              self._verifySellerOnCategory("collectables/sub/vinylRecords");
+              self._verifySellerOnCategory(targetCategory);
             });
           } else {
             console.log("  " + self.user.uid + " has already been added as a seller.");
@@ -300,12 +304,11 @@
         firebase.app("polyn-app").database().ref(refPathCategories).once('value').then(function(snapshot) {
 
           var categories = snapshot.val();
-
           //console.log("  categories: " + JSON.stringify(categories, null, 4));
 
           if(categories == null) {
 
-            // info/ategories doesn't even exist - just add it to the user!
+            // info/categories doesn't even exist - just add it to the user!
             self._addSellerToCategory(targetCategory);
 
           } else {
@@ -333,6 +336,7 @@
       }
 
       _onTapAddToCategory() {
+        console.log("ProfileView._onTapAddToCategory");
         this._verifySellerOnCategory("collectables/sub/vinylRecords");
       }
 
@@ -366,6 +370,7 @@
       }
 
       _onTapRemoveFromCategory() {
+        console.log("ProfileView._onTapRemoveFromCategory");
         this._removeFromCategory("collectables/sub/vinylRecords");
       }
 
@@ -421,7 +426,7 @@
               firebase.app("polyn-app").database().ref().child(refPathCategories + "/" + categoryKeyToRemove).remove();
               
             } else {
-              console.log("  The users has already been unsubscribed from this category!");
+              console.log(" " + self.user.uid + " has already been unsubscribed from this category!!");
             }
           }
         });
