@@ -130,7 +130,7 @@
             if(user.isAnonymous == false) {
 
               if(user.uid) {
-                // As soon as we get the user - get the users info data.
+                // As soon as we get the user - verify the users info data.
                 this._verifyUserInfo(user);
               }
 
@@ -159,44 +159,47 @@
       _verifyUserInfo(user) {
         console.log("ProfileView._verifyUserInfo");
 
-        // var self = this;
-
         const refPath = "/users/" + user.uid + "/info";
 
         firebase.app("polyn-app").database().ref(refPath).once('value').then(function(snapshot) {
 
           var usersInfo = snapshot.val();
-          
-          console.log("  usersInfo: " + JSON.stringify(usersInfo, null, 4));
 
-          var info = {};
+          if(usersInfo) {
 
-          // If name or email is missing - add them!
-          if(!usersInfo.name || !usersInfo.email) {
+            // The user's info key exists - so update it if anything is missing.
 
-            if(!usersInfo.name) {
-              info.name = user.providerData[0].displayName;
+            console.log("  usersInfo: " + JSON.stringify(usersInfo, null, 4));
+
+            var info = {};
+
+            // If name or email is missing - add them!
+            if(!usersInfo.name || !usersInfo.email) {
+
+              if(!usersInfo.name) {
+                info.name = user.providerData[0].displayName;
+              }
+
+              if(!usersInfo.email) {
+                info.email = user.providerData[0].email;
+              }
+
+              // If we have a token - preserve it.
+              if(usersInfo.token) {
+                info.token = usersInfo.token;
+              }
+
+              firebase.app("polyn-app").database().ref(refPath).update(info);
             }
-
-            if(!usersInfo.email) {
-              info.email = user.providerData[0].email;
-            }
-
-            // If we have a token - preserve it.
-            if(usersInfo.token) {
-              info.token = usersInfo.token;
-            }
-
-            firebase.app("polyn-app").database().ref(refPath).update(info);
 
           } else {
 
-            // if(usersInfo.sellerId) {
-            //   console.log("XXXXXX " + self.$.registerbusiness);
-            //   self.$.registerbusiness.hidden = true;
-            // }
+            // The user's info key does NOT exist - so add one.
+            var info = {};
+            info.name = user.providerData[0].displayName;
+            info.email = user.providerData[0].email;
+            firebase.app("polyn-app").database().ref(refPath).update(info);
           }
-
         });
       }
 
