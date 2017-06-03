@@ -1,3 +1,5 @@
+
+// https://github.com/firebase/geofire-js/blob/master/examples/html5Geolocation/index.html
 // https://medium.freecodecamp.com/javascript-modules-a-beginner-s-guide-783f7d7a5fcc
 
 var HTML5GeoLocation = (function() {
