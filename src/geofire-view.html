@@ -1,0 +1,88 @@
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="geofire.html">
+
+<dom-module id="geofire-view">
+  <template>
+  <style include="shared-styles">
+    :host {
+      display: block;
+      padding: 10px;
+    }
+  </style>
+
+  <div id="log"></div>
+
+  <!--<firebase-auth 
+    id="auth" 
+    app-name="polyn-app" 
+    user="{{user}}">
+  </firebase-auth>-->
+
+  <!--<firebase-query
+    id="query"
+    app-name="polyn-app"
+    path="/users/[[user.uid]]/chats"
+    data="{{chats}}">
+  </firebase-query>
+
+  <app-indexeddb-mirror
+    session="[[user.uid]]"
+    key="chats"
+    data="{{chats}}"
+    persisted-data="{{persistedChats}}">
+  </app-indexeddb-mirror>
+
+  <dom-repeat items="[[persistedChats]]" as="chat" initial-count="5">
+    <template>
+      <div class="card" on-tap="_onTappedMessage">
+        <h2>[[chat.subject]]</h2>
+        <p>Seller: [[chat.seller]]</p>
+      </div>
+    </template>
+  </dom-repeat>-->
+
+  </template>
+
+    <script>
+      class GeofireView extends Polymer.GestureEventListeners(Polymer.Element) {
+        static get is() { return 'geofire-view'; }
+
+      connectedCallback() {
+        super.connectedCallback();
+        console.log("GeofireView.connectedCallback");
+
+        // Ask for location permissions.
+        HTML5GeoLocation.getLocation();
+
+      }
+
+      //   _onTappedMessage(e) {
+      //     console.log("MessagesView._onTappedMessage");
+
+      //     // Which index was clicked?
+      //     var index = e.model.index;
+      //     console.info(index + ' was clicked.');
+
+      //     // What object is stored at that index?
+      //     console.info(this.$.query.data[index]);
+
+      //     // What is the Firebase key for this data?
+      //     console.info(this.$.query.data[index].$key);
+
+      //     // Push the chat-view and pass the chatMessagesId.
+      //     var polynApp = document.getElementById("polynApp");
+      //     var chatView = polynApp.pushPageOnCurrentTab("chat-view");
+      //     chatView.chatInfoId = this.$.query.data[index].$key;
+      //     chatView.chatMessagesId = this.$.query.data[index].chatId;
+      // }
+    }
+
+    window.customElements.define(GeofireView.is, GeofireView);
+  </script>
+</dom-module>

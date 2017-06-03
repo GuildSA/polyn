@@ -28,7 +28,8 @@
     "paper-badge": "PolymerElements/paper-badge#^2.0.0",
     "paper-spinner": "PolymerElements/paper-spinner#^2.0.0",
     "polymerfire": "^2.0.0",
-    "paper-fab": "^2.0.0"
+    "paper-fab": "^2.0.0",
+    "geofire": "^4.1.2"
   },
   "devDependencies": {
     "web-component-tester": "6.0.0"
