@@ -4,14 +4,15 @@
 
 var HTML5GeoLocation = (function() {
 
-  // Generate a random Firebase location
-  var firebaseRef = firebase.app("polyn-app").database().ref().push();
-
-  // Create a new GeoFire instance at the random Firebase location
-  var geoFire = new GeoFire(firebaseRef);
+  var firebaseRef;
+  var geoFire;
 
   /* Uses the HTML5 geolocation API to get the current user's location */
-  var getLocation = function() {
+  var getLocation = function(usersLocationPath) {
+
+    firebaseRef = firebase.app("polyn-app").database().ref(usersLocationPath);
+    // Create a new GeoFire instance at the random Firebase location
+    geoFire = new GeoFire(firebaseRef);
 
     if(typeof navigator !== "undefined" && typeof navigator.geolocation !== "undefined") {
       log("Asking user to get their location");
@@ -28,18 +29,17 @@ var HTML5GeoLocation = (function() {
     var longitude = location.coords.longitude;
     log("Retrieved user's location: [" + latitude + ", " + longitude + "]");
 
-    var username = "MrTester";
-
-    geoFire.set(username, [latitude, longitude]).then(function() {
-      log("Current user " + username + "'s location has been added to GeoFire");
+    var locationKey = "location";
+    geoFire.set(locationKey, [latitude, longitude]).then(function() {
+      log("Current user's location has been added to GeoFire");
 
       // When the user disconnects from Firebase (e.g. closes the app, exits the browser),
       // remove their GeoFire entry
-      firebaseRef.child(username).onDisconnect().remove();
+      firebaseRef.child(locationKey).onDisconnect().remove();
 
-      log("Added handler to remove user " + username + " from GeoFire when you leave this page.");
+      log("Added handler to remove user from GeoFire when you leave this page.");
     }).catch(function(error) {
-      log("Error adding user " + username + "'s location to GeoFire");
+      log("Error adding user location to GeoFire");
     });
   }
 
@@ -48,9 +48,9 @@ var HTML5GeoLocation = (function() {
 
     if(error.code == 1) {
       log("Error: PERMISSION_DENIED: User denied access to their location");
-    } else if (error.code === 2) {
+    } else if(error.code === 2) {
       log("Error: POSITION_UNAVAILABLE: Network is down or positioning satellites cannot be reached");
-    } else if (error.code === 3) {
+    } else if(error.code === 3) {
       log("Error: TIMEOUT: Calculating the user's location too took long");
     } else {
       log("Unexpected error code")
@@ -69,7 +69,7 @@ var HTML5GeoLocation = (function() {
   // }
 
   function log(message) {
-    console.log("message: " + message);
+    console.log("HTML5GeoLocation: " + message);
   }
  
   // Define the interface by explicitly reveal public pointers to the 
