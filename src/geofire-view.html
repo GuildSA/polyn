@@ -55,7 +55,21 @@
 
   <div class="card">
     <h1>Get Sellers By Location</h1>
+    <paper-input id="range" label="Range in Miles"></paper-input>
     <paper-button on-tap="_onTapGetSellersByLocation" raised>Get Sellers</paper-button>
+
+    <dom-repeat items="[[sellers]]" as="sellersInfo">
+      <template>
+        <div class="card">
+          <p>[[sellersInfo.name]]</p>
+          <p>[[sellersInfo.distance]]</p>
+          <p>[[sellersInfo.phone]]</p>
+          <p>[[sellersInfo.email]]</p>
+          <p>[[sellersInfo.website]]</p>
+        </div>
+      </template>
+    </dom-repeat>
+
   </div>
 
   <div class="card">
@@ -77,6 +91,14 @@
           user: {
             type: Object,
             observer: '_userChanged'
+          },
+          sellers: {
+            type: Array,
+            value: []
+          },
+          location: {
+            type: Array,
+            value: null
           }
         };
       }
@@ -108,12 +130,18 @@
 
         if(this.user && this.user.uid) {
 
+          var self = this;
+
           // Ask for location permission.
           GeofireManager.getUsersLocation("users/" + this.user.uid + "/info", 
 
             function (location) {
               var latitude = location.coords.latitude;
               var longitude = location.coords.longitude;
+
+              // Cache the user's location.
+              self.location = [latitude, longitude];
+
               console.log("User Location is lat: " + latitude + ", long: " + longitude + "");
               alert("User Location is lat: " + latitude + ", long: " + longitude + "");
             },
@@ -152,15 +180,83 @@
         GeofireManager.addSellerToLocations(sellersKey, lat, long);
       }
 
+      _addSellersEntry(sellersEntry) {
+        console.log("GeofireView._addSellersEntry: " + sellersEntry);
+
+        this.push('sellers', sellersEntry);
+      }
+
       _onTapGetSellersByLocation() {
         console.log("GeofireView._onTapGetSellersByLocation");
+
+        if(!this.$.range.value) {
+          alert("Missing range in miles!");
+        }
+
+        var self = this;
+
+        // Geofire only uses KM.
+        const rangeInKm = 1.6 * parseFloat(this.$.range.value);
+
+        if(!this.location) {
+
+          // If we don't know the user's current location - ask for it!
+
+          GeofireManager.getUsersLocation("users/" + this.user.uid + "/info", 
+
+            function(location) {
+              var latitude = location.coords.latitude;
+              var longitude = location.coords.longitude;
+
+              // Cache the user's location.
+              self.location = [latitude, longitude];
+
+              console.log("User Location is lat: " + latitude + ", long: " + longitude + "");
+
+              self._getSellerData(latitude, longitude, rangeInKm);
+            },
+            
+            function(error) {
+              console.log("User Location error: " + error + "");
+              alert("User Location error: " + error + "");
+          });
+
+        } else {
+
+          // If we DO know the user's current location - just get the sellers.!
+          self._getSellerData(this.location[0], this.location[1], rangeInKm);
+        }
+      }
+
+      _getSellerData(latitude, longitude, rangeInKm) {
+        console.log("GeofireView._getSellerData");
+
+        var self = this;
+
+        this.sellers = [];
 
         // Find all the sellers within a circle defined by a 
         // lat/long for the center of a circle and a range in kilometers.
         // The lat/long should come from the user's current location.
-        GeofireManager.getSellersByLocation(33.1020945, -96.7584535, 100,
-          function(key) {
-            console.log("GeofireView got seller key: " + key + "");
+        GeofireManager.getSellersByLocation(latitude, longitude, rangeInKm,
+          function(key, distance) {
+
+            console.log("GeofireView got seller key: " + key);
+            console.log("  distance =  " + distance + " miles away");
+
+            const refPath = "/sellers/" + key;
+            firebase.app("polyn-app").database().ref(refPath).once('value').then(function(snapshot) {
+
+              var sellersInfo = snapshot.val();
+
+              if(sellersInfo) {
+                var roundedDistance = parseFloat(distance).toFixed(1);
+                sellersInfo.distance = roundedDistance + " miles away";
+                self._addSellersEntry(sellersInfo);
+              } else {
+                console.log("  Failed to get data for seller key: " + key);
+              }
+            });
         });
       }
     }
