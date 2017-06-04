@@ -2,16 +2,28 @@
  -- Firebase --
 
 
-
 firebase deploy --only hosting
 firebase deploy --only functions
 
 
+OLD RULES
 
  {
   "rules": {
     ".read": "auth != null",
     ".write": "auth != null"
+  }
+}
+
+NEW RULES with optimization added for sellers_by_location
+
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
+    "sellers_by_location": {
+      ".indexOn": "g"
+    } 
   }
 }
 

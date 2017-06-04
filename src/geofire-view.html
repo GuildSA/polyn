@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="geofire.html">
@@ -47,6 +48,24 @@
     </template>
   </dom-repeat>-->
 
+  <div class="card">
+    <h1>Get User's Location</h1>
+    <paper-button on-tap="_onTapGetUsersLocation" raised>Get User's Location</paper-button>
+  </div>
+
+  <div class="card">
+    <h1>Get Sellers By Location</h1>
+    <paper-button on-tap="_onTapGetSellersByLocation" raised>Get Sellers</paper-button>
+  </div>
+
+  <div class="card">
+    <h1>Add A Seller's Location</h1>
+    <paper-input id="sellerKey" label="Seller's key:"></paper-input>
+    <paper-input id="lat" label="Lat:"></paper-input>
+    <paper-input id="long" label="Long:"></paper-input>
+    <paper-button on-tap="_onTapAddLocation" raised>Add Location</paper-button>
+  </div>
+
   </template>
 
     <script>
@@ -65,10 +84,32 @@
       _userChanged(user) {
         console.log("GeofireView._userChanged");
 
-        if(user && user.uid) {
+        // if(user && user.uid) {
+
+        //   // Ask for location permission.
+        //   GeofireManager.getUsersLocation("users/" + user.uid + "/info", 
+
+        //     function (location) {
+        //       var latitude = location.coords.latitude;
+        //       var longitude = location.coords.longitude;
+        //       console.log("User Location is lat: " + latitude + ", long: " + longitude + "");
+        //       alert("User Location is lat: " + latitude + ", long: " + longitude + "");
+        //     },
+            
+        //     function (error) {
+        //       console.log("User Location error: " + error + "");
+        //       alert("User Location error: " + error + "");
+        //     });
+        // }
+      }
+
+      _onTapGetUsersLocation() {
+        console.log("GeofireView._onTapGetUsersLocation");
+
+        if(this.user && this.user.uid) {
 
           // Ask for location permission.
-          GeofireManager.getUsersLocation("users/" + user.uid + "/info", 
+          GeofireManager.getUsersLocation("users/" + this.user.uid + "/info", 
 
             function (location) {
               var latitude = location.coords.latitude;
@@ -82,6 +123,45 @@
               alert("User Location error: " + error + "");
             });
         }
+      }
+
+      _onTapAddLocation() {
+        console.log("GeofireView._onTapAddLocation");
+
+        const sellersKey = this.$.sellerKey.value; 
+        const lat = parseFloat(this.$.lat.value);
+        const long = parseFloat(this.$.long.value);
+
+        console.log("  Seller Key: " + sellersKey);
+        console.log("  Lat: " + lat);
+        console.log("  Long: " + long);
+
+        if(!sellersKey && !lat && !long) {
+          alert("Missing data!");
+          return;
+        }
+
+        //GeofireManager.addLocationToSeller("-Kh_YnwbmV03w-hr1avv", 36.10, 100.20);
+
+        // Tulsa, OK    -Kh_YnwbmV03w-hr1avvv (Vintage Vinyl)  36.157519   -95.990656
+        // Plano, TX    -Kh_Ynn7mV03w-ht3acx  (Goods Records)  33.1020945  -96.7584535
+        // Dallas, TX   -Kh_Ynn7mV03w-ht3acx  (Goods Records)  32.783648   -96.805506
+
+        // Distance Plano to Tulsa 239 mi or 384.633 km
+
+        GeofireManager.addSellerToLocations(sellersKey, lat, long);
+      }
+
+      _onTapGetSellersByLocation() {
+        console.log("GeofireView._onTapGetSellersByLocation");
+
+        // Find all the sellers within a circle defined by a 
+        // lat/long for the center of a circle and a range in kilometers.
+        // The lat/long should come from the user's current location.
+        GeofireManager.getSellersByLocation(33.1020945, -96.7584535, 100,
+          function(key) {
+            console.log("GeofireView got seller key: " + key + "");
+        });
       }
     }
 

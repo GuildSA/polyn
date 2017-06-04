@@ -9,6 +9,7 @@ var GeofireManager = (function() {
   var _geoFire;
   var _usersLocationCallback;
   var _usersLocationError;
+  var _sellerFoundCallback;
 
   // Uses the HTML5 geolocation API to get the current user's location.
   var getUsersLocation = function(usersInfoKeyPath, usersLocationCallback, usersLocationError) {
@@ -80,6 +81,59 @@ var GeofireManager = (function() {
     }
   };
   
+  var addSellerToLocations = function(sellersKey, latitude, longitude) {
+
+    console.log("  sellersKey: " + sellersKey);
+    console.log("  latitude: " + latitude);
+    console.log("  longitude: " + longitude);
+
+    var sellersByLocationRef = firebase.app("polyn-app").database().ref("sellers_by_location/");
+
+    // Create a new GeoFire instance pointing at the user's data.
+    var geoFireSellersRef = new GeoFire(sellersByLocationRef);
+
+    geoFireSellersRef.set(sellersKey, [latitude, longitude]).then(function() {
+      log("Seller location has been added to seller's key");
+    }).catch(function(error) {
+      log("Error adding seller's location: " + error);
+    });
+  }
+
+
+  var getSellersByLocation = function(latitude, longitude, range, sellerFoundCallback) {
+
+    console.log("  latitude: " + latitude);
+    console.log("  longitude: " + longitude);
+    console.log("  range: " + range);
+
+    _sellerFoundCallback = sellerFoundCallback;
+
+    var sellersByLocationRef = firebase.app("polyn-app").database().ref("sellers_by_location/");
+    var geoFireSellersRef = new GeoFire(sellersByLocationRef);
+
+    var geoQuery = geoFireSellersRef.query({
+        center: [latitude, longitude],
+        radius: range // Kilometers
+      });
+
+    var onKeyEnteredRegistration = geoQuery.on("key_entered", function(key, location) {
+
+      log(key + " entered the query.");
+
+      if(_sellerFoundCallback) {
+        _sellerFoundCallback(key);
+      }
+      
+    });
+
+    var onReadyRegistration = geoQuery.on("ready", function() {
+
+      log("  The 'ready' event fired - cancelling query.");
+
+      geoQuery.cancel();
+    })
+  }
+
   function log(message) {
     console.log("GeofireManager: " + message);
   }
@@ -87,7 +141,9 @@ var GeofireManager = (function() {
   // Define the public interface by explicitly revealing public pointers to the 
   // our private functions.
   return {
-    getUsersLocation: getUsersLocation
+    getUsersLocation: getUsersLocation,
+    addSellerToLocations: addSellerToLocations,
+    getSellersByLocation: getSellersByLocation
   }
 
 })();
