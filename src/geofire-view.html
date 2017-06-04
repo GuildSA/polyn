@@ -171,14 +171,14 @@
 
         //GeofireManager.addLocationToSeller("-Kh_YnwbmV03w-hr1avv", 36.10, 100.20);
 
-        // Tulsa, OK    -Kh_YnwbmV03w-hr1avvv (Vintage Vinyl)  36.157519   -95.990656
+        // Tulsa, OK    -Kh_YnwbmV03w-hr1avv (Vintage Vinyl)  36.157519   -95.990656
         // Plano, TX    -Kh_Ynn7mV03w-ht3acx  (Goods Records)  33.1020945  -96.7584535
         // Dallas, TX   -Kh_Ynn7mV03w-ht3acx  (Goods Records)  32.783648   -96.805506
         // Frisco, TX   -Kh_Ynn7mV03w-ht3acx  (Goods Records)  33.154269   -96.835353
 
         // Distance Plano to Tulsa 239 mi or 384.633 km
 
-        GeofireManager.addSellerToLocations(sellersKey, lat, long);
+        GeofireManager.addSellerToLocations("collectables/sub/vinylRecords", sellersKey, lat, long);
       }
 
       _addSellersEntry(sellersEntry) {
@@ -214,7 +214,7 @@
 
               console.log("User Location is lat: " + latitude + ", long: " + longitude + "");
 
-              self._getSellerData(latitude, longitude, rangeInKm);
+              self._getSellerData("collectables/sub/vinylRecords", latitude, longitude, rangeInKm);
             },
             
             function(error) {
@@ -225,11 +225,11 @@
         } else {
 
           // If we DO know the user's current location - just get the sellers.!
-          self._getSellerData(this.location[0], this.location[1], rangeInKm);
+          self._getSellerData("collectables/sub/vinylRecords", this.location[0], this.location[1], rangeInKm);
         }
       }
 
-      _getSellerData(latitude, longitude, rangeInKm) {
+      _getSellerData(sellersCategory, latitude, longitude, rangeInKm) {
         console.log("GeofireView._getSellerData");
 
         var self = this;
@@ -239,7 +239,7 @@
         // Find all the sellers within a circle defined by a 
         // lat/long for the center of a circle and a range in kilometers.
         // The lat/long should come from the user's current location.
-        GeofireManager.getSellersByLocation(latitude, longitude, rangeInKm,
+        GeofireManager.getSellersByLocation(sellersCategory, latitude, longitude, rangeInKm,
           function(key, distance) {
 
             console.log("GeofireView got seller key: " + key);

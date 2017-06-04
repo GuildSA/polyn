@@ -27,6 +27,34 @@ NEW RULES with optimization added for sellers_by_location
   }
 }
 
+
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
+
+    "locations": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+
+      "collectables": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+
+        "sub": {
+          ".read": "auth != null",
+          ".write": "auth != null",
+
+          "vinylRecords": {
+            ".indexOn": "g"
+          } 
+        } 
+      } 
+    } 
+  }
+}
+
+
  -- Firebase Cloud Messaging --
 
 A Real Curl example filled in:
