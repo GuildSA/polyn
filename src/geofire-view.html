@@ -62,44 +62,27 @@
         };
       }
 
-      _geolocationCallback(location) {
-        console.log("GeofireView._geolocationCallback");
-
-        var latitude = location.coords.latitude;
-        var longitude = location.coords.longitude;
-
-        console.log("User Location is lat: " + latitude + ", long: " + longitude + "");
-        alert("User Location is lat: " + latitude + ", long: " + longitude + "");
-      }
-
       _userChanged(user) {
         console.log("GeofireView._userChanged");
 
         if(user && user.uid) {
+
           // Ask for location permission.
-          GeofireManager.getUsersLocation("users/" + user.uid + "/info", this._geolocationCallback);
+          GeofireManager.getUsersLocation("users/" + user.uid + "/info", 
+
+            function (location) {
+              var latitude = location.coords.latitude;
+              var longitude = location.coords.longitude;
+              console.log("User Location is lat: " + latitude + ", long: " + longitude + "");
+              alert("User Location is lat: " + latitude + ", long: " + longitude + "");
+            },
+            
+            function (error) {
+              console.log("User Location error: " + error + "");
+              alert("User Location error: " + error + "");
+            });
         }
       }
-
-      //   _onTappedMessage(e) {
-      //     console.log("MessagesView._onTappedMessage");
-
-      //     // Which index was clicked?
-      //     var index = e.model.index;
-      //     console.info(index + ' was clicked.');
-
-      //     // What object is stored at that index?
-      //     console.info(this.$.query.data[index]);
-
-      //     // What is the Firebase key for this data?
-      //     console.info(this.$.query.data[index].$key);
-
-      //     // Push the chat-view and pass the chatMessagesId.
-      //     var polynApp = document.getElementById("polynApp");
-      //     var chatView = polynApp.pushPageOnCurrentTab("chat-view");
-      //     chatView.chatInfoId = this.$.query.data[index].$key;
-      //     chatView.chatMessagesId = this.$.query.data[index].chatId;
-      // }
     }
 
     window.customElements.define(GeofireView.is, GeofireView);

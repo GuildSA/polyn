@@ -7,12 +7,14 @@ var GeofireManager = (function() {
 
   var _firebaseRef;
   var _geoFire;
-  var _usersGeolocationCallback;
+  var _usersLocationCallback;
+  var _usersLocationError;
 
   // Uses the HTML5 geolocation API to get the current user's location.
-  var getUsersLocation = function(usersInfoKeyPath, usersGeolocationCallback) {
+  var getUsersLocation = function(usersInfoKeyPath, usersLocationCallback, usersLocationError) {
 
-    _usersGeolocationCallback = usersGeolocationCallback;
+    _usersLocationCallback = usersLocationCallback;
+    _usersLocationError = usersLocationError;
 
     _firebaseRef = firebase.app("polyn-app").database().ref(usersInfoKeyPath);
 
@@ -21,7 +23,13 @@ var GeofireManager = (function() {
 
     if(typeof navigator !== "undefined" && typeof navigator.geolocation !== "undefined") {
       log("Asking user to get their location");
-      navigator.geolocation.getCurrentPosition(geolocationCallback, errorHandler);
+
+      var positionOptions = { 
+        enableHighAccuracy: false,
+        timeout: 5000
+      };
+
+      navigator.geolocation.getCurrentPosition(geolocationCallback, errorHandler, positionOptions);
     } else {
       log("The user's browser does not support the HTML5 Geolocation API!")
     }
@@ -43,8 +51,8 @@ var GeofireManager = (function() {
       // remove their GeoFire location entry
       _firebaseRef.child(locationKey).onDisconnect().remove();
 
-      if(_usersGeolocationCallback) {
-        _usersGeolocationCallback(location);
+      if(_usersLocationCallback) {
+        _usersLocationCallback(location);
       }
 
       log("Added handler to remove user from GeoFire when you leave this page.");
@@ -65,6 +73,10 @@ var GeofireManager = (function() {
       log("Error: TIMEOUT: Calculating the user's location too took long");
     } else {
       log("Unexpected error code")
+    }
+
+    if(_usersLocationError) {
+       _usersLocationError(error);
     }
   };
   
