@@ -31,6 +31,16 @@
         margin-bottom: 8px;
       }
 
+      #facebook-btn {
+        background-color: var(--paper-indigo-500);
+        color: white;
+      }
+
+      #twitter-btn {
+        background-color: #0084B4;
+        color: white;
+      }
+
      /*.bottom {
         margin-top: auto
       }*/
@@ -67,8 +77,8 @@
       <template is="dom-if" if="[[isAnonymous]]">
         <div class="layout vertical">
           <paper-button class="custom bluebtn" on-tap="_onTapSignInUsingGmail" raised>Sign In Using Gmail</paper-button>
-          <paper-button class="custom bluebtn" on-tap="_onTapSignInUsingFacebook" raised>Sign In Using Facebook</paper-button>
-          <paper-button class="custom bluebtn" on-tap="_onTapSignInUsingTwitter" raised>Sign In Using Twitter</paper-button>
+          <paper-button class="custom bluebtn" id="facebook-btn" on-tap="_onTapSignInUsingFacebook" raised>Sign In Using Facebook</paper-button>
+          <paper-button class="custom bluebtn" id="twitter-btn" on-tap="_onTapSignInUsingTwitter" raised>Sign In Using Twitter</paper-button>
         </div>
       </template>
 
