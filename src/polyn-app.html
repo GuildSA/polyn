@@ -20,6 +20,7 @@
 <link rel="lazy-import" href="home-view.html">
 <link rel="lazy-import" href="ajax-view.html">
 <link rel="lazy-import" href="functions-view.html">
+<link rel="lazy-import" href="requests-view.html">
 <link rel="lazy-import" href="messages-view.html">
 <link rel="lazy-import" href="profile-view.html">
 <link rel="lazy-import" href="chat-view.html">
@@ -149,8 +150,8 @@
              
               <paper-tab on-tap="_onTapHomeTab"><iron-icon id="home" noink icon="custom-icons:home" on-tap="_onTapHomeTab"></iron-icon></paper-tab>
              
-              <paper-tab on-tap="_onTapMessagesTab"><iron-icon id="messages" noink icon="custom-icons:question-answer" on-tap="_onTapMessagesTab"></iron-icon>
-                <paper-badge for="messages" label="1" suffix></paper-badge>
+              <paper-tab on-tap="_onTapRequestsTab"><iron-icon id="requests" noink icon="custom-icons:question-answer" on-tap="_onTapRequestsTab"></iron-icon>
+                <paper-badge for="requests" label="1" suffix></paper-badge>
               </paper-tab>
               
               <paper-tab on-tap="_onTapProfileTab"><iron-icon id="profile" noink icon="custom-icons:account-circle" on-tap="_onTapProfileTab"></iron-icon></paper-tab>
@@ -165,6 +166,7 @@
             fallback-selection="view404"
             role="main">
           <home-view name="home-view"></home-view>
+          <requests-view name="requests-view"></requests-view>
           <messages-view name="messages-view"></messages-view>
           <profile-view name="profile-view"></profile-view>
           <chat-view name="chat-view"></chat-view>
@@ -326,7 +328,7 @@
               if(this.$.tabs.selected == 0) {
                 this.page = 'home-view';
               } else if(this.$.tabs.selected == 1) {
-                this.page = 'messages-view';
+                this.page = 'requests-view';
               } else if(this.$.tabs.selected == 2) {
                 this.page = 'profile-view';
               }
@@ -367,10 +369,10 @@
         }
       }
 
-      _onTapMessagesTab() {
-        console.log("PolynApp._onTapMessagesTab: stack size = " + this.tabViewStacks[1].length + ", tab = " + this.$.tabs.selected);
+      _onTapRequestsTab() {
+        console.log("PolynApp._onTapRequestsTab: stack size = " + this.tabViewStacks[1].length + ", tab = " + this.$.tabs.selected);
 
-        // Messages tab = index 1!
+        // Requests tab = index 1!
         if(this.tabViewStacks[1].length > 0) {
           this.$.toolbarNavBtn.icon = "custom-icons:arrow-back";
           var viewName = this.tabViewStacks[1][this.tabViewStacks[1].length - 1].tagName.toLowerCase();
@@ -378,7 +380,7 @@
           this.page = viewName;
         } else {
           this.$.toolbarNavBtn.icon = "custom-icons:menu";
-          this.page = 'messages-view';
+          this.page = 'requests-view';
         }
       }
 

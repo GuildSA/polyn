@@ -1,0 +1,124 @@
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="requests-view">
+  <template>
+  <style include="shared-styles">
+    :host {
+      display: block;
+      padding: 10px;
+    }
+  </style>
+
+  <firebase-auth 
+    id="auth" 
+    app-name="polyn-app" 
+    user="{{user}}">
+  </firebase-auth>
+
+  <firebase-query
+    id="query"
+    app-name="polyn-app"
+    path="/users/[[user.uid]]/requests"
+    data="{{requests}}">
+  </firebase-query>
+
+  <app-indexeddb-mirror
+    session="[[user.uid]]"
+    key="requests"
+    data="{{requests}}"
+    persisted-data="{{persistedRequests}}">
+  </app-indexeddb-mirror>
+
+  <dom-repeat items="[[persistedRequests]]" as="request" initial-count="5">
+    <template>
+      <div class="card" on-tap="_onTappedRequest">
+        <h2>[[request.subject]]</h2>
+        <p>[[request.body]]</p>
+      </div>
+    </template>
+  </dom-repeat>
+
+  </template>
+
+    <script>
+      class RequestsView extends Polymer.GestureEventListeners(Polymer.Element) {
+        static get is() { return 'requests-view'; }
+
+        static get properties() {
+          return {
+            user: {
+              type: Object,
+              observer: '_userChanged'
+            }
+          };
+        }
+
+        _userChanged(user) {
+          console.log("RequestsView._userChanged");
+        }
+        
+        _onTappedRequest(e) {
+          console.log("RequestsView._onTappedRequest");
+
+          // Which index was clicked?
+          var index = e.model.index;
+          console.info(index + ' was clicked.');
+
+          // What object is stored at that index?
+          console.info(this.$.query.data[index]);
+
+          // What is the Firebase key for this data?
+          console.info(this.$.query.data[index].$key);
+
+// console.log("key: " + this.$.query.data[index].$key);
+// console.log("chats: " + this.$.query.data[index].chats);
+// console.log("chatId: " + this.$.query.data[index].chatId);
+
+          if(this.user.uid != this.$.query.data[index].buyerId) {
+
+            // We can chat with the buyer!
+
+            if(this.$.query.data[index].chatId) {
+
+              var polynApp = document.getElementById("polynApp");
+              var chatView = polynApp.pushPageOnCurrentTab("chat-view");
+              chatView.chatInfoId = this.$.query.data[index].$key;
+              chatView.chatMessagesId = this.$.query.data[index].chatId;
+
+            } else {
+
+// console.log("No Chat ID yet!!!");
+
+              var polynApp = document.getElementById("polynApp");
+              var chatView = polynApp.pushPageOnCurrentTab("chat-view");
+              chatView.chatInfoId = this.$.query.data[index].$key
+            }
+
+          } else {
+
+            // We're the buyer who made this request!
+
+            // If we have any chats - list them out
+            if(this.$.query.data[index].chats) {
+              
+              // Push the messages-view and pass the ?????.
+              var polynApp = document.getElementById("polynApp");
+              var messagesView = polynApp.pushPageOnCurrentTab("messages-view");
+              messagesView.requestId = this.$.query.data[index].$key;
+
+            } else {
+              console.log("No Chats yet!!!");
+            }
+          }
+      }
+    }
+
+    window.customElements.define(RequestsView.is, RequestsView);
+  </script>
+</dom-module>

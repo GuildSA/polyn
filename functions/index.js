@@ -125,8 +125,8 @@ exports.sendRequest = functions.https.onRequest((req, res) => {
               // Use the User's info to get their token and send a message.
               if(usersInfo) {
                 
-                // For our seller, add the request to the user's 'chats' key.
-                let newMessage = {
+                // For our seller, add the request to the user's 'requests' key.
+                let request = {
                   subject: title,
                   buyer: buyer,
                   buyerId: buyerId,
@@ -136,7 +136,7 @@ exports.sendRequest = functions.https.onRequest((req, res) => {
                   //sellerId: Wait till they start a chat before filling this in.
                 };
 
-                admin.database().ref('/users/' + childData + '/chats').push(newMessage).then(snapshot => {
+                admin.database().ref('/users/' + childData + '/requests').push(request).then(snapshot => {
 
                   console.log("token = " + usersInfo.token);
 

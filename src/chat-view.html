@@ -102,7 +102,7 @@
     <firebase-document
       app-name="polyn-app"
       id="chatinfo"
-      path="/users/[[user.uid]]/chats/[[chatInfoId]]"
+      path="/users/[[user.uid]]/requests/[[chatInfoId]]"
       data="{{chatInfo}}">
     </firebase-document>
 
@@ -176,7 +176,6 @@
       <paper-button id="send-button" on-tap="_onTapSendDialogBtn" dialog-confirm autofocus raised>Send</paper-button>
     </div>
       
-
   </template>
 
   <script>
@@ -314,7 +313,28 @@
             this.chatMessagesId = newChatMessageKey;
 
             // Save the chatMessagesId back to the chat entry.
-            firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/chats/" + this.chatInfoId + "/chatId").set(newChatMessageKey);
+            firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/requests/" + this.chatInfoId + "/chatId").set(newChatMessageKey);
+
+// console.log("this.chatInfo.buyerId = " + this.chatInfo.buyerId);
+// console.log("this.chatInfo.requestId = " + this.chatInfo.requestId);
+
+              var newOthersChatMessageKey = firebase.app("polyn-app").database().ref().child("/users/" + this.chatInfo.buyerId + "/requests/" + this.chatInfo.requestId + "/chats").push().key;
+              if(newOthersChatMessageKey) {
+
+// console.log("chatId = " + newChatMessageKey);
+// console.log("seller = " + this.usersInfo.name);
+// console.log("sellerId = " + this.usersInfo.sellerId);
+
+                let newChatEntry = {
+                  chatId : newChatMessageKey,
+                  seller : this.usersInfo.name,
+                  sellerId: this.usersInfo.sellerId,
+                  timeStamp: firebase.database.ServerValue.TIMESTAMP
+                };
+
+                firebase.app("polyn-app").database().ref().child("/users/" + this.chatInfo.buyerId + "/requests/" + this.chatInfo.requestId + "/chats/" + newOthersChatMessageKey).set(newChatEntry);
+              }
+
             this._sendChatMessage();
           }
         }

@@ -221,10 +221,10 @@
           return;
         }
         
-        const requestKey = firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/chats').push().key;
+        const requestKey = firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/requests').push().key;
 
-        // Add the user's new request to their 'chats' key as a reference.
-        let newRequest = {
+        // Add the user's new request to their 'requests' key as a reference.
+        let request = {
           subject: this.titleDialogValue,
           body: this.bodyDialogValue,
           buyerId: this.user.uid,
@@ -232,7 +232,7 @@
           timeStamp: firebase.database.ServerValue.TIMESTAMP
         };
 
-        firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/chats/' + requestKey).set(newRequest).then(snapshot => {
+        firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/requests/' + requestKey).set(request).then(snapshot => {
 
           // Send this info to the server.
           var params = {
