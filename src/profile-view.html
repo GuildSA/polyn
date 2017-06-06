@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <link rel="import" href="shared-styles.html">
@@ -23,7 +24,7 @@
         border-radius: 50%;
       }
 
-      paper-button.bluebtn {
+      paper-button.sign-in {
         background-color: var(--app-primary-color);
         color: white;
         margin-left: 24px;
@@ -31,14 +32,34 @@
         margin-bottom: 8px;
       }
 
+      paper-input {
+        margin-left: 24px;
+        margin-right: 24px;
+        margin-bottom: 8px;
+      }
+
+      #continue-btn {
+        background-color: #70C187;
+        color: white; 
+      }
+
+      #google-btn {
+        background-color: #3D88EC; 
+      }
+
       #facebook-btn {
-        background-color: var(--paper-indigo-500);
+        background-color: #4069AD;
         color: white;
       }
 
       #twitter-btn {
         background-color: #0084B4;
         color: white;
+      }
+
+      #tos {
+        color: lightgray;
+        font-size: 0.5em;
       }
 
      /*.bottom {
@@ -60,10 +81,19 @@
 
       <div class="card">
         <template is="dom-if" if="[[isAnonymous]]">
-          <div class="layout horizontal center-justified">
-            <iron-image sizing="contain" id="profile-image" alt="Anonymous Profile Image." src="./images/anonymous_profile.png"></iron-image>
-          </div>
+            <div class="layout horizontal center-justified">
+              <iron-image sizing="contain" id="profile-image" alt="Anonymous Profile Image." src="./images/anonymous_profile.png"></iron-image>
+            </div>
+            <div class="layout horizontal center-justified">
+              <paper-input id="email" label="Email"></paper-input>
+            </div>
+                <div class="layout horizontal center-justified">
+                 <paper-input id="password" label="Password"></paper-input>
+                </div>
+              </div>
+            </div>
         </template>
+
         <template is="dom-if" if="[[!isAnonymous]]">
           <div class="layout horizontal center-justified">
             <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="[[photoURL]]"></iron-image>
@@ -72,14 +102,22 @@
             <h1>Welcome [[displayName]]</h1>
           </div>
         </template>
-      </div>
+      
 
       <template is="dom-if" if="[[isAnonymous]]">
         <div class="layout vertical">
-          <paper-button class="custom bluebtn" on-tap="_onTapSignInUsingGmail" raised>Sign In Using Gmail</paper-button>
-          <paper-button class="custom bluebtn" id="facebook-btn" on-tap="_onTapSignInUsingFacebook" raised>Sign In Using Facebook</paper-button>
-          <paper-button class="custom bluebtn" id="twitter-btn" on-tap="_onTapSignInUsingTwitter" raised>Sign In Using Twitter</paper-button>
-        </div>
+          <paper-button class="sign-in" id="continue-btn">Continue</paper-button>
+          <div class="layout horizontal center-justified">
+           <h4>OR</h4>
+          </div>
+          <paper-button class="sign-in" id="google-btn" on-tap="_onTapSignInUsingGmail">Sign In Using Gmail</paper-button>
+          <paper-button class="sign-in" id="facebook-btn" on-tap="_onTapSignInUsingFacebook">Sign In Using Facebook</paper-button>
+          <!--<paper-button class="custom bluebtn" id="twitter-btn" on-tap="_onTapSignInUsingTwitter" raised>Sign In Using Twitter</paper-button>-->
+           </div>
+            <div class="layout horizontal center-justified">
+              <div id="tos">Creating an account means you agree with our Terms of Service, Privacy Policy</div>
+            </div>
+       
       </template>
 
       <template is="dom-if" if="[[!isAnonymous]]">
@@ -90,7 +128,7 @@
           <paper-button class="custom bluebtn" on-tap="_onTapSignOut" raised>Sign Out</paper-button>
         </div>
       </template>
-
+      </div>
     </div>
 
   </template>
