@@ -302,6 +302,27 @@
           return;
         }
 
+        if(this.chatMessagesId) {
+          this._sendChatMessage();
+        } else {
+
+          // We don't have a chatMessagesId yet so create it first and then send a message.
+          var newChatMessageKey = firebase.app("polyn-app").database().ref().child("chats/").push().key;
+
+          if(newChatMessageKey) {
+
+            this.chatMessagesId = newChatMessageKey;
+
+            // Save the chatMessagesId back to the chat entry.
+            firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/chats/" + this.chatInfoId + "/chatId").set(newChatMessageKey);
+            this._sendChatMessage();
+          }
+        }
+      }
+
+      _sendChatMessage() {
+        console.log("ChatView._sendChatMessage");
+
         var text = this.$.message.value;
 
         var newKey = firebase.app("polyn-app").database().ref().child("chats/" + this.chatMessagesId).push().key;

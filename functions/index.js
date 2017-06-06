@@ -90,15 +90,84 @@ exports.sendRequest = functions.https.onRequest((req, res) => {
   const categoryPath = req.query.categoryPath;
   const title = req.query.title;
   const body = req.query.body;
+  const buyerId = req.query.buyerId;
+  const buyer = req.query.buyer;
+  const requestId = req.query.requestId;
 
   let request = {
       title: title,
       body: body,
+      buyer: buyer,
+      buyerId: buyerId,
+      requestId: requestId,
       timeStamp: admin.database.ServerValue.TIMESTAMP
   };
 
   // Push it into the Realtime Database then send a response
   admin.database().ref('/requests/' + categoryPath + '/requests').push(request).then(snapshot => {
+
+    // Get all the sellers for this category.
+    admin.database().ref('/requests/' + categoryPath + '/sellers').once('value').then(function(snapshot) {
+
+      // For each seller - get their user ID.
+      snapshot.forEach(function(childSnapshot) {
+
+          var childKey = childSnapshot.key;
+          var childData = childSnapshot.val();
+
+          console.log(childKey + " = " + childData); // The childData is the user's ID who wants the message!
+
+            // Use the User's ID to get their info.
+            admin.database().ref('/users/' + childData + '/info').once('value').then(function(snapshot) {
+
+              var usersInfo = snapshot.val();
+
+              // Use the User's info to get their token and send a message.
+              if(usersInfo) {
+                
+                // For our seller, add the request to the user's 'chats' key.
+                let newMessage = {
+                  subject: title,
+                  buyer: buyer,
+                  buyerId: buyerId,
+                  requestId: requestId,
+                  timeStamp: admin.database.ServerValue.TIMESTAMP
+                  //seller: Wait till they start a chat before filling this in.
+                  //sellerId: Wait till they start a chat before filling this in.
+                };
+
+                admin.database().ref('/users/' + childData + '/chats').push(newMessage).then(snapshot => {
+
+                  console.log("token = " + usersInfo.token);
+
+                  let payload = {
+                    notification: {
+                      title: title,
+                      body: body,
+                      icon: "/images/polyn-msg.png",
+                      clickAction: "https://vinylrecords.io/"
+                    }
+                  };
+
+                  admin.messaging().sendToDevice(usersInfo.token, payload)
+                  .then(function(response) {
+                    console.log("Successfully sent message:", response);
+                    res.status(200).end();
+                  })
+                  .catch(function(error) {
+                    console.log("Error sending message:", error);
+                    res.status(500).end();
+                  });
+
+                });
+
+              }
+
+            });
+
+        });
+
+    });
 
     cors(req, res, () => {
       //res.redirect(303, snapshot.ref); // Redirect with 303 SEE OTHER to the URL of the pushed object in the Firebase console.

@@ -10,7 +10,9 @@
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-behavior.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="custom-icons.html">
 
@@ -67,6 +69,18 @@
       }
 
     </style>
+
+    <firebase-auth 
+      id="auth"
+      app-name="polyn-app"
+      user="{{user}}">
+    </firebase-auth>
+
+    <firebase-document
+      app-name="polyn-app"
+      id="usersinfo"
+      data="{{usersInfo}}">
+    </firebase-document>
 
     <paper-spinner id="spinner" active="[[loading]]" active></paper-spinner>
 
@@ -161,8 +175,25 @@
           bodyDialogValue: {
             type: String,
             value: ""
+          },
+          user: {
+            type: Object,
+            observer: '_userChanged'
+          },
+          usersInfo: {
+            type: Object
           }
         };
+      }
+
+      _userChanged(user) {
+        console.log("HomeView._userChanged");
+
+        // As soon as we get the user - get the users info so we can 
+        // learn more about them!
+        if(user && user.uid) {
+          this.$.usersinfo.path = "/users/" + user.uid + "/info";
+        }
       }
 
       _onTapBusiness() {
@@ -186,14 +217,37 @@
       _onTapRequestDialogBtn() {
         console.log("HomeView._onTapRequestDialogBtn: " + this.titleDialogValue);
 
-        var params = {
-          categoryPath: "collectables/sub/vinylRecords" ,
-          title: this.titleDialogValue,
+        if(!this.user || !this.usersInfo) {
+          return;
+        }
+        
+        const requestKey = firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/chats').push().key;
+
+        // Add the user's new request to their 'chats' key as a reference.
+        let newRequest = {
+          subject: this.titleDialogValue,
           body: this.bodyDialogValue,
+          buyerId: this.user.uid,
+          buyer: this.usersInfo.name,
+          timeStamp: firebase.database.ServerValue.TIMESTAMP
         };
 
-        this.$.sendRequet.params = params;
-        this.$.sendRequet.generateRequest();
+        firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/chats/' + requestKey).set(newRequest).then(snapshot => {
+
+          // Send this info to the server.
+          var params = {
+            categoryPath: "collectables/sub/vinylRecords",
+            title: this.titleDialogValue,
+            body: this.bodyDialogValue,
+            buyerId: this.user.uid,
+            buyer: this.usersInfo.name,
+            requestId: requestKey
+          };
+
+          this.$.sendRequet.params = params;
+          this.$.sendRequet.generateRequest(); // Calls: sendRequest()
+
+        });
       }
 
       _handleSendRequestResponse(data) {
