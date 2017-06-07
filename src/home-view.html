@@ -68,6 +68,25 @@
         color: #70C187;
       }
 
+      .stick-btn-container {
+        justify-content: center;
+        right:0;
+        left:0;
+        
+        
+      }
+
+      .sticky-btn {
+        @apply(--layout-flex);
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        background-color: #70C187; 
+        color: white;
+        position: fixed;
+        bottom:0;
+        width: 100%;
+      }
+
     </style>
 
     <firebase-auth 
@@ -131,6 +150,9 @@
           <p><paper-icon-button icon="custom-icons:web"></paper-icon-button>www.goodrecords.com</p>
       </div>
     </div>
+  </div>
+  <div id="sticky-btn-container">
+    <paper-button class="sticky-btn" on-tap="_onTapCreateMessage" icon="custom-icons:message" >Submit Your Request</paper-button>
   </div>
 
     <paper-fab id="fab" icon="custom-icons:message" on-tap="_onTapCreateMessage"></paper-fab>

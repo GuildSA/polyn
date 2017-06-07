@@ -116,7 +116,7 @@
           </div>
           <paper-button class="sign-in" id="google-btn" on-tap="_onTapSignInUsingGmail">Sign In Using Gmail</paper-button>
           <paper-button class="sign-in" id="facebook-btn" on-tap="_onTapSignInUsingFacebook">Sign In Using Facebook</paper-button>
-          <!--<paper-button class="custom bluebtn" id="twitter-btn" on-tap="_onTapSignInUsingTwitter" raised>Sign In Using Twitter</paper-button>-->
+          <!--<paper-button class="sign-in" id="twitter-btn" on-tap="_onTapSignInUsingTwitter" raised>Sign In Using Twitter</paper-button>-->
            </div>
             <div class="layout horizontal center-justified">
               <div id="tos">Creating an account means you agree with our Terms of Service, Privacy Policy</div>
@@ -126,10 +126,10 @@
 
       <template is="dom-if" if="[[!isAnonymous]]">
         <div class="layout vertical">
-          <paper-button id="registerbusiness" class="custom bluebtn" on-tap="_onTapRegisterBusiness" raised>Register Your Business</paper-button>
-          <paper-button class="custom bluebtn" on-tap="_onTapAddToCategory" raised>Add Business To Category</paper-button>
-          <paper-button class="custom bluebtn" on-tap="_onTapRemoveFromCategory" raised>Remove Business From Category</paper-button>
-          <paper-button class="custom bluebtn" on-tap="_onTapSignOut" raised>Sign Out</paper-button>
+          <paper-button id="registerbusiness" class="sign-in" on-tap="_onTapRegisterBusiness">Register Your Business</paper-button>
+          <paper-button class="sign-in" on-tap="_onTapAddToCategory">Add Business To Category</paper-button>
+          <paper-button class="sign-in" on-tap="_onTapRemoveFromCategory" >Remove Business From Category</paper-button>
+          <paper-button class="sign-in" on-tap="_onTapSignOut">Sign Out</paper-button>
         </div>
       </template>
       </div>
