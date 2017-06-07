@@ -43,7 +43,7 @@
 
     
   </style>
-  <template is="dom-if" if="[[!hasMessages]]">
+  <template is="dom-if" if="[[hasMessages]]">
     <div class="main-container">
       <img src="images/svg/chatBubbles.svg">
       <h3> Welcome to the Message Center!</h3>
@@ -98,7 +98,7 @@
           }
         };
       }
-      
+  
       _onTappedRequest(e) {
         console.log("RequestsView._onTappedRequest");
 
