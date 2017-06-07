@@ -35,8 +35,8 @@
         @apply --layout-end-justified;
       }
 
-       #message {
-         --paper-input-container-focus-color: #70C187;
+      #message {
+        --paper-input-container-focus-color: #70C187;
       }
 
       .message-container-main {
@@ -53,7 +53,6 @@
         border-radius: 5px;
         max-width: 400px;
         margin: auto;
-            
       }
 
       .profile-pic {
@@ -72,7 +71,6 @@
         @apply --layout-center-justified; 
         @apply --layout-center;
         background-color: white; 
-        
       }
 
       .username {
@@ -86,18 +84,18 @@
       user="{{user}}">
     </firebase-auth>
 
+    <firebase-document
+      app-name="polyn-app"
+      id="usersinfo"
+      data="{{usersInfo}}">
+    </firebase-document>
+
     <firebase-query
       id="query"
       app-name="polyn-app"
       path="/chats/[[chatMessagesId]]"
       data="{{chatMessages}}">
     </firebase-query>
-
-    <firebase-document
-      app-name="polyn-app"
-      id="usersinfo"
-      data="{{usersInfo}}">
-    </firebase-document>
 
     <firebase-document
       app-name="polyn-app"
@@ -185,21 +183,21 @@
 
       static get properties() {
         return {
-          chatMessagesId: {
-            type: String,
-            observer: '_chatMessagesIdChanged'
-          },
-          chatInfoId: {
-            type: String,
-            observer: '_chatInfoIdChanged'
-          },
           user: {
             type: Object,
             observer: '_userChanged'
           },
           usersInfo: {
-            type: Object,
-            observer: '_usersInfoChanged'
+            type: Object
+            //observer: '_usersInfoChanged'
+          },
+          chatMessagesId: {
+            type: String
+            //observer: '_chatMessagesIdChanged'
+          },
+          chatInfoId: {
+            type: String
+            //observer: '_chatInfoIdChanged'
           },
           chatInfo: {
             type: Object,
@@ -217,17 +215,8 @@
         };
       }
 
-      _chatMessagesIdChanged() {
-        console.log("ChatView._chatMessagesIdChanged: " + this.chatMessagesId);
-      }
-
-      _chatInfoIdChanged() {
-        console.log("ChatView._chatInfoIdChanged: " + this.chatInfoId);
-      }
-
       _userChanged(user) {
         console.log("ChatView._userChanged");
-        //console.log("ChatView._userChanged: " + JSON.stringify(user, null, 4));
 
         // As soon as we get the user - get the users info so we can 
         // learn more about them!
@@ -236,9 +225,17 @@
         }
       }
 
-      _usersInfoChanged(e) {
-        console.log("ChatView._usersInfoChanged: " + JSON.stringify(e, null, 4));
-      }
+      // _usersInfoChanged(e) {
+      //   console.log("ChatView._usersInfoChanged: " + JSON.stringify(e, null, 4));
+      // }
+
+      // _chatMessagesIdChanged() {
+      //   console.log("ChatView._chatMessagesIdChanged: " + this.chatMessagesId);
+      // }
+
+      // _chatInfoIdChanged() {
+      //   console.log("ChatView._chatInfoIdChanged: " + this.chatInfoId);
+      // }
 
       _chatInfoChanged(e) {
         console.log("ChatView._chatInfoChanged: " + JSON.stringify(e, null, 4));
@@ -261,13 +258,12 @@
           this.$.otherusersinfo.path = "/users/" + otherUsersId + "/info";
         }
       }
-
+      
       _otherUsersInfoChanged(usersInfo) {
         console.log("ChatView._otherUsersInfoChanged: " + JSON.stringify(usersInfo, null, 4));
 
 // TODO: Is this the best way to check for an empty JSON object?
         if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
-           console.log(" usersInfo = null");
           return;
         }
 
@@ -292,10 +288,6 @@
 
       _onTapSendDialogBtn() {
         console.log("ChatView._onTapSendDialogBtn: message = " + this.$.message.value);
-
-        // console.log("user " + JSON.stringify(this.user, null, 4));
-        // console.log("this.user.uid " + this.user.uid);
-        // console.log("this.user.displayName " + this.user.displayName);
 
         if(!this.$.message.value) {
           return;

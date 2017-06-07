@@ -32,7 +32,7 @@
       }
     </style>
 
-    <iron-ajax
+    <!--<iron-ajax
       id="requestHelloWorld"
       url="https://us-central1-polyn-3c431.cloudfunctions.net/helloWorld"
       method="GET"
@@ -51,7 +51,7 @@
       on-response="_handleTextParameterResponse"
       on-error="_handleTextParameterError"
       debounce-duration="300">
-    </iron-ajax>
+    </iron-ajax>-->
 
     <iron-ajax
       id="sendMessage"
@@ -67,8 +67,8 @@
 
     <div class="card">
       <h1>Firebase Functions</h1>
-      <paper-button on-tap="_onTapRequestText" raised>Request Text</paper-button>
-      <paper-button on-tap="_onTapSendTextParameter" raised>Send Text Parameter</paper-button>
+      <!--<paper-button on-tap="_onTapRequestText" raised>Request Text</paper-button>
+      <paper-button on-tap="_onTapSendTextParameter" raised>Send Text Parameter</paper-button>-->
       <paper-button on-tap="_onTapSendMessage" raised>Send Message</paper-button>
     </div>
 
@@ -88,54 +88,54 @@
         };
       }
 
-      ready() {
-        super.ready();
-      }
+      // ready() {
+      //   super.ready();
+      // }
 
-      _onTapRequestText() {
-        console.log("FunctionsView._onTapRequestText");
+      // _onTapRequestText() {
+      //   console.log("FunctionsView._onTapRequestText");
 
-        this.$.requestHelloWorld.generateRequest();
-      }
+      //   this.$.requestHelloWorld.generateRequest();
+      // }
 
-      _handleTextResponse(data) {
-        console.log("FunctionsView._handleTextResponse");
+      // _handleTextResponse(data) {
+      //   console.log("FunctionsView._handleTextResponse");
 
-        console.log("  response = " + data.detail.response);
-      }
+      //   console.log("  response = " + data.detail.response);
+      // }
 
-      _handleTextError(e) {
-        console.log("FunctionsView._handleTextError");
-        console.log("  status = ", e.status, e.statusText);
-      }
+      // _handleTextError(e) {
+      //   console.log("FunctionsView._handleTextError");
+      //   console.log("  status = ", e.status, e.statusText);
+      // }
 
-       _onTapSendTextParameter() {
-        console.log("FunctionsView._onTapSendTextParameter");
+      //  _onTapSendTextParameter() {
+      //   console.log("FunctionsView._onTapSendTextParameter");
 
-        var params = {
-          text: "something to uppercase!"
-        };
-        this.$.requestWithTextParameter.params = params;
+      //   var params = {
+      //     text: "something to uppercase!"
+      //   };
+      //   this.$.requestWithTextParameter.params = params;
 
-        // var body = {
-        //   text: "something to uppercase!"
-        // };
-        // this.$.requestWithTextParameter.body = JSON.stringify(body)
+      //   // var body = {
+      //   //   text: "something to uppercase!"
+      //   // };
+      //   // this.$.requestWithTextParameter.body = JSON.stringify(body)
 
-        this.$.requestWithTextParameter.generateRequest();
-      }
+      //   this.$.requestWithTextParameter.generateRequest();
+      // }
 
-      _handleTextParameterResponse(data) {
-        console.log("FunctionsView._handleTextParameterResponse");
+      // _handleTextParameterResponse(data) {
+      //   console.log("FunctionsView._handleTextParameterResponse");
 
-        //console.log(data.detail.response);
-        console.log("  status = " + data.detail.status);
-      }
+      //   //console.log(data.detail.response);
+      //   console.log("  status = " + data.detail.status);
+      // }
 
-      _handleTextParameterError(e) {
-        console.log("FunctionsView._handleTextParameterError");
-        console.log("  status = ", e.status, e.statusText);
-      }
+      // _handleTextParameterError(e) {
+      //   console.log("FunctionsView._handleTextParameterError");
+      //   console.log("  status = ", e.status, e.statusText);
+      // }
 
       _onTapSendMessage() {
 

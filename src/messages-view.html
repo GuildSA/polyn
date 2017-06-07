@@ -38,10 +38,7 @@
   <dom-repeat items="[[persistedChats]]" as="chat" initial-count="5">
     <template>
       <div class="card" on-tap="_onTappedMessage">
-        <!--<h2>[[chat.subject]]</h2>-->
-        <!--<p>buyer: [[chat.buyer]]</p>-->
         <p>Seller: [[chat.seller]]</p>
-        <!--<p>chatId: [[chat.chatId]]</p>-->
       </div>
     </template>
   </dom-repeat>
@@ -54,43 +51,20 @@
 
         static get properties() {
           return {
-            requestId: {
-              type: String,
-              observer: '_requestIdChanged'
-            },
             user: {
-              type: Object,
-              observer: '_userChanged'
+              type: Object
+            },
+            requestId: {
+              type: String
             }
-            // usersInfo: {
-            //   type: Object,
-            //   observer: '_usersInfoChanged'
-            // }
           };
-        }
-
-        _requestIdChanged() {
-          console.log("MessagesView._requestIdChanged: " + this.requestId);
-        }
-
-        _userChanged(user) {
-          console.log("MessagesView._userChanged");
         }
 
         _onTappedMessage(e) {
           console.log("MessagesView._onTappedMessage");
 
-          // Which index was clicked?
-          var index = e.model.index;
-          console.info(index + ' was clicked.');
+          const index = e.model.index;
 
-          // What object is stored at that index?
-          console.info(this.$.query.data[index]);
-
-          // What is the Firebase key for this data?
-          console.info(this.$.query.data[index].$key);
-
-          // Push the chat-view and pass the chatMessagesId.
           var polynApp = document.getElementById("polynApp");
           var chatView = polynApp.pushPageOnCurrentTab("chat-view");
           chatView.chatInfoId = this.$.query.data[index].$key;
