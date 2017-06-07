@@ -5,7 +5,6 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-request.html">
 <link rel="import" href="../bower_components/iron-iconset-svg/iron-iconset-svg.html">
-<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-behavior.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
@@ -76,15 +75,18 @@
         
       }
 
-      .sticky-btn {
-        @apply(--layout-flex);
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-        background-color: #70C187; 
+
+      #submit-request-container {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        @apply --layout-around-justified;
         color: white;
-        position: fixed;
-        bottom:0;
-        width: 100%;
+        background: #70C187;
+        border-radius: 5px;
+        max-width: 400px;
+        margin: auto;
+        position: sticky;
+        bottom: 0px;
       }
 
     </style>
@@ -151,11 +153,10 @@
       </div>
     </div>
   </div>
-  <div id="sticky-btn-container">
+
+  <div id="submit-request-container">
     <paper-button class="sticky-btn" on-tap="_onTapCreateMessage" icon="custom-icons:message" >Submit Your Request</paper-button>
   </div>
-
-    <paper-fab id="fab" icon="custom-icons:message" on-tap="_onTapCreateMessage"></paper-fab>
 
     <iron-ajax
       id="sendRequet"
