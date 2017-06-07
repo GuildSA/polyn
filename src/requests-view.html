@@ -43,12 +43,14 @@
 
     
   </style>
-  <div class="main-container">
-    <img src="images/svg/chatBubbles.svg">
-    <h3> Welcome to the Message Center!</h3>
-    <p> Tap the ‘Submit Request’ button to let your local record shops know you are looking for something amazing!</p>
-    <paper-button class="submit">Submit Your Request</paper-button>
-  </div>
+  <template is="dom-if" if="[[!hasMessages]]">
+    <div class="main-container">
+      <img src="images/svg/chatBubbles.svg">
+      <h3> Welcome to the Message Center!</h3>
+      <p> Tap the ‘Submit Request’ button to let your local record shops know you are looking for something amazing!</p>
+      <paper-button class="submit">Submit Your Request</paper-button>
+    </div>
+  </template>
 
   <firebase-auth
     id="auth" 
@@ -89,6 +91,10 @@
         return {
           user: {
             type: Object
+          },
+          hasMessages: {
+            type: String,
+            value: true
           }
         };
       }
