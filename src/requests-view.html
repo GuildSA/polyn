@@ -4,6 +4,8 @@
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="requests-view">
@@ -13,7 +15,40 @@
       display: block;
       padding: 10px;
     }
+
+    .main-container {
+      padding: 10px;
+      display: flex;
+      @apply --layout-vertical;
+      @apply --layout-center;
+    }
+
+    h3 {
+      font-family: Helvetica, sans-serif;
+      color: #70C187;
+    }
+
+    p {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #9B9B9B;
+    }
+
+    paper-button.submit {
+        background-color: #70C187;
+        color: white;
+        margin-left: 24px;
+        margin-right: 24px;
+        margin-bottom: 8px;
+    }
+
+    
   </style>
+  <div class="main-container">
+    <img src="images/svg/chatBubbles.svg">
+    <h3> Welcome to the Message Center!</h3>
+    <p> Tap the ‘Submit Request’ button to let your local record shops know you are looking for something amazing!</p>
+    <paper-button class="submit">Submit Your Request</paper-button>
+  </div>
 
   <firebase-auth
     id="auth" 
