@@ -2,9 +2,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="shared-styles.html">
 
@@ -40,9 +38,9 @@
         margin-right: 24px;
         margin-bottom: 8px;
     }
-
     
   </style>
+
   <template is="dom-if" if="[[!hasMessages]]">
     <div class="main-container">
       <img src="images/svg/chatBubbles.svg">
@@ -57,13 +55,6 @@
     app-name="polyn-app" 
     user="{{user}}">
   </firebase-auth>
-
-  <firebase-query
-    id="query"
-    app-name="polyn-app"
-    path="/users/[[user.uid]]/requests"
-    data="{{requests}}">
-  </firebase-query>
 
   <app-indexeddb-mirror
     session="[[user.uid]]"
@@ -90,11 +81,16 @@
       static get properties() {
         return {
           user: {
-            type: Object
+            type: Object,
+            observer: '_userChanged'
           },
           hasMessages: {
             type: String,
             value: false
+          },
+          requests: {
+            type: Array,
+            value: []
           }
         };
       }
@@ -106,6 +102,36 @@
         this.hasMessages = false;
       }
 
+      _userChanged(user) {
+        console.log("RequestsView._userChanged");
+        //console.log("user: " + JSON.stringify(user, null, 4));
+
+        if(user != null) {
+
+          var self = this;
+
+          firebase.app("polyn-app").database().ref("/users/" + user.uid + "/requests").once('value').then(function(snapshot) {
+
+            snapshot.forEach(function(childSnapshot) {
+
+                var childKey = childSnapshot.key;
+                var childData = childSnapshot.val();
+                //console.log("childKey = " + childKey);
+                //console.log("childData: " + JSON.stringify(childData, null, 4));
+
+                // Manually add the key for this data so we can pass it forward if selected.
+                childData.key = childKey;
+
+                self.push('requests', childData);
+              });
+
+              if(self.requests.length > 0) {
+                self.hasMessages = true;
+              }
+          });
+        }
+      }
+
       _onTappedRequest(e) {
         console.log("RequestsView._onTappedRequest");
 
@@ -115,24 +141,26 @@
 
         const index = e.model.index;
 
+        //console.log("this.requests[index]: " + JSON.stringify(this.requests[index], null, 4));
+
         // Did the user create this request - if not - the current user is a seller.
-        if(this.user.uid != this.$.query.data[index].buyerId) {
+        if(this.user.uid != this.requests[index].buyerId) {
 
           // Have we already created a chat session with this buyer?
-          if(this.$.query.data[index].chatId) {
+          if(this.requests[index].chatId) {
 
             // We've already created a chatId for this buyer - so load the chat session.
             var polynApp = document.getElementById("polynApp");
             var chatView = polynApp.pushPageOnCurrentTab("chat-view");
-            chatView.chatInfoId = this.$.query.data[index].$key;
-            chatView.chatMessagesId = this.$.query.data[index].chatId;
+            chatView.chatInfoId = this.requests[index].key;
+            chatView.chatMessagesId = this.requests[index].chatId;
 
           } else {
 
             // No chat ID yet.
             var polynApp = document.getElementById("polynApp");
             var chatView = polynApp.pushPageOnCurrentTab("chat-view");
-            chatView.chatInfoId = this.$.query.data[index].$key
+            chatView.chatInfoId = this.requests[index].key
           }
 
         } else {
@@ -140,11 +168,11 @@
           // The current user is the buyer who made this request!
 
           // If there are any chats from any sellers - list them.
-          if(this.$.query.data[index].chats) {
+          if(this.requests[index].chats) {
             
             var polynApp = document.getElementById("polynApp");
             var messagesView = polynApp.pushPageOnCurrentTab("messages-view");
-            messagesView.requestId = this.$.query.data[index].$key;
+            messagesView.requestId = this.requests[index].key;
 
           } else {
             console.log("No sellers have created a chat session yet.");
