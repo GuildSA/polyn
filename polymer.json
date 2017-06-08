@@ -15,6 +15,7 @@
     "src/pageanim-view.html",
     "src/basicanim-view.html",
     "src/analytics-view.html",
+    "src/sellertest-view.html",
     "src/error404-view.html"
   ],
   "sources": [

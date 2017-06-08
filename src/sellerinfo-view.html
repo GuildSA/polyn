@@ -3,14 +3,22 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="sellerinfo-view">
   <template>
-    <style include="shared-styles">
+    <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
-        display: block;
-        padding: 10px;
+        display: flex;
+      }
+
+      paper-button.sign-in {
+        background-color: var(--app-primary-color);
+        color: white;
+        margin-left: 24px;
+        margin-right: 24px;
+        margin-bottom: 8px;
       }
     </style>
 
@@ -31,6 +39,14 @@
       id="sellersinfo"
       data="{{sellersInfo}}">
     </firebase-document>
+
+    <div class="flex layout vertical">
+      <div class="card">
+        <div class="layout horizontal center-justified">
+          <paper-button id="registerbusiness" class="sign-in" on-tap="_onTapRegisterBusiness">Register Your Business</paper-button>
+        </div>
+      </div>
+    </div>
 
   </template>
 
@@ -78,6 +94,129 @@
 
       _sellersInfoChanged(e) {
         console.log("SellerInfoView._sellersInfoChanged: " + JSON.stringify(e, null, 4));
+      }
+
+      _onTapRegisterBusiness() {
+        console.log("SellerInfoView._onTapRegisterBusiness");
+        this._registerNewSeller("collectables/sub/vinylRecords");
+      }
+
+      _registerNewSeller(targetCategory) {
+        console.log("ProfileView._registerNewSeller: " + targetCategory);
+
+        if(!this.user.uid) {
+          console.log("  Error: User is not defined!");
+        }
+
+        var self = this;
+
+        // Get the 'info' key under the user's id, so we can check for a 'sellerId'.
+        const refPathInfo = "/users/" + this.user.uid + "/info";
+
+        firebase.app("polyn-app").database().ref(refPathInfo).once('value').then(function(snapshot) {
+
+          var usersInfo = snapshot.val();
+          //console.log("  sellerId: " + usersInfo.sellerId);
+
+          // If the user doesn't already have a 'sellerId' in 'info' - create one.
+          if(!usersInfo.sellerId) {
+
+            // Add the new seller under the 'sellers' key
+            var newSellerKey = firebase.app("polyn-app").database().ref().child("sellers/").push().key;
+            //console.log("  newKey: " + newSellerKey);
+
+            var newSellerData = {
+              name: usersInfo.name,
+              email: usersInfo.email
+            };
+
+            firebase.app("polyn-app").database().ref("sellers/" + newSellerKey).set(newSellerData).then(function() {
+
+              // Record the new 'sellerId' under the user's 'info'.
+              const refPathSellerId = refPathInfo + "/sellerId";
+              firebase.app("polyn-app").database().ref(refPathSellerId).set(newSellerKey);
+
+              self._verifySellerOnCategory(targetCategory);
+            });
+          } else {
+            console.log("  " + self.user.uid + " has already been added as a seller.");
+          }
+        });
+      }
+
+     _verifySellerOnCategory(targetCategory) {
+        console.log("ProfileView._verifySellerOnCategory: " + targetCategory);
+
+        if(!this.user.uid) {
+          console.log("  Error: User is not defined!");
+        }
+
+        var self = this;
+
+        // Get the 'info' key under the user's id, so we can check for a 'sellerId'.
+        const refPathCategories = "/users/" + this.user.uid + "/info/categories";
+
+        firebase.app("polyn-app").database().ref(refPathCategories).once('value').then(function(snapshot) {
+
+          var categories = snapshot.val();
+          //console.log("  categories: " + JSON.stringify(categories, null, 4));
+
+          if(categories == null) {
+
+            // info/categories doesn't even exist - just add it to the user!
+            self._addSellerToCategory(targetCategory);
+
+          } else {
+
+            var foundCategory = false;
+
+            for(var key in categories) {
+
+              if(categories.hasOwnProperty(key)) {
+                //console.log("  path = " + categories[key].path);
+                //console.log("  sellersKey = " + categories[key].sellersKey);
+                if(categories[key].path == targetCategory) {
+                  foundCategory = true;
+                }
+              }
+            }
+
+            if(foundCategory) {
+              console.log("  The users is already subscribed to this category!");
+            } else {
+              self._addSellerToCategory(targetCategory);
+            }
+          }
+        });
+      }
+
+      _addSellerToCategory(targetCategory) {
+        console.log("ProfileView._addSellerToCategory: " + targetCategory);
+
+        if(!this.user.uid) {
+          console.log("  Error: User is not defined!");
+        }
+
+        var self = this;
+
+        // Add the user's id under the category that they wish to listen to!
+        const refPathRequestCategory = "requests/" + targetCategory + "/sellers";
+        var newSellersKey = firebase.app("polyn-app").database().ref().child(refPathRequestCategory).push().key;
+        console.log("  newSellersKey: " + newSellersKey);
+
+        firebase.app("polyn-app").database().ref(refPathRequestCategory + "/" + newSellersKey).set(this.user.uid);
+
+        const refPathCategories = "/users/" + this.user.uid + "/info/categories";
+        var newCategoryKey = firebase.app("polyn-app").database().ref().child(refPathCategories).push().key;
+
+        var categoryData = {
+          path: targetCategory,
+          sellersKey: newSellersKey
+        };
+
+        firebase.app("polyn-app").database().ref(refPathCategories + "/" + newCategoryKey).set(categoryData).then(function() {
+          console.log(" " + self.user.uid + " was added to category!");
+        });
       }
     }
 

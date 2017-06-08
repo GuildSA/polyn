@@ -33,6 +33,7 @@
 <link rel="lazy-import" href="basicanim-view.html">
 <link rel="lazy-import" href="geofire-view.html">
 <link rel="lazy-import" href="analytics-view.html">
+<link rel="lazy-import" href="sellertest-view.html">
 
 <dom-module id="polyn-app">
   <template>
@@ -119,6 +120,7 @@
         <app-toolbar>Research</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="geofire-view" on-tap="_onTapGeofireView">Geofire</a>
+          <a name="sellertest-view" on-tap="_onTapSellerTestView">Seller Test</a>
           <a name="messaging-view" on-tap="_onTapMessagingView">Messaging</a>
           <a name="functions-view" on-tap="_onTapFunctionsView">Cloud Functions</a>
           <a name="ajax-view" on-tap="_onTapAjaxView">AJAX + Spinner</a>
@@ -180,6 +182,7 @@
           <pageanim-view name="pageanim-view"></pageanim-view>
           <basicanim-view name="basicanim-view"></basicanim-view>
           <geofire-view name="geofire-view"></geofire-view>
+          <sellertest-view name="sellertest-view"></sellertest-view>
         </iron-pages>
 
       </app-header-layout>
@@ -288,6 +291,13 @@
 
       _onTapGeofireView() {
         this.page = 'geofire-view';
+        if(!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      }
+
+      _onTapSellerTestView() {
+        this.page = 'sellertest-view';
         if(!this.$.drawer.persistent) {
           this.$.drawer.close();
         }

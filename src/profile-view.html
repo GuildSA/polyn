@@ -66,10 +66,6 @@
         margin-bottom: 8px;
       }
 
-     /*.bottom {
-        margin-top: auto
-      }*/
-
     </style>
 
     <firebase-auth
@@ -82,20 +78,18 @@
     </firebase-auth>
 
     <div class="flex layout vertical">
-
       <div class="card">
+
         <template is="dom-if" if="[[isAnonymous]]">
-            <div class="layout horizontal center-justified">
-              <iron-image sizing="contain" id="profile-image" alt="Anonymous Profile Image." src="./images/anonymous_profile.png"></iron-image>
-            </div>
-            <div class="layout vertical">
-              <paper-input id="email" label="Email"></paper-input>
-            </div>
-                <div class="layout vertical">
-                 <paper-input id="password" label="Password"></paper-input>
-                </div>
-              </div>
-            </div>
+          <div class="layout horizontal center-justified">
+            <iron-image sizing="contain" id="profile-image" alt="Anonymous Profile Image." src="./images/anonymous_profile.png"></iron-image>
+          </div>
+          <div class="layout vertical">
+            <paper-input id="email" label="Email"></paper-input>
+          </div>
+          <div class="layout vertical">
+            <paper-input id="password" label="Password"></paper-input>
+          </div>
         </template>
 
         <template is="dom-if" if="[[!isAnonymous]]">
@@ -107,31 +101,28 @@
           </div>
         </template>
       
-
-      <template is="dom-if" if="[[isAnonymous]]">
-        <div class="layout vertical">
-          <paper-button class="sign-in" id="continue-btn">Continue</paper-button>
-          <div class="layout horizontal center-justified">
-           <h4>OR</h4>
-          </div>
-          <paper-button class="sign-in" id="google-btn" on-tap="_onTapSignInUsingGmail">Sign In Using Gmail</paper-button>
-          <paper-button class="sign-in" id="facebook-btn" on-tap="_onTapSignInUsingFacebook">Sign In Using Facebook</paper-button>
-          <!--<paper-button class="sign-in" id="twitter-btn" on-tap="_onTapSignInUsingTwitter" raised>Sign In Using Twitter</paper-button>-->
-           </div>
+        <template is="dom-if" if="[[isAnonymous]]">
+          <div class="layout vertical">
+            <paper-button class="sign-in" id="continue-btn">Continue</paper-button>
             <div class="layout horizontal center-justified">
-              <div id="tos">Creating an account means you agree with our Terms of Service, Privacy Policy</div>
+              <h4>OR</h4>
             </div>
-       
-      </template>
+            <paper-button class="sign-in" id="google-btn" on-tap="_onTapSignInUsingGmail">Sign In Using Gmail</paper-button>
+            <paper-button class="sign-in" id="facebook-btn" on-tap="_onTapSignInUsingFacebook">Sign In Using Facebook</paper-button>
+            <!--<paper-button class="sign-in" id="twitter-btn" on-tap="_onTapSignInUsingTwitter" raised>Sign In Using Twitter</paper-button>-->
+          </div>
+          <div class="layout horizontal center-justified">
+            <div id="tos">Creating an account means you agree with our Terms of Service, Privacy Policy</div>
+          </div>
+        </template>
 
-      <template is="dom-if" if="[[!isAnonymous]]">
-        <div class="layout vertical">
-          <paper-button id="registerbusiness" class="sign-in" on-tap="_onTapRegisterBusiness">Register Your Business</paper-button>
-          <paper-button class="sign-in" on-tap="_onTapAddToCategory">Add Business To Category</paper-button>
-          <paper-button class="sign-in" on-tap="_onTapRemoveFromCategory" >Remove Business From Category</paper-button>
-          <paper-button class="sign-in" on-tap="_onTapSignOut">Sign Out</paper-button>
-        </div>
-      </template>
+        <template is="dom-if" if="[[!isAnonymous]]">
+          <div class="layout vertical">
+            <paper-button id="registerbusiness" class="sign-in" on-tap="_onTapRegisterBusiness">Register Your Business</paper-button>
+            <paper-button class="sign-in" on-tap="_onTapSignOut">Sign Out</paper-button>
+          </div>
+        </template>
+
       </div>
     </div>
 
@@ -168,7 +159,7 @@
       }
 
       _handleError(e, err) {
-          alert(err);
+        alert(err);
       }
 
       _userChanged(user) {
@@ -295,193 +286,9 @@
 
       _onTapRegisterBusiness() {
         console.log("ProfileView._onTapRegisterBusiness");
-        this._registerNewSeller("collectables/sub/vinylRecords");
-      }
 
-      _registerNewSeller(targetCategory) {
-        console.log("ProfileView._registerNewSeller: " + targetCategory);
-
-        if(!this.user.uid) {
-          console.log("  Error: User is not defined!");
-        }
-
-        var self = this;
-
-        // Get the 'info' key under the user's id, so we can check for a 'sellerId'.
-        const refPathInfo = "/users/" + this.user.uid + "/info";
-
-        firebase.app("polyn-app").database().ref(refPathInfo).once('value').then(function(snapshot) {
-
-          var usersInfo = snapshot.val();
-          //console.log("  sellerId: " + usersInfo.sellerId);
-
-          // If the user doesn't already have a 'sellerId' in 'info' - create one.
-          if(!usersInfo.sellerId) {
-
-            // Add the new seller under the 'sellers' key
-            var newSellerKey = firebase.app("polyn-app").database().ref().child("sellers/").push().key;
-            //console.log("  newKey: " + newSellerKey);
-
-            var newSellerData = {
-              name: usersInfo.name,
-              email: usersInfo.email
-            };
-
-            firebase.app("polyn-app").database().ref("sellers/" + newSellerKey).set(newSellerData).then(function() {
-
-              // Record the new 'sellerId' under the user's 'info'.
-              const refPathSellerId = refPathInfo + "/sellerId";
-              firebase.app("polyn-app").database().ref(refPathSellerId).set(newSellerKey);
-
-              self._verifySellerOnCategory(targetCategory);
-            });
-          } else {
-            console.log("  " + self.user.uid + " has already been added as a seller.");
-          }
-        });
-      }
-
-     _verifySellerOnCategory(targetCategory) {
-        console.log("ProfileView._verifySellerOnCategory: " + targetCategory);
-
-        if(!this.user.uid) {
-          console.log("  Error: User is not defined!");
-        }
-
-        var self = this;
-
-        // Get the 'info' key under the user's id, so we can check for a 'sellerId'.
-        const refPathCategories = "/users/" + this.user.uid + "/info/categories";
-
-        firebase.app("polyn-app").database().ref(refPathCategories).once('value').then(function(snapshot) {
-
-          var categories = snapshot.val();
-          //console.log("  categories: " + JSON.stringify(categories, null, 4));
-
-          if(categories == null) {
-
-            // info/categories doesn't even exist - just add it to the user!
-            self._addSellerToCategory(targetCategory);
-
-          } else {
-
-            var foundCategory = false;
-
-            for(var key in categories) {
-
-              if(categories.hasOwnProperty(key)) {
-                //console.log("  path = " + categories[key].path);
-                //console.log("  sellersKey = " + categories[key].sellersKey);
-                if(categories[key].path == targetCategory) {
-                  foundCategory = true;
-                }
-              }
-            }
-
-            if(foundCategory) {
-              console.log("  The users is already subscribed to this category!");
-            } else {
-              self._addSellerToCategory(targetCategory);
-            }
-          }
-        });
-      }
-
-      _onTapAddToCategory() {
-        console.log("ProfileView._onTapAddToCategory");
-        this._verifySellerOnCategory("collectables/sub/vinylRecords");
-      }
-
-      _addSellerToCategory(targetCategory) {
-        console.log("ProfileView._addSellerToCategory: " + targetCategory);
-
-        if(!this.user.uid) {
-          console.log("  Error: User is not defined!");
-        }
-
-        var self = this;
-
-        // Add the user's id under the category that they wish to listen to!
-        const refPathRequestCategory = "requests/" + targetCategory + "/sellers";
-        var newSellersKey = firebase.app("polyn-app").database().ref().child(refPathRequestCategory).push().key;
-        console.log("  newSellersKey: " + newSellersKey);
-
-        firebase.app("polyn-app").database().ref(refPathRequestCategory + "/" + newSellersKey).set(this.user.uid);
-
-        const refPathCategories = "/users/" + this.user.uid + "/info/categories";
-        var newCategoryKey = firebase.app("polyn-app").database().ref().child(refPathCategories).push().key;
-
-        var categoryData = {
-          path: targetCategory,
-          sellersKey: newSellersKey
-        };
-
-        firebase.app("polyn-app").database().ref(refPathCategories + "/" + newCategoryKey).set(categoryData).then(function() {
-          console.log(" " + self.user.uid + " was added to category!");
-        });
-      }
-
-      _onTapRemoveFromCategory() {
-        console.log("ProfileView._onTapRemoveFromCategory");
-        this._removeFromCategory("collectables/sub/vinylRecords");
-      }
-
-      _removeFromCategory(targetCategory) {
-        console.log("ProfileView._removeFromCategory: " + targetCategory);
-
-        if(!this.user.uid) {
-          console.log("  Error: User is not defined!");
-        }
-
-        var self = this;
-
-        // Get the 'info' key under the user's id, so we can check for a 'sellerId'.
-        const refPathCategories = "/users/" + this.user.uid + "/info/categories";
-
-        firebase.app("polyn-app").database().ref(refPathCategories).once('value').then(function(snapshot) {
-
-          var categories = snapshot.val();
-
-          //console.log("  categories: " + JSON.stringify(categories, null, 4));
-
-          if(categories == null) {
-
-            console.log("  The user has no categories key! Removal pointless.");
-
-          } else {
-
-            var foundCategory = false;
-            var requestKeyToRemove = null;
-            var categoryKeyToRemove = null;
-
-            for(var key in categories) {
-
-              if(categories.hasOwnProperty(key)) {
-                //console.log("  key = " + key);
-                //console.log("    path = " + categories[key].path);
-                //console.log("    sellersKey = " + categories[key].sellersKey);
-                if(categories[key].path == targetCategory) {
-                  foundCategory = true;
-                  requestKeyToRemove = categories[key].sellersKey;
-                  categoryKeyToRemove = key;
-                }
-              }
-            }
-
-            if(foundCategory) {
-
-              // Delete sellers key from requests!
-              const refPathRequestCategory = "requests/" + targetCategory + "/sellers";
-              firebase.app("polyn-app").database().ref().child(refPathRequestCategory + "/" + requestKeyToRemove).remove();
-
-              // Delete entry key from info/categories!
-              firebase.app("polyn-app").database().ref().child(refPathCategories + "/" + categoryKeyToRemove).remove();
-              
-            } else {
-              console.log(" " + self.user.uid + " has already been unsubscribed from this category!!");
-            }
-          }
-        });
+        var polynApp = document.getElementById("polynApp");
+        var sellerInfoView = polynApp.pushPageOnCurrentTab("sellerinfo-view");
       }
     }
 
