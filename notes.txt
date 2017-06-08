@@ -1,6 +1,17 @@
 
- -- Firebase --
 
+
+ -- Geofire --
+
+
+ Unable to find a suitable version for firebase, please choose one by typing one of the numbers below:
+    1) firebase#^2.4.0 || 3.x.x which resolved to 3.9.0 and is required by geofire#4.1.2
+    2) firebase#^4.1.1 which resolved to 4.1.2 and is required by polymerfire#2.1.0
+
+Prefix the choice with ! to persist it to bower.json
+
+
+ -- Firebase --
 
 firebase deploy --only hosting
 firebase deploy --only functions
@@ -15,7 +26,7 @@ OLD RULES
   }
 }
 
-NEW RULES with optimization added for sellers_by_location
+NEW RULES with optimization example added for sellers_by_location
 
 {
   "rules": {
@@ -27,24 +38,17 @@ NEW RULES with optimization added for sellers_by_location
   }
 }
 
+NEW RULES with optimization added for nested entry for vinylRecords
 
 {
   "rules": {
+
     ".read": "auth != null",
     ".write": "auth != null",
 
     "locations": {
-      ".read": "auth != null",
-      ".write": "auth != null",
-
       "collectables": {
-        ".read": "auth != null",
-        ".write": "auth != null",
-
         "sub": {
-          ".read": "auth != null",
-          ".write": "auth != null",
-
           "vinylRecords": {
             ".indexOn": "g"
           } 
