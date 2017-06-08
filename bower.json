@@ -34,5 +34,8 @@
   "devDependencies": {
     "web-component-tester": "6.0.0"
   },
-  "private": true
+  "private": true,
+  "resolutions": {
+    "firebase": "^4.1.1"
+  }
 }
