@@ -1,0 +1,86 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="sellerinfo-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+    </style>
+
+    <firebase-auth 
+      id="auth" 
+      app-name="polyn-app" 
+      user="{{user}}">
+    </firebase-auth>
+
+    <firebase-document
+      app-name="polyn-app"
+      id="usersinfo"
+      data="{{usersInfo}}">
+    </firebase-document>
+
+    <firebase-document
+      app-name="polyn-app"
+      id="sellersinfo"
+      data="{{sellersInfo}}">
+    </firebase-document>
+
+  </template>
+
+  <script>
+    class SellerInfoView extends Polymer.GestureEventListeners(Polymer.Element) {
+
+      static get is() { return 'sellerinfo-view'; }
+
+      static get properties() {
+        return {
+          user: {
+            type: Object,
+            observer: '_userChanged'
+          },
+          usersInfo: {
+            type: String,
+            observer: '_usersInfoChanged'
+          },
+          sellersInfo: {
+            type: String,
+            observer: '_sellersInfoChanged'
+          }
+        };
+      }
+
+      _userChanged(user) {
+        console.log("SellerInfoView._userChanged");
+        //console.log("SellerInfoView._userChanged: " + JSON.stringify(user, null, 4));
+
+        // As soon as we get the user - get the users info so we can learn more about them!
+        if(user && user.uid) {
+          this.$.usersinfo.path = "/users/" + user.uid + "/info";
+        }
+      }
+
+      _usersInfoChanged(e) {
+        console.log("SellerInfoView._usersInfoChanged: " + JSON.stringify(e, null, 4));
+
+        // As soon as we get the user's info - check for a sellerId. If a sellerId is 
+        // present - get the users seller info so we can learn more about their business!
+        if(this.usersInfo.sellerId) {
+          this.$.sellersinfo.path = "/sellers/" + this.usersInfo.sellerId;
+        }
+      }
+
+      _sellersInfoChanged(e) {
+        console.log("SellerInfoView._sellersInfoChanged: " + JSON.stringify(e, null, 4));
+      }
+    }
+
+    window.customElements.define(SellerInfoView.is, SellerInfoView);
+  </script>
+</dom-module>

@@ -5,6 +5,7 @@
     "src/home-view.html",
     "src/messages-view.html",
     "src/profile-view.html",
+    "src/sellerinfo-view.html",
     "src/chat-view.html",
     "src/business-view.html",
     "src/item-view.html",
@@ -13,7 +14,7 @@
     "src/messaging-view.html",
     "src/pageanim-view.html",
     "src/basicanim-view.html",
-    "src/chatstart-view.html",
+    "src/analytics-view.html",
     "src/error404-view.html"
   ],
   "sources": [
