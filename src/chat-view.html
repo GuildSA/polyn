@@ -103,7 +103,7 @@
     <firebase-document
       app-name="polyn-app"
       id="chatinfo"
-      path="/users/[[user.uid]]/requests/[[chatInfoId]]"
+      path="/users/[[user.uid]]/requests/[[requestId]]"
       data="{{chatInfo}}">
     </firebase-document>
 
@@ -192,15 +192,12 @@
           },
           usersInfo: {
             type: Object
-            //observer: '_usersInfoChanged'
           },
           chatMessagesId: {
             type: String
-            //observer: '_chatMessagesIdChanged'
           },
-          chatInfoId: {
+          requestId: {
             type: String
-            //observer: '_chatInfoIdChanged'
           },
           chatInfo: {
             type: Object,
@@ -227,18 +224,6 @@
           this.$.usersinfo.path = "/users/" + user.uid + "/info";
         }
       }
-
-      // _usersInfoChanged(e) {
-      //   console.log("ChatView._usersInfoChanged: " + JSON.stringify(e, null, 4));
-      // }
-
-      // _chatMessagesIdChanged() {
-      //   console.log("ChatView._chatMessagesIdChanged: " + this.chatMessagesId);
-      // }
-
-      // _chatInfoIdChanged() {
-      //   console.log("ChatView._chatInfoIdChanged: " + this.chatInfoId);
-      // }
 
       _chatInfoChanged(e) {
         console.log("ChatView._chatInfoChanged: " + JSON.stringify(e, null, 4));
@@ -308,7 +293,7 @@
             this.chatMessagesId = newChatMessageKey;
 
             // Save the chatMessagesId back to the chat entry.
-            firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/requests/" + this.chatInfoId + "/chatId").set(newChatMessageKey);
+            firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/requests/" + this.requestId + "/chatId").set(newChatMessageKey);
 
 // console.log("this.chatInfo.buyerId = " + this.chatInfo.buyerId);
 // console.log("this.chatInfo.requestId = " + this.chatInfo.requestId);

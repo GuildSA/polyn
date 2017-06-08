@@ -46,31 +46,30 @@
 
   </template>
 
+  <script>
+    class MessagesView extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'messages-view'; }
 
-    <script>
-      class MessagesView extends Polymer.GestureEventListeners(Polymer.Element) {
-        static get is() { return 'messages-view'; }
+      static get properties() {
+        return {
+          user: {
+            type: Object
+          },
+          requestId: {
+            type: String
+          }
+        };
+      }
 
-        static get properties() {
-          return {
-            user: {
-              type: Object
-            },
-            requestId: {
-              type: String
-            }
-          };
-        }
+      _onTappedMessage(e) {
+        console.log("MessagesView._onTappedMessage");
 
-        _onTappedMessage(e) {
-          console.log("MessagesView._onTappedMessage");
+        const index = e.model.index;
 
-          const index = e.model.index;
-
-          var polynApp = document.getElementById("polynApp");
-          var chatView = polynApp.pushPageOnCurrentTab("chat-view");
-          chatView.chatInfoId = this.$.query.data[index].$key;
-          chatView.chatMessagesId = this.$.query.data[index].chatId;
+        var polynApp = document.getElementById("polynApp");
+        var chatView = polynApp.pushPageOnCurrentTab("chat-view");
+        chatView.requestId = this.requestId;
+        chatView.chatMessagesId = this.$.query.data[index].chatId;
       }
     }
 
