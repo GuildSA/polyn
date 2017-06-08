@@ -191,21 +191,22 @@
             observer: '_userChanged'
           },
           usersInfo: {
-            type: Object
+            type: Object,
+            observer: '_usersInfoChanged'
           },
-          chatMessagesId: {
-            type: String
+          otherUsersInfo: {
+            type: Object,
+            observer: '_otherUsersInfoChanged'
           },
           requestId: {
+            type: String
+          },
+          chatMessagesId: {
             type: String
           },
           chatInfo: {
             type: Object,
             observer: '_chatInfoChanged'
-          },
-          otherUsersInfo: {
-            type: Object,
-            observer: '_otherUsersInfoChanged'
           },
           loading: {
             type: Boolean,
@@ -222,6 +223,20 @@
         // learn more about them!
         if(user && user.uid) {
           this.$.usersinfo.path = "/users/" + user.uid + "/info";
+        }
+      }
+
+      _usersInfoChanged(usersInfo) {
+        console.log("ChatView._usersInfoChanged");
+
+// TODO: Is this the best way to check for an empty JSON object?
+        if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
+          return;
+        }
+
+        // If the user has no token - we should prompt for permisssion!
+        if(!usersInfo.token) {
+          this._requestNotificationPermission();
         }
       }
 
@@ -247,18 +262,9 @@
         }
       }
       
-      _otherUsersInfoChanged(usersInfo) {
-        console.log("ChatView._otherUsersInfoChanged: " + JSON.stringify(usersInfo, null, 4));
+      _otherUsersInfoChanged(otherUsersInfo) {
+        console.log("ChatView._otherUsersInfoChanged: " + JSON.stringify(otherUsersInfo, null, 4));
 
-// TODO: Is this the best way to check for an empty JSON object?
-        if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
-          return;
-        }
-
-        // If the user has no token - we should prompt for permisssion!
-        if(!usersInfo.token) {
-          this._requestNotificationPermission();
-        }
       }
 
       _requestNotificationPermission() {
@@ -266,12 +272,12 @@
 
         this.$.messaging.activate();
         this.$.messaging.requestPermission()
-        .then(() => {
-          console.log('Notification Message permission granted!');
-        })
-        .catch((err) => {
-          console.log('Notification Message permission denied!');
-        });
+          .then(() => {
+            console.log('Notification Message permission granted!');
+          })
+          .catch((err) => {
+            console.log('Notification Message permission denied!');
+          });
       }
 
       _onTapSendDialogBtn() {
