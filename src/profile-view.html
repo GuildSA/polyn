@@ -25,7 +25,7 @@
       }
 
       paper-button.sign-in {
-        background-color: var(--app-primary-color);
+        background-color: #70C187;
         color: white;
         margin-left: 24px;
         margin-right: 24px;
@@ -53,6 +53,14 @@
         color: white;
       }
 
+      #sign-out-btn {
+        background-color: var(--app-primary-color);
+        color: white;
+        margin-left: 24px;
+        margin-right: 24px;
+        margin-bottom: 8px;
+      }
+
       #twitter-btn {
         background-color: #0084B4;
         color: white;
@@ -77,7 +85,7 @@
       on-error="_handleError">
     </firebase-auth>
 
-    <div class="flex layout vertical">
+    <div class="flex layout horizontal center-justified">
       <div class="card">
 
         <template is="dom-if" if="[[isAnonymous]]">
@@ -119,7 +127,7 @@
         <template is="dom-if" if="[[!isAnonymous]]">
           <div class="layout vertical">
             <paper-button id="registerbusiness" class="sign-in" on-tap="_onTapRegisterBusiness">Register Your Business</paper-button>
-            <paper-button class="sign-in" on-tap="_onTapSignOut">Sign Out</paper-button>
+            <paper-button id="sign-out-btn" on-tap="_onTapSignOut">Sign Out</paper-button>
           </div>
         </template>
 

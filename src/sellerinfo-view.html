@@ -14,12 +14,23 @@
       }
 
       paper-button.sign-in {
-        background-color: var(--app-primary-color);
+        background-color: #70C187;
         color: white;
         margin-left: 24px;
         margin-right: 24px;
+        margin-top: 8px;
         margin-bottom: 8px;
       }
+
+      h1 {
+        color: grey;
+      }
+
+      paper-input {
+        --paper-input-container-focus-color: #70C187;
+      }
+
+      
     </style>
 
     <firebase-auth 
@@ -40,10 +51,16 @@
       data="{{sellersInfo}}">
     </firebase-document>
 
-    <div class="flex layout vertical">
+    <div class="flex layout horizontal center-justified">
       <div class="card">
-        <div class="layout horizontal center-justified">
-          <paper-button id="registerbusiness" class="sign-in" on-tap="_onTapRegisterBusiness">Register Your Business</paper-button>
+        <div class="layout vertical center-justified">
+            <center> <h1>Create a business account</h1> </center>
+            <paper-input label="Business name"></paper-input>
+            <paper-input label="Business email"></paper-input>
+            <paper-input label="Business type"></paper-input>
+            <paper-input label="Phone number"></paper-input>
+            <paper-input label="Website"></paper-input>
+          <paper-button id="registerbusiness" class="sign-in" on-tap="_onTapRegisterBusiness" raised>Complete Signup</paper-button>
         </div>
       </div>
     </div>
