@@ -17,10 +17,16 @@
 
 <dom-module id="home-view">
   <template>
-    <style include="shared-styles">
+    <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
         display: block;
         padding: 0px;
+      }
+
+      .business-image {
+        width: 75px;
+        height: 75px;
+        border-radius: 50%;
       }
 
       .item {
@@ -106,8 +112,58 @@
 
     <paper-spinner id="spinner" active="[[loading]]" active></paper-spinner>
 
+    <div class="flex layout horizontal center-justified">
+     <div class="card"  on-tap="_onTapBusiness">
+      <div class="layout horizontal">
+       <iron-image style="background-color: lightgray;" sizing="cover" class="business-image" preload fade src="images/RecordStoreDayLogo.jpg" on-tap="_onTapBusiness" ></iron-image>
+       
+        <!-- Middle Flex Box Vertical -->
+        <div class="flex layout vertical ">
+         <h1>Goods Records</h1>
+          <p class="description">This is a short description of the record store.</p>
+            <div class="layout horizontal">
+              <p><paper-icon-button icon="custom-icons:near-me"></paper-icon-button>1.2 miles away</p> 
+              <p><paper-icon-button icon="custom-icons:phonelink-ring"></paper-icon-button></p>
+              <p><paper-icon-button icon="custom-icons:web"></paper-icon-button></p>
+            </div>
+          </div>
+
+        </div>
+        <!--<div id="submit-request-container">
+          <paper-button class="sticky-btn" on-tap="_onTapCreateMessage" icon="custom-icons:message" >Submit Your Request</paper-button>
+        </div>-->
+      </div>
+    </div>
+
+
+
+     <div class="flex layout horizontal center-justified">
+     <div class="card"  on-tap="_onTapBusiness">
+      <div class="layout horizontal">
+       <iron-image style="background-color: lightgray;" sizing="cover" class="business-image" preload fade src="images/RecordStoreDayLogo.jpg" on-tap="_onTapBusiness" ></iron-image>
+       
+        <!-- Middle Flex Box Vertical -->
+        <div class="flex layout vertical">
+         <h1>Spinster Records</h1>
+          <p class="description">This is a short description of the record store.</p>
+            <div class="layout horizontal">
+              <p><paper-icon-button icon="custom-icons:near-me"></paper-icon-button>1.2 miles away</p> 
+              <p><paper-icon-button icon="custom-icons:phonelink-ring"></paper-icon-button></p>
+              <p><paper-icon-button icon="custom-icons:web"></paper-icon-button></p>
+            </div>
+          </div>
+
+        </div>
+        <!--<div id="submit-request-container">
+          <paper-button class="sticky-btn" on-tap="_onTapCreateMessage" icon="custom-icons:message" >Submit Your Request</paper-button>
+        </div>-->
+      </div>
+    </div>
+
+
+
     <!-- TODO: We can use a dom-repeat for these business-cards -->
-    <div class="main-container">
+    <!--<div class="main-container">
       <div class="card">
         <div class="business-image item">
           <iron-image style="height:25vh; background-color: lightgray;" sizing="cover" class="profile-pic" preload fade src="images/RecordStoreDayLogo.jpg" class="item" on-tap="_onTapBusiness" ></iron-image>
@@ -153,7 +209,7 @@
           <p><paper-icon-button icon="custom-icons:web"></paper-icon-button>www.goodrecords.com</p>
       </div>
     </div>
-  </div>
+  </div>-->
 
   <div id="submit-request-container">
     <paper-button class="sticky-btn" on-tap="_onTapCreateMessage" icon="custom-icons:message" >Submit Your Request</paper-button>
