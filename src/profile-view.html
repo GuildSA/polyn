@@ -142,7 +142,7 @@
   </template>
 
   <script>
-    class ProfileView extends Polymer.Element {
+    class ProfileView extends Polymer.GestureEventListeners(Polymer.Element) {
 
       static get is() { return 'profile-view'; }
 
