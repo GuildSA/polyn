@@ -29,7 +29,6 @@
     "paper-spinner": "PolymerElements/paper-spinner#^2.0.0",
     "paper-toast": "PolymerElements/paper-toast#^2.0.0",
     "polymerfire": "^2.0.0",
-    "paper-fab": "^2.0.0",
     "geofire": "^4.1.2"
   },
   "devDependencies": {
