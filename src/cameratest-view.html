@@ -1,4 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="utility.html">
 
 <!--<link rel="import" href="../bower_components/app-media/app-media-devices.html">
 <link rel="import" href="../bower_components/app-media/app-media-stream.html">
@@ -19,21 +22,13 @@
         display: block;
         padding: 10px;
       }
-
     </style>
 
-    <!--<app-media-devices
-      kind="videoinput"
-      selected-device="{{videoDevice}}">
-    </app-media-devices>-->
-
-    <!--<app-media-image-capture
-        id="imageCapture"
-        stream="[[videoStream]]"
-        focus-mode="single-shot"
-        red-eye-reduction
-        last-photo="{{photo}}">
-    </app-media-image-capture>-->
+  <firebase-auth 
+    id="auth"
+    app-name="polyn-app"
+    user="{{user}}">
+  </firebase-auth>
 
   <div class="card">
     <h1>Pick Image</h1>
@@ -41,11 +36,16 @@
     <img id="frame">
   </div>
 
-  <div class="card">
+  <!--<div class="card">
     <h1>Take Picture</h1>
     <button id="capture">Capture</button>
     <video id="player" width=320 height=240 controls autoplay></video>
     <canvas id="snapshot" width=320 height=240></canvas>
+  </div>-->
+
+  <div class="card">
+    <h1>Test Toast</h1>
+    <paper-button on-tap="_onTapTestToast" raised>Test Toast</paper-button>
   </div>
 
   </template>
@@ -56,27 +56,46 @@
 
       static get is() { return 'cameratest-view'; }
 
-      // static get properties() {
-      //   return {
-      //     }
-      //   };
-      // }
-
-      constructor() {
-          super()
-          console.log("CameraTestView.constructor")
+      static get properties() {
+        return {
+          user: {
+            type: Object,
+            observer: '_userChanged'
+          }
+        };
       }
 
-      ready() {
-          super.ready();
+      // constructor() {
+      //     super()
+      //     console.log("CameraTestView.constructor")
+      // }
 
-          console.log("CameraTestView.ready")
+      // ready() {
+      //     super.ready();
 
-          // When possible, use afterNextRender to defer non-critical
-          // work until after first paint.
-          Polymer.RenderStatus.afterNextRender(this, function() {
-              console.log("CameraTestView.afterNextRender")
-          });
+      //     console.log("CameraTestView.ready")
+
+      //     // When possible, use afterNextRender to defer non-critical
+      //     // work until after first paint.
+      //     Polymer.RenderStatus.afterNextRender(this, function() {
+      //         console.log("CameraTestView.afterNextRender")
+      //     });
+      // }
+
+      _userChanged(user) {
+        console.log("CameraTestView._userChanged");
+        //console.log("  user: " + JSON.stringify(user, null, 4));
+
+        // As soon as we get the user - get the users info so we can 
+        // learn more about them!
+        if(user && user.uid) {
+          //this.$.usersinfo.path = "/users/" + user.uid + "/info";
+        }
+      }
+
+      _onTapTestToast() {
+ 
+        Utility.showErrorToast("This is a test toast!");
       }
 
       connectedCallback() {
@@ -94,12 +113,35 @@
         var camera = this.$.camera;
         var frame = this.$.frame;
 
+        var self = this;
+
         camera.addEventListener('change', function(e) {
-          var file = e.target.files[0]; 
+
+          var file = e.target.files[0];
+
+          if(!file) {
+            return;
+          }
+
+          if(!file.type.match('image.*')) {
+            Utility.showErrorToast("You can only share images");
+            return;
+          }
+
           // Do something with the image file.
           frame.src = URL.createObjectURL(file);
-        });
 
+          // //Upload the image to Cloud Storage.
+          // var newImageKey = firebase.app("polyn-app").database().ref().child("users/" + self.user.uid).push().key;
+          // firebase.app("polyn-app").storage().ref("users/" + self.user.uid + "/" + newImageKey).put(file).then(function(snapshot) {
+
+          // Upload the image to Cloud Storage.
+          firebase.app("polyn-app").storage().ref("users/" + self.user.uid + "/pic").put(file).then(function(snapshot) {
+            // Get the file's storage URI and save into the database under the user's info key.
+            var fullPath = snapshot.metadata.fullPath;
+            firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/pic").set(fullPath);
+          });
+        });
 
 
         //
@@ -125,30 +167,30 @@
         // Works only in Chrome.
         //
 
-        var player = this.$.player; 
-        var snapshotCanvas = this.$.snapshot;
-        var captureButton = this.$.capture;
-        var videoTracks;
+        // var player = this.$.player; 
+        // var snapshotCanvas = this.$.snapshot;
+        // var captureButton = this.$.capture;
+        // var videoTracks;
 
-        var handleSuccess = function(stream) {
-          // Attach the video stream to the video element and autoplay.
-          player.srcObject = stream;
-          videoTracks = stream.getVideoTracks();
-        };
+        // var handleSuccess = function(stream) {
+        //   // Attach the video stream to the video element and autoplay.
+        //   player.srcObject = stream;
+        //   videoTracks = stream.getVideoTracks();
+        // };
 
-        captureButton.addEventListener('click', function() {
+        // captureButton.addEventListener('click', function() {
 
-          var context = snapshotCanvas.getContext('2d');
+        //   var context = snapshotCanvas.getContext('2d');
 
-          // Draw the video frame to the canvas.
-          context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
+        //   // Draw the video frame to the canvas.
+        //   context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
 
-          // Stop all video streams.
-          //videoTracks.forEach(function(track) {track.stop()});
-        });
+        //   // Stop all video streams.
+        //   //videoTracks.forEach(function(track) {track.stop()});
+        // });
 
-        navigator.mediaDevices.getUserMedia({video: true})
-          .then(handleSuccess);
+        // navigator.mediaDevices.getUserMedia({video: true})
+        //   .then(handleSuccess);
       }
 
       disconnectedCallback() {

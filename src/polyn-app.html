@@ -15,6 +15,7 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="custom-icons.html">
 
 <link rel="lazy-import" href="home-view.html">
@@ -97,6 +98,11 @@
       paper-tabs {
         --paper-tab-ink: white;
         --paper-tabs-selection-bar-color: #FFA138;
+      }
+
+      #errorToast {
+        --paper-toast-background-color: red;
+        --paper-toast-color: white;
       }
 
       /*iron-pages {
@@ -187,6 +193,8 @@
 
       </app-header-layout>
     </app-drawer-layout>
+
+    <paper-toast id="errorToast" class="fit-bottom" text="Unknown Error"></paper-toast>
 
   </template>
 
