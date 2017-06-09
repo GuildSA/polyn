@@ -1,12 +1,11 @@
-
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="utility.html">
 
 <dom-module id="profile-view">
   <template>
@@ -14,11 +13,9 @@
     <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
         display: flex;
-        /*background-color: lightblue;*/
-        /*height: 100%;*/
       }
 
-      #profile-image {
+      #profileImage {
         width: 200px;
         height: 200px;
         border-radius: 50%;
@@ -85,12 +82,18 @@
       on-error="_handleError">
     </firebase-auth>
 
+    <firebase-document
+      app-name="polyn-app"
+      id="usersinfo"
+      data="{{usersInfo}}">
+    </firebase-document>
+
     <div class="flex layout horizontal center-justified">
       <div class="card">
 
-        <template is="dom-if" if="[[isAnonymous]]">
+        <template is="dom-if" if="[[!user]]">
           <div class="layout horizontal center-justified">
-            <img src="/images/svg/VinylRecord.svg" id="profile-image" alt="Anonymous Profile Image." >
+            <img src="/images/svg/VinylRecord.svg" id="profileImage" alt="Anonymous Profile Image." >
           </div>
           <div class="layout vertical">
             <paper-input id="email" label="Email"></paper-input>
@@ -100,16 +103,18 @@
           </div>
         </template>
 
-        <template is="dom-if" if="[[!isAnonymous]]">
+        <template is="dom-if" if="[[user]]">
           <div class="layout horizontal center-justified">
-            <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="[[photoURL]]"></iron-image>
+            <iron-image sizing="contain" id="profileImage" alt="User's' Profile Image." src="[[photoURL]]" on-tap="_onTapProfilePhoto"></iron-image>
           </div>
           <div class="layout horizontal center-justified">
             <h1>Welcome [[displayName]]</h1>
           </div>
         </template>
       
-        <template is="dom-if" if="[[isAnonymous]]">
+        <input id="camera" type="file" name="photo" accept="image/*;capture=camera" style="display:none;"></input>
+
+        <template is="dom-if" if="[[!user]]">
           <div class="layout vertical">
             <paper-button class="sign-in" id="continue-btn">Continue</paper-button>
             <div class="layout horizontal center-justified">
@@ -124,7 +129,7 @@
           </div>
         </template>
 
-        <template is="dom-if" if="[[!isAnonymous]]">
+        <template is="dom-if" if="[[user]]">
           <div class="layout vertical">
             <paper-button id="registerbusiness" class="sign-in" on-tap="_onTapRegisterBusiness">Register Your Business</paper-button>
             <paper-button id="sign-out-btn" on-tap="_onTapSignOut">Sign Out</paper-button>
@@ -143,10 +148,6 @@
 
       static get properties() {
         return {
-          isAnonymous: {
-            type: String,
-            value: true
-          },
           photoURL: {
             type: String
           },
@@ -162,8 +163,57 @@
           },
           statusKnown:{
             type: Object
+          },
+          usersInfo: {
+            type: Object,
+            observer: '_usersInfoChanged'
           }
         };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        console.log("ProfileView.connectedCallback")
+
+        var self = this;
+        var camera = this.$.camera;
+
+        // Use the hidden input called 'camera' to get a photo from the user 
+        // if they tap their profile photo!
+        camera.addEventListener('change', function(e) {
+
+          var file = e.target.files[0];
+
+          if(!file) {
+            return;
+          }
+
+          if(!file.type.match('image.*')) {
+            Utility.showErrorToast("You can only share images.");
+            return;
+          }
+
+          self.photoURL = URL.createObjectURL(file);
+          self._uploadUsersProfilePhoto(file);
+        });
+      }
+
+      _uploadUsersProfilePhoto(file) {
+        console.log("ProfileView._uploadUsersProfilePhoto");
+
+        var self = this;
+
+        // Upload the image to Cloud Storage.
+        firebase.app("polyn-app").storage().ref("users/" + this.user.uid + "/photo").put(file).then(function(snapshot) {
+          // Get the file's storage URI and save into the database under the user's info key.
+          self._setUsersProfilePhotoURL(snapshot.downloadURL);
+        });
+      }
+
+      _setUsersProfilePhotoURL(url) {
+        console.log("ProfileView._setUsersProfilePhotoURL");
+
+        firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/info/photoURL").set(url);
       }
 
       _handleError(e, err) {
@@ -176,39 +226,45 @@
 
         if(user != null) {
 
-            console.log("  user.isAnonymous = " + user.isAnonymous);
-
             if(user.isAnonymous == false) {
 
-              if(user.uid) {
-                // As soon as we get the user - verify the users info data.
-                this._verifyUserInfo(user);
-              }
-
-              // console.log("user.providerData: " + user.providerData);
-              // console.log("user " + JSON.stringify(user, null, 4));
-              // console.log("user.providerData: " + JSON.stringify(user.providerData, null, 4));
-              // console.log("user.providerData[0].photoURL: " + user.providerData[0].photoURL);
-
-              // If the user is not anonymous, get their name and photo.
-              this.displayName = user.providerData[0].displayName;
-              this.photoURL = user.providerData[0].photoURL;
-            }           
-
-            // This element keeps track of if its own isAnonymous property.
-            // Using the one on user creates issues!
-            this.isAnonymous = user.isAnonymous;
+              // As soon as we get the user - verify the users info data.
+              this._verifyUserInfo(user);
+            }
 
         } else {
 
             this.displayName = "";
             this.photoURL = "";
-            this.isAnonymous = true;
         }
+      }
+
+      _usersInfoChanged(usersInfo) {
+        console.log("ProfileView._usersInfoChanged");
+
+// // TODO: Is this the best way to check for an empty JSON object?
+//         if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
+//           return;
+//         }
+
+        if(usersInfo.photoURL) {
+          this.photoURL = usersInfo.photoURL;
+        }
+
+        if(usersInfo.name) {
+          this.displayName = usersInfo.name;
+        }
+      }
+
+      _onTapProfilePhoto() {
+        console.log("ProfileView._onTapProfilePhoto")
+        this.$.camera.click();
       }
 
       _verifyUserInfo(user) {
         console.log("ProfileView._verifyUserInfo");
+
+        var self = this;
 
         const refPath = "/users/" + user.uid + "/info";
 
@@ -224,15 +280,25 @@
 
             var info = {};
 
-            // If name or email is missing - add them!
-            if(!usersInfo.name || !usersInfo.email) {
+            // If name, email or photoURL is missing - add them!
+            if(!usersInfo.name || !usersInfo.email || !usersInfo.photoURL) {
 
               if(!usersInfo.name) {
+                // Force set this now, so the user can at least see something.
+                self.displayName = user.providerData[0].displayName;
+
                 info.name = user.providerData[0].displayName;
               }
 
               if(!usersInfo.email) {
                 info.email = user.providerData[0].email;
+              }
+
+              if(!usersInfo.photoURL) {
+                // Force set this now, so the user can at least see something.
+                self.photoURL = user.providerData[0].photoURL;
+
+                self._setUsersProfilePhotoURL(user.providerData[0].photoURL);
               }
 
               // If we have a token - preserve it.
@@ -243,12 +309,20 @@
               firebase.app("polyn-app").database().ref(refPath).update(info);
             }
 
+          // Now, get the users info so we can learn more about them!
+          self.$.usersinfo.path = "/users/" + user.uid + "/info";
+
           } else {
+
+            // Force set these now, so the user can at least see something.
+            self.displayName = user.providerData[0].displayName;
+            self.photoURL = user.providerData[0].photoURL;
 
             // The user's info key does NOT exist - so add one.
             var info = {};
             info.name = user.providerData[0].displayName;
             info.email = user.providerData[0].email;
+            info.photoURL = user.providerData[0].photoURL;
             firebase.app("polyn-app").database().ref(refPath).update(info);
           }
         });

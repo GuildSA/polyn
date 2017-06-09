@@ -22,6 +22,11 @@
         display: block;
         padding: 10px;
       }
+
+      /*input[type="file"] {
+        display: none;
+      }*/
+
     </style>
 
   <firebase-auth 
@@ -32,8 +37,14 @@
 
   <div class="card">
     <h1>Pick Image</h1>
-    <input type="file" accept="image/*" capture="camera" id="camera">
+    <!--<input id="camera" type="file" accept="image/*" capture="camera">-->
+    <input id="camera" type="file" name="photo" accept="image/*;capture=camera" style="display:none;"></input>
     <img id="frame">
+  </div>
+
+  <div class="card">
+    <h1>Button Test</h1>
+    <paper-button on-tap="_onTapPickImage" raised="">Pick Image</paper-button>
   </div>
 
   <!--<div class="card">
@@ -98,6 +109,12 @@
         Utility.showErrorToast("This is a test toast!");
       }
 
+      _onTapPickImage() {
+        console.log("CameraTestView._onTapPickImage: " + this.$.camera)
+
+        this.$.camera.click();
+      }
+
       connectedCallback() {
         super.connectedCallback();
         console.log("CameraTestView.connectedCallback")
@@ -136,10 +153,10 @@
           // firebase.app("polyn-app").storage().ref("users/" + self.user.uid + "/" + newImageKey).put(file).then(function(snapshot) {
 
           // Upload the image to Cloud Storage.
-          firebase.app("polyn-app").storage().ref("users/" + self.user.uid + "/pic").put(file).then(function(snapshot) {
+          firebase.app("polyn-app").storage().ref("test/" + self.user.uid + "/pic").put(file).then(function(snapshot) {
             // Get the file's storage URI and save into the database under the user's info key.
-            var fullPath = snapshot.metadata.fullPath;
-            firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/pic").set(fullPath);
+            //var fullPath = snapshot.metadata.fullPath;
+            //firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/pic").set(fullPath);
           });
         });
 
