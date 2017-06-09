@@ -8,6 +8,8 @@
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="shared-styles.html">
 
@@ -56,6 +58,7 @@
         position: sticky;
         position: -webkit-sticky;
         bottom: 0px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
       }
 
       .profile-pic {
@@ -74,88 +77,20 @@
         @apply --layout-center-justified; 
         @apply --layout-center;
         background-color: white; 
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+        margin-bottom: 5px;
+        border-radius: 5px;
+
       }
 
       .username {
         padding: 10px;
       }
 
-
-.module {
-  max-width: 400px;
-  margin: 20px auto;
-}
-
-.discussion {
-  list-style: none;
-  background: grey;
-  margin: 0;
-  padding: 0 0 50px 0;
-}
-.discussion li {
-  padding: 0.5rem;
-  overflow: hidden;
-  display: flex;
-}
-.discussion .avatar {
-  width: 40px;
-  position: relative;
-}
-.discussion .avatar img {
-  display: block;
-  width: 100%;
-}
-
-.other .avatar:after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 0;
-  height: 0;
-  border: 5px solid white;
-  border-left-color: transparent;
-  border-bottom-color: transparent;
-}
-
-.self {
-  justify-content: flex-end;
-  align-items: flex-end;
-}
-.self .messages {
-  order: 1;
-  border-bottom-right-radius: 0;
-}
-.self .avatar {
-  order: 2;
-}
-.self .avatar:after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 0;
-  border: 5px solid white;
-  border-right-color: transparent;
-  border-top-color: transparent;
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.messages {
-  background: white;
-  padding: 10px;
-  border-radius: 2px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-.messages p {
-  font-size: 0.8rem;
-  margin: 0 0 0.2rem 0;
-}
-.messages time {
-  font-size: 0.7rem;
-  color: #ccc;
-}
+      .content-wrapper {
+        overflow-y: auto;
+        height: 440px;
+      }
 
 
 
@@ -227,6 +162,8 @@
 
     <paper-spinner id="spinner" active="[[loading]]" active></paper-spinner>
 
+
+
     <div class="title">
       <div class="business-photo">
         <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="profile-pic" preload fade src="images/RecordStoreDayLogo.jpg" class="item" on-tap="_onTapBusiness" ></iron-image>
@@ -236,44 +173,9 @@
       <p style="margin: 0px;">www.recordStoreWebsite.com</p>
       </div>
      </div>
+
+     <div class="content-wrapper">
      
-    <section class="module">
-
-     <ol class="discussion">
-    <li class="other">
-      <div class="avatar">
-        <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="images/anonymous_profile.png" class="item" on-tap="_onTapBusiness" ></iron-image> 
-      </div>
-      <div class="messages">
-        <p>yeah, they do early flights cause they connect with big airports.  they wanna get u to your connection</p>
-        <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
-      </div>
-    </li>
-    <li class="self">
-      <div class="avatar">
-        <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="images/anonymous_profile.png" class="item" on-tap="_onTapBusiness" ></iron-image> 
-      </div>
-      <div class="messages">
-        <p>That makes sense.</p>
-        <p>It's a pretty small airport.</p>
-        <time datetime="2009-11-13T20:14">37 mins</time>
-      </div>
-    </li>
-    <li class="other">
-      <div class="avatar">
-        <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="images/anonymous_profile.png" class="item" on-tap="_onTapBusiness" ></iron-image> 
-      </div>
-      <div class="messages">
-        <p>Not sure if this is going to work</p>
-        <p>
-          but why not give it a shot.</p>
-      </div>
-    </li>
-  </ol>
-  
-</section>
-
-
     <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
       <template>
        <div class="message-container-main"> 
@@ -291,6 +193,8 @@
           </div>
       </template>
     </dom-repeat>
+  </div>
+  
   
     <div class="message-sender-container">
       <paper-input id="message" label="Message..."></paper-input>
