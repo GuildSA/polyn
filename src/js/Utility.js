@@ -190,8 +190,7 @@ var Utility = (function() {
 
           } else {
             log("Call to getBase64 failed!");
-// TODO: Handle Error!
-            callback(file);
+            callback("ERROR", "Conversion to Base64 failed.");
           }
         });
 

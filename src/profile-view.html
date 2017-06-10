@@ -193,9 +193,13 @@
             return;
           }
 
-          Utility.correctOrientation(file, function(blob) {
-            self.photoURL = URL.createObjectURL(blob);
-            self._uploadUsersProfilePhoto(blob);
+          Utility.correctOrientation(file, function(blob, error) {
+            if(!error) {
+              self.photoURL = URL.createObjectURL(blob);
+              self._uploadUsersProfilePhoto(blob);
+            } else {
+              Utility.showErrorToast("Sorry, but we were unable to use this image for some reason.");
+            }
           });
         });
       }

@@ -35,16 +35,18 @@
     user="{{user}}">
   </firebase-auth>
 
-  <div class="card">
+  <!--<div class="card">
     <h1>Pick Image</h1>
-    <!--<input id="camera" type="file" accept="image/*" capture="camera">-->
+    <input id="camera" type="file" accept="image/*" capture="camera">
     <input id="camera" type="file" name="photo" accept="image/*;capture=camera" style="display:none;"></input>
     <img id="frame">
-  </div>
+  </div>-->
+
+  <input id="camera" type="file" name="photo" accept="image/*;capture=camera" style="display:none;"></input>
 
   <div class="card">
-    <h1>Button Test</h1>
     <paper-button on-tap="_onTapPickImage" raised="">Pick Image</paper-button>
+    <paper-button on-tap="_onTapTestToast" raised>Test Toast</paper-button>
   </div>
 
   <!--<div class="card">
@@ -53,11 +55,6 @@
     <video id="player" width=320 height=240 controls autoplay></video>
     <canvas id="snapshot" width=320 height=240></canvas>
   </div>-->
-
-  <div class="card">
-    <h1>Test Toast</h1>
-    <paper-button on-tap="_onTapTestToast" raised>Test Toast</paper-button>
-  </div>
 
   </template>
 
