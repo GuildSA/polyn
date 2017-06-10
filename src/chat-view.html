@@ -30,6 +30,15 @@
         padding: 10px;
       }
 
+      iron-icon {
+        color: white;
+        background: #FFA138;
+      }
+
+      #image-btn {
+        background: #FFA138;
+      }
+
       .flex-horizontal {
         @apply --layout-horizontal;
         @apply --layout-center;
@@ -66,7 +75,7 @@
         border-radius: 50%;
       }
 
-      #send-button {
+      #send-btn {
         background-color: #70C187;
         color: white; 
       }
@@ -188,7 +197,8 @@
   
     <div class="message-sender-container anchor">
       <paper-input id="message" label="Message..."></paper-input>
-      <paper-button id="send-button" on-tap="_onTapSendDialogBtn" dialog-confirm autofocus raised type="submit">Send</paper-button>
+      <paper-button id="image-btn" dialog-confirm autofocus raised type="submit"><iron-icon icon="custom-icons:insert-photo"></iron-icon></paper-button>
+      <paper-button id="send-btn" on-tap="_onTapSendDialogBtn" dialog-confirm autofocus raised type="submit">Send</paper-button>
     </div>
       
   </template>
