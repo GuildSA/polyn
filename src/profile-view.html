@@ -193,37 +193,9 @@
             return;
           }
 
-          Utility.getOrientation(file, function(orientation) {
-
-            //alert('orientation: ' + orientation);
-            console.log('  orientation: ' + orientation);
-
-            if(orientation != 1 && orientation != -1 && orientation != -2) {
-
-              console.log('  Call resetOrientation!!!!');
-
-              Utility.getBase64(file, function(base64) {
-
-                //console.log('  After getBase64: ' + result);
-
-                Utility.resetOrientation(base64, orientation, function(resetBase64Image) {
-
-                  console.log('  resetOrientation done!');
-
-                  var blob = Utility.dataURLtoBlob(resetBase64Image);
-
-                  self.photoURL = URL.createObjectURL(blob);
-                  self._uploadUsersProfilePhoto(blob);
-                });
-              });
-
-            } else {
-
-              console.log('  No call to resetOrientation needed!');
-
-              self.photoURL = URL.createObjectURL(file);
-              self._uploadUsersProfilePhoto(file);
-            }
+          Utility.correctOrientation(file, function(blob) {
+            self.photoURL = URL.createObjectURL(blob);
+            self._uploadUsersProfilePhoto(blob);
           });
         });
       }

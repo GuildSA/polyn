@@ -29,9 +29,36 @@ var Utility = (function() {
     _errorToast.open();
   };
 
+  //----------------------------------------------------------------------------
+  // The getOrientation method parses the EXIF (exchangeable image file format)
+  // image data in a JPEG image and returns an int value representing the 
+  // orientation of the image.
+  //
+  // The EXIF specification defines an Orientation Tag number to indicate the 
+  // orientation of the camera relative to the captured scene. This can be used 
+  // by the camera either to indicate the orientation automatically by an 
+  // orientation sensor, or to allow the user to indicate the orientation 
+  // manually by a menu switch, without actually transforming the image data itself.
+  //
+  // Here is what the letter F would look like if it were tagged correctly and displayed 
+  // by a program that ignores the orientation tag (thus showing the stored image):
+  //
+  //   1        2        3   4            5          6           7          8
+  //
+  // 888888  888888      88  88      8888888888  88                  88  8888888888
+  // 88          88      88  88      88  88      88  88          88  88      88  88
+  // 8888      8888    8888  8888    88          8888888888  8888888888          88
+  // 88          88      88  88
+  // 88          88  888888  888888
+  //
+  // The method may also return the special values -1 or -2:
+  // -1: orientation was not defined.
+  // -2: file or blob passed was not a jpeg.
+  //
+  // http://www.daveperrett.com/articles/2012/07/28/exif-orientation-handling-is-a-ghetto/
   // https://stackoverflow.com/questions/7584794/accessing-jpeg-exif-rotation-data-in-javascript-on-the-client-side
-  // -2: not jpeg
-  // -1: not defined
+  //----------------------------------------------------------------------------
+
   var getOrientation = function(file, callback) {
 
     var reader = new FileReader();
@@ -63,17 +90,25 @@ var Utility = (function() {
 
   var getBase64 = function(file, callback) {
     var reader = new FileReader();
+
     reader.readAsDataURL(file);
+
     reader.onload = function () {
       callback(reader.result);
     };
+
     reader.onerror = function (error) {
-//console.log('Error: ', error);
       callback('Error: ', error);
     };
   }
 
+  //----------------------------------------------------------------------------
+  // Given the known EXIF orientation of a JPEG image, the resetOrientation 
+  // method resets the JPEG image to orientation 1 which will causes the image
+  // to be viewed correclty in browsers that ignore the EXIF orientation tag.
+  //
   // https://stackoverflow.com/questions/20600800/js-client-side-exif-orientation-rotate-and-mirror-jpeg-images
+  //----------------------------------------------------------------------------
   var resetOrientation = function(srcBase64, srcOrientation, callback) {
     var img = new Image();    
 
@@ -124,6 +159,50 @@ var Utility = (function() {
       return new Blob([u8arr], {type:mime});
   }
 
+  //----------------------------------------------------------------------------
+  // If required, the correctOrientation resets the EXIF orientation to 1 so the
+  // image can be dispalyed correctly in browesers that do not adjust the image
+  // for EXIF orientation.
+  //----------------------------------------------------------------------------
+  var correctOrientation = function(file, callback) {
+
+    getOrientation(file, function(orientation) {
+
+      log("Called to getOrientation returned: " + orientation);
+
+      if(orientation > 1) {
+
+        log("Calling getBase64.");
+
+        getBase64(file, function(base64, error) {
+
+          if(!error) {
+
+            log("Calling resetOrientation.");
+
+            resetOrientation(base64, orientation, function(resetBase64Image) {
+
+              log("Call to resetOrientation done!");
+
+              const blob = dataURLtoBlob(resetBase64Image);
+              callback(blob);
+            });
+
+          } else {
+            log("Call to getBase64 failed!");
+// TODO: Handle Error!
+            callback(file);
+          }
+        });
+
+      } else {
+
+        log("No call to resetOrientation needed - just return the file.");
+        callback(file);
+      }
+    });
+  }
+
   function log(message) {
     console.log("Utility: " + message);
   }
@@ -135,7 +214,8 @@ var Utility = (function() {
     getOrientation: getOrientation,
     resetOrientation: resetOrientation,
     getBase64: getBase64,
-    dataURLtoBlob: dataURLtoBlob
+    dataURLtoBlob: dataURLtoBlob,
+    correctOrientation: correctOrientation
   }
 
 })();
