@@ -23,10 +23,19 @@
         padding: 0px;
       }
 
+      .business-description {
+        margin: 0%;
+        
+      }
+
       .business-image {
         width: 75px;
         height: 75px;
         border-radius: 50%;
+      }
+
+      h2 {
+        color: #70C187;
       }
 
       .item {
@@ -35,7 +44,6 @@
         background: #eee;
         width: 100%;
       }
-
 
       .item:hover {
         opacity: .75;
@@ -64,23 +72,11 @@
         @apply --layout-vertical;
       }
 
-      .business-description {
-        margin: 0%;
-        
-      }
-
-      h2 {
-        color: #70C187;
-      }
-
       .stick-btn-container {
         justify-content: center;
         right:0;
         left:0;
-        
-        
       }
-
 
       #submit-request-container {
         @apply --layout-horizontal;
@@ -93,7 +89,7 @@
         margin: auto;
         position: sticky;
         position: -webkit-sticky;
-        bottom: 5px;
+        bottom: 0px;
       }
 
     </style>
@@ -159,57 +155,6 @@
         </div>-->
       </div>
     </div>
-
-
-
-    <!-- TODO: We can use a dom-repeat for these business-cards -->
-    <!--<div class="main-container">
-      <div class="card">
-        <div class="business-image item">
-          <iron-image style="height:25vh; background-color: lightgray;" sizing="cover" class="profile-pic" preload fade src="images/RecordStoreDayLogo.jpg" class="item" on-tap="_onTapBusiness" ></iron-image>
-        </div>
-        <div class="business-description">
-         <h2> Good Records</h2>
-          <p>Description Goes Here</p>
-          <p><paper-icon-button icon="custom-icons:near-me"></paper-icon-button>1.2 miles away</p> 
-          <p><paper-icon-button icon="custom-icons:phonelink-ring"></paper-icon-button>(214) 752-4663</p>
-          <p><paper-icon-button icon="custom-icons:web"></paper-icon-button>www.goodrecords.com</p>
-        </div>
-      </div>
-    <div class="card">
-        <div class="business-image item">
-          <iron-image style="height:25vh; background-color: lightgray;" sizing="cover" class="profile-pic" preload fade src="images/RecordStoreDayLogo.jpg" class="item" on-tap="_onTapBusiness" ></iron-image>
-        </div>
-        <div class="business-description">
-          <h2> Spinster Records</h2>
-          <p><paper-icon-button icon="custom-icons:near-me"></paper-icon-button>2.3 miles away</p> 
-          <p><paper-icon-button icon="custom-icons:phonelink-ring"></paper-icon-button>(214) 752-4663</p>
-          <p><paper-icon-button icon="custom-icons:web"></paper-icon-button>www.goodrecords.com</p>
-        </div>
-      </div>
-    <div class="card">
-        <div class="business-image">
-          <iron-image style="height:25vh; background-color: lightgray;" sizing="cover" class="profile-pic" preload fade src="images/RecordStoreDayLogo.jpg" class="item" on-tap="_onTapBusiness" ></iron-image>
-        </div>
-        <div class="business-description">
-          <h2>Bills Records</h2>
-          <p><paper-icon-button icon="custom-icons:near-me"></paper-icon-button>3.6 miles away</p> 
-          <p><paper-icon-button icon="custom-icons:phonelink-ring"></paper-icon-button>(214) 752-4663</p>
-          <p><paper-icon-button icon="custom-icons:web"></paper-icon-button>www.goodrecords.com</p>
-        </div>
-      </div>
-      <div class="card">
-      <div class="business-image">
-        <iron-image style="height:25vh; background-color: lightgray;" sizing="cover" class="profile-pic" preload fade src="images/RecordStoreDayLogo.jpg" class="item" on-tap="_onTapBusiness" ></iron-image>
-      </div>
-      <div class="business-description">
-        <h2> Hit Records</h2>
-          <p><paper-icon-button icon="custom-icons:near-me"></paper-icon-button>4.0 miles away</p> 
-          <p><paper-icon-button icon="custom-icons:phonelink-ring"></paper-icon-button>(214) 752-4663</p>
-          <p><paper-icon-button icon="custom-icons:web"></paper-icon-button>www.goodrecords.com</p>
-      </div>
-    </div>
-  </div>-->
 
   <div id="submit-request-container">
     <paper-button class="sticky-btn" on-tap="_onTapCreateMessage" icon="custom-icons:message" >Submit Your Request</paper-button>
