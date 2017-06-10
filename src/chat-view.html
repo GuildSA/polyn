@@ -9,6 +9,7 @@
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="shared-styles.html">
 
@@ -85,15 +86,6 @@
       .username {
         padding: 10px;
       }
-
-      .content-wrapper {
-        overflow-y: auto;
-        height: 440px;
-      }
-
-
-
-
 
 
     </style>
@@ -173,7 +165,7 @@
       </div>
      </div>
 
-     <div class="content-wrapper">
+    <div class="content-wrapper">
      
     <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
       <template>
@@ -192,10 +184,10 @@
           </div>
       </template>
     </dom-repeat>
-  </div>
+    </div>
   
   
-    <div class="message-sender-container">
+    <div class="message-sender-container anchor">
       <paper-input id="message" label="Message..."></paper-input>
       <paper-button id="send-button" on-tap="_onTapSendDialogBtn" dialog-confirm autofocus raised type="submit">Send</paper-button>
     </div>
@@ -238,6 +230,9 @@
           }
         };
       }
+
+
+   
 
       _userChanged(user) {
         console.log("ChatView._userChanged");
@@ -398,6 +393,8 @@
         console.log("  status = ", e.status, e.statusText);
       }
     }
+
+    
 
     window.customElements.define(ChatView.is, ChatView);
   </script>
