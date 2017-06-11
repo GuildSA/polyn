@@ -202,22 +202,12 @@
             return;
           }
 
-          // Utility.correctOrientation(file, function(blob, error) {
-          //   if(!error) {
+          self.editingProfileImage = true;
 
-              self.editingProfileImage = true;
-
-              var polynApp = document.getElementById("polynApp");
-              var cropperView = polynApp.pushPageOnCurrentTab("cropper-view");
-// cropperView.file = null;
-// cropperView.prevPage = null;
-              cropperView.file = file;
-              cropperView.prevPage = self;
-
-          //   } else {
-          //     Utility.showErrorToast("Sorry, but we were unable to use this image for some reason.");
-          //   }
-          // });
+          var polynApp = document.getElementById("polynApp");
+          var cropperView = polynApp.pushPageOnCurrentTab("cropper-view");
+          cropperView.file = file;
+          cropperView.prevPage = self;
         });
       }
 
