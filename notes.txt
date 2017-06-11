@@ -1,6 +1,5 @@
 
 
-
  -- Geofire --
 
 
@@ -215,6 +214,8 @@ cp -rn node_modules build/default/
 
  -- Markup & Code Scraps -- 
     
+    console.log("  user: " + JSON.stringify(user, null, 4));
+
       // ready() {
       //   super.ready();
       //   console.log("ProfileView.ready");

@@ -1,60 +1,48 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-input/iron-input.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="utility.html">
-
-<!--<link rel="import" href="../bower_components/app-media/app-media-devices.html">
-<link rel="import" href="../bower_components/app-media/app-media-stream.html">
-<link rel="import" href="../bower_components/app-media/app-media-video.html">
-<link rel="import" href="../bower_components/app-media/app-media-audio.html">
-<link rel="import" href="../bower_components/app-media/app-media-waveform.html">
-<link rel="import" href="../bower_components/app-media/app-media-recorder.html">
-<link rel="import" href="../bower_components/app-media/app-media-image-capture.html">-->
-
-<!--<link rel="import" href="webrtc-adaptor.html">-->
-
+<link rel="import" href="cropper.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="misctest-view">
+
   <template>
-    <style include="shared-styles">
+    <style include="shared-styles cropper-styles">
       :host {
         display: block;
         padding: 10px;
       }
 
-      /*input[type="file"] {
-        display: none;
-      }*/
+      #originalImage {
+        max-width: 100%;
+      }
 
     </style>
 
-  <firebase-auth 
-    id="auth"
-    app-name="polyn-app"
-    user="{{user}}">
-  </firebase-auth>
+    <firebase-auth 
+      id="auth"
+      app-name="polyn-app"
+      user="{{user}}">
+    </firebase-auth>
 
-  <!--<div class="card">
-    <h1>Pick Image</h1>
-    <input id="camera" type="file" accept="image/*" capture="camera">
-    <input id="camera" type="file" name="photo" accept="image/*;capture=camera" style="display:none;"></input>
-    <img id="frame">
-  </div>-->
+    <div class="card">
+      <paper-button on-tap="_onTapPickImage" raised="">Pick Image</paper-button>
+      <paper-button on-tap="_onTapTestToast" raised>Test Toast</paper-button>
+    </div>
 
-  <input id="camera" type="file" name="photo" accept="image/*;capture=camera" style="display:none;"></input>
+    <div class="card">
+      <input id="camera" type="file" name="photo" accept="image/*;capture=camera" style="display:none;"></input>
+      <div>
+        <img id="originalImage">
+      </div>
+      <paper-button on-tap="_onTapCropImage" raised="">Crop Image</paper-button>
+    </div>
 
-  <div class="card">
-    <paper-button on-tap="_onTapPickImage" raised="">Pick Image</paper-button>
-    <paper-button on-tap="_onTapTestToast" raised>Test Toast</paper-button>
-  </div>
-
-  <!--<div class="card">
-    <h1>Take Picture</h1>
-    <button id="capture">Capture</button>
-    <video id="player" width=320 height=240 controls autoplay></video>
-    <canvas id="snapshot" width=320 height=240></canvas>
-  </div>-->
+    <div class="card">
+      <img id="croppedImage">
+    </div>
 
   </template>
 
@@ -90,36 +78,12 @@
       //     });
       // }
 
-      _userChanged(user) {
-        console.log("MiscTestView._userChanged");
-        //console.log("  user: " + JSON.stringify(user, null, 4));
-
-        // As soon as we get the user - get the users info so we can 
-        // learn more about them!
-        if(user && user.uid) {
-          //this.$.usersinfo.path = "/users/" + user.uid + "/info";
-        }
-      }
-
-      _onTapTestToast() {
- 
-        Utility.showErrorToast("This is a test toast!");
-      }
-
-      _onTapPickImage() {
-        console.log("MiscTestView._onTapPickImage: " + this.$.camera)
-
-        this.$.camera.click();
-      }
-
       connectedCallback() {
         super.connectedCallback();
-        console.log("MiscTestView.connectedCallback")
-
-        //https://developers.google.com/web/fundamentals/native-hardware/capturing-images/
+        console.log("MiscTestView.connectedCallback");
 
         //
-        // Get a pic from the user!
+        // Get a pic from the user and allow it to be cropped!
         //
         // Works in both Chrome and Safari.
         //
@@ -142,79 +106,69 @@
             return;
           }
 
-          // Do something with the image file.
-          frame.src = URL.createObjectURL(file);
+          self.$.originalImage.src = URL.createObjectURL(file);
 
-          // //Upload the image to Cloud Storage.
-          // var newImageKey = firebase.app("polyn-app").database().ref().child("users/" + self.user.uid).push().key;
-          // firebase.app("polyn-app").storage().ref("users/" + self.user.uid + "/" + newImageKey).put(file).then(function(snapshot) {
-
-          // Upload the image to Cloud Storage.
-          firebase.app("polyn-app").storage().ref("test/" + self.user.uid + "/pic").put(file).then(function(snapshot) {
-            // Get the file's storage URI and save into the database under the user's info key.
-            //var fullPath = snapshot.metadata.fullPath;
-            //firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/pic").set(fullPath);
+          self.cropper = new Cropper(self.$.originalImage, {
+            aspectRatio: 1,
+            crop: function(e) {
+              console.log(e.detail.x);
+              console.log(e.detail.y);
+              console.log(e.detail.width);
+              console.log(e.detail.height);
+              console.log(e.detail.rotate);
+              console.log(e.detail.scaleX);
+              console.log(e.detail.scaleY);
+            }
           });
         });
-
-
-        //
-        // Get video and play it back!
-        //                            
-        // Works only in Chrome.
-        //
-
-        // var player = this.$.player;
-
-        // var handleSuccess = function(stream) {
-        //   player.srcObject = stream;
-        // };
-
-        // navigator.mediaDevices.getUserMedia({video: true})
-        //   .then(handleSuccess);
-
-
-
-        //
-        // Get video and play it back but allow a pic to be captured!
-        //
-        // Works only in Chrome.
-        //
-
-        // var player = this.$.player; 
-        // var snapshotCanvas = this.$.snapshot;
-        // var captureButton = this.$.capture;
-        // var videoTracks;
-
-        // var handleSuccess = function(stream) {
-        //   // Attach the video stream to the video element and autoplay.
-        //   player.srcObject = stream;
-        //   videoTracks = stream.getVideoTracks();
-        // };
-
-        // captureButton.addEventListener('click', function() {
-
-        //   var context = snapshotCanvas.getContext('2d');
-
-        //   // Draw the video frame to the canvas.
-        //   context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
-
-        //   // Stop all video streams.
-        //   //videoTracks.forEach(function(track) {track.stop()});
-        // });
-
-        // navigator.mediaDevices.getUserMedia({video: true})
-        //   .then(handleSuccess);
       }
 
       disconnectedCallback() {
         super.disconnectedCallback();
-          console.log("MiscTestView.disconnectedCallback")
+        console.log("MiscTestView.disconnectedCallback");
       }
 
       attributeChangedCallback() {
-          console.log("MiscTestView.attributeChangedCallback")
+        console.log("MiscTestView.attributeChangedCallback");
       }
+
+      _userChanged(user) {
+        console.log("MiscTestView._userChanged");
+        //console.log("  user: " + JSON.stringify(user, null, 4));
+      }
+
+      _onTapTestToast() {
+        console.log("MiscTestView._onTapTestToast");
+        Utility.showErrorToast("This is a test toast!");
+      }
+
+      _onTapPickImage() {
+        console.log("MiscTestView._onTapPickImage");
+        this.$.camera.click();
+      }
+
+      _onTapCropImage() {
+        console.log("MiscTestView._onTapCropImage:");
+
+        if(this.cropper) {
+
+          var self = this;
+
+          this.cropper.getCroppedCanvas().toBlob(function(blob) {
+
+            self.$.croppedImage.src = URL.createObjectURL(blob);
+
+            // Upload the image to Cloud Storage.
+            var newImageKey = firebase.app("polyn-app").database().ref().child("tests").push().key;
+
+            firebase.app("polyn-app").storage().ref("tests/" + newImageKey).put(blob).then(function(snapshot) {
+              console.log("snapshot.downloadURL = " + snapshot.downloadURL);
+            });
+
+          });
+        }
+      }
+
     }
 
     window.customElements.define(MiscTestView.is, MiscTestView);
