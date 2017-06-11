@@ -30,7 +30,7 @@
 <link rel="lazy-import" href="error404-view.html">
 <link rel="lazy-import" href="messaging-view.html">
 <link rel="lazy-import" href="pageanim-view.html">
-<link rel="lazy-import" href="cameratest-view.html">
+<link rel="lazy-import" href="misctest-view.html">
 <link rel="lazy-import" href="geofire-view.html">
 <link rel="lazy-import" href="analytics-view.html">
 <link rel="lazy-import" href="sellertest-view.html">
@@ -124,7 +124,7 @@
       <app-drawer id="drawer" slot="drawer">
         <app-toolbar>Research</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="cameratest-view" on-tap="_onTapCameraTestView">Camera Test</a>
+          <a name="misctest-view" on-tap="_onTapMiscTestView">Misc Test</a>
           <a name="geofire-view" on-tap="_onTapGeofireView">Geofire</a>
           <a name="sellertest-view" on-tap="_onTapSellerTestView">Seller Test</a>
           <a name="messaging-view" on-tap="_onTapMessagingView">Messaging</a>
@@ -185,7 +185,7 @@
           <functions-view name="functions-view"></functions-view>
           <messaging-view name="messaging-view"></messaging-view>
           <pageanim-view name="pageanim-view"></pageanim-view>
-          <cameratest-view name="cameratest-view"></cameratest-view>
+          <misctest-view name="misctest-view"></misctest-view>
           <geofire-view name="geofire-view"></geofire-view>
           <sellertest-view name="sellertest-view"></sellertest-view>
         </iron-pages>
@@ -242,7 +242,7 @@
 
         // // When possible, use afterNextRender to defer non-critical work until after first paint.
         // Polymer.RenderStatus.afterNextRender(this, function() {
-        //   console.log("CameraTestView.afterNextRender")
+        //   console.log("MiscTestView.afterNextRender")
         // });
       }
 
@@ -282,8 +282,8 @@
         }
       }
 
-      _onTapCameraTestView() {
-        this.page = 'cameratest-view';
+      _onTapMiscTestView() {
+        this.page = 'misctest-view';
         if(!this.$.drawer.persistent) {
           this.$.drawer.close();
         }

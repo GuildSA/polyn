@@ -15,7 +15,7 @@
 
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="cameratest-view">
+<dom-module id="misctest-view">
   <template>
     <style include="shared-styles">
       :host {
@@ -60,9 +60,9 @@
 
   <script>
 
-    class CameraTestView extends Polymer.Element {
+    class MiscTestView extends Polymer.Element {
 
-      static get is() { return 'cameratest-view'; }
+      static get is() { return 'misctest-view'; }
 
       static get properties() {
         return {
@@ -75,23 +75,23 @@
 
       // constructor() {
       //     super()
-      //     console.log("CameraTestView.constructor")
+      //     console.log("MiscTestView.constructor")
       // }
 
       // ready() {
       //     super.ready();
 
-      //     console.log("CameraTestView.ready")
+      //     console.log("MiscTestView.ready")
 
       //     // When possible, use afterNextRender to defer non-critical
       //     // work until after first paint.
       //     Polymer.RenderStatus.afterNextRender(this, function() {
-      //         console.log("CameraTestView.afterNextRender")
+      //         console.log("MiscTestView.afterNextRender")
       //     });
       // }
 
       _userChanged(user) {
-        console.log("CameraTestView._userChanged");
+        console.log("MiscTestView._userChanged");
         //console.log("  user: " + JSON.stringify(user, null, 4));
 
         // As soon as we get the user - get the users info so we can 
@@ -107,14 +107,14 @@
       }
 
       _onTapPickImage() {
-        console.log("CameraTestView._onTapPickImage: " + this.$.camera)
+        console.log("MiscTestView._onTapPickImage: " + this.$.camera)
 
         this.$.camera.click();
       }
 
       connectedCallback() {
         super.connectedCallback();
-        console.log("CameraTestView.connectedCallback")
+        console.log("MiscTestView.connectedCallback")
 
         //https://developers.google.com/web/fundamentals/native-hardware/capturing-images/
 
@@ -209,15 +209,15 @@
 
       disconnectedCallback() {
         super.disconnectedCallback();
-          console.log("CameraTestView.disconnectedCallback")
+          console.log("MiscTestView.disconnectedCallback")
       }
 
       attributeChangedCallback() {
-          console.log("CameraTestView.attributeChangedCallback")
+          console.log("MiscTestView.attributeChangedCallback")
       }
     }
 
-    window.customElements.define(CameraTestView.is, CameraTestView);
+    window.customElements.define(MiscTestView.is, MiscTestView);
 
   </script>
 </dom-module>
