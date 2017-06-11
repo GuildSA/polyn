@@ -6,11 +6,12 @@
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-behavior.html">
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="utility.html">
 
 <dom-module id="chat-view">
   <template>
@@ -110,13 +111,6 @@
       data="{{usersInfo}}">
     </firebase-document>
 
-    <firebase-query
-      id="query"
-      app-name="polyn-app"
-      path="/chats/[[chatMessagesId]]"
-      data="{{chatMessages}}">
-    </firebase-query>
-
     <firebase-document
       app-name="polyn-app"
       id="chatinfo"
@@ -162,16 +156,15 @@
     <paper-spinner id="spinner" active="[[loading]]" active></paper-spinner>
 
 
-
     <div class="title">
       <div class="business-photo">
         <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="profile-pic" preload fade src="images/RecordStoreDayLogo.jpg" class="item" on-tap="_onTapBusiness" ></iron-image>
       </div>
       <div class="business-name">
         Conversation between you and @Seller 
-      <p style="margin: 0px;">www.recordStoreWebsite.com</p>
+        <p style="margin: 0px;">www.recordStoreWebsite.com</p>
       </div>
-     </div>
+    </div>
 
     <div class="content-wrapper">
      
@@ -179,14 +172,21 @@
       <template>
        <div class="message-container-main"> 
         <div class="card">
-          <p>[[chatMessage.text]]</p>
+
+          <template is="dom-if" if="[[chatMessage.text]]">
+            <p>[[chatMessage.text]]</p>
+          </template>
+
+          <template is="dom-if" if="[[chatMessage.photoUrl]]">
+            <iron-image src="[[chatMessage.photoUrl]]"></iron-image> 
+          </template>
 
             <div class="flex-horizontal">
               <div class="user-photo">
                 <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="images/anonymous_profile.png" class="item" on-tap="_onTapBusiness" ></iron-image> 
               </div>
               <div class="username">
-                Username 
+                [[chatMessage.name]]
               </div>           
             </div>
           </div>
@@ -197,9 +197,11 @@
   
     <div class="message-sender-container anchor">
       <paper-input id="message" label="Message..."></paper-input>
-      <paper-button id="image-btn" dialog-confirm autofocus raised type="submit"><iron-icon icon="custom-icons:insert-photo"></iron-icon></paper-button>
+      <paper-button id="image-btn" on-tap="_onTapImageBtn" dialog-confirm autofocus raised type="submit"><iron-icon icon="custom-icons:insert-photo"></iron-icon></paper-button>
       <paper-button id="send-btn" on-tap="_onTapSendDialogBtn" dialog-confirm autofocus raised type="submit">Send</paper-button>
     </div>
+
+    <input id="camera" type="file" name="photo" accept="image/*;capture=camera" style="display:none;"></input>
       
   </template>
 
@@ -225,23 +227,95 @@
           requestId: {
             type: String
           },
-          chatMessagesId: {
-            type: String
-          },
           chatInfo: {
             type: Object,
             observer: '_chatInfoChanged'
+          },
+          chatMessagesId: {
+            type: String,
+            observer: '_chatMessagesIdChanged'
+          },
+          chatMessages: {
+            type: Array,
+            value: []
           },
           loading: {
             type: Boolean,
             notify: true,
             value: false
+          },
+          chatPhotoUrl: {
+            type: String,
+            value: null
           }
         };
       }
 
+      connectedCallback() {
+        super.connectedCallback();
+        console.log("ChatView.connectedCallback")
 
-   
+        var self = this;
+        var camera = this.$.camera;
+
+        // Use the hidden input called 'camera' to get a photo from the user 
+        // if they tap the image button!
+        camera.addEventListener('change', function(e) {
+
+          var file = e.target.files[0];
+
+          if(!file) {
+            return;
+          }
+
+          if(!file.type.match('image.*')) {
+            Utility.showErrorToast("You can only share images.");
+            return;
+          }
+
+          Utility.correctOrientation(file, function(blob, error) {
+            if(!error) {
+
+// TODO: How should we preview the image so the user can see it before sending it?
+
+              self._uploadChatPhoto(blob);
+            } else {
+              Utility.showErrorToast("Sorry, but we were unable to use this image for some reason.");
+            }
+          });
+        });
+      }
+
+      _uploadChatPhoto(file) {
+        console.log("ChatView._uploadChatPhoto");
+
+        var self = this;
+
+        // Upload the image to Cloud Storage.
+        var newImageKey = firebase.app("polyn-app").database().ref().child("users/" + self.user.uid + "/chatphotos").push().key;
+
+        firebase.app("polyn-app").storage().ref("users/" + self.user.uid + "/chatphotos" + "/" + newImageKey).put(file).then(function(snapshot) {
+          //console.log("snapshot.downloadURL = " + snapshot.downloadURL);
+          self.chatPhotoUrl = snapshot.downloadURL;
+          self._sendChatMessage();
+        });
+      }
+
+      _chatMessagesIdChanged(chatMessagesId) {
+        console.log("ChatView._chatMessagesIdChanged: " + chatMessagesId);
+
+        if(chatMessagesId) {
+
+          var self = this;
+
+          var setMessage = function(snapshot) {
+            var val = snapshot.val();
+            self.push('chatMessages', val);
+          };
+
+          firebase.app("polyn-app").database().ref("/chats/" + chatMessagesId).on('child_added', setMessage);
+        }
+      }
 
       _userChanged(user) {
         console.log("ChatView._userChanged");
@@ -307,10 +381,15 @@
           });
       }
 
+      _onTapImageBtn() {
+        console.log("ChatView._onTapImageBtn");
+        this.$.camera.click();
+      }
+
       _onTapSendDialogBtn() {
         console.log("ChatView._onTapSendDialogBtn: message = " + this.$.message.value);
 
-        if(!this.$.message.value) {
+        if(!this.$.message.value && !this.chatPhotoUrl) {
           return;
         }
 
@@ -328,15 +407,15 @@
             // Save the chatMessagesId back to the chat entry.
             firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/requests/" + this.requestId + "/chatId").set(newChatMessageKey);
 
-// console.log("this.chatInfo.buyerId = " + this.chatInfo.buyerId);
-// console.log("this.chatInfo.requestId = " + this.chatInfo.requestId);
+              // console.log("this.chatInfo.buyerId = " + this.chatInfo.buyerId);
+              // console.log("this.chatInfo.requestId = " + this.chatInfo.requestId);
 
               var newOthersChatMessageKey = firebase.app("polyn-app").database().ref().child("/users/" + this.chatInfo.buyerId + "/requests/" + this.chatInfo.requestId + "/chats").push().key;
               if(newOthersChatMessageKey) {
 
-// console.log("chatId = " + newChatMessageKey);
-// console.log("seller = " + this.usersInfo.name);
-// console.log("sellerId = " + this.usersInfo.sellerId);
+                // console.log("chatId = " + newChatMessageKey);
+                // console.log("seller = " + this.usersInfo.name);
+                // console.log("sellerId = " + this.usersInfo.sellerId);
 
                 let newChatEntry = {
                   chatId : newChatMessageKey,
@@ -356,16 +435,28 @@
       _sendChatMessage() {
         console.log("ChatView._sendChatMessage");
 
-        var text = this.$.message.value;
+        if(!this.$.message.value && !this.chatPhotoUrl) {
+          return;
+        }
 
-        var newKey = firebase.app("polyn-app").database().ref().child("chats/" + this.chatMessagesId).push().key;
+        const text = this.$.message.value;
+        const photoUrl = this.chatPhotoUrl;
+
+        const newKey = firebase.app("polyn-app").database().ref().child("chats/" + this.chatMessagesId).push().key;
 
         var chatMessage = {
           name: this.usersInfo.name,
           senderId: this.user.uid,
-          text: text,
           timeStamp: firebase.database.ServerValue.TIMESTAMP
         };
+
+        if(text) {
+          chatMessage.text = text;
+        }
+
+        if(photoUrl) {
+          chatMessage.photoUrl = photoUrl;
+        }
 
         // Write the new chat message under a new key, which is under the existing chat mnessage thread id.
         firebase.app("polyn-app").database().ref("chats/" + this.chatMessagesId + "/" + newKey).set(chatMessage);
@@ -402,8 +493,6 @@
         console.log("  status = ", e.status, e.statusText);
       }
     }
-
-    
 
     window.customElements.define(ChatView.is, ChatView);
   </script>
