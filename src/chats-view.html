@@ -2,12 +2,11 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="messages-view">
+<dom-module id="chats-view">
   <template>
   <style include="shared-styles">
     :host {
@@ -21,13 +20,6 @@
     app-name="polyn-app" 
     user="{{user}}">
   </firebase-auth>
-
-  <firebase-query
-    id="query"
-    app-name="polyn-app"
-    path="/users/[[user.uid]]/requests/[[requestId]]/chats"
-    data="{{chats}}">
-  </firebase-query>
 
   <app-indexeddb-mirror
     session="[[user.uid]]"
@@ -47,32 +39,54 @@
   </template>
 
   <script>
-    class MessagesView extends Polymer.GestureEventListeners(Polymer.Element) {
-      static get is() { return 'messages-view'; }
+    class ChatsView extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'chats-view'; }
 
       static get properties() {
         return {
           user: {
-            type: Object
+            type: Object,
+            observer: '_userChanged'
           },
           requestId: {
             type: String
+          },
+          chats: {
+            type: Array,
+            value: []
           }
         };
       }
 
+      _userChanged(user) {
+        console.log("ChatsView._userChanged");
+
+        // As soon as we get the user - get the users info so we can 
+        // learn more about them!
+        if(user && this.requestId) {
+          
+          var self = this;
+
+          var setChat = function(snapshot) {
+            self.push('chats', snapshot.val());
+          };
+
+          firebase.app("polyn-app").database().ref("/users/" + user.uid + "/requests/" + this.requestId + "/chats").on('child_added', setChat);
+        }
+      }
+
       _onTappedMessage(e) {
-        console.log("MessagesView._onTappedMessage");
+        console.log("ChatsView._onTappedMessage");
 
         const index = e.model.index;
 
         var polynApp = document.getElementById("polynApp");
         var chatView = polynApp.pushPageOnCurrentTab("chat-view");
         chatView.requestId = this.requestId;
-        chatView.chatMessagesId = this.$.query.data[index].chatId;
+        chatView.chatMessagesId = this.chats[index].chatId;
       }
     }
 
-    window.customElements.define(MessagesView.is, MessagesView);
+    window.customElements.define(ChatsView.is, ChatsView);
   </script>
 </dom-module>

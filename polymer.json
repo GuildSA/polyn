@@ -3,7 +3,7 @@
   "shell": "src/polyn-app.html",
   "fragments": [
     "src/home-view.html",
-    "src/messages-view.html",
+    "src/chats-view.html",
     "src/profile-view.html",
     "src/sellerinfo-view.html",
     "src/chat-view.html",

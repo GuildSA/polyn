@@ -3,7 +3,6 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="item-view">
@@ -22,30 +21,6 @@
         <paper-button raised>Request a Chat</paper-button>
         <paper-button raised>Learn more About the Seller</paper-button>
     </div>
-
-    <!--<firebase-auth id="auth" app-name="polyn-app" user="{{user}}"></firebase-auth>
-
-    <firebase-query
-        id="query"
-        app-name="polyn-app"
-        path="/chats/[[chatMessagesId]]"
-        data="{{chatMessages}}">
-    </firebase-query>
-
-    <app-indexeddb-mirror
-        session="[[user.uid]]"
-        key="chats/[[chatMessagesId]]"
-        data="{{chatMessages}}"
-        persisted-data="{{persistedChatMessages}}">
-    </app-indexeddb-mirror>
-
-    <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
-        <template>
-            <div class="card">
-                <p>[[chatMessage.text]]</p>
-            </div>
-        </template>
-    </dom-repeat>-->
 
   </template>
 

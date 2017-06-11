@@ -174,8 +174,8 @@
           if(this.requests[index].chats) {
             
             var polynApp = document.getElementById("polynApp");
-            var messagesView = polynApp.pushPageOnCurrentTab("messages-view");
-            messagesView.requestId = this.requests[index].key;
+            var chatsView = polynApp.pushPageOnCurrentTab("chats-view");
+            chatsView.requestId = this.requests[index].key;
 
           } else {
             console.log("No sellers have created a chat session yet.");
