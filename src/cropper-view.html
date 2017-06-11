@@ -1,0 +1,104 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="cropper.html">
+
+<dom-module id="cropper-view">
+
+  <template>
+    <style include="shared-styles cropper-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+
+      #originalImage {
+        max-width: 100%;
+      }
+
+    </style>
+
+    <div class="card">
+      <paper-button on-tap="_onTapCropImage" raised="">Crop Image</paper-button>
+      <paper-button on-tap="_onTapCancel" raised="">Cancel</paper-button>
+      <div>
+        <img id="originalImage">
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+
+    class CropperView extends Polymer.Element {
+
+      static get is() { return 'cropper-view'; }
+
+      static get properties() {
+        return {
+          file: {
+            type: Object,
+            observer: '_fileChanged'
+          },
+          prevPage: {
+            type: Object
+          }
+        };
+      }
+
+      pushedCallback() {
+        console.log("CropperView.pushedCallback");
+      }
+
+      poppedCallback() {
+        console.log("CropperView.poppedCallback");
+
+        // If we're being popped - tell the page that launched us that editing has been canceled.
+        this.prevPage.editingProfileImage = false;
+      }
+
+      _fileChanged(file) {
+        console.log("CropperView._fileChanged");
+        
+        if(file) {
+
+          this.$.originalImage.src = URL.createObjectURL(file);
+
+          if(this.cropper) {
+            this.cropper.destroy();
+          }
+          
+          this.cropper = new Cropper(this.$.originalImage, {aspectRatio: 1});
+        }
+      }
+
+      _onTapCancel() {
+        console.log("CropperView._onTapCancel:");
+        
+        var polynApp = document.getElementById("polynApp");
+        this.prevPage.editingProfileImage = false;
+        polynApp.popPageOffCurrentTab();
+      }
+
+      _onTapCropImage() {
+        console.log("CropperView._onTapCropImage:");
+
+        if(this.cropper) {
+
+          var self = this;
+
+          this.cropper.getCroppedCanvas().toBlob(function(blob) {
+
+            var polynApp = document.getElementById("polynApp");
+            self.prevPage.croppedImage = blob;
+            polynApp.popPageOffCurrentTab();
+          });
+        }
+      }
+
+    }
+
+    window.customElements.define(CropperView.is, CropperView);
+
+  </script>
+</dom-module>

@@ -148,18 +148,12 @@
 
       static get properties() {
         return {
-          photoURL: {
-            type: String
-          },
-          displayName: {
-            type: String
-          },
-          signedIn: {
-            type: Object
-          },
           user: {
             type: Object,
             observer: '_userChanged'
+          },
+          signedIn: {
+            type: Object
           },
           statusKnown:{
             type: Object
@@ -167,6 +161,20 @@
           usersInfo: {
             type: Object,
             observer: '_usersInfoChanged'
+          },
+          displayName: {
+            type: String
+          },
+          photoURL: {
+            type: String
+          },
+          croppedImage: {
+            type: Object,
+            observer: '_croppedImageChanged'
+          },
+          editingProfileImage: {
+            type: Boolean,
+            observer: '_editingProfileImageChanged'
           }
         };
       }
@@ -185,6 +193,7 @@
           var file = e.target.files[0];
 
           if(!file) {
+            Utility.showErrorToast("No image file selcted.");
             return;
           }
 
@@ -193,15 +202,46 @@
             return;
           }
 
-          Utility.correctOrientation(file, function(blob, error) {
-            if(!error) {
-              self.photoURL = URL.createObjectURL(blob);
-              self._uploadUsersProfilePhoto(blob);
-            } else {
-              Utility.showErrorToast("Sorry, but we were unable to use this image for some reason.");
-            }
-          });
+          // Utility.correctOrientation(file, function(blob, error) {
+          //   if(!error) {
+
+              self.editingProfileImage = true;
+
+              var polynApp = document.getElementById("polynApp");
+              var cropperView = polynApp.pushPageOnCurrentTab("cropper-view");
+// cropperView.file = null;
+// cropperView.prevPage = null;
+              cropperView.file = file;
+              cropperView.prevPage = self;
+
+          //   } else {
+          //     Utility.showErrorToast("Sorry, but we were unable to use this image for some reason.");
+          //   }
+          // });
         });
+      }
+
+      _croppedImageChanged(croppedImage) {
+        console.log("ProfileView._croppedBlobChanged: " + croppedImage);
+
+        if(croppedImage) {
+          this.photoURL = URL.createObjectURL(croppedImage);
+          this._uploadUsersProfilePhoto(croppedImage);
+          this.editingProfileImage = false;
+        }
+      }
+
+      _editingProfileImageChanged(val) {
+        console.log("ProfileView._editingProfileImageChanged: " + val);
+
+        if(val == false) {
+          this.$.camera.value = null;
+        }
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        console.log("ProfileView.disconnectedCallback");
       }
 
       _uploadUsersProfilePhoto(file) {
@@ -233,7 +273,6 @@
         if(user != null) {
 
             if(user.isAnonymous == false) {
-
               // As soon as we get the user - verify the users info data.
               this._verifyUserInfo(user);
             }
@@ -356,16 +395,16 @@
         }
       }
 
-      _onTapSignInUsingTwitter() {
-        console.log("ProfileView._onTapSignInUsingTwitter");
-
-        if(this.user == null) {
-          this.$.auth.provider = "twitter";
-          return this.$.auth.signInWithPopup();
-        } else {
-          console.log("  Already logged into an account!");
-        }
-      }
+      // _onTapSignInUsingTwitter() {
+      //   console.log("ProfileView._onTapSignInUsingTwitter");
+      //
+      //   if(this.user == null) {
+      //     this.$.auth.provider = "twitter";
+      //     return this.$.auth.signInWithPopup();
+      //   } else {
+      //     console.log("  Already logged into an account!");
+      //   }
+      // }
 
       _onTapSignOut() {
         console.log("ProfileView._onTapSignOut");

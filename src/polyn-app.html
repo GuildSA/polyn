@@ -23,6 +23,7 @@
 <link rel="lazy-import" href="requests-view.html">
 <link rel="lazy-import" href="chats-view.html">
 <link rel="lazy-import" href="profile-view.html">
+<link rel="lazy-import" href="cropper-view.html">
 <link rel="lazy-import" href="sellerinfo-view.html">
 <link rel="lazy-import" href="chat-view.html">
 <link rel="lazy-import" href="business-view.html">
@@ -139,7 +140,7 @@
 
         <app-header slot="header" condenses reveals effects="waterfall">
           <app-toolbar>
-            <paper-icon-button id="toolbarNavBtn" icon="custom-icons:menu" on-tap="_onTapToolbarNavBtn"></paper-icon-button>
+            <paper-icon-button id="toolbarNavBtn" icon="custom-icons:menu" on-tap="popPageOffCurrentTab"></paper-icon-button>
             <div class="logo" main-title>
               <picture>
                 <source media="(max-width: 767px)" sizes="(max-width:767px) 50vw, 10vw"
@@ -176,6 +177,7 @@
           <requests-view name="requests-view"></requests-view>
           <chats-view name="chats-view"></chats-view>
           <profile-view name="profile-view"></profile-view>
+          <cropper-view name="cropper-view"></cropper-view>
           <sellerinfo-view name="sellerinfo-view"></sellerinfo-view>
           <chat-view name="chat-view"></chat-view>
           <business-view name="business-view"></business-view>
@@ -310,16 +312,22 @@
         }
       }
 
-      _onTapToolbarNavBtn() {
-        console.log("PolynApp._onTapToolbarNavBtn")
+      popPageOffCurrentTab() {
+        console.log("PolynApp.popPageOffCurrentTab")
 
         var selectedTab = this.$.tabs.selected;
 
         // If the current tab has any views in its stack, we need to do a back pop!
         if(this.tabViewStacks[selectedTab].length > 0) {
 
-            var popped = this.tabViewStacks[selectedTab].pop();
-            console.log("  popped = " + popped.tagName.toLowerCase())
+            var poppedPage = this.tabViewStacks[selectedTab].pop();
+
+            if(typeof poppedPage.poppedCallback === 'function') {
+              // If a page is being popped - this it's chance to cleanup anything.
+              poppedPage.poppedCallback();
+            }
+
+            console.log("  poppedPage = " + poppedPage.tagName.toLowerCase())
 
             console.log("  length after pop = " + this.tabViewStacks[selectedTab].length);
 
@@ -360,8 +368,16 @@
         this.$.toolbarNavBtn.icon = "custom-icons:arrow-back";
         this.tabViewStacks[this.$.tabs.selected].push(this.$.ironPages.selectedItem);
  
+        var pushedPage = this.$.ironPages.selectedItem;
+
+        if(typeof pushedPage.pushedCallback === 'function') {
+          // If a page is being pushed - this it's chance to reset anything.
+// TODO: For some reason, this only works on the second time we visit the page - not on the first!
+          pushedPage.pushedCallback();
+        }
+
         // Return the newly selected item or page so we can set some data on it, if required.
-        return this.$.ironPages.selectedItem;
+        return pushedPage;
       }
 
       _onTapHomeTab() {
