@@ -60,13 +60,13 @@
       <div class="card">
         <div class="layout vertical center-justified">
             <center> <h1>Create a business account</h1> </center>
-            <paper-input label="Business name"> 
+            <paper-input label="Business name" required auto-validate error-message="Please enter the name of your business"> 
               <iron-icon icon="custom-icons:business" slot="prefix"></iron-icon>
             </paper-input>
-            <paper-input label="Business email">
+            <paper-input label="Business email" required auto-validate error-message="Please enter your business email address">
               <iron-icon icon="custom-icons:email" slot="prefix">
             </paper-input>
-            <paper-input label="Phone number">
+            <paper-input label="Phone number"  required auto-validate error-message="Please enter a valid phone number">
               <iron-icon icon="custom-icons:phone" slot="prefix">
             </paper-input>
             <paper-input label="Website">
