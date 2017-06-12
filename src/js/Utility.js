@@ -202,6 +202,51 @@ var Utility = (function() {
     });
   }
 
+  var resizeImageToSpecificWidth = function(file, maxWidth, cb) {
+
+    var dataUrl;
+
+    if(file) {
+
+      var reader = new FileReader();
+
+      reader.onload = function(event) {
+
+        var img = new Image();
+
+        img.onload = function() {
+
+          if(img.width > maxWidth) {
+
+            var oc = document.createElement('canvas'), octx = oc.getContext('2d');
+            oc.width = img.width;
+            oc.height = img.height;
+            octx.drawImage(img, 0, 0);
+
+            if(img.width > img.height) {
+              oc.height = (img.height / img.width) * maxWidth;
+              oc.width = maxWidth;
+            } else {
+              oc.width = (img.width / img.height) * maxWidth;
+              oc.height = maxWidth;
+            }
+
+            octx.drawImage(oc, 0, 0, oc.width, oc.height);          
+            octx.drawImage(img, 0, 0, oc.width, oc.height);
+            dataUrl = oc.toDataURL();
+          } else {
+            dataUrl = oc.toDataURL();
+          }
+
+          cb(dataUrl);
+        };
+        img.src = event.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    }
+  }
+
   function log(message) {
     console.log("Utility: " + message);
   }
@@ -214,7 +259,8 @@ var Utility = (function() {
     resetOrientation: resetOrientation,
     getBase64: getBase64,
     dataURLtoBlob: dataURLtoBlob,
-    correctOrientation: correctOrientation
+    correctOrientation: correctOrientation,
+    resizeImageToSpecificWidth: resizeImageToSpecificWidth
   }
 
 })();

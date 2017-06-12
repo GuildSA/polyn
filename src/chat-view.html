@@ -144,10 +144,10 @@
       data="[[token]]">
     </firebase-document>
 
-    <app-indexeddb-mirror 
-      session="[[user.uid]]" 
-      key="chats/[[chatMessagesId]]" 
-      data="{{chatMessages}}" 
+    <app-indexeddb-mirror
+      session="[[user.uid]]"
+      key="chats/[[chatMessagesId]]"
+      data="{{chatMessages}}"
       persisted-data="{{persistedChatMessages}}">
     </app-indexeddb-mirror>
 
@@ -191,7 +191,12 @@
 
             <div class="flex-horizontal">
               <div class="user-photo">
-                <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="images/anonymous_profile.png" class="item" on-tap="_onTapBusiness" ></iron-image> 
+                <template is="dom-if" if="[[chatMessage.photoThumbURL]]">
+                  <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="[[chatMessage.photoThumbURL]]" class="item"></iron-image> 
+                </template>
+                <template is="dom-if" if="[[!chatMessage.photoThumbURL]]">
+                  <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="images/anonymous_profile.png" class="item"></iron-image> 
+                </template>
               </div>
               <div class="username">
                 [[chatMessage.name]]
@@ -259,6 +264,21 @@
         };
       }
 
+      poppedCallback() {
+        console.log("ChatView.poppedCallback");
+
+        //this.user = null;
+        //this.usersInfo = null;
+        //this.otherUsersInfo = null;
+        //this.chatInfo = null;
+
+        // If we're getting popped off - reset these!
+        this.requestId = null;
+        this.chatMessagesId = null;
+        this.chatPhotoUrl = null;
+        this.chatMessages = [];
+      }
+
       connectedCallback() {
         super.connectedCallback();
         console.log("ChatView.connectedCallback")
@@ -294,34 +314,35 @@
         });
       }
 
-      _uploadChatPhoto(file) {
-        console.log("ChatView._uploadChatPhoto");
-
-        var self = this;
-
-        // Upload the image to Cloud Storage.
-        var newImageKey = firebase.app("polyn-app").database().ref().child("users/" + self.user.uid + "/chatphotos").push().key;
-
-        firebase.app("polyn-app").storage().ref("users/" + self.user.uid + "/chatphotos" + "/" + newImageKey).put(file).then(function(snapshot) {
-          //console.log("snapshot.downloadURL = " + snapshot.downloadURL);
-          self.chatPhotoUrl = snapshot.downloadURL;
-          self._sendChatMessage();
-        });
-      }
-
       _chatMessagesIdChanged(chatMessagesId) {
         console.log("ChatView._chatMessagesIdChanged: " + chatMessagesId);
 
-        if(chatMessagesId) {
+        this._loadChats();
+      }
+
+      _loadChats() {
+
+        if(this.chatMessagesId) {
 
           var self = this;
 
           var setMessage = function(snapshot) {
             var val = snapshot.val();
+
+            if(self.user.uid == val.senderId) {
+              if(self.usersInfo.photoThumbURL) {
+                val.photoThumbURL = self.usersInfo.photoThumbURL;
+              }
+            } else {
+              if(self.otherUsersInfo.photoThumbURL) {
+                val.photoThumbURL = self.otherUsersInfo.photoThumbURL;
+              }
+            }
+
             self.push('chatMessages', val);
           };
 
-          firebase.app("polyn-app").database().ref("/chats/" + chatMessagesId).on('child_added', setMessage);
+          firebase.app("polyn-app").database().ref("/chats/" + this.chatMessagesId).on('child_added', setMessage);
         }
       }
 
@@ -336,7 +357,8 @@
       }
 
       _usersInfoChanged(usersInfo) {
-        console.log("ChatView._usersInfoChanged");
+        //console.log("ChatView._usersInfoChanged");
+        console.log("ChatView._usersInfoChanged: " + JSON.stringify(usersInfo, null, 4));
 
 // TODO: Is this the best way to check for an empty JSON object?
         if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
@@ -365,7 +387,7 @@
         } else {
           otherUsersId = this.chatInfo.buyerId; // The other user is the buyer.
         }
-
+        
         if(otherUsersId) {
           this.$.otherusersinfo.path = "/users/" + otherUsersId + "/info";
         }
@@ -374,6 +396,11 @@
       _otherUsersInfoChanged(otherUsersInfo) {
         console.log("ChatView._otherUsersInfoChanged: " + JSON.stringify(otherUsersInfo, null, 4));
 
+        if(!otherUsersInfo || Object.keys(otherUsersInfo).length === 0 && otherUsersInfo.constructor === Object) {
+          return;
+        }
+
+        //this._loadChats();
       }
 
       _requestNotificationPermission() {
@@ -438,6 +465,21 @@
             this._sendChatMessage();
           }
         }
+      }
+
+      _uploadChatPhoto(file) {
+        console.log("ChatView._uploadChatPhoto");
+
+        var self = this;
+
+        // Upload the image to Cloud Storage.
+        var newImageKey = firebase.app("polyn-app").database().ref().child("users/" + self.user.uid + "/chatphotos").push().key;
+
+        firebase.app("polyn-app").storage().ref("users/" + self.user.uid + "/chatphotos" + "/" + newImageKey).put(file).then(function(snapshot) {
+          //console.log("snapshot.downloadURL = " + snapshot.downloadURL);
+          self.chatPhotoUrl = snapshot.downloadURL;
+          self._sendChatMessage();
+        });
       }
 
       _sendChatMessage() {
