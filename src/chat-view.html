@@ -34,7 +34,6 @@
 
       iron-icon {
         color: white;
-        background: #FFA138;
       }
 
       iron-image {
@@ -42,6 +41,7 @@
       }
 
       #image-btn {
+        color: white;
         background: #FFA138;
       }
 
@@ -83,7 +83,7 @@
 
       paper-textarea {
         margin: 10px;
-        width: 100%
+        width: 100%;
       }
 
       #send-btn {
@@ -206,7 +206,7 @@
     <div class="message-sender-container anchor">
       <paper-textarea id="message" label="Message..."></paper-textarea>
       <paper-button id="image-btn" on-tap="_onTapImageBtn" class="flex" dialog-confirm autofocus raised type="submit"><iron-icon icon="custom-icons:insert-photo"></iron-icon></paper-button>
-      <paper-button id="send-btn" on-tap="_onTapSendDialogBtn" dialog-confirm autofocus raised type="submit">Send</paper-button>
+      <paper-button id="send-btn" on-tap="_onTapSendDialogBtn" dialog-confirm autofocus raised type="submit"><iron-icon icon="custom-icons:send"></iron-icon></paper-button>
     </div>
 
     <input id="camera" type="file" name="photo" accept="image/*;capture=camera" style="display:none;"></input>
