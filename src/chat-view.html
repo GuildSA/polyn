@@ -10,6 +10,7 @@
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="utility.html">
 
@@ -80,6 +81,11 @@
         border-radius: 50%;
       }
 
+      paper-textarea {
+        margin: 10px;
+        width: 100%
+      }
+
       #send-btn {
         background-color: #70C187;
         color: white; 
@@ -93,13 +99,11 @@
         box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
         margin-bottom: 5px;
         border-radius: 5px;
-
       }
 
       .username {
         padding: 10px;
       }
-
 
     </style>
 
@@ -200,8 +204,8 @@
   
   
     <div class="message-sender-container anchor">
-      <paper-input id="message" label="Message..."></paper-input>
-      <paper-button id="image-btn" on-tap="_onTapImageBtn" dialog-confirm autofocus raised type="submit"><iron-icon icon="custom-icons:insert-photo"></iron-icon></paper-button>
+      <paper-textarea id="message" label="Message..."></paper-textarea>
+      <paper-button id="image-btn" on-tap="_onTapImageBtn" class="flex" dialog-confirm autofocus raised type="submit"><iron-icon icon="custom-icons:insert-photo"></iron-icon></paper-button>
       <paper-button id="send-btn" on-tap="_onTapSendDialogBtn" dialog-confirm autofocus raised type="submit">Send</paper-button>
     </div>
 
