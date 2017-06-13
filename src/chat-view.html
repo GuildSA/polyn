@@ -78,7 +78,7 @@
         box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
       }
 
-      #spinner {
+      .overlay {
         position: absolute;
         top: 0;
         left: 0;
@@ -89,6 +89,7 @@
         align-items: center;
         justify-content: center;
         background: #FFF; 
+        z-index: 999999;
       }
 
       .profile-pic {
@@ -164,9 +165,11 @@
       debounce-duration="300">
     </iron-ajax>
 
-    
-    <paper-spinner id="spinner" hidden$="[[!loading]]" active></paper-spinner>
-
+      <template is="dom-if" if="[[loading]]">
+        <div class="overlay">
+          <paper-spinner id="spinner" active="[[loading]]"></paper-spinner>
+        </div>
+      </template>
 
     <div class="title">
       <div class="business-photo">
@@ -259,7 +262,7 @@
           loading: {
             type: Boolean,
             notify: true,
-            value: false
+            value: true
           },
           chatPhotoUrl: {
             type: String,
@@ -325,6 +328,8 @@
 
           var self = this;
 
+          self.loading = true;
+
           var setMessage = function(snapshot) {
             var val = snapshot.val();
 
@@ -339,6 +344,9 @@
             }
 
             self.push('chatMessages', val);
+
+// TODO: Kevin fix this!!!!!
+            self.loading = false;
           };
 
           firebase.app("polyn-app").database().ref("/chats/" + this.chatMessagesId).on('child_added', setMessage);

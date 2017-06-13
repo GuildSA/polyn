@@ -37,6 +37,12 @@
         margin-right: 12px;
       }
 
+       #profileImage {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+      }
+
     </style>
 
     <firebase-auth 
@@ -63,12 +69,17 @@
 
     <div class="flex layout vertical center-justified">
       <div class="card">
+
+        <div class="layout horizontal center-justified">
+            <img src="/images/svg/VinylRecord.svg" id="profileImage" alt="Anonymous Profile Image." >
+        </div>
+
         <div class="layout vertical center-justified">
             <center> <h1>Create a New Request</h1> </center>
             <paper-input id="titleText" label="What can we find for you?" required auto-validate error-message="Please enter a title for what you are looking for" char-counter maxlength="140"> 
               <iron-icon icon="custom-icons:search" slot="prefix"></iron-icon>
             </paper-input>
-            <paper-textarea id="descText" label="Enter a detailed description of your item here..." auto-validate error-message="Please enter a description of the item you are looking for" suffix="optional">
+            <paper-textarea id="descText" label="Enter a detailed description of your item..." auto-validate error-message="Please enter a description of the item you are looking for" suffix="optional">
               <iron-icon icon="custom-icons:email" slot="prefix">
             </paper-textarea>
           <paper-button class="sign-in" on-tap="_onTapSubmitRequest" raised>Submit Request</paper-button>
