@@ -132,8 +132,6 @@ exports.sendRequest = functions.https.onRequest((req, res) => {
                   buyerId: buyerId,
                   requestId: requestId,
                   timeStamp: admin.database.ServerValue.TIMESTAMP
-                  //seller: Wait till they start a chat before filling this in.
-                  //sellerId: Wait till they start a chat before filling this in.
                 };
 
                 admin.database().ref('/users/' + childData + '/requests').push(request).then(snapshot => {

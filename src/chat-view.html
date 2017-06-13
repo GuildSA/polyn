@@ -371,7 +371,7 @@
           fullChatInfoPath = "/users/" + this.user.uid + "/requests/" + this.requestId;
         }
 
-        console.log("fullChatInfoPath = " + fullChatInfoPath);
+        //console.log("fullChatInfoPath = " + fullChatInfoPath);
 
         firebase.app("polyn-app").database().ref(fullChatInfoPath).once('value').then(function(snapshot) {
 
@@ -382,22 +382,21 @@
               self.chatInfo = chatInfo;
               self.chatMessagesId = chatInfo.chatId;
 
-              console.log("chatInfo: " + JSON.stringify(chatInfo, null, 4));
+              //console.log("chatInfo: " + JSON.stringify(chatInfo, null, 4));
 
               // As soon as we get the user and the chat info - get the other 
               // users info so we know who we're chatting with.
               var otherUsersId;
 
-              if(self.user.uid == self.chatInfo.buyerId) {
-                otherUsersId = self.chatInfo.sellerId; // The other user is the seller.
+              if(self.subChatId) {
+                // If the subChatId is set - we're looking at our own request and the info about the chat is in a list of chats.
+                // This means the other user is the seller!
+                otherUsersId = self.chatInfo.sellerId;
               } else {
-                otherUsersId = self.chatInfo.buyerId; // The other user is the buyer.
+                // If the subChatId is NOT set - there is no chats list since there is only one chat to see.
+                // In this case - we're the seller.
+                  otherUsersId = self.chatInfo.buyerId;
               }
-              
-// // TODO: ??????????
-// if(!otherUsersId) {
-//   otherUsersId = self.user.uid;
-// }
 
               //console.log("otherUsersId = " + otherUsersId);
 
@@ -406,8 +405,10 @@
                 firebase.app("polyn-app").database().ref("/users/" + otherUsersId + "/info").once('value').then(function(snapshot) {
 
                     var otherUsersInfo = snapshot.val();
+                    //console.log("otherUsersInfo: " + JSON.stringify(otherUsersInfo, null, 4));
 
                     if(otherUsersInfo) {
+
                       self.otherUsersInfo = otherUsersInfo;
                       self._loadChats();
                     }
@@ -469,7 +470,7 @@
                 let newChatEntry = {
                   chatId : newChatMessageKey,
                   seller : this.usersInfo.name,
-                  sellerId: this.usersInfo.sellerId,
+                  sellerId: this.user.uid,
                   timeStamp: firebase.database.ServerValue.TIMESTAMP
                 };
 
