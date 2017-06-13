@@ -165,11 +165,11 @@
       debounce-duration="300">
     </iron-ajax>
 
-      <template is="dom-if" if="[[loading]]">
-        <div class="overlay">
-          <paper-spinner id="spinner" active="[[loading]]"></paper-spinner>
-        </div>
-      </template>
+    <template is="dom-if" if="[[loading]]">
+      <div class="overlay">
+        <paper-spinner id="spinner" active="[[loading]]"></paper-spinner>
+      </div>
+    </template>
 
     <div class="title">
       <div class="business-photo">
@@ -285,6 +285,8 @@
         this.chatMessagesId = null;
         this.chatPhotoUrl = null;
         this.chatMessages = [];
+
+        self.loading = true;
       }
 
       connectedCallback() {
@@ -333,6 +335,8 @@
           var setMessage = function(snapshot) {
             var val = snapshot.val();
 
+            //console.log(" snapshot: " + JSON.stringify(snapshot, null, 4));
+
             if(self.user.uid == val.senderId) {
               if(self.usersInfo.photoThumbURL) {
                 val.photoThumbURL = self.usersInfo.photoThumbURL;
@@ -346,10 +350,13 @@
             self.push('chatMessages', val);
 
 // TODO: Kevin fix this!!!!!
-            self.loading = false;
+            //self.loading = false;
           };
 
           firebase.app("polyn-app").database().ref("/chats/" + this.chatMessagesId).on('child_added', setMessage);
+
+          // No matter how fast it loads - show the spinner for at least 0.5 seconds.
+          setTimeout(function() { self.loading = false; }, 500);
         }
       }
 
