@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
@@ -28,7 +29,7 @@
         color: grey;
       }
 
-      paper-input {
+      paper-input, paper-textarea {
         --paper-input-container-focus-color: #70C187;
       }
 
@@ -60,16 +61,16 @@
       debounce-duration="300">
     </iron-ajax>
 
-    <div class="flex layout horizontal center-justified">
+    <div class="flex layout vertical center-justified">
       <div class="card">
         <div class="layout vertical center-justified">
             <center> <h1>Create a New Request</h1> </center>
-            <paper-input id="titleText" label="Title" required auto-validate error-message="Please enter a Title"> 
-              <iron-icon icon="custom-icons:business" slot="prefix"></iron-icon>
+            <paper-input id="titleText" label="What can we find for you?" required auto-validate error-message="Please enter a title for what you are looking for" char-counter maxlength="140"> 
+              <iron-icon icon="custom-icons:search" slot="prefix"></iron-icon>
             </paper-input>
-            <paper-input id="descText" label="Description" required auto-validate error-message="Please enter a Description">
+            <paper-textarea id="descText" label="Enter a detailed description of your item here..." auto-validate error-message="Please enter a description of the item you are looking for" suffix="optional">
               <iron-icon icon="custom-icons:email" slot="prefix">
-            </paper-input>
+            </paper-textarea>
           <paper-button class="sign-in" on-tap="_onTapSubmitRequest" raised>Submit Request</paper-button>
         </div>
       </div>
