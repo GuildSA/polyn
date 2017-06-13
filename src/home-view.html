@@ -2,12 +2,10 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-request.html">
 <link rel="import" href="../bower_components/iron-iconset-svg/iron-iconset-svg.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-behavior.html">
-<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
@@ -157,28 +155,8 @@
     </div>
 
   <div id="submit-request-container">
-    <paper-button class="sticky-btn" on-tap="_onTapCreateMessage" icon="custom-icons:message" >Submit Your Request</paper-button>
+    <paper-button class="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message" >Create a Request</paper-button>
   </div>
-
-    <iron-ajax
-      id="sendRequet"
-      url="https://us-central1-polyn-3c431.cloudfunctions.net/sendRequest"
-      method="POST"
-      loading="{{loading}}"
-      on-response="_handleSendRequestResponse"
-      on-error="_handleSendRequestError"
-      debounce-duration="300">
-    </iron-ajax>
-
-    <paper-dialog id="requestDialog">
-      <p>What is your request?</p>
-      <paper-input label="Short Description..." value="{{titleDialogValue}}"></paper-input>
-      <paper-input label="Long Description..." value="{{bodyDialogValue}}"></paper-input>
-      <div class="buttons">
-        <paper-button dialog-dismiss>Cancel</paper-button>
-        <paper-button on-tap="_onTapRequestDialogBtn" dialog-confirm autofocus>Request</paper-button>
-      </div>
-    </paper-dialog>
 
   </template>
 
@@ -192,14 +170,6 @@
             type: Boolean,
             notify: true,
             value: false
-          },
-          titleDialogValue: {
-            type: String,
-            value: ""
-          },
-          bodyDialogValue: {
-            type: String,
-            value: ""
           },
           user: {
             type: Object,
@@ -222,67 +192,17 @@
       }
 
       _onTapBusiness() {
+        console.log("HomeView._onTapBusiness");
         var polynApp = document.getElementById("polynApp");
         var businessView = polynApp.pushPageOnCurrentTab("business-view");
-        businessView.businessId = 1;
+// TODO: Pass a real sellerId!
+        businessView.sellerId = 1;
       }
       
-      _onClickItem() {
+      _onTapCreateRequest() {
+        console.log("HomeView._onTapCreateRequest");
         var polynApp = document.getElementById("polynApp");
-        var itemView = polynApp.pushPageOnCurrentTab("item-view");
-        itemView.itemId = 2;
-      }
-
-      _onTapCreateMessage() {
-        console.log("HomeView._onTapCreateMessage");
-
-        this.$.requestDialog.toggle();
-      }
-
-      _onTapRequestDialogBtn() {
-        console.log("HomeView._onTapRequestDialogBtn: " + this.titleDialogValue);
-
-        if(!this.user || !this.usersInfo) {
-          return;
-        }
-        
-        const requestKey = firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/requests').push().key;
-
-        // Add the user's new request to their 'requests' key as a reference.
-        let request = {
-          subject: this.titleDialogValue,
-          body: this.bodyDialogValue,
-          buyerId: this.user.uid,
-          buyer: this.usersInfo.name,
-          timeStamp: firebase.database.ServerValue.TIMESTAMP
-        };
-
-        firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/requests/' + requestKey).set(request).then(snapshot => {
-
-          // Send this info to the server.
-          var params = {
-            categoryPath: "collectables/sub/vinylRecords",
-            title: this.titleDialogValue,
-            body: this.bodyDialogValue,
-            buyerId: this.user.uid,
-            buyer: this.usersInfo.name,
-            requestId: requestKey
-          };
-
-          this.$.sendRequet.params = params;
-          this.$.sendRequet.generateRequest(); // Calls: sendRequest()
-
-        });
-      }
-
-      _handleSendRequestResponse(data) {
-        console.log("HomeView._handleSendRequestResponse");
-        console.log("  status = " + data.detail.status);
-      }
-
-      _handleSendRequestError(e) {
-        console.log("HomeView._handleSendRequestError");
-        console.log("  status = ", e.status, e.statusText);
+        var requestView = polynApp.pushPageOnCurrentTab("request-view");
       }
     }
 

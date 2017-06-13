@@ -1,0 +1,179 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="utility.html">
+
+<dom-module id="request-view">
+  <template>
+    <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: flex;
+      }
+
+      paper-button.sign-in {
+        background-color: #70C187;
+        color: white;
+        margin-left: 24px;
+        margin-right: 24px;
+        margin-top: 8px;
+        margin-bottom: 8px;
+      }
+
+      h1 {
+        color: grey;
+      }
+
+      paper-input {
+        --paper-input-container-focus-color: #70C187;
+      }
+
+      iron-icon {
+        margin-right: 12px;
+      }
+
+    </style>
+
+    <firebase-auth 
+      id="auth" 
+      app-name="polyn-app" 
+      user="{{user}}">
+    </firebase-auth>
+
+    <firebase-document
+      app-name="polyn-app"
+      id="usersinfo"
+      data="{{usersInfo}}">
+    </firebase-document>
+
+    <iron-ajax
+      id="sendRequet"
+      url="https://us-central1-polyn-3c431.cloudfunctions.net/sendRequest"
+      method="POST"
+      loading="{{loading}}"
+      on-response="_handleSendRequestResponse"
+      on-error="_handleSendRequestError"
+      debounce-duration="300">
+    </iron-ajax>
+
+    <div class="flex layout horizontal center-justified">
+      <div class="card">
+        <div class="layout vertical center-justified">
+            <center> <h1>Create a New Request</h1> </center>
+            <paper-input id="titleText" label="Title" required auto-validate error-message="Please enter a Title"> 
+              <iron-icon icon="custom-icons:business" slot="prefix"></iron-icon>
+            </paper-input>
+            <paper-input id="descText" label="Description" required auto-validate error-message="Please enter a Description">
+              <iron-icon icon="custom-icons:email" slot="prefix">
+            </paper-input>
+          <paper-button class="sign-in" on-tap="_onTapSubmitRequest" raised>Submit Request</paper-button>
+        </div>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    class RequestView extends Polymer.GestureEventListeners(Polymer.Element) {
+
+      static get is() { return 'request-view'; }
+
+      static get properties() {
+        return {
+          user: {
+            type: Object,
+            observer: '_userChanged'
+          },
+          usersInfo: {
+            type: String,
+            observer: '_usersInfoChanged'
+          }
+        };
+      }
+
+      _userChanged(user) {
+        console.log("RequestView._userChanged");
+        //console.log("RequestView._userChanged: " + JSON.stringify(user, null, 4));
+
+        // As soon as we get the user - get the users info so we can learn more about them!
+        if(user && user.uid) {
+          this.$.usersinfo.path = "/users/" + user.uid + "/info";
+        }
+      }
+
+      _usersInfoChanged(e) {
+        console.log("RequestView._usersInfoChanged: " + JSON.stringify(e, null, 4));
+      }
+
+      _onTapSubmitRequest() {
+        console.log("RequestView._onTapRequestDialogBtn");
+
+        if(!this.user || !this.usersInfo) {
+          Utility.showErrorToast("You must be signed in to make a request.");
+          return;
+        }
+
+        const title = this.$.titleText.value;
+        const desc = this.$.descText.value;
+
+        //console.log("  titleText: " + title);
+        //console.log("  descText: " + desc);
+
+        if(!title || title.length == 0) {
+          Utility.showErrorToast("A Title must be provided.");
+          return;
+        }
+
+        if(!desc || desc.length == 0) {
+          Utility.showErrorToast("A brief Description must be provided.");
+          return;
+        }
+
+        var self = this;
+
+        const requestKey = firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/requests').push().key;
+
+        // Add the user's new request to their 'requests' key as a reference.
+        let request = {
+          subject: title,
+          body: desc,
+          buyerId: self.user.uid,
+          buyer: self.usersInfo.name,
+          timeStamp: firebase.database.ServerValue.TIMESTAMP
+        };
+
+        firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/requests/' + requestKey).set(request).then(snapshot => {
+
+          // Send this info to the server.
+          var params = {
+            categoryPath: "collectables/sub/vinylRecords",
+            title: title,
+            body: desc,
+            buyerId: self.user.uid,
+            buyer: self.usersInfo.name,
+            requestId: requestKey
+          };
+
+          this.$.sendRequet.params = params;
+          this.$.sendRequet.generateRequest(); // Calls: sendRequest()
+        });
+      }
+
+      _handleSendRequestResponse(data) {
+        console.log("RequestView._handleSendRequestResponse");
+        console.log("  status = " + data.detail.status);
+      }
+
+      _handleSendRequestError(e) {
+        console.log("RequestView._handleSendRequestError");
+        console.log("  status = ", e.status, e.statusText);
+      }
+    }
+
+    window.customElements.define(RequestView.is, RequestView);
+  </script>
+</dom-module>

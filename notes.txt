@@ -214,6 +214,32 @@ cp -rn node_modules build/default/
 
  -- Markup & Code Scraps -- 
     
+
+
+
+   <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+
+    <paper-dialog id="requestDialog">
+      <p>What is your request?</p>
+      <paper-input label="Short Description..." value="{{titleDialogValue}}"></paper-input>
+      <paper-input label="Long Description..." value="{{bodyDialogValue}}"></paper-input>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button on-tap="_onTapRequestDialogBtn" dialog-confirm autofocus>Request</paper-button>
+      </div>
+    </paper-dialog>
+
+   titleDialogValue: {
+      type: String,
+      value: ""
+    },
+    bodyDialogValue: {
+      type: String,
+      value: ""
+    },
+
+-------
+
     console.log("  user: " + JSON.stringify(user, null, 4));
 
       // ready() {
@@ -231,6 +257,7 @@ cp -rn node_modules build/default/
       //   console.log("ProfileView.disconnectedCallback");
       // }
 
+-------
 
 //      _linkGoogleAccount() {
 //           console.log("ProfileView._linkGoogleAccount");
