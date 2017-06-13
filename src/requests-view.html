@@ -156,14 +156,22 @@
             var polynApp = document.getElementById("polynApp");
             var chatView = polynApp.pushPageOnCurrentTab("chat-view");
             chatView.requestId = this.requests[index].key;
-            chatView.chatMessagesId = this.requests[index].chatId;
+
+            if(typeof chatView.reload === 'function') {
+              chatView.reload();
+            }
 
           } else {
 
             // No chat ID yet.
             var polynApp = document.getElementById("polynApp");
             var chatView = polynApp.pushPageOnCurrentTab("chat-view");
-            chatView.requestId = this.requests[index].key
+
+            chatView.requestId = this.requests[index].key;
+
+            if(typeof chatView.reload === 'function') {
+              chatView.reload();
+            }
           }
 
         } else {
@@ -175,7 +183,12 @@
             
             var polynApp = document.getElementById("polynApp");
             var chatsView = polynApp.pushPageOnCurrentTab("chats-view");
+
             chatsView.requestId = this.requests[index].key;
+
+            if(typeof chatsView.reload === 'function') {
+              chatsView.reload();
+            }
 
           } else {
             console.log("No sellers have created a chat session yet.");

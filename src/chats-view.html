@@ -58,21 +58,45 @@
         };
       }
 
+      reload() {
+        console.log("ChatsView.reload");
+        this._loadChats();
+      }
+
+      poppedCallback() {
+        console.log("ChatsView.poppedCallback");
+
+        // // If we're getting popped off - reset these!
+        this.requestId = null;
+        this.chats = [];
+      }
+
       _userChanged(user) {
         console.log("ChatsView._userChanged");
 
         // As soon as we get the user - get the users info so we can 
         // learn more about them!
         if(user && this.requestId) {
-          
-          var self = this;
-
-          var setChat = function(snapshot) {
-            self.push('chats', snapshot.val());
-          };
-
-          firebase.app("polyn-app").database().ref("/users/" + user.uid + "/requests/" + this.requestId + "/chats").on('child_added', setChat);
+          this._loadChats();
         }
+      }
+
+      _loadChats() {
+
+        var self = this;
+
+        var setChat = function(snapshot) {
+
+          var childKey = snapshot.key;
+          var childData = snapshot.val();
+
+          // Manually add the key for this data so we can pass it forward if selected.
+          childData.key = childKey;
+
+          self.push('chats', childData);
+        };
+
+        firebase.app("polyn-app").database().ref("/users/" + this.user.uid + "/requests/" + this.requestId + "/chats").on('child_added', setChat);
       }
 
       _onTappedMessage(e) {
@@ -82,8 +106,13 @@
 
         var polynApp = document.getElementById("polynApp");
         var chatView = polynApp.pushPageOnCurrentTab("chat-view");
+
+        chatView.subChatId = this.chats[index].key;
         chatView.requestId = this.requestId;
-        chatView.chatMessagesId = this.chats[index].chatId;
+
+        if(typeof chatView.reload === 'function') {
+          chatView.reload();
+        }
       }
     }
 

@@ -122,19 +122,6 @@
       data="{{usersInfo}}">
     </firebase-document>
 
-    <firebase-document
-      app-name="polyn-app"
-      id="chatinfo"
-      path="/users/[[user.uid]]/requests/[[requestId]]"
-      data="{{chatInfo}}">
-    </firebase-document>
-
-    <firebase-document
-      app-name="polyn-app"
-      id="otherusersinfo"
-      data="{{otherUsersInfo}}">
-    </firebase-document>
-
     <firebase-messaging
       id="messaging"
       app-name="polyn-app"
@@ -237,19 +224,19 @@
             observer: '_usersInfoChanged'
           },
           otherUsersInfo: {
-            type: Object,
-            observer: '_otherUsersInfoChanged'
+            type: Object
           },
           requestId: {
             type: String
           },
+          subChatId: {
+            type: String
+          },
           chatInfo: {
-            type: Object,
-            observer: '_chatInfoChanged'
+            type: Object
           },
           chatMessagesId: {
-            type: String,
-            observer: '_chatMessagesIdChanged'
+            type: String
           },
           chatMessages: {
             type: Array,
@@ -267,16 +254,17 @@
         };
       }
 
+      reload() {
+        console.log("ChatView.reload");
+        this._loadChatInfo();
+      }
+
       poppedCallback() {
         console.log("ChatView.poppedCallback");
 
-        //this.user = null;
-        //this.usersInfo = null;
-        //this.otherUsersInfo = null;
-        //this.chatInfo = null;
-
         // If we're getting popped off - reset these!
         this.requestId = null;
+        this.subChatId = null;
         this.chatMessagesId = null;
         this.chatPhotoUrl = null;
         this.chatMessages = [];
@@ -317,12 +305,6 @@
         });
       }
 
-      _chatMessagesIdChanged(chatMessagesId) {
-        console.log("ChatView._chatMessagesIdChanged: " + chatMessagesId);
-
-        this._loadChats();
-      }
-
       _loadChats() {
 
         if(this.chatMessagesId) {
@@ -350,7 +332,8 @@
       }
 
       _userChanged(user) {
-        console.log("ChatView._userChanged");
+        //console.log("ChatView._userChanged");
+        console.log("ChatView._userChanged: " + JSON.stringify(user, null, 4));
 
         // As soon as we get the user - get the users info so we can 
         // learn more about them!
@@ -363,7 +346,6 @@
         //console.log("ChatView._usersInfoChanged");
         console.log("ChatView._usersInfoChanged: " + JSON.stringify(usersInfo, null, 4));
 
-// TODO: Is this the best way to check for an empty JSON object?
         if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
           return;
         }
@@ -372,38 +354,67 @@
         if(!usersInfo.token) {
           this._requestNotificationPermission();
         }
+
+        this._loadChatInfo();
       }
 
-      _chatInfoChanged(e) {
-        console.log("ChatView._chatInfoChanged: " + JSON.stringify(e, null, 4));
+      _loadChatInfo() {
+        console.log("ChatView._loadChatInfo");
 
-        if(!this.user || !this.chatInfo) {
-          return;
-        }
+        var self = this;
 
-        // As soon as we get the user and the chat info - get the other 
-        // users info so we know who we're chatting with.
-        var otherUsersId;
+        var fullChatInfoPath;
 
-        if(this.user.uid == this.chatInfo.buyerId) {
-          otherUsersId = this.chatInfo.sellerId; // The other user is the seller.
+        if(this.subChatId) {
+          fullChatInfoPath = "/users/" + this.user.uid + "/requests/" + this.requestId + "/chats/" + this.subChatId;
         } else {
-          otherUsersId = this.chatInfo.buyerId; // The other user is the buyer.
-        }
-        
-        if(otherUsersId) {
-          this.$.otherusersinfo.path = "/users/" + otherUsersId + "/info";
-        }
-      }
-      
-      _otherUsersInfoChanged(otherUsersInfo) {
-        console.log("ChatView._otherUsersInfoChanged: " + JSON.stringify(otherUsersInfo, null, 4));
-
-        if(!otherUsersInfo || Object.keys(otherUsersInfo).length === 0 && otherUsersInfo.constructor === Object) {
-          return;
+          fullChatInfoPath = "/users/" + this.user.uid + "/requests/" + this.requestId;
         }
 
-        //this._loadChats();
+        console.log("fullChatInfoPath = " + fullChatInfoPath);
+
+        firebase.app("polyn-app").database().ref(fullChatInfoPath).once('value').then(function(snapshot) {
+
+            var chatInfo = snapshot.val();
+
+            if(chatInfo) {
+
+              self.chatInfo = chatInfo;
+              self.chatMessagesId = chatInfo.chatId;
+
+              console.log("chatInfo: " + JSON.stringify(chatInfo, null, 4));
+
+              // As soon as we get the user and the chat info - get the other 
+              // users info so we know who we're chatting with.
+              var otherUsersId;
+
+              if(self.user.uid == self.chatInfo.buyerId) {
+                otherUsersId = self.chatInfo.sellerId; // The other user is the seller.
+              } else {
+                otherUsersId = self.chatInfo.buyerId; // The other user is the buyer.
+              }
+              
+// // TODO: ??????????
+// if(!otherUsersId) {
+//   otherUsersId = self.user.uid;
+// }
+
+              //console.log("otherUsersId = " + otherUsersId);
+
+              if(otherUsersId) {
+
+                firebase.app("polyn-app").database().ref("/users/" + otherUsersId + "/info").once('value').then(function(snapshot) {
+
+                    var otherUsersInfo = snapshot.val();
+
+                    if(otherUsersInfo) {
+                      self.otherUsersInfo = otherUsersInfo;
+                      self._loadChats();
+                    }
+                });
+              }
+            }
+        });
       }
 
       _requestNotificationPermission() {
