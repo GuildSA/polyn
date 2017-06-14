@@ -95,13 +95,17 @@
       persisted-data="{{persistedSellers}}">
     </app-indexeddb-mirror>
 
-    <dom-repeat items="[[persistedSellers]]" as="seller" initial-count="5">
+    <dom-repeat items="[[persistedSellers]]" as="seller" initial-count="2">
       <template>
 
         <div class="card layout vertical" on-tap="_onTapBusiness">
           <iron-image style="width:100%; height:400px; background-color: lightgray;" sizing="cover" preload fade src="[[seller.photoUrl]]"></iron-image>
           <center><h2>[[seller.name]]</h2></center>
-          <center><h1>[[seller.distance]] miles away</h1></center>
+
+          <template is="dom-if" if="[[seller.distance]]">
+            <center><h1>[[seller.distance]] miles away</h1></center>
+          </template>
+
           <p>[[seller.desc]]</p>
         </div>
 
@@ -135,30 +139,45 @@
         super.connectedCallback();
         console.log("HomeView.connectedCallback");
 
-        //this._loadSellers();
-        this._loadSellersByLocation(100);
+        //this._loadSellersNoLocation("collectables/sub/vinylRecords");
+        this._loadSellersByLocation("collectables/sub/vinylRecords", 100);
       }
 
-      _loadSellers() {
-        console.log("HomeView._loadSellers");
+      _loadSellersNoLocation(sellersCategory) {
+        console.log("HomeView._loadSellersNoLocation: " + sellersCategory);
 
         var self = this;
 
-        var setSeller= function(snapshot) {
+        var setSeller = function(snapshot) {
 
           var childKey = snapshot.key;
-          var childData = snapshot.val();
 
-          // Manually add the key for this data so we can pass it forward if selected.
-          childData.key = childKey;
+          const refPath = "/sellers/" + childKey;
+          firebase.app("polyn-app").database().ref(refPath).once('value').then(function(snapshot) {
 
-          self.push('sellers', childData);
+            var sellersInfo = snapshot.val();
+
+            if(sellersInfo) {
+
+              self.push('sellers', sellersInfo);
+
+              // Since we don't know anything about the user's location - sort alphabetically by name.
+              self.sellers.sort(function(a, b){
+                if(a.name < b.name) return -1;
+                if(a.name > b.name) return 1;
+                return 0;
+              })
+
+            } else {
+              console.log("  Failed to get data for seller key: " + key);
+            }
+          });
         };
 
-        firebase.app("polyn-app").database().ref("/sellers").on('child_added', setSeller);
+        firebase.app("polyn-app").database().ref("/locations/" + sellersCategory).on('child_added', setSeller);
       }
 
-      _loadSellersByLocation(rangeInMiles) {
+      _loadSellersByLocation(sellersCategory, rangeInMiles) {
         console.log("HomeView._loadSellersByLocation: " + rangeInMiles);
 
         var self = this;
@@ -171,7 +190,7 @@
           // If we don't know the user's current location - ask for it!
 
           //GeofireManager.getUsersLocation("users/" + this.user.uid + "/info", 
-          GeofireManager.getUsersLocation(null, 
+          GeofireManager.getUsersLocation(null, // Pass null for user's info path since we don't actually need a user to do this.
 
             function(location) {
               var latitude = location.coords.latitude;
@@ -182,18 +201,19 @@
 
               console.log("User Location is lat: " + latitude + ", long: " + longitude + "");
 
-              self._getSellerData("collectables/sub/vinylRecords", latitude, longitude, rangeInKm);
+              self._getSellerData(sellersCategory, latitude, longitude, rangeInKm);
             },
             
             function(error) {
               console.log("User Location error: " + error + "");
-              alert("User Location error: " + error + "");
+              // We have no location to use - just get the sellers direclty from the selected category!
+              self._loadSellersNoLocation(sellersCategory);
           });
 
         } else {
 
           // If we DO know the user's current location - just get the sellers!
-          self._getSellerData("collectables/sub/vinylRecords", this.location[0], this.location[1], rangeInKm);
+          self._getSellerData(sellersCategory, this.location[0], this.location[1], rangeInKm);
         }
       }
 
