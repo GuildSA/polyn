@@ -6,6 +6,7 @@
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="utility.html">
 
 <dom-module id="sellerinfo-view">
   <template>
@@ -142,6 +143,28 @@
 
       _onTapRegisterBusiness() {
         console.log("SellerInfoView._onTapRegisterBusiness");
+
+        if(!this.$.name.value || this.$.name.value.length == 0) {
+          Utility.showErrorToast("A Business Name must be provided.");
+          return;
+        }
+
+// TODO: How much data is optional for a Business?
+        // if(!this.$.email.value || this.$.email.value.length == 0) {
+        //   Utility.showErrorToast("A Business Email must be provided.");
+        //   return;
+        // }
+
+        // if(!this.$.phone.value || this.$.phone.value.length == 0) {
+        //   Utility.showErrorToast("A Business Phone must be provided.");
+        //   return;
+        // }
+
+        // if(!this.$.website.value || this.$.website.value.length == 0) {
+        //   Utility.showErrorToast("A Business Website must be provided.");
+        //   return;
+        // }
+
         this._registerNewSeller("collectables/sub/vinylRecords");
       }
 
@@ -195,9 +218,6 @@
 
             var newSellerData = {
               name: self.$.name.value,
-              email: self.$.email.value,
-              phone: self.$.phone.value,
-              website: self.$.website.value,
               address: {
                 line1: "l1",
                 line2: "l2",
@@ -206,6 +226,18 @@
                 zip: "z"
               }
             };
+
+            if(self.$.email.value && self.$.email.value.length > 0) {
+              newSellerData.email = self.$.email.value;
+            }
+
+            if(self.$.phone.value && self.$.phone.value.length > 0) {
+              newSellerData.phone = self.$.phone.value;
+            }
+
+            if(self.$.website.value && self.$.website.value.length > 0) {
+              newSellerData.website = self.$.website.value;
+            }
 
             firebase.app("polyn-app").database().ref("sellers/" + newSellerKey).set(newSellerData).then(function() {
 
