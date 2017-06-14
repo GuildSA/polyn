@@ -60,7 +60,15 @@
     <div class="flex layout horizontal center-justified">
       <div class="card">
         <div class="layout vertical center-justified">
-          <center> <h1>Create a business account</h1> </center>
+
+          <template is="dom-if" if="[[!usersInfo.sellerId]]">
+            <center> <h1>Create a business account</h1> </center>
+          </template>
+
+          <template is="dom-if" if="[[usersInfo.sellerId]]">
+            <center> <h1>Edit your business account</h1> </center>
+          </template>
+
           <paper-input id="name" label="Business name" required auto-validate error-message="Please enter the name of your business"> 
             <iron-icon icon="custom-icons:business" slot="prefix"></iron-icon>
           </paper-input>
