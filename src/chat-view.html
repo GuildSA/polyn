@@ -22,6 +22,14 @@
         padding: 10px;
       }
 
+      .bottom-border {
+        border-bottom-style: solid;
+        border-bottom-color: #70C187;
+        border-bottom-width: .5px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+      }
+
       .business-pic {
         width: 50px;
         height: 50px;
@@ -30,6 +38,10 @@
 
       .business-name {
         padding: 10px;
+      }
+
+      .card {
+        max-width: 400px;
       }
 
       iron-icon {
@@ -119,7 +131,11 @@
       }
 
       .username {
-        padding: 10px;
+        font-weight: bold;
+      }
+
+      .user-photo {
+        padding-right: 15px;
       }
 
     </style>   
@@ -181,39 +197,44 @@
       </div>
     </div>
 
-    <div class="content-wrapper">
-     
-    <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
-      <template>
-       <div class="message-container-main"> 
-        <div class="card">
+    <div class="card">
+      
+      <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
+        <template>
+          <div class="bottom-border">
 
-          <template is="dom-if" if="[[chatMessage.text]]">
-            <p>[[chatMessage.text]]</p>
-          </template>
+            
+            <template is="dom-if" if="[[chatMessage.photoUrl]]">
+              <iron-image src="[[chatMessage.photoUrl]]"></iron-image> 
+            </template>
 
-          <template is="dom-if" if="[[chatMessage.photoUrl]]">
-            <iron-image src="[[chatMessage.photoUrl]]"></iron-image> 
-          </template>
+              <div class="horizontal layout start">
+                <div class="user-photo">
+                  <template is="dom-if" if="[[chatMessage.photoThumbURL]]">
+                    <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="[[chatMessage.photoThumbURL]]" class="item"></iron-image> 
+                  </template>
+                  <template is="dom-if" if="[[!chatMessage.photoThumbURL]]">
+                    <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="images/anonymous_profile.png" class="item"></iron-image> 
+                  </template>
+                </div>
 
-            <div class="flex-horizontal">
-              <div class="user-photo">
-                <template is="dom-if" if="[[chatMessage.photoThumbURL]]">
-                  <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="[[chatMessage.photoThumbURL]]" class="item"></iron-image> 
-                </template>
-                <template is="dom-if" if="[[!chatMessage.photoThumbURL]]">
-                  <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="images/anonymous_profile.png" class="item"></iron-image> 
-                </template>
+              <div class="flex vertical layout">
+                <div class="username horizontal layout">
+                  [[chatMessage.name]]
+                </div> 
+                  <template is="dom-if" if="[[chatMessage.text]]">
+                <div class="horizontal layout center">
+                  <p>[[chatMessage.text]]</p>
+                </div>
               </div>
-              <div class="username">
-                [[chatMessage.name]]
-              </div>           
-            </div>
+            </template>          
           </div>
-      </template>
-    </dom-repeat>
+
+          
+        </template>
+      </dom-repeat>
     </div>
-  
+    
   
     <div class="card">
       <div class="flex layout horizontal center-justified">
@@ -222,8 +243,10 @@
       <div class="flex layout horizontal right-justified">
         <paper-button id="image-btn" on-tap="_onTapImageBtn"  dialog-confirm autofocus raised type="submit"><iron-icon icon="custom-icons:insert-photo"></iron-icon></paper-button>
         <paper-button id="send-btn" on-tap="_onTapSendDialogBtn" class="flex" dialog-confirm autofocus raised type="submit"><iron-icon icon="custom-icons:send"></iron-icon></paper-button>
+      </div>
     </div>
-
+    
+  </div>
 
     <input id="camera" type="file" name="photo" accept="image/*;capture=camera" style="display:none;"></input>
       
