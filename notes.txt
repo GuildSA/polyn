@@ -157,7 +157,7 @@ curl -H "Content-Type: application/json" \
           "notification": {
              "title": "My title text!",
              "body": "My body text!",
-             "icon": "/images/polyn-msg.png",
+             "icon": "/images/vr-msg.png",
              "click_action": "https://polyn-3c431.firebaseapp.com/"
            },
            "data": {
