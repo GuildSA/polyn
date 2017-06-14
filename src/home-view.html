@@ -9,6 +9,7 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="custom-icons.html">
@@ -21,22 +22,21 @@
         padding: 0px;
       }
 
-      .business-description {
+      /*.business-description {
         margin: 0%;
-        
-      }
+      }*/
 
-      .business-image {
+      /*.business-image {
         width: 75px;
         height: 75px;
         border-radius: 50%;
-      }
+      }*/
 
       h2 {
         color: #70C187;
       }
 
-      .item {
+      /*.item {
         transition-timing-function: ease-out;
         transition-duration: .75s;
         background: #eee;
@@ -45,36 +45,35 @@
 
       .item:hover {
         opacity: .75;
-      }
+      }*/
 
-      .main-container {
+      /*.main-container {
         display: flex;
         align-items: center;
         width: 100%;
         @apply --layout-wrap;
         @apply --layout-center;
         @apply --layout-around-justified;
-      }
+      }*/
 
-      paper-fab {
+      /*paper-fab {
         --paper-fab-background: var(--app-secondary-color);
         bottom: 2.5%;
         right: 2.5%;
         position: fixed;
-      }
+      }*/
 
-      .profile-pic {
-        
+      /*.profile-pic {
         border-radius: 5%;
         display: flex;
         @apply --layout-vertical;
-      }
+      }*/
 
-      .stick-btn-container {
+      /*.stick-btn-container {
         justify-content: center;
         right:0;
         left:0;
-      }
+      }*/
 
       #submit-request-container {
         @apply --layout-horizontal;
@@ -89,74 +88,31 @@
         position: -webkit-sticky;
         bottom: 0px;
       }
-
     </style>
-
-    <firebase-auth 
-      id="auth"
-      app-name="polyn-app"
-      user="{{user}}">
-    </firebase-auth>
-
-    <firebase-document
-      app-name="polyn-app"
-      id="usersinfo"
-      data="{{usersInfo}}">
-    </firebase-document>
 
     <paper-spinner id="spinner" active="[[loading]]" active></paper-spinner>
 
-    <div class="flex layout horizontal center-justified">
-     <div class="card"  on-tap="_onTapBusiness">
-      <div class="layout horizontal">
-       <iron-image style="background-color: lightgray;" sizing="cover" class="business-image" preload fade src="images/RecordStoreDayLogo.jpg" on-tap="_onTapBusiness" ></iron-image>
-       
-        <!-- Middle Flex Box Vertical -->
-        <div class="flex layout vertical ">
-         <h1>Goods Records</h1>
-          <p class="description">This is a short description of the record store.</p>
-            <div class="layout horizontal">
-              <p><paper-icon-button icon="custom-icons:near-me"></paper-icon-button>1.2 miles away</p> 
-              <p><paper-icon-button icon="custom-icons:phonelink-ring"></paper-icon-button></p>
-              <p><paper-icon-button icon="custom-icons:web"></paper-icon-button></p>
-            </div>
-          </div>
+    <app-indexeddb-mirror
+      key="sellers"
+      data="{{sellers}}"
+      persisted-data="{{persistedSellers}}">
+    </app-indexeddb-mirror>
 
+    <dom-repeat items="[[persistedSellers]]" as="seller" initial-count="5">
+      <template>
+
+        <div class="card layout vertical" on-tap="_onTapBusiness">
+          <iron-image style="width:100%; height:400px; background-color: lightgray;" sizing="cover" preload fade src="[[seller.photoUrl]]"></iron-image>
+          <center><h2>[[seller.name]]</h2></center>
+          <p>[[seller.desc]]</p>
         </div>
-        <!--<div id="submit-request-container">
-          <paper-button class="sticky-btn" on-tap="_onTapCreateMessage" icon="custom-icons:message" >Submit Your Request</paper-button>
-        </div>-->
-      </div>
+
+      </template>
+    </dom-repeat>
+
+    <div id="submit-request-container">
+      <paper-button class="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message" >Create a Request</paper-button>
     </div>
-
-
-
-     <div class="flex layout horizontal center-justified">
-     <div class="card"  on-tap="_onTapBusiness">
-      <div class="layout horizontal">
-       <iron-image style="background-color: lightgray;" sizing="cover" class="business-image" preload fade src="images/RecordStoreDayLogo.jpg" on-tap="_onTapBusiness" ></iron-image>
-       
-        <!-- Middle Flex Box Vertical -->
-        <div class="flex layout vertical">
-         <h1>Spinster Records</h1>
-          <p class="description">This is a short description of the record store.</p>
-            <div class="layout horizontal">
-              <p><paper-icon-button icon="custom-icons:near-me"></paper-icon-button>1.2 miles away</p> 
-              <p><paper-icon-button icon="custom-icons:phonelink-ring"></paper-icon-button></p>
-              <p><paper-icon-button icon="custom-icons:web"></paper-icon-button></p>
-            </div>
-          </div>
-
-        </div>
-        <!--<div id="submit-request-container">
-          <paper-button class="sticky-btn" on-tap="_onTapCreateMessage" icon="custom-icons:message" >Submit Your Request</paper-button>
-        </div>-->
-      </div>
-    </div>
-
-  <div id="submit-request-container">
-    <paper-button class="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message" >Create a Request</paper-button>
-  </div>
 
   </template>
 
@@ -171,32 +127,47 @@
             notify: true,
             value: false
           },
-          user: {
-            type: Object,
-            observer: '_userChanged'
-          },
-          usersInfo: {
-            type: Object
+          sellers: {
+            type: Array,
+            value: []
           }
         };
       }
 
-      _userChanged(user) {
-        console.log("HomeView._userChanged");
+      connectedCallback() {
+        super.connectedCallback();
+        console.log("HomeView.connectedCallback");
 
-        // As soon as we get the user - get the users info so we can 
-        // learn more about them!
-        if(user && user.uid) {
-          this.$.usersinfo.path = "/users/" + user.uid + "/info";
-        }
+        this._loadSellers();
       }
 
-      _onTapBusiness() {
-        console.log("HomeView._onTapBusiness");
+      _loadSellers() {
+        console.log("HomeView._loadSellers");
+
+        var self = this;
+
+        var setSeller= function(snapshot) {
+
+          var childKey = snapshot.key;
+          var childData = snapshot.val();
+
+          // Manually add the key for this data so we can pass it forward if selected.
+          childData.key = childKey;
+
+          self.push('sellers', childData);
+        };
+
+        firebase.app("polyn-app").database().ref("/sellers").on('child_added', setSeller);
+      }
+
+      _onTapBusiness(e) {
+        console.log("HomeView._onTapBusiness: " + e);
+
         var polynApp = document.getElementById("polynApp");
         var businessView = polynApp.pushPageOnCurrentTab("business-view");
-// TODO: Pass a real sellerId!
-        businessView.sellerId = 1;
+
+        const index = e.model.index;
+        businessView.sellerInfo = this.sellers[index];
       }
       
       _onTapCreateRequest() {

@@ -1,10 +1,11 @@
 {
   "rules": {
 
-    ".read": "auth != null",
-    ".write": "auth != null",
-
     "locations": {
+
+      ".read": "true",
+      ".write": "auth != null",
+
       "collectables": {
         "sub": {
           "vinylRecords": {
@@ -12,6 +13,32 @@
           } 
         } 
       } 
-    } 
+    },
+
+    "sellers": {
+      ".read": "true",
+      ".write": "auth != null"
+    },
+
+    "categories": {
+      ".read": "true",
+      ".write": "auth != null"
+    },
+
+    "users": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+
+    "requests": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+
+    "chats": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    }
+    
   }
 }

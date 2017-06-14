@@ -58,6 +58,85 @@ NEW RULES with optimization added for nested entry for vinylRecords
 }
 
 
+
+
+
+{
+  "rules": {
+
+    ".read": "auth != null",
+    ".write": "auth != null",
+
+    "locations": {
+      "collectables": {
+        "sub": {
+          "vinylRecords": {
+            ".indexOn": "g"
+          } 
+        } 
+      } 
+    } 
+  }
+}
+
+
+
+
+
+{
+  "rules": {
+
+    "locations": {
+
+      ".read": "true",
+      ".write": "auth != null",
+
+      "collectables": {
+        "sub": {
+          "vinylRecords": {
+            ".indexOn": "g"
+          } 
+        } 
+      } 
+    },
+
+    "sellers": {
+
+      ".read": "true",
+      ".write": "auth != null"
+    },
+
+    "categories": {
+
+      ".read": "true",
+      ".write": "auth != null"
+    },
+
+    "users": {
+
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+
+    "requests": {
+
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+
+    "chats": {
+
+      ".read": "auth != null",
+      ".write": "auth != null"
+    }
+    
+  }
+}
+
+
+
+
+
  -- Firebase Cloud Messaging --
 
 A Real Curl example filled in:

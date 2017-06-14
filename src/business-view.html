@@ -1,6 +1,7 @@
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
@@ -9,37 +10,69 @@
 
 <dom-module id="business-view">
   <template>
-  <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
-    :host {
-      display: flex;
-    }
-
-    paper-button {
-      color: white;
-      background: #70C187;
-    }
-
-    #submit-request-btn {
-       max-width: 400px;
-       margin: auto;
-       position: sticky;
-       position: -webkit-sticky;
-       bottom: 0px;
+    <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: block;
+        padding: 0px;
       }
 
-  </style>
+      h2 {
+        color: #70C187;
+      }
 
-  <div class="card layout vertical">
-    <iron-image style="width:100%; height:400px; background-color: lightgray;" sizing="cover" preload fade src="http://lorempixel.com/600/400"></iron-image>
-    <center><h1>Spinster Records</h1></center>
-    <div class="layout horizontal center-justified">
-      <p><paper-icon-button icon="custom-icons:near-me"></paper-icon-button></p><p><paper-icon-button icon="custom-icons:phonelink-ring"></paper-icon-button></p> <p><paper-icon-button icon="custom-icons:web"></paper-icon-button></p>
+      paper-button {
+        color: white;
+        background: #70C187;
+      }
+
+      #submit-request-btn {
+        max-width: 400px;
+        margin: auto;
+        position: sticky;
+        position: -webkit-sticky;
+        bottom: 0px;
+      }
+
+      #submit-request-container {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        @apply --layout-around-justified;
+        color: white;
+        background: #70C187;
+        border-radius: 5px;
+        max-width: 400px;
+        margin: auto;
+        position: sticky;
+        position: -webkit-sticky;
+        bottom: 0px;
+      }
+
+    </style>
+
+    <div class="card layout vertical">
+      <iron-image style="width:100%; height:400px; background-color: lightgray;" sizing="cover" preload fade src="[[sellerInfo.photoUrl]]"></iron-image>
+      <center><h2>[[sellerInfo.name]]</h2></center>
+      <div class="layout horizontal center-justified">
+        <p><paper-icon-button icon="custom-icons:near-me"></paper-icon-button></p>
+        <p>
+          <a href="tel:[[sellerInfo.phone]]">
+            <paper-icon-button icon="custom-icons:phonelink-ring"></paper-icon-button>
+          </a>
+        </p>
+        <p>
+          <a href="[[sellerInfo.website]]" tabindex="-1">
+            <paper-icon-button icon="custom-icons:web"></paper-icon-button>
+          </a>
+        </p>
+      </div>
+      <p>[[sellerInfo.desc]]</p>
     </div>
-    <p>Spinster Records a vinyl record and lifestyle store located in North Oak Cliff, just south of downtown Dallas, Texas. </p>
-    <paper-button id="sumbit-request-btn" raised>Submit a Request</paper-button>
-  </div>
 
-</template>
+    <div id="submit-request-container">
+      <paper-button class="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message" >Create a Request</paper-button>
+    </div>
+
+  </template>
 
   <script>
     class BusinessView extends Polymer.Element {
@@ -47,15 +80,22 @@
 
       static get properties() {
         return {
-          sellerId: {
-            type: String,
-            observer: '_sellerIdChanged'
+          sellerInfo: {
+            type: Object,
+            observer: '_sellerInfoChanged'
           }
         };
       }
 
-      _sellerIdChanged() {
-        console.log("BusinessView._sellerIdChanged: " + this.sellerId);
+      _sellerInfoChanged(sellerInfo) {
+        console.log("BusinessView._sellerInfoChanged: " + sellerInfo);
+        //console.log("  sellerInfo: " + JSON.stringify(sellerInfo, null, 4));
+      }
+
+      _onTapCreateRequest() {
+        console.log("BusinessView._onTapCreateRequest");
+        var polynApp = document.getElementById("polynApp");
+        var requestView = polynApp.pushPageOnCurrentTab("request-view");
       }
     }
 
