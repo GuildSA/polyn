@@ -376,6 +376,8 @@
 
             self.push('chatMessages', val);
 
+            self.chatMessages.sort(function(a, b){return a.timeStamp - b.timeStamp});
+
 // TODO: Kevin fix this!!!!!
             //self.loading = false;
           };
@@ -387,9 +389,16 @@
         } else {
           this.loading = false;
 
-// TODO: Add the desc from the buyer as a fake chat message.
+          // Create a fake message from the buyer so the seller has something to read.
+          var fakedMessage = {
+            name: this.otherUsersInfo.name,
+            text: this.chatInfo.desc,
+            senderId: this.chatInfo.buyerId,
+            photoThumbURL: this.otherUsersInfo.photoThumbURL,
+            timeStamp: firebase.database.ServerValue.TIMESTAMP
+          };
 
-
+          this.push('chatMessages', fakedMessage);
         }
       }
 
@@ -505,6 +514,8 @@
           return;
         }
 
+        var self = this;
+
         if(this.chatMessagesId) {
           this._sendChatMessage();
         } else {
@@ -539,7 +550,25 @@
                 firebase.app("polyn-app").database().ref().child("/users/" + this.chatInfo.buyerId + "/requests/" + this.chatInfo.requestId + "/chats/" + newOthersChatMessageKey).set(newChatEntry);
               }
 
-            this._sendChatMessage();
+            // Set the fake message from the buyer so the chat thread starts off with some context.
+            var firstMessage = {
+              name: this.otherUsersInfo.name,
+              text: this.chatInfo.desc,
+              senderId: this.chatInfo.buyerId,
+              photoThumbURL: this.otherUsersInfo.photoThumbURL,
+              timeStamp: firebase.database.ServerValue.TIMESTAMP
+            };
+
+            this.chatMessages = []; // Get rid of the faked message.
+
+            const newKey = firebase.app("polyn-app").database().ref().child("chats/" + this.chatMessagesId).push().key;
+
+            firebase.app("polyn-app").database().ref("chats/" + this.chatMessagesId + "/" + newKey).set(firstMessage).then(function() {
+
+              // Now, that we have a chatMessagesId - load the chats so we get our first one.
+              self._loadChats();
+              self._sendChatMessage();
+            });
           }
         }
       }
