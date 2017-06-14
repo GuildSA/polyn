@@ -67,7 +67,7 @@ exports.sendMessage = functions.https.onRequest((req, res) => {
     notification: {
       title: title,
       body: body,
-      icon: "/images/polyn-msg.png",
+      icon: "/images/vr-msg.png",
       clickAction: "https://vinylrecords.io/"
     }
   };
@@ -143,7 +143,7 @@ exports.sendRequest = functions.https.onRequest((req, res) => {
                     notification: {
                       title: title,
                       body: desc,
-                      icon: "/images/polyn-msg.png",
+                      icon: "/images/vr-msg.png",
                       clickAction: "https://vinylrecords.io/"
                     }
                   };
