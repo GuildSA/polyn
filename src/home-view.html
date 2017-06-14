@@ -21,18 +21,30 @@
         padding: 0px;
       }
 
-      /*.business-description {
-        margin: 0%;
-      }*/
+      .top-border {
+        border-top-style: solid;
+        border-top-color: var(--app-accent-color);
+        border-top-width: .5px;
+        margin-top: 15px;
+        padding-top: 10px;
+      }
 
-      /*.business-image {
-        width: 75px;
-        height: 75px;
-        border-radius: 50%;
-      }*/
+      .business-img {
+        width: 150px;
+        height: 150px;
+        border-radius: 2.5%;
+        border-color: var(--app-accent-color);
+        transition: all 0.3s ease;
+      }
+
+      .business-img:hover {
+        box-shadow: var(--app-shadow-large);
+        cursor: pointer;
+      }
 
       h2 {
         color: #70C187;
+        margin: 0;
       }
 
       /*.item {
@@ -46,33 +58,18 @@
         opacity: .75;
       }*/
 
-      /*.main-container {
+      .main-container {
         display: flex;
         align-items: center;
         width: 100%;
-        @apply --layout-wrap;
+        @apply --layout-vertical;
         @apply --layout-center;
         @apply --layout-around-justified;
-      }*/
+      }
 
-      /*paper-fab {
-        --paper-fab-background: var(--app-secondary-color);
-        bottom: 2.5%;
-        right: 2.5%;
-        position: fixed;
-      }*/
-
-      /*.profile-pic {
-        border-radius: 5%;
-        display: flex;
-        @apply --layout-vertical;
-      }*/
-
-      /*.stick-btn-container {
-        justify-content: center;
-        right:0;
-        left:0;
-      }*/
+      .seller-name {
+         border-bottom: var(--app-accent-color);
+      } 
 
       #submit-request-container {
         @apply --layout-horizontal;
@@ -81,6 +78,7 @@
         color: white;
         background: #70C187;
         border-radius: 5px;
+        width: 100%;
         max-width: 400px;
         margin: auto;
         position: sticky;
@@ -88,6 +86,8 @@
         bottom: 0px;
       }
     </style>
+
+    <div class="main-container">
 
     <app-indexeddb-mirror
       key="sellers"
@@ -97,23 +97,24 @@
 
     <dom-repeat items="[[persistedSellers]]" as="seller" initial-count="2">
       <template>
-
         <div class="card layout vertical" on-tap="_onTapBusiness">
-          <iron-image style="width:100%; height:400px; background-color: lightgray;" sizing="cover" preload fade src="[[seller.photoUrl]]"></iron-image>
-          <center><h2>[[seller.name]]</h2></center>
-
+          <iron-image class="business-img" style="width:100%; background-color: lightgray;" sizing="cover" preload fade src="[[seller.photoUrl]]"></iron-image>
+          <div class="top-border">
+            <center><h2>[[seller.name]]</h2></center>
+          </div>
           <template is="dom-if" if="[[seller.distance]]">
             <center><h1>[[seller.distance]] miles away</h1></center>
           </template>
-
           <p>[[seller.desc]]</p>
         </div>
+        
 
       </template>
     </dom-repeat>
 
     <div id="submit-request-container">
       <paper-button class="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message" >Create a Request</paper-button>
+    </div>
     </div>
 
   </template>
