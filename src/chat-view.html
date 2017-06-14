@@ -44,6 +44,11 @@
         max-width: 400px;
       }
 
+      .chat {
+        overflow:auto;
+        word-wrap: break-word;
+      }
+
       iron-icon {
         color: white;
       }
@@ -67,19 +72,13 @@
         --paper-input-container-focus-color: #70C187;
       }
 
-      .message-container-main {
-        display: flex;
-        align-items: center;
-        width: 100%;
-      }
-
       .message-sender-container {
         @apply --layout-horizontal;
         @apply --layout-center;
         @apply --layout-around-justified;
         background: white;
         border-radius: 5px;
-        max-width: 400px;
+        /*max-width: 400px;*/
         margin: auto;
         position: sticky;
         position: -webkit-sticky;
@@ -187,16 +186,6 @@
       </div>
     </template>
 
-    <div class="title">
-      <div class="business-photo">
-        <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="profile-pic" preload fade src="images/RecordStoreDayLogo.jpg" class="item" on-tap="_onTapBusiness" ></iron-image>
-      </div>
-      <div class="business-name">
-        Conversation between you and @Seller 
-        <p style="margin: 0px;">www.recordStoreWebsite.com</p>
-      </div>
-    </div>
-
     <div class="card">
       
       <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
@@ -217,6 +206,7 @@
                     <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="images/anonymous_profile.png" class="item"></iron-image> 
                   </template>
                 </div>
+              </div>
 
               <div class="flex vertical layout">
                 <div class="username horizontal layout">
@@ -224,7 +214,9 @@
                 </div> 
                   <template is="dom-if" if="[[chatMessage.text]]">
                 <div class="horizontal layout center">
-                  <p>[[chatMessage.text]]</p>
+                  <div class="chat">
+                    <p>[[chatMessage.text]]</p>
+                  </div>
                 </div>
               </div>
             </template>          
