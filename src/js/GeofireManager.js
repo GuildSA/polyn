@@ -10,17 +10,20 @@ var GeofireManager = (function() {
   var _usersLocationCallback;
   var _usersLocationError;
   var _sellerFoundCallback;
+  var _usersInfoKeyPath;
 
   // Uses the HTML5 geolocation API to get the current user's location.
   var getUsersLocation = function(usersInfoKeyPath, usersLocationCallback, usersLocationError) {
 
     _usersLocationCallback = usersLocationCallback;
     _usersLocationError = usersLocationError;
+    _usersInfoKeyPath = usersInfoKeyPath;
 
-    _firebaseRef = firebase.app("polyn-app").database().ref(usersInfoKeyPath);
-
-    // Create a new GeoFire instance pointing at the user's data.
-    _geoFire = new GeoFire(_firebaseRef);
+    if(_usersInfoKeyPath) {
+      _firebaseRef = firebase.app("polyn-app").database().ref(usersInfoKeyPath);
+      // Create a new GeoFire instance pointing at the user's data.
+      _geoFire = new GeoFire(_firebaseRef);
+    }
 
     if(typeof navigator !== "undefined" && typeof navigator.geolocation !== "undefined") {
       log("Asking user to get their location");
@@ -43,24 +46,34 @@ var GeofireManager = (function() {
     var longitude = location.coords.longitude;
     log("Retrieved user's location: [" + latitude + ", " + longitude + "]");
 
-    var locationKey = "location";
-    _geoFire.set(locationKey, [latitude, longitude]).then(function() {
+// TODO: Should we store the location at user's info location or not? Is there any benefit to this?
+    if(_usersInfoKeyPath) {
 
-      log("Current user's location has been added to GeoFire");
+      var locationKey = "location";
+      _geoFire.set(locationKey, [latitude, longitude]).then(function() {
 
-      // When the user disconnects from Firebase (e.g. closes the app, exits the browser),
-      // remove their GeoFire location entry
-      _firebaseRef.child(locationKey).onDisconnect().remove();
+        log("Current user's location has been added to GeoFire");
 
-      if(_usersLocationCallback) {
-        _usersLocationCallback(location);
-      }
+        // When the user disconnects from Firebase (e.g. closes the app, exits the browser),
+        // remove their GeoFire location entry
+        _firebaseRef.child(locationKey).onDisconnect().remove();
 
-      log("Added handler to remove user from GeoFire when you leave this page.");
+        if(_usersLocationCallback) {
+          _usersLocationCallback(location);
+        }
 
-    }).catch(function(error) {
-      log("Error adding user location to GeoFire");
-    });
+        log("Added handler to remove user from GeoFire when you leave this page.");
+
+      }).catch(function(error) {
+        log("Error adding user location to GeoFire");
+      });
+
+    } else {
+
+        if(_usersLocationCallback) {
+          _usersLocationCallback(location);
+        }
+    }
   }
 
   // Handles any errors from trying to get the user's current location.
