@@ -5,6 +5,7 @@
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="utility.html">
@@ -61,7 +62,6 @@
       id="sendRequet"
       url="https://us-central1-polyn-3c431.cloudfunctions.net/sendRequest"
       method="POST"
-      loading="{{loading}}"
       on-response="_handleSendRequestResponse"
       on-error="_handleSendRequestError"
       debounce-duration="300">
