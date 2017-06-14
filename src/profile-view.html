@@ -131,7 +131,15 @@
 
         <template is="dom-if" if="[[user]]">
           <div class="layout vertical">
-            <paper-button id="registerbusiness" class="sign-in" on-tap="_onTapRegisterBusiness">Register Your Business</paper-button>
+            
+            <template is="dom-if" if="[[!usersInfo.sellerId]]">
+              <paper-button id="registerBusiness" class="sign-in" on-tap="_onTapRegisterBusiness">Register Your Business</paper-button>
+            </template>
+
+            <template is="dom-if" if="[[usersInfo.sellerId]]">
+              <paper-button id="registerBusiness" class="sign-in" on-tap="_onTapRegisterBusiness">Edit Your Business</paper-button>
+            </template>
+
             <paper-button id="sign-out-btn" on-tap="_onTapSignOut">Sign Out</paper-button>
           </div>
         </template>
@@ -296,6 +304,10 @@
 //         if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
 //           return;
 //         }
+
+        // if(usersInfo.sellerId) {
+        //   this.$.registerBusiness.textContent = "Edit Business";
+        // }
 
         if(usersInfo.photoURL) {
           this.photoURL = usersInfo.photoURL;

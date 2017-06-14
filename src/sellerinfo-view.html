@@ -59,20 +59,28 @@
     <div class="flex layout horizontal center-justified">
       <div class="card">
         <div class="layout vertical center-justified">
-            <center> <h1>Create a business account</h1> </center>
-            <paper-input label="Business name" required auto-validate error-message="Please enter the name of your business"> 
-              <iron-icon icon="custom-icons:business" slot="prefix"></iron-icon>
-            </paper-input>
-            <paper-input label="Business email" required auto-validate error-message="Please enter your business email address">
-              <iron-icon icon="custom-icons:email" slot="prefix">
-            </paper-input>
-            <paper-input label="Phone number"  required auto-validate error-message="Please enter a valid phone number">
-              <iron-icon icon="custom-icons:phone" slot="prefix">
-            </paper-input>
-            <paper-input label="Website">
-              <iron-icon icon="custom-icons:web" slot="prefix">
-            </paper-input>
-          <paper-button id="registerbusiness" class="sign-in" on-tap="_onTapRegisterBusiness" raised>Complete Signup</paper-button>
+          <center> <h1>Create a business account</h1> </center>
+          <paper-input id="name" label="Business name" required auto-validate error-message="Please enter the name of your business"> 
+            <iron-icon icon="custom-icons:business" slot="prefix"></iron-icon>
+          </paper-input>
+          <paper-input id="email" label="Business email" required auto-validate error-message="Please enter your business email address">
+            <iron-icon icon="custom-icons:email" slot="prefix">
+          </paper-input>
+          <paper-input id="phone" label="Phone number"  required auto-validate error-message="Please enter a valid phone number">
+            <iron-icon icon="custom-icons:phone" slot="prefix">
+          </paper-input>
+          <paper-input id="website" label="Website">
+            <iron-icon icon="custom-icons:web" slot="prefix">
+          </paper-input>
+
+          <template is="dom-if" if="[[!usersInfo.sellerId]]">
+            <paper-button id="registerbusiness" class="sign-in" on-tap="_onTapRegisterBusiness" raised>Complete Signup</paper-button>
+          </template>
+
+          <template is="dom-if" if="[[usersInfo.sellerId]]">
+            <paper-button id="registerbusiness" class="sign-in" on-tap="_onTapSaveBusiness" raised>Save</paper-button>
+          </template>
+
         </div>
       </div>
     </div>
@@ -121,13 +129,44 @@
         }
       }
 
-      _sellersInfoChanged(e) {
-        console.log("SellerInfoView._sellersInfoChanged: " + JSON.stringify(e, null, 4));
+      _sellersInfoChanged(sellersInfo) {
+        console.log("SellerInfoView._sellersInfoChanged: " + JSON.stringify(sellersInfo, null, 4));
+
+        if(sellersInfo) {
+          this.$.name.value = sellersInfo.name;
+          this.$.email.value = sellersInfo.email;
+          this.$.phone.value = sellersInfo.phone;
+          this.$.website.value = sellersInfo.website;
+        }
       }
 
       _onTapRegisterBusiness() {
         console.log("SellerInfoView._onTapRegisterBusiness");
         this._registerNewSeller("collectables/sub/vinylRecords");
+      }
+
+      _onTapSaveBusiness() {
+        console.log("SellerInfoView._onTapSaveBusiness");
+        this._saveSeller("collectables/sub/vinylRecords");
+      }
+
+      _saveSeller() {
+        console.log("ProfileView._saveSeller");
+
+        if(!this.user.uid) {
+          console.log("  Error: User is not defined!");
+        }
+
+        if(!this.usersInfo.sellerId) {
+          console.log("  Error: User Info is not defined!");
+        }
+
+        var self = this;
+
+        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/name").set(this.$.name.value);
+        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/email").set(this.$.email.value);
+        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/phone").set(this.$.phone.value);
+        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/website").set(this.$.website.value);
       }
 
       _registerNewSeller(targetCategory) {
@@ -155,8 +194,17 @@
             //console.log("  newKey: " + newSellerKey);
 
             var newSellerData = {
-              name: usersInfo.name,
-              email: usersInfo.email
+              name: self.$.name.value,
+              email: self.$.email.value,
+              phone: self.$.phone.value,
+              website: self.$.website.value,
+              address: {
+                line1: "l1",
+                line2: "l2",
+                city: "c",
+                state: "s",
+                zip: "z"
+              }
             };
 
             firebase.app("polyn-app").database().ref("sellers/" + newSellerKey).set(newSellerData).then(function() {
