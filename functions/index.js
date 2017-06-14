@@ -89,14 +89,14 @@ exports.sendRequest = functions.https.onRequest((req, res) => {
 
   const categoryPath = req.query.categoryPath;
   const title = req.query.title;
-  const body = req.query.body;
+  const desc = req.query.desc;
   const buyerId = req.query.buyerId;
   const buyer = req.query.buyer;
   const requestId = req.query.requestId;
 
   let request = {
       title: title,
-      body: body,
+      desc: desc,
       buyer: buyer,
       buyerId: buyerId,
       requestId: requestId,
@@ -127,7 +127,8 @@ exports.sendRequest = functions.https.onRequest((req, res) => {
                 
                 // For our seller, add the request to the user's 'requests' key.
                 let request = {
-                  subject: title,
+                  title: title,
+                  desc: desc,
                   buyer: buyer,
                   buyerId: buyerId,
                   requestId: requestId,
@@ -141,7 +142,7 @@ exports.sendRequest = functions.https.onRequest((req, res) => {
                   let payload = {
                     notification: {
                       title: title,
-                      body: body,
+                      body: desc,
                       icon: "/images/polyn-msg.png",
                       clickAction: "https://vinylrecords.io/"
                     }

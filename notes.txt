@@ -433,7 +433,7 @@ So where this really bites me is that
     <dom-repeat items="[[persistedChats]]" as="chat">
         <template>
             <div class="card" on-tap="_onTappedCard">
-                <p>[[chat.subject]]</p>
+                <p>[[chat.title]]</p>
                 <!--<p>buyer: [[chat.buyer]]</p>-->
                 <p>Seller: [[chat.seller]]</p>
                 <!--<p>chatId: [[chat.chatId]]</p>-->

@@ -151,8 +151,8 @@
 
         // Add the user's new request to their 'requests' key as a reference.
         let request = {
-          subject: title,
-          body: desc,
+          title: title,
+          desc: desc,
           buyerId: self.user.uid,
           buyer: self.usersInfo.name,
           timeStamp: firebase.database.ServerValue.TIMESTAMP
@@ -164,7 +164,7 @@
           var params = {
             categoryPath: "collectables/sub/vinylRecords",
             title: title,
-            body: desc,
+            desc: desc,
             buyerId: self.user.uid,
             buyer: self.usersInfo.name,
             requestId: requestKey
