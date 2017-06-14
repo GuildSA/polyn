@@ -45,8 +45,8 @@
     <div class="main-container">
       <img src="images/svg/chatBubbles.svg">
       <h3> Welcome to the Message Center!</h3>
-      <p> Tap the ‘Submit Request’ button to let your local record shops know you are looking for something amazing!</p>
-      <paper-button class="submit">Submit Your Request</paper-button>
+      <p> Tap the Create Request’ button to let your local record shops know you are looking for something amazing!</p>
+      <paper-button class="submit" on-tap="_onTapCreateRequest">Create Request</paper-button>
     </div>
   </template>
 
@@ -66,8 +66,8 @@
   <dom-repeat items="[[persistedRequests]]" as="request" initial-count="5">
     <template>
       <div class="card" on-tap="_onTappedRequest">
-        <h2>[[request.subject]]</h2>
-        <p>[[request.body]]</p>
+        <h2>[[request.title]]</h2>
+        <p>[[request.desc]]</p>
       </div>
     </template>
   </dom-repeat>
@@ -194,6 +194,12 @@
             console.log("No sellers have created a chat session yet.");
           }
         }
+      }
+
+      _onTapCreateRequest() {
+        console.log("RequestsView._onTapCreateRequest");
+        var polynApp = document.getElementById("polynApp");
+        var requestView = polynApp.pushPageOnCurrentTab("request-view");
       }
     }
 
