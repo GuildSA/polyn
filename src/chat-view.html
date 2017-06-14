@@ -16,7 +16,7 @@
 
 <dom-module id="chat-view">
   <template>
-    <style include="shared-styles">
+    <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
         display: block;
         padding: 10px;
@@ -215,11 +215,15 @@
     </div>
   
   
-    <div class="message-sender-container">
-      <paper-textarea id="message" label="Message..."></paper-textarea>
-      <paper-button id="image-btn" on-tap="_onTapImageBtn" class="flex" dialog-confirm autofocus raised type="submit"><iron-icon icon="custom-icons:insert-photo"></iron-icon></paper-button>
-      <paper-button id="send-btn" on-tap="_onTapSendDialogBtn" dialog-confirm autofocus raised type="submit"><iron-icon icon="custom-icons:send"></iron-icon></paper-button>
+    <div class="card">
+      <div class="flex layout horizontal center-justified">
+        <paper-textarea id="message" label="Message..."></paper-textarea>
+      </div>
+      <div class="flex layout horizontal right-justified">
+        <paper-button id="image-btn" on-tap="_onTapImageBtn"  dialog-confirm autofocus raised type="submit"><iron-icon icon="custom-icons:insert-photo"></iron-icon></paper-button>
+        <paper-button id="send-btn" on-tap="_onTapSendDialogBtn" class="flex" dialog-confirm autofocus raised type="submit"><iron-icon icon="custom-icons:send"></iron-icon></paper-button>
     </div>
+
 
     <input id="camera" type="file" name="photo" accept="image/*;capture=camera" style="display:none;"></input>
       
