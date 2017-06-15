@@ -107,8 +107,6 @@
           </template>
           <p>[[seller.desc]]</p>
         </div>
-        
-
       </template>
     </dom-repeat>
 
@@ -132,6 +130,11 @@
           sellers: {
             type: Array,
             value: []
+          },
+          sellersCategory: {
+            type: String,
+            value: "collectables/sub/vinylRecords",
+            readOnly: true
           }
         };
       }
@@ -140,21 +143,20 @@
         super.connectedCallback();
         console.log("HomeView.connectedCallback");
 
-        //this._loadSellersNoLocation("collectables/sub/vinylRecords");
-        this._loadSellersByLocation("collectables/sub/vinylRecords", 100);
+        //this._loadSellersNoLocation();
+        this._loadSellersByLocation(100);
       }
 
-      _loadSellersNoLocation(sellersCategory) {
-        console.log("HomeView._loadSellersNoLocation: " + sellersCategory);
+      _loadSellersNoLocation() {
+        console.log("HomeView._loadSellersNoLocation");
 
-        var self = this;
+        const self = this;
 
-        var setSeller = function(snapshot) {
+        firebase.app("polyn-app").database().ref("/locations/" + this.sellersCategory).on('child_added', function(snapshot) {
 
-          var childKey = snapshot.key;
+          const childKey = snapshot.key;
 
-          const refPath = "/sellers/" + childKey;
-          firebase.app("polyn-app").database().ref(refPath).once('value').then(function(snapshot) {
+          firebase.app("polyn-app").database().ref("/sellers/" + childKey).once('value').then(function(snapshot) {
 
             var sellersInfo = snapshot.val();
 
@@ -173,15 +175,13 @@
               console.log("  Failed to get data for seller key: " + key);
             }
           });
-        };
-
-        firebase.app("polyn-app").database().ref("/locations/" + sellersCategory).on('child_added', setSeller);
+        })
       }
 
-      _loadSellersByLocation(sellersCategory, rangeInMiles) {
+      _loadSellersByLocation(rangeInMiles) {
         console.log("HomeView._loadSellersByLocation: " + rangeInMiles);
 
-        var self = this;
+        const self = this;
 
         // Geofire only uses KM.
         const rangeInKm = 1.6 * parseFloat(rangeInMiles);
@@ -202,47 +202,48 @@
 
               console.log("User Location is lat: " + latitude + ", long: " + longitude + "");
 
-              self._getSellerData(sellersCategory, latitude, longitude, rangeInKm);
+              self._getSellerData(latitude, longitude, rangeInKm);
             },
             
             function(error) {
               console.log("User Location error: " + error + "");
               // We have no location to use - just get the sellers direclty from the selected category!
-              self._loadSellersNoLocation(sellersCategory);
+              self._loadSellersNoLocation();
           });
 
         } else {
 
           // If we DO know the user's current location - just get the sellers!
-          self._getSellerData(sellersCategory, this.location[0], this.location[1], rangeInKm);
+          self._getSellerData(this.location[0], this.location[1], rangeInKm);
         }
       }
 
-      _getSellerData(sellersCategory, latitude, longitude, rangeInKm) {
+      _getSellerData(latitude, longitude, rangeInKm) {
         console.log("HomeView._getSellerData");
 
-        var self = this;
+        const self = this;
 
         this.sellers = [];
 
         // Find all the sellers within a circle defined by a 
         // lat/long for the center of a circle and a range in kilometers.
         // The lat/long should come from the user's current location.
-        GeofireManager.getSellersByLocation(sellersCategory, latitude, longitude, rangeInKm,
+        GeofireManager.getSellersByLocation(this.sellersCategory, latitude, longitude, rangeInKm,
           function(key, distance) {
 
             console.log("  GeofireView got seller key: " + key);
             console.log("  distance =  " + distance + " miles away");
 
-            const refPath = "/sellers/" + key;
-            firebase.app("polyn-app").database().ref(refPath).once('value').then(function(snapshot) {
+            firebase.app("polyn-app").database().ref("/sellers/" + key).once('value').then(function(snapshot) {
 
               var sellersInfo = snapshot.val();
 
               if(sellersInfo) {
 
+                sellersInfo.key = snapshot.key; // Cache the key so we can look up the lat/long later.
+
                 var roundedDistance = parseFloat(distance).toFixed(1);
-                sellersInfo.distance = roundedDistance;
+                sellersInfo.distance = roundedDistance; // Cache the distance for the UI.
 
                 self.push('sellers', sellersInfo);
 

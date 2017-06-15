@@ -3,6 +3,8 @@
 <link rel="import" href="../bower_components/iron-input/iron-input.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/google-map/google-map.html">
+<link rel="import" href="../bower_components/google-map/google-map-marker.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="utility.html">
 <link rel="import" href="cropper.html">
@@ -24,6 +26,10 @@
         --iron-image-width: 100%;
       }
 
+      google-map {
+        height: 300px;
+      }
+
     </style>
 
     <firebase-auth 
@@ -31,6 +37,12 @@
       app-name="polyn-app"
       user="{{user}}">
     </firebase-auth>
+
+    <div class="card">
+      <google-map latitude="37.78" longitude="-122.4" fit-to-marker api-key="AIzaSyB3E3yJzc7-g6-0rZCJhCxAWtoD6d7DgrM">
+        <google-map-marker latitude="37.78" longitude="-122.4" draggable="true"></google-map-marker>
+      </google-map>
+    </div>
 
     <div class="card">
       <paper-button on-tap="_onTapPickImage" raised="">Pick Image</paper-button>

@@ -1,4 +1,28 @@
 
+
+
+
+
+
+------------------------------------------------------------------------
+
+firebase.app("polyn-app").database().ref("/locations/" + this.sellersCategory).on('child_added', function(snapshot) {
+
+  var key = snapshot.key;
+  var data = snapshot.val();
+
+})
+
+------------------------------------------------------------------------
+
+
+ -- Google Maps Key --
+
+AIzaSyB3E3yJzc7-g6-0rZCJhCxAWtoD6d7DgrM
+
+
+------------------------------------------------------------------------
+
  -- Manifest Icons --
 
 Pixel - icon-144x144.png
@@ -255,6 +279,8 @@ bower install --save PolymerElements/iron-signals   ??????
 npm install --save redux
 npm install --save redux-thunk
 bower install --save polymer-redux#polymer-2
+
+bower install --save google-map#2.0-preview
 
 npm outdated
 npm update
