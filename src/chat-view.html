@@ -41,6 +41,11 @@
       }
 
       .card {
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        hyphens: auto;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
         max-width: 400px;
       }
 
@@ -53,19 +58,13 @@
         color: white;
       }
 
-      iron-image {
+      /*iron-image {
         --iron-image-width: 100%;
-      }
+      }*/
 
       #image-btn {
         color: white;
         background: #FFA138;
-      }
-
-      .flex-horizontal {
-        @apply --layout-horizontal;
-        @apply --layout-center;
-        @apply --layout-end-justified;
       }
 
       #message {
@@ -186,18 +185,27 @@
       </div>
     </template>
 
+    <!--<div class="title">
+      <div class="business-photo">
+        <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="profile-pic" preload fade src="images/RecordStoreDayLogo.jpg" class="item" on-tap="_onTapBusiness" ></iron-image>
+      </div>
+      <div class="business-name">
+        Conversation between you and @Seller 
+        <p style="margin: 0px;">www.recordStoreWebsite.com</p>
+      </div>
+    </div>-->
+
     <div class="card">
       
       <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
         <template>
           <div class="bottom-border">
 
-            
             <template is="dom-if" if="[[chatMessage.photoUrl]]">
               <iron-image src="[[chatMessage.photoUrl]]"></iron-image> 
             </template>
 
-              <div class="horizontal layout start">
+              <div class="horizontal layout">
                 <div class="user-photo">
                   <template is="dom-if" if="[[chatMessage.photoThumbURL]]">
                     <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="[[chatMessage.photoThumbURL]]" class="item"></iron-image> 
@@ -206,23 +214,22 @@
                     <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="images/anonymous_profile.png" class="item"></iron-image> 
                   </template>
                 </div>
-              </div>
 
-              <div class="flex vertical layout">
-                <div class="username horizontal layout">
-                  [[chatMessage.name]]
-                </div> 
-                  <template is="dom-if" if="[[chatMessage.text]]">
-                <div class="horizontal layout center">
-                  <div class="chat">
-                    <p>[[chatMessage.text]]</p>
+                <div class="vertical layout">
+                  <div class="username">
+                    [[chatMessage.name]]
                   </div>
-                </div>
-              </div>
-            </template>          
-          </div>
 
-          
+                  <template is="dom-if" if="[[chatMessage.text]]">
+                    <div class="chat">
+                      <p class="flex">[[chatMessage.text]]</p>
+                    </div>
+                  </template>
+                </div>
+
+              </div>
+
+          </div>
         </template>
       </dom-repeat>
     </div>
