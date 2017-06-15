@@ -164,8 +164,8 @@ var GeofireManager = (function() {
 
     var onKeyEnteredRegistration = geoQuery.on("key_entered", function(key, location) {
 
-      log(key + " entered the query.");
-      log("location: " + JSON.stringify(location, null, 4));
+      //log(key + " entered the query.");
+      //log("location: " + JSON.stringify(location, null, 4));
 
       if(_sellerFoundCallback) {
 

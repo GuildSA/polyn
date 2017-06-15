@@ -221,7 +221,7 @@
               // Cache the user's location.
               self.location = [latitude, longitude];
 
-              console.log("User Location is lat: " + latitude + ", long: " + longitude + "");
+              //console.log("User Location is lat: " + latitude + ", long: " + longitude + "");
 
               self._getSellerData(latitude, longitude, rangeInKm);
             },
@@ -252,8 +252,8 @@
         GeofireManager.getSellersByLocation(this.sellersCategory, latitude, longitude, rangeInKm,
           function(key, distance) {
 
-            console.log("  GeofireView got seller key: " + key);
-            console.log("  distance =  " + distance + " miles away");
+            //console.log("  got seller key: " + key);
+            //console.log("  distance =  " + distance + " miles away");
 
             firebase.app("polyn-app").database().ref("/sellers/" + key).once('value').then(function(snapshot) {
 
@@ -293,6 +293,7 @@
       
       _onTapCreateRequest() {
         console.log("HomeView._onTapCreateRequest");
+
         var polynApp = document.getElementById("polynApp");
         var requestView = polynApp.pushPageOnCurrentTab("request-view");
       }
