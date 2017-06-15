@@ -123,6 +123,9 @@ Prefix the choice with ! to persist it to bower.json
 firebase deploy --only hosting
 firebase deploy --only functions
 
+------------------------------------------------------------------------
+
+ -- Firebase Databse Rules --
 
 OLD RULES
 
@@ -166,9 +169,6 @@ NEW RULES with optimization added for nested entry for vinylRecords
 }
 
 
-
-
-
 {
   "rules": {
 
@@ -186,9 +186,6 @@ NEW RULES with optimization added for nested entry for vinylRecords
     } 
   }
 }
-
-
-
 
 
 {
@@ -241,9 +238,7 @@ NEW RULES with optimization added for nested entry for vinylRecords
   }
 }
 
-
-
-
+------------------------------------------------------------------------
 
  -- Firebase Cloud Messaging --
 

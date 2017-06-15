@@ -18,6 +18,7 @@
     "src/misctest-view.html",
     "src/analytics-view.html",
     "src/sellertest-view.html",
+    "src/list-view.html",
     "src/error404-view.html"
   ],
   "sources": [

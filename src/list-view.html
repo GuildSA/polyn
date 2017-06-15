@@ -1,0 +1,384 @@
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-request.html">
+<link rel="import" href="../bower_components/iron-iconset-svg/iron-iconset-svg.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-behavior.html">
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="custom-icons.html">
+<link rel="import" href="geofire.html">
+
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+
+<dom-module id="list-view">
+  <template>
+    <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: block;
+        padding: 0px;
+
+/*height: 100vh;
+display: flex;
+flex-direction: column;*/
+      }
+
+      .top-border {
+        border-top-style: solid;
+        border-top-color: var(--app-accent-color);
+        border-top-width: .5px;
+        margin-top: 15px;
+        padding-top: 10px;
+      }
+
+      .business-img {
+        width: 150px;
+        height: 150px;
+        border-radius: 2.5%;
+        border-color: var(--app-accent-color);
+        transition: all 0.3s ease;
+      }
+
+      .business-img:hover {
+        box-shadow: var(--app-shadow-large);
+        cursor: pointer;
+      }
+
+      h2 {
+        color: #70C187;
+        margin: 0;
+      }
+
+      /*.item {
+        transition-timing-function: ease-out;
+        transition-duration: .75s;
+        background: #eee;
+        width: 100%;
+      }
+
+      .item:hover {
+        opacity: .75;
+      }*/
+
+      .main-container {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        @apply --layout-vertical;
+        @apply --layout-center;
+        @apply --layout-around-justified;
+      }
+
+      .seller-name {
+         border-bottom: var(--app-accent-color);
+      } 
+
+      #submit-request-container {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        @apply --layout-around-justified;
+        color: white;
+        background: #70C187;
+        border-radius: 5px;
+        width: 100%;
+        max-width: 400px;
+        margin: auto;
+        position: sticky;
+        position: -webkit-sticky;
+        bottom: 0px;
+      }
+
+      /*iron-list {
+        flex: 1 1 auto;
+        padding-top: 64px;
+      }*/
+
+      iron-list {
+        height: 100vh; /* don't use % values unless the parent element is sized. */
+      }
+
+    </style>
+
+    <!--<div class="main-container">-->
+
+      <!--<iron-list scroll-target="document" items="[[items]]" as="item">
+        <template>
+          <div class="card layout vertical" on-tap="_onTapBusiness">
+            <p>Name: [[item.name]]</p>
+          </div>
+        </template>
+      </iron-list>-->
+
+
+      <app-indexeddb-mirror
+        key="sellers"
+        data="{{sellers}}"
+        persisted-data="{{persistedSellers}}">
+      </app-indexeddb-mirror>
+
+      <iron-list scroll-target="document" items="[[persistedSellers]]" as="seller">
+        <template>
+          <div class="card layout vertical" on-tap="_onTapBusiness">
+            <iron-image class="business-img" style="width:100%; background-color: lightgray;" sizing="cover" preload fade src="[[seller.photoUrl]]"></iron-image>
+            <div class="top-border">
+              <center><h2>[[seller.name]]</h2></center>
+            </div>
+            <template is="dom-if" if="[[seller.distance]]">
+              <center><h1>[[seller.distance]] miles away</h1></center>
+            </template>
+            <p>[[seller.desc]]</p>
+          </div>
+        </template>
+      </iron-list>
+
+      <!--<dom-repeat items="[[persistedSellers]]" as="seller" initial-count="2">
+        <template>
+          <div class="card layout vertical" on-tap="_onTapBusiness">
+            <iron-image class="business-img" style="width:100%; background-color: lightgray;" sizing="cover" preload fade src="[[seller.photoUrl]]"></iron-image>
+            <div class="top-border">
+              <center><h2>[[seller.name]]</h2></center>
+            </div>
+            <template is="dom-if" if="[[seller.distance]]">
+              <center><h1>[[seller.distance]] miles away</h1></center>
+            </template>
+            <p>[[seller.desc]]</p>
+          </div>
+        </template>
+      </dom-repeat>-->
+
+      <div id="submit-request-container">
+        <paper-button class="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message" >Create a Request</paper-button>
+      </div>
+      
+    <!--</div>-->
+
+    <template is="dom-if" if="[[loading]]">
+      <div class="overlay">
+        <p>Loading Vinyl...</p>
+        <paper-spinner id="spinner" active="[[loading]]"></paper-spinner>
+      </div>
+    </template>
+
+  </template>
+
+  <script>
+    class Listiew extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'list-view'; }
+
+      static get properties() {
+        return {
+          location: {
+            type: Array,
+            value: null
+          },
+          sellers: {
+            type: Array,
+            value: []
+          },
+          sellersCategory: {
+            type: String,
+            value: "collectables/sub/vinylRecords",
+            readOnly: true
+          },
+          loading: {
+            type: Boolean,
+            notify: true,
+            value: true
+          },
+          items: {
+            type: Array,
+            value: []
+          }
+        };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        console.log("Listiew.connectedCallback");
+
+        this.loading = true;
+
+this.loading = false;
+
+        this.items = [
+          {
+            "name": "One"
+          },
+          {
+            "name": "Two"
+          },
+          {
+            "name": "Three"
+          },
+          {
+            "name": "Four"
+          },
+          {
+            "name": "Five"
+          },
+          {
+            "name": "Six"
+          },
+          {
+            "name": "Seven"
+          },
+          {
+            "name": "Eight"
+          },
+          {
+            "name": "None"
+          },
+          {
+            "name": "Ten"
+          }
+        ];
+
+        this._loadSellersNoLocation();
+        //this._loadSellersByLocation(100);
+      }
+
+      _loadSellersNoLocation() {
+        console.log("Listiew._loadSellersNoLocation");
+
+        const self = this;
+
+        firebase.app("polyn-app").database().ref("/locations/" + this.sellersCategory).on('child_added', function(snapshot) {
+
+          const childKey = snapshot.key;
+
+          firebase.app("polyn-app").database().ref("/sellers/" + childKey).once('value').then(function(snapshot) {
+
+            var sellersInfo = snapshot.val();
+
+            if(sellersInfo) {
+
+              self.push('sellers', sellersInfo);
+
+              // Since we don't know anything about the user's location - sort alphabetically by name.
+              self.sellers.sort(function(a, b){
+                if(a.name < b.name) return -1;
+                if(a.name > b.name) return 1;
+                return 0;
+              })
+
+              self.loading = false;
+
+            } else {
+              console.log("  Failed to get data for seller key: " + key);
+              self.loading = false;
+            }
+          });
+        })
+      }
+
+      _loadSellersByLocation(rangeInMiles) {
+        console.log("Listiew._loadSellersByLocation: " + rangeInMiles);
+
+        const self = this;
+
+        // Geofire only uses KM.
+        const rangeInKm = 1.6 * parseFloat(rangeInMiles);
+
+        if(!this.location) {
+
+          // If we don't know the user's current location - ask for it!
+
+          self.loading = true;
+
+          //GeofireManager.getUsersLocation("users/" + this.user.uid + "/info", 
+          GeofireManager.getUsersLocation(null, // Pass null for user's info path since we don't actually need a user to do this.
+
+            function(location) {
+              var latitude = location.coords.latitude;
+              var longitude = location.coords.longitude;
+
+              // Cache the user's location.
+              self.location = [latitude, longitude];
+
+              //console.log("User Location is lat: " + latitude + ", long: " + longitude + "");
+
+              self._getSellerData(latitude, longitude, rangeInKm);
+            },
+            
+            function(error) {
+              console.log("User Location error: " + error + "");
+              // We have no location to use - just get the sellers direclty from the selected category!
+              self._loadSellersNoLocation();
+          });
+
+        } else {
+
+          // If we DO know the user's current location - just get the sellers!
+          self._getSellerData(this.location[0], this.location[1], rangeInKm);
+        }
+      }
+
+      _getSellerData(latitude, longitude, rangeInKm) {
+        console.log("Listiew._getSellerData");
+
+        const self = this;
+
+        this.sellers = [];
+
+        // Find all the sellers within a circle defined by a 
+        // lat/long for the center of a circle and a range in kilometers.
+        // The lat/long should come from the user's current location.
+        GeofireManager.getSellersByLocation(this.sellersCategory, latitude, longitude, rangeInKm,
+          function(key, distance) {
+
+            //console.log("  got seller key: " + key);
+            //console.log("  distance =  " + distance + " miles away");
+
+            firebase.app("polyn-app").database().ref("/sellers/" + key).once('value').then(function(snapshot) {
+
+              var sellersInfo = snapshot.val();
+
+              if(sellersInfo) {
+
+                sellersInfo.key = snapshot.key; // Cache the key so we can look up the lat/long later.
+
+                var roundedDistance = parseFloat(distance).toFixed(1);
+                sellersInfo.distance = roundedDistance; // Cache the distance for the UI.
+
+                self.push('sellers', sellersInfo);
+
+                // Sort by distance - closet location at top.
+                self.sellers.sort(function(a, b){return a.distance - b.distance});
+
+                self.loading = false;
+
+              } else {
+                console.log("  Failed to get data for seller key: " + key);
+                self.loading = false;
+              }
+            });
+        });
+      }
+
+      _onTapBusiness(e) {
+        console.log("Listiew._onTapBusiness: " + e);
+
+        var polynApp = document.getElementById("polynApp");
+        var businessView = polynApp.pushPageOnCurrentTab("business-view");
+
+        const index = e.model.index;
+        businessView.sellerInfo = this.sellers[index];
+      }
+      
+      _onTapCreateRequest() {
+        console.log("Listiew._onTapCreateRequest");
+
+        var polynApp = document.getElementById("polynApp");
+        var requestView = polynApp.pushPageOnCurrentTab("request-view");
+      }
+    }
+
+    window.customElements.define(Listiew.is, Listiew);
+  </script>
+</dom-module>
