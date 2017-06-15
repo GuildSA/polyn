@@ -1,4 +1,9 @@
 
+ -- Manifest Icons --
+
+Pixel - icon-144x144.png
+
+iPhone 6S - icon-114x114.png
 
  -- Geofire --
 
