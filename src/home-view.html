@@ -7,6 +7,8 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-behavior.html">
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="shared-styles.html">
@@ -89,31 +91,38 @@
 
     <div class="main-container">
 
-    <app-indexeddb-mirror
-      key="sellers"
-      data="{{sellers}}"
-      persisted-data="{{persistedSellers}}">
-    </app-indexeddb-mirror>
+      <app-indexeddb-mirror
+        key="sellers"
+        data="{{sellers}}"
+        persisted-data="{{persistedSellers}}">
+      </app-indexeddb-mirror>
 
-    <dom-repeat items="[[persistedSellers]]" as="seller" initial-count="2">
-      <template>
-        <div class="card layout vertical" on-tap="_onTapBusiness">
-          <iron-image class="business-img" style="width:100%; background-color: lightgray;" sizing="cover" preload fade src="[[seller.photoUrl]]"></iron-image>
-          <div class="top-border">
-            <center><h2>[[seller.name]]</h2></center>
+      <dom-repeat items="[[persistedSellers]]" as="seller" initial-count="2">
+        <template>
+          <div class="card layout vertical" on-tap="_onTapBusiness">
+            <iron-image class="business-img" style="width:100%; background-color: lightgray;" sizing="cover" preload fade src="[[seller.photoUrl]]"></iron-image>
+            <div class="top-border">
+              <center><h2>[[seller.name]]</h2></center>
+            </div>
+            <template is="dom-if" if="[[seller.distance]]">
+              <center><h1>[[seller.distance]] miles away</h1></center>
+            </template>
+            <p>[[seller.desc]]</p>
           </div>
-          <template is="dom-if" if="[[seller.distance]]">
-            <center><h1>[[seller.distance]] miles away</h1></center>
-          </template>
-          <p>[[seller.desc]]</p>
-        </div>
-      </template>
-    </dom-repeat>
+        </template>
+      </dom-repeat>
 
-    <div id="submit-request-container">
-      <paper-button class="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message" >Create a Request</paper-button>
+      <div id="submit-request-container">
+        <paper-button class="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message" >Create a Request</paper-button>
+      </div>
     </div>
-    </div>
+
+    <template is="dom-if" if="[[loading]]">
+      <div class="overlay">
+        <p>Loading Vinyl...</p>
+        <paper-spinner id="spinner" active="[[loading]]"></paper-spinner>
+      </div>
+    </template>
 
   </template>
 
@@ -135,6 +144,11 @@
             type: String,
             value: "collectables/sub/vinylRecords",
             readOnly: true
+          },
+          loading: {
+            type: Boolean,
+            notify: true,
+            value: true
           }
         };
       }
@@ -142,6 +156,8 @@
       connectedCallback() {
         super.connectedCallback();
         console.log("HomeView.connectedCallback");
+
+        this.loading = true;
 
         //this._loadSellersNoLocation();
         this._loadSellersByLocation(100);
@@ -171,8 +187,11 @@
                 return 0;
               })
 
+              self.loading = false;
+
             } else {
               console.log("  Failed to get data for seller key: " + key);
+              self.loading = false;
             }
           });
         })
@@ -189,6 +208,8 @@
         if(!this.location) {
 
           // If we don't know the user's current location - ask for it!
+
+          self.loading = true;
 
           //GeofireManager.getUsersLocation("users/" + this.user.uid + "/info", 
           GeofireManager.getUsersLocation(null, // Pass null for user's info path since we don't actually need a user to do this.
@@ -250,8 +271,11 @@
                 // Sort by distance - closet location at top.
                 self.sellers.sort(function(a, b){return a.distance - b.distance});
 
+                self.loading = false;
+
               } else {
                 console.log("  Failed to get data for seller key: " + key);
+                self.loading = false;
               }
             });
         });
