@@ -85,8 +85,8 @@
 
         var self = this;
 
-        var setChat = function(snapshot) {
-
+        firebase.app("polyn-app").database().ref("/users/" + this.user.uid + "/requests/" + this.requestId + "/chats").on('child_added', function(snapshot) {
+        
           var childKey = snapshot.key;
           var childData = snapshot.val();
 
@@ -94,9 +94,7 @@
           childData.key = childKey;
 
           self.push('chats', childData);
-        };
-
-        firebase.app("polyn-app").database().ref("/users/" + this.user.uid + "/requests/" + this.requestId + "/chats").on('child_added', setChat);
+        });
       }
 
       _onTappedMessage(e) {

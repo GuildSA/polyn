@@ -76,21 +76,6 @@
         <google-map-marker latitude="[[lat]]" longitude="[[long]]" draggable="false"></google-map-marker>
       </google-map>
 
-      <!--<google-map latitude="[[lat]]" longitude="[[long]]" fit-to-marker api-key="AIzaSyB3E3yJzc7-g6-0rZCJhCxAWtoD6d7DgrM">
-        <google-map-marker latitude="[[lat]]" longitude="[[long]]" label="[[sellerInfo.name]]" draggable="false" open="true"></google-map-marker>
-      </google-map>-->
-
-      <!--<google-map
-        latitude="[[arrayItem(location.*, 0, 'lat')]]" 
-        longitude="[[arrayItem(location.*, 1, 'long')]]" 
-        fit-to-marker api-key="AIzaSyB3E3yJzc7-g6-0rZCJhCxAWtoD6d7DgrM">
-        <google-map-marker
-          latitude="[[arrayItem(location.*, 0, 'lat')]]"
-          longitude="[[arrayItem(location.*, 1, 'long')]]"
-          draggable="true">
-        </google-map-marker>
-      </google-map>-->
-
     </div>
 
     <div id="submit-request-container">
@@ -122,26 +107,8 @@
             type: Number,
             value: null
           }
-          // location: {
-          //   type: Array,
-          //   value: null
-          // }
         };
       }
-
-      // // First argument is the change record for the array change,
-      // // change.base is the array specified in the binding
-      // arrayItem(change, index, path) {
-      //   console.log("BusinessView.arrayItem");
-
-      //   if(!change.base) {
-      //     return;
-      //   }
-
-      //   // this.get(path, root) returns a value for a path
-      //   // relative to a root object.
-      //   return this.get(path, change.base[index]);
-      // }
 
       _sellerInfoChanged(sellerInfo) {
         console.log("BusinessView._sellerInfoChanged");
@@ -160,7 +127,6 @@
 
           self.lat = locationData.l[0];
           self.long = locationData.l[1];
-          //self.location = [{ lat: locationData.l[0] }, { long: locationData.l[1] }]
         });
       }
 

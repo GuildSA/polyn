@@ -1,17 +1,96 @@
 
+------------------------------------------------------------------------
 
+  -- Data binding to an array Example -- 
 
+      <google-map latitude="[[lat]]" longitude="[[long]]" fit-to-marker api-key="AIzaSyB3E3yJzc7-g6-0rZCJhCxAWtoD6d7DgrM">
+        <google-map-marker latitude="[[lat]]" longitude="[[long]]" label="[[sellerInfo.name]]" draggable="false" open="true"></google-map-marker>
+      </google-map>
 
+      <google-map
+        latitude="[[arrayItem(location.*, 0, 'lat')]]" 
+        longitude="[[arrayItem(location.*, 1, 'long')]]" 
+        fit-to-marker api-key="AIzaSyB3E3yJzc7-g6-0rZCJhCxAWtoD6d7DgrM">
+        <google-map-marker
+          latitude="[[arrayItem(location.*, 0, 'lat')]]"
+          longitude="[[arrayItem(location.*, 1, 'long')]]"
+          draggable="true">
+        </google-map-marker>
+      </google-map>
 
+      ...
+
+      static get properties() {
+        return {
+          location: {
+             type: Array,
+             value: null
+          }
+        };
+      }
+
+      ...
+
+      // First argument is the change record for the array change,
+      // change.base is the array specified in the binding
+      arrayItem(change, index, path) {
+        console.log("BusinessView.arrayItem");
+
+        if(!change.base) {
+          return;
+        }
+
+        // this.get(path, root) returns a value for a path
+        // relative to a root object.
+        return this.get(path, change.base[index]);
+      }
+
+      ...
+
+      self.location = [{ lat: locationData.l[0] }, { long: locationData.l[1] }]
 
 ------------------------------------------------------------------------
 
-firebase.app("polyn-app").database().ref("/locations/" + this.sellersCategory).on('child_added', function(snapshot) {
+  -- Firebase Examples -- 
 
-  var key = snapshot.key;
-  var data = snapshot.val();
+  // Get all data under a key one-at-a-time.
+  firebase.app("polyn-app").database().ref("/locations/" + this.sellersCategory).on('child_added', function(snapshot) {
 
-})
+    var key = snapshot.key;
+    var data = snapshot.val();
+  });
+
+
+  // Get some data just once.
+  firebase.app("polyn-app").database().ref("/users/" + user.uid + "/info").once('value').then(function(snapshot) {
+
+    var usersInfo = snapshot.val();
+  });
+
+
+  // Upload the image to Cloud Storage.
+  firebase.app("polyn-app").storage().ref("users/" + this.user.uid + "/photo").put(file).then(function(snapshot) {
+
+    var fullUrlPath = snapshot.downloadURL;
+  });
+
+
+  // Setting one key with no callback.
+  var url = "https://some/url/here";
+  firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/info/photoURL").set(url);
+
+
+  // Create or push a new key and then add some data under it.
+  var newSellerKey = firebase.app("polyn-app").database().ref().child("sellers/").push().key;
+
+  var newSellerData = {
+    name: usersInfo.name,
+    email: usersInfo.email
+  };
+
+  firebase.app("polyn-app").database().ref("sellers/" + newSellerKey).set(newSellerData).then(function() {
+
+  });
 
 ------------------------------------------------------------------------
 
@@ -501,3 +580,27 @@ var intervalID = setInterval(alert, 1000); // Will alert every second.
 setTimeout(alert, 1000); // Will alert once, after a second.
 
 ------------------------------------------------------------------------
+
+ -- vscode settings --
+
+{
+    "workbench.colorTheme": "Monokai",
+    "window.zoomLevel": 1,
+    "workbench.iconTheme": "vscode-simpler-icons",
+    "[polymer]": {
+        
+    },
+    "workbench.welcome.enabled": true,
+    "java.errors.incompleteClasspath.severity": "ignore",
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true
+    },
+    "editor.tabSize": 2,
+    "workbench.colorCustomizations": {
+        "editor.lineHighlightBackground": "#505050",
+        "editor.selectionBackground": "#000000",
+        "editor.wordHighlightBackground": "#45a7ba",
+        "editorCursor.foreground": "#f6e83e"
+    }
+}
