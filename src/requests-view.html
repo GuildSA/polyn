@@ -115,14 +115,6 @@
         };
       }
   
-      ready() {
-        super.ready();
-        console.log("RequestsView.ready");
-
-        this.hasMessages = false;
-        this.loading = true;
-      }
-
       _userChanged(user) {
         console.log("RequestsView._userChanged");
         //console.log("user: " + JSON.stringify(user, null, 4));
