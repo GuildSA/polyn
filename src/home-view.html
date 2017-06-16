@@ -157,8 +157,6 @@
         super.connectedCallback();
         console.log("HomeView.connectedCallback");
 
-        this.loading = true;
-
         //this._loadSellersNoLocation();
         this._loadSellersByLocation(100);
       }
@@ -167,6 +165,8 @@
         console.log("HomeView._loadSellersNoLocation");
 
         const self = this;
+
+        this.sellers = [];
 
         firebase.app("polyn-app").database().ref("/locations/" + this.sellersCategory).on('child_added', function(snapshot) {
 
@@ -177,6 +177,8 @@
             var sellersInfo = snapshot.val();
 
             if(sellersInfo) {
+
+              sellersInfo.key = snapshot.key; // Cache the key so we can look up the lat/long later.
 
               self.push('sellers', sellersInfo);
 
@@ -201,6 +203,7 @@
         console.log("HomeView._loadSellersByLocation: " + rangeInMiles);
 
         const self = this;
+        this.loading = true;
 
         // Geofire only uses KM.
         const rangeInKm = 1.6 * parseFloat(rangeInMiles);
@@ -208,8 +211,6 @@
         if(!this.location) {
 
           // If we don't know the user's current location - ask for it!
-
-          self.loading = true;
 
           //GeofireManager.getUsersLocation("users/" + this.user.uid + "/info", 
           GeofireManager.getUsersLocation(null, // Pass null for user's info path since we don't actually need a user to do this.
@@ -234,7 +235,7 @@
 
         } else {
 
-          // If we DO know the user's current location - just get the sellers!
+          // If we already know the user's current location - just get the sellers!
           self._getSellerData(this.location[0], this.location[1], rangeInKm);
         }
       }
@@ -271,6 +272,7 @@
                 // Sort by distance - closet location at top.
                 self.sellers.sort(function(a, b){return a.distance - b.distance});
 
+// TODO: We need a way to know how many in total will get pulled down.
                 self.loading = false;
 
               } else {

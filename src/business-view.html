@@ -123,10 +123,13 @@
         firebase.app("polyn-app").database().ref("/locations/" + this.sellersCategory + "/" + sellerInfo.key).once('value').then(function(snapshot) {
 
           var locationData = snapshot.val();
-          //console.log("  locationData: " + JSON.stringify(locationData, null, 4))
 
-          self.lat = locationData.l[0];
-          self.long = locationData.l[1];
+          if(locationData) {
+
+            //console.log("  locationData: " + JSON.stringify(locationData, null, 4))
+            self.lat = locationData.l[0];
+            self.long = locationData.l[1];
+          }
         });
       }
 
