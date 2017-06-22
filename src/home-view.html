@@ -87,6 +87,61 @@
         position: -webkit-sticky;
         bottom: 0px;
       }
+
+      .business-img {
+        width: 100%;
+      }
+
+      .card {
+        @apply(--layout-vertical);
+      }
+
+        @media (max-width: 720px) {
+          .main-container {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          @apply --layout-vertical;
+          
+        }
+
+        .top-border {
+          border-top-style: none;
+          border-top-color: none;
+          border-top-width: 0px;
+          margin-top: 0px;
+          padding-top: 0px;
+        }
+
+        .business-img {
+          height: 10vh;
+          width: 15vh;
+        }
+
+        .card {
+          width: 85%;
+          @apply(--layout-horizontal);
+          padding: 0;
+          margin: 0.5rem;
+        }
+
+        .top-border {
+          display: hidden;
+        }
+
+        .short-description {
+          display: none;
+        }
+
+        h2 {
+          font-size: 1rem;
+          padding: 1rem; 
+        }
+
+        .miles-away {
+          @apply(--layout-vertical);
+        }
+      }
     </style>
 
     <div class="main-container">
@@ -99,15 +154,21 @@
 
       <dom-repeat items="[[persistedSellers]]" as="seller" initial-count="2">
         <template>
-          <div class="card layout vertical" on-tap="_onTapBusiness">
-            <iron-image class="business-img" style="width:100%; background-color: lightgray;" sizing="cover" preload fade src="[[seller.photoUrl]]"></iron-image>
+          <div class="card" on-tap="_onTapBusiness">
+            <iron-image class="business-img" style="background-color: lightgray;" sizing="cover" preload fade src="[[seller.photoUrl]]"></iron-image>
             <div class="top-border">
-              <center><h2>[[seller.name]]</h2></center>
+              <div class="seller-title">
+                <center><h2>[[seller.name]]</h2></center>
+              </div>
             </div>
             <template is="dom-if" if="[[seller.distance]]">
-              <center><h1>[[seller.distance]] miles away</h1></center>
+              <div class="miles-away">
+                <center><h1>[[seller.distance]] miles away</h1></center>
+              </div>
             </template>
-            <p>[[seller.desc]]</p>
+             <div class="short-description">
+              <p>[[seller.desc]]</p>
+             </div>
           </div>
         </template>
       </dom-repeat>
