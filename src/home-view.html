@@ -11,6 +11,7 @@
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-behavior.html">
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="custom-icons.html">
 <link rel="import" href="geofire.html">
@@ -144,15 +145,25 @@
       }
     </style>
 
-    <div class="main-container">
-
       <app-indexeddb-mirror
-        key="sellers"
-        data="{{sellers}}"
-        persisted-data="{{persistedSellers}}">
-      </app-indexeddb-mirror>
+      key="sellers"
+      data="{{sellers}}"
+      persisted-data="{{persistedSellers}}">
+    </app-indexeddb-mirror>
+
+    <div class="main-container">
+      <!-- Mobile Device Media Query -->
+      <iron-media-query query="(min-width:300px) and (max-width: 700px)" query-matches="{{mobileDevice}}"></iron-media-query>
+        <template is="dom-if" if="{{mobileDevice}}">
+          <h1>Record Stores In Your Area</h1>
+
+        </template>
+      <!-- / Mobile Device Media Query -->
+
+  
 
       <dom-repeat items="[[persistedSellers]]" as="seller" initial-count="2">
+      
         <template>
           <div class="card" on-tap="_onTapBusiness">
             <iron-image class="business-img" style="background-color: lightgray;" sizing="cover" preload fade src="[[seller.photoUrl]]"></iron-image>
