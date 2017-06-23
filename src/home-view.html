@@ -121,7 +121,7 @@
         }
 
         .card {
-          width: 85%;
+          width: 95%;
           @apply(--layout-horizontal);
           padding: 0;
           margin: 0.5rem;
@@ -129,6 +129,10 @@
 
         .top-border {
           display: hidden;
+        }
+
+        .seller-title {
+          padding: 0.5em; 
         }
 
         .short-description {
@@ -142,7 +146,9 @@
 
         .miles-away {
           font-size: 0.5 rem;
-          @apply(--layout-self-end)
+          display: flex; 
+          align-content: center; 
+          
         }
 
         #sticky-btn {
@@ -181,7 +187,7 @@
             </div>
             <template is="dom-if" if="[[seller.distance]]">
               <div class="miles-away">
-                [[seller.distance]]<p> miles away</p>
+                [[seller.distance]] miles away
               </div>
             </template>
              <div class="short-description">
