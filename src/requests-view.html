@@ -6,6 +6,8 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-behavior.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="requests-view">
@@ -24,6 +26,9 @@
       }
 
       .description {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
         word-wrap: break-word;
       }
 
@@ -43,6 +48,12 @@
         margin-left: 24px;
         margin-right: 24px;
         margin-bottom: 8px;
+      }
+
+      #title-close {
+        display: flex;
+        flex-direction: row-reverse; 
+        justify-content: center;
       }
       
     </style>
@@ -72,7 +83,10 @@
     <dom-repeat items="[[persistedRequests]]" as="request" initial-count="5">
       <template>
         <div class="card" on-tap="_onTappedRequest">
-          <h2>[[request.title]]</h2>
+          <div id="title-close">
+            <paper-icon-button id="toolbarNavBtn" icon="custom-icons:close"></paper-icon-button>
+            <h2>[[request.title]]</h2>
+          </div>
           <div class="description">
           <p>[[request.desc]]</p>
           </div>
