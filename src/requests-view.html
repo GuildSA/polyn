@@ -83,9 +83,9 @@
 
     <dom-repeat items="[[persistedRequests]]" as="request" initial-count="5">
       <template>
-        <div class="card" on-tap="_onTappedRequest">
+        <div class="card" on-tap="_onTapRequest">
           <div id="title-close">
-            <paper-icon-button id="closeBtn" icon="custom-icons:close" on-tap="_onTappedClose"></paper-icon-button>
+            <paper-icon-button id="closeBtn" icon="custom-icons:close" on-tap="_onTapDelete"></paper-icon-button>
             <h2>[[request.title]]</h2>
           </div>
           <div class="description">
@@ -111,7 +111,7 @@
     </paper-dialog>
 
     <paper-dialog id="noChatsDialog">
-      <p>Sorry, no sellers have responded yet.</p>
+      <p>[[noChatsMessage]]</p>
       <div class="buttons">
         <paper-button dialog-confirm autofocus>OK</paper-button>
       </div>
@@ -146,50 +146,69 @@
             type: String,
             value: ""
           },
+          noChatsMessage: {
+            type: String,
+            value: ""
+          }
         };
       }
   
+      reload() {
+        console.log("RequestsView.reload");
+
+        if(this.user != null) {
+          this._loadRequests();
+        }
+      }
+
       _userChanged(user) {
         console.log("RequestsView._userChanged");
         //console.log("user: " + JSON.stringify(user, null, 4));
 
         if(user != null) {
-
-          var self = this;
-
-          firebase.app("polyn-app").database().ref("/users/" + user.uid + "/requests").once('value').then(function(snapshot) {
-
-            snapshot.forEach(function(childSnapshot) {
-
-                var childKey = childSnapshot.key;
-                var childData = childSnapshot.val();
-                //console.log("childKey = " + childKey);
-                //console.log("childData: " + JSON.stringify(childData, null, 4));
-
-                // Manually add the key for this data so we can pass it forward if selected.
-                childData.key = childKey;
-
-                self.push('requests', childData);
-              });
-
-              if(self.requests.length > 0) {
-                self.hasMessages = true;
-              }
-
-              // No matter how fast it loads - show the spinner for at least 0.5 seconds.
-              setTimeout(function() { self.loading = false; }, 500);
-          });
+          this._loadRequests();
         } else {
-          this.requests = [];
+          this.splice("requests", 0, this.requests.length);
           this.hasMessages = false;
           this.loading = false;
         }
       }
 
-      _onTappedClose(e) {
-        console.log("RequestsView._onTappedClose");
+      _loadRequests() {
+        console.log("RequestsView._loadRequests");
 
-        //e.preventDefault();
+        var self = this;
+
+        this.splice("requests", 0, this.requests.length);
+        this.hasMessages = false;
+
+        firebase.app("polyn-app").database().ref("/users/" + this.user.uid + "/requests").once('value').then(function(snapshot) {
+
+          snapshot.forEach(function(childSnapshot) {
+
+              var childKey = childSnapshot.key;
+              var childData = childSnapshot.val();
+              //console.log("childKey = " + childKey);
+              //console.log("childData: " + JSON.stringify(childData, null, 4));
+
+              // Manually add the key for this data so we can pass it forward if selected.
+              childData.key = childKey;
+
+              self.push('requests', childData);
+            });
+
+            if(self.requests.length > 0) {
+              self.hasMessages = true;
+            }
+
+            // No matter how fast it loads - show the spinner for at least 0.5 seconds.
+            setTimeout(function() { self.loading = false; }, 500);
+        });
+      }
+
+      _onTapDelete(e) {
+        console.log("RequestsView._onTapDelete");
+
         e.stopPropagation();
 
         if(!this.user) {
@@ -289,8 +308,8 @@
         }
       }
 
-      _onTappedRequest(e) {
-        console.log("RequestsView._onTappedRequest");
+      _onTapRequest(e) {
+        console.log("RequestsView._onTapRequest");
 
         if(!this.user) {
           return;
@@ -301,6 +320,12 @@
         //console.log("this.requests[index]: " + JSON.stringify(this.requests[index], null, 4));
 
         if(this._getUserRole(this.requests[index].buyerId) == "seller") {
+
+          if(this.requests[index].deleted) {
+            this.noChatsMessage = "Im sorry, but the buyer has deleted this request.";
+            this.$.noChatsDialog.toggle();
+            return;
+          }
 
           // Have we already created a chat session with this buyer?
           if(this.requests[index].chatId) {
@@ -332,19 +357,39 @@
           // The current user is the buyer who made this request!
 
           // If there are any chats from any sellers - list them.
-          if(this.requests[index].chats) {
-            
-            var polynApp = document.getElementById("polynApp");
-            var chatsView = polynApp.pushPageOnCurrentTab("chats-view");
+          const requestInfo = this.requests[index];
 
-            chatsView.requestId = this.requests[index].key;
+          if(requestInfo.chats) {
 
-            if(typeof chatsView.reload === 'function') {
-              chatsView.reload();
+            var numActiveChats = false;
+
+            for(var key in requestInfo.chats) {
+              const chat = requestInfo.chats[key];
+              if(!chat.deleted) {
+                numActiveChats++;
+              }
+            }
+
+            if(numActiveChats > 0) {
+
+              var polynApp = document.getElementById("polynApp");
+              var chatsView = polynApp.pushPageOnCurrentTab("chats-view");
+
+              chatsView.requestId = requestInfo.key;
+
+              if(typeof chatsView.reload === 'function') {
+                chatsView.reload();
+              }
+
+            } else {
+              console.log("Sellers have created chat sessions but all have been deleted.");
+              this.noChatsMessage = "All active chats with sellers have been deleted.";
+              this.$.noChatsDialog.toggle();
             }
 
           } else {
             console.log("No sellers have created a chat session yet.");
+            this.noChatsMessage = "Sorry, no sellers have responded yet.";
             this.$.noChatsDialog.toggle();
           }
         }

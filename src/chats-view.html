@@ -3,6 +3,9 @@
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="shared-styles.html">
 
@@ -12,6 +15,12 @@
     :host {
       display: block;
       padding: 10px;
+    }
+
+    #title-close {
+      display: flex;
+      flex-direction: row-reverse; 
+      justify-content: center;
     }
   </style>
 
@@ -30,11 +39,22 @@
 
   <dom-repeat items="[[persistedChats]]" as="chat" initial-count="5">
     <template>
-      <div class="card" on-tap="_onTappedMessage">
-        <p>Seller: [[chat.seller]]</p>
+      <div class="card" on-tap="_onTapMessage">
+        <div id="title-close">
+          <paper-icon-button id="closeBtn" icon="custom-icons:close" on-tap="_onTapDelete"></paper-icon-button>
+          <p>Seller: [[chat.seller]]</p>
+        </div>
       </div>
     </template>
   </dom-repeat>
+
+    <paper-dialog id="deleteDialog">
+      <p>[[deletePrompt]]</p>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button on-tap="_onTapDeleteDialogBtn" dialog-confirm autofocus>Delete</paper-button>
+      </div>
+    </paper-dialog>
 
   </template>
 
@@ -54,6 +74,10 @@
           chats: {
             type: Array,
             value: []
+          },
+          deletePrompt: {
+            type: String,
+            value: ""
           }
         };
       }
@@ -66,9 +90,9 @@
       poppedCallback() {
         console.log("ChatsView.poppedCallback");
 
-        // // If we're getting popped off - reset these!
+        // If we're getting popped off - reset these!
         this.requestId = null;
-        this.chats = [];
+        this.splice("chats", 0, this.chats.length);
       }
 
       _userChanged(user) {
@@ -84,6 +108,7 @@
       _loadChats() {
 
         var self = this;
+        this.splice("chats", 0, this.chats.length);
 
         firebase.app("polyn-app").database().ref("/users/" + this.user.uid + "/requests/" + this.requestId + "/chats").on('child_added', function(snapshot) {
         
@@ -97,8 +122,8 @@
         });
       }
 
-      _onTappedMessage(e) {
-        console.log("ChatsView._onTappedMessage");
+      _onTapMessage(e) {
+        console.log("ChatsView._onTapMessage");
 
         const index = e.model.index;
 
@@ -111,6 +136,46 @@
         if(typeof chatView.reload === 'function') {
           chatView.reload();
         }
+      }
+
+      _onTapDelete(e) {
+        console.log("ChatsView._onTapDelete");
+
+        e.stopPropagation();
+
+        if(!this.user) {
+          return;
+        }
+
+        this.indexToDelete = e.model.index;
+        this.deletePrompt = "Delete the chat with this seller?";
+        this.$.deleteDialog.toggle();
+      }
+
+      _onTapDeleteDialogBtn() {
+        console.log("ChatsView._onTapDeleteDialogBtn");
+
+        var self = this;
+
+        const requestChatInfo = this.chats[this.indexToDelete];
+        //console.log("  requestChatInfo: " + JSON.stringify(requestChatInfo, null, 4));
+
+        const subChatId = this.chats[this.indexToDelete].key;
+        //console.log("  subChatId: " + subChatId);
+
+        // The buyer is deleting a sinlge chat session with a seller!
+
+        // First, mark the seller's copy of the request as deleted, so they can't interact with it.
+        // They can still see it but it will be marked 'closed' so they can not chat anymore.
+        firebase.app("polyn-app").database().ref(
+          "users/" + requestChatInfo.sellerId + "/requests/" + requestChatInfo.sellersRequestId + "/deleted").set(true).then(function() {
+
+          // Next, in the buyer's copy of the request, mark this one chat session as deleted, so they don't see it anymore.
+          firebase.app("polyn-app").database().ref(
+            "/users/" + self.user.uid + "/requests/" + self.requestId + "/chats/" + subChatId + "/deleted").set(true).then(function() {
+            self.splice('chats', self.indexToDelete, 1);
+          });
+        });
       }
     }
 

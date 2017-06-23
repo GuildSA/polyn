@@ -472,6 +472,13 @@
             null,
             this._showPage404.bind(this),
             true);
+
+        // If the next page supports the reload method - call it!
+        // We need to tell it to prepare for a reload so it can refresh its data.
+        var nextPage = this.$.ironPages.selectedItem;
+        if(nextPage && typeof nextPage.reload === 'function') {
+          nextPage.reload();
+        }
       }
 
       _showPage404() {
