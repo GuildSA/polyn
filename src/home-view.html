@@ -137,13 +137,18 @@
 
         h2 {
           font-size: 1rem;
-          padding: 1rem; 
+          
         }
 
         .miles-away {
-          font-size: 1 rem; 
-
+          font-size: 0.5 rem;
+          @apply(--layout-self-end)
         }
+
+        #sticky-btn {
+          border-radius: 0px;
+        }
+
       }
     </style>
 
@@ -176,9 +181,7 @@
             </div>
             <template is="dom-if" if="[[seller.distance]]">
               <div class="miles-away">
-                <div class="layout vertical">
-                [[seller.distance]] miles away
-                </div>
+                [[seller.distance]]<p> miles away</p>
               </div>
             </template>
              <div class="short-description">
@@ -189,7 +192,7 @@
       </dom-repeat>
 
       <div id="submit-request-container">
-        <paper-button class="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message" >Create a Request</paper-button>
+        <paper-button id="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message" >Create a Request</paper-button>
       </div>
     </div>
 
