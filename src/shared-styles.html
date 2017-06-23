@@ -1,10 +1,22 @@
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 
+
 <!-- shared styles for all views -->
 <dom-module id="shared-styles">
   <template>
     <style>
+
+      @font-face {
+      font-family: "Avenir-Bold";
+       src: url(".fonts/avenir-next.otf");
+      }
+
+      @font-face {
+      font-family: "Avenir-Regular";
+       src: url(".fonts/avenir-next-regular.otf");
+      }
+
       .card {
         margin: 24px;
         padding: 16px;
@@ -43,12 +55,13 @@
       h1 {
         margin: 16px 0;
         color: #212121;
-        font-size: 26px;
-        font-family: Garamond;
+        font-size: 22px;
+        font-family: Avenir-Bold, Arial, Helvetica, sans-serif;
+        font-style: bold;
       }
 
       h2 {
-        font-family: Arial, Helvetica, sans-serif; 
+        font-family: Avenir;
       }
 
       a:link {
