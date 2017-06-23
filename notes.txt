@@ -92,6 +92,10 @@
 
   });
 
+
+  const refPathRequestCategory = "requests/" + targetCategory + "/sellers";
+  firebase.app("polyn-app").database().ref().child(refPathRequestCategory + "/" + requestKeyToRemove).remove();
+
 ------------------------------------------------------------------------
 
 
@@ -399,7 +403,7 @@ cp -rn node_modules build/default/
  -- Markup & Code Scraps -- 
     
 
-
+-------
 
    <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 

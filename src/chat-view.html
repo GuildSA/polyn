@@ -8,7 +8,6 @@
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
@@ -435,46 +434,51 @@
 
         firebase.app("polyn-app").database().ref(fullChatInfoPath).once('value').then(function(snapshot) {
 
-            var chatInfo = snapshot.val();
+          var chatInfo = snapshot.val();
 
-            if(chatInfo) {
+          if(chatInfo) {
 
-              self.chatInfo = chatInfo;
+            self.chatInfo = chatInfo;
+
+            if(self.subChatId) {
+              self.chatMessagesId = self.subChatId;
+            } else {
               self.chatMessagesId = chatInfo.chatId;
-
-              //console.log("chatInfo: " + JSON.stringify(chatInfo, null, 4));
-
-              // As soon as we get the user and the chat info - get the other 
-              // users info so we know who we're chatting with.
-              var otherUsersId;
-
-              if(self.subChatId) {
-                // If the subChatId is set - we're looking at our own request and the info about the chat is in a list of chats.
-                // This means the other user is the seller!
-                otherUsersId = self.chatInfo.sellerId;
-              } else {
-                // If the subChatId is NOT set - there is no chats list since there is only one chat to see.
-                // In this case - we're the seller.
-                  otherUsersId = self.chatInfo.buyerId;
-              }
-
-              //console.log("otherUsersId = " + otherUsersId);
-
-              if(otherUsersId) {
-
-                firebase.app("polyn-app").database().ref("/users/" + otherUsersId + "/info").once('value').then(function(snapshot) {
-
-                    var otherUsersInfo = snapshot.val();
-                    //console.log("otherUsersInfo: " + JSON.stringify(otherUsersInfo, null, 4));
-
-                    if(otherUsersInfo) {
-
-                      self.otherUsersInfo = otherUsersInfo;
-                      self._loadChats();
-                    }
-                });
-              }
             }
+
+            //console.log("chatInfo: " + JSON.stringify(chatInfo, null, 4));
+
+            // As soon as we get the user and the chat info - get the other 
+            // users info so we know who we're chatting with.
+            var otherUsersId;
+
+            if(self.subChatId) {
+              // If the subChatId is set - we're looking at our own request and the info about the chat is in a list of chats.
+              // This means the other user is the seller!
+              otherUsersId = self.chatInfo.sellerId;
+            } else {
+              // If the subChatId is NOT set - there is no chats list since there is only one chat to see.
+              // In this case - we're the seller.
+              otherUsersId = self.chatInfo.buyerId;
+            }
+
+            //console.log("otherUsersId = " + otherUsersId);
+
+            if(otherUsersId) {
+
+              firebase.app("polyn-app").database().ref("/users/" + otherUsersId + "/info").once('value').then(function(snapshot) {
+
+                  var otherUsersInfo = snapshot.val();
+                  //console.log("otherUsersInfo: " + JSON.stringify(otherUsersInfo, null, 4));
+
+                  if(otherUsersInfo) {
+
+                    self.otherUsersInfo = otherUsersInfo;
+                    self._loadChats();
+                  }
+              });
+            }
+          }
         });
       }
 
@@ -510,34 +514,30 @@
         } else {
 
           // We don't have a chatMessagesId yet so create it first and then send a message.
-          var newChatMessageKey = firebase.app("polyn-app").database().ref().child("chats/").push().key;
+          var newChatMessagesId = firebase.app("polyn-app").database().ref().child("chats/").push().key;
 
-          if(newChatMessageKey) {
+          if(newChatMessagesId) {
 
-            this.chatMessagesId = newChatMessageKey;
+            this.chatMessagesId = newChatMessagesId;
 
             // Save the chatMessagesId back to the chat entry.
-            firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/requests/" + this.requestId + "/chatId").set(newChatMessageKey);
+            firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/requests/" + this.requestId + "/chatId").set(newChatMessagesId);
 
-              // console.log("this.chatInfo.buyerId = " + this.chatInfo.buyerId);
-              // console.log("this.chatInfo.requestId = " + this.chatInfo.requestId);
+            // console.log("this.chatInfo.buyerId = " + this.chatInfo.buyerId);
+            // console.log("this.chatInfo.requestId = " + this.chatInfo.requestId);
 
-              var newOthersChatMessageKey = firebase.app("polyn-app").database().ref().child("/users/" + this.chatInfo.buyerId + "/requests/" + this.chatInfo.requestId + "/chats").push().key;
-              if(newOthersChatMessageKey) {
+            // console.log("chatId = " + newChatMessagesId);
+            // console.log("seller = " + this.usersInfo.name);
+            // console.log("sellerId = " + this.usersInfo.sellerId);
 
-                // console.log("chatId = " + newChatMessageKey);
-                // console.log("seller = " + this.usersInfo.name);
-                // console.log("sellerId = " + this.usersInfo.sellerId);
+            let newChatEntry = {
+              sellersRequestId: this.requestId,
+              seller : this.usersInfo.name,
+              sellerId: this.user.uid,
+              timeStamp: firebase.database.ServerValue.TIMESTAMP
+            };
 
-                let newChatEntry = {
-                  chatId : newChatMessageKey,
-                  seller : this.usersInfo.name,
-                  sellerId: this.user.uid,
-                  timeStamp: firebase.database.ServerValue.TIMESTAMP
-                };
-
-                firebase.app("polyn-app").database().ref().child("/users/" + this.chatInfo.buyerId + "/requests/" + this.chatInfo.requestId + "/chats/" + newOthersChatMessageKey).set(newChatEntry);
-              }
+            firebase.app("polyn-app").database().ref().child("/users/" + this.chatInfo.buyerId + "/requests/" + this.chatInfo.requestId + "/chats/" + newChatMessagesId).set(newChatEntry);
 
             // Set the fake message from the buyer so the chat thread starts off with some context.
             var firstMessage = {

@@ -8,6 +8,7 @@
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner-behavior.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="requests-view">
@@ -84,7 +85,7 @@
       <template>
         <div class="card" on-tap="_onTappedRequest">
           <div id="title-close">
-            <paper-icon-button id="toolbarNavBtn" icon="custom-icons:close"></paper-icon-button>
+            <paper-icon-button id="closeBtn" icon="custom-icons:close" on-tap="_onTappedClose"></paper-icon-button>
             <h2>[[request.title]]</h2>
           </div>
           <div class="description">
@@ -100,6 +101,21 @@
         <paper-spinner id="spinner" active="[[loading]]"></paper-spinner>
       </div>
     </template>
+
+    <paper-dialog id="deleteDialog">
+      <p>[[deletePrompt]]</p>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button on-tap="_onTapDeleteDialogBtn" dialog-confirm autofocus>Delete</paper-button>
+      </div>
+    </paper-dialog>
+
+    <paper-dialog id="noChatsDialog">
+      <p>Sorry, no sellers have responded yet.</p>
+      <div class="buttons">
+        <paper-button dialog-confirm autofocus>OK</paper-button>
+      </div>
+    </paper-dialog>
 
   </template>
 
@@ -125,7 +141,11 @@
             type: Boolean,
             notify: true,
             value: true
-          }
+          },
+          deletePrompt: {
+            type: String,
+            value: ""
+          },
         };
       }
   
@@ -166,6 +186,109 @@
         }
       }
 
+      _onTappedClose(e) {
+        console.log("RequestsView._onTappedClose");
+
+        //e.preventDefault();
+        e.stopPropagation();
+
+        if(!this.user) {
+          return;
+        }
+
+        this.indexToDelete = e.model.index;
+
+        if(this._getUserRole(this.requests[this.indexToDelete].buyerId) == "seller") {
+          this.deletePrompt = "Delete buyer request?";
+        } else {
+          this.deletePrompt = "Delete your request?";
+        }
+
+        this.$.deleteDialog.toggle();
+      }
+
+      _onTapDeleteDialogBtn() {
+        console.log("RequestsView._onTapDeleteDialogBtn");
+
+        var self = this;
+
+        const requestInfo = this.requests[this.indexToDelete];
+
+        //console.log("  requestInfo: " + JSON.stringify(requestInfo, null, 4));
+
+        if(this._getUserRole(requestInfo.buyerId) == "seller") {
+
+          // The seller is deleting the request.
+
+          if(requestInfo.chatId) {
+
+            // First, If the seller is already engaged in a chat - mark it closed by seller.
+            firebase.app("polyn-app").database().ref(
+              "users/" + requestInfo.buyerId + "/requests/" + requestInfo.requestId + "/chats/" + requestInfo.chatId + "/deleted").set(true).then(function() {
+              // Finally, delete the request from the sellers 'request' key.
+              firebase.app("polyn-app").database().ref().child("users/" + self.user.uid + "/requests/" + requestInfo.key).remove().then(function() {
+                self.splice('requests', self.indexToDelete, 1);
+              });
+            });
+
+          } else {
+
+            // No chat was started - just delete the request from the sellers 'request' key.
+            firebase.app("polyn-app").database().ref().child("users/" + self.user.uid + "/requests/" + requestInfo.key).remove().then(function() {
+              self.splice('requests', self.indexToDelete, 1);
+            });
+          }
+
+        } else {
+
+          // The buyer is deleting the request!
+
+          const keyToRemove = requestInfo.key;
+
+          // Remove uneeded data before we archive the request.
+          delete requestInfo.key;
+          delete requestInfo.buyer;
+          delete requestInfo.buyerId;
+
+          // First, mark all the chats the buyer is engaged in as closed by buyer.
+          if(requestInfo.chats) {
+            for(var key in requestInfo.chats) {
+              const chat = requestInfo.chats[key];
+              //console.log("  chat: " + JSON.stringify(chat, null, 4));
+              firebase.app("polyn-app").database().ref("users/" + chat.sellerId + "/requests/" + chat.sellersRequestId + "/deleted").set(true);
+            }
+          }
+
+          // Next, put a copy of the request under the 'requestsArchive' key.
+          firebase.app("polyn-app").database().ref("users/" + self.user.uid + "/requestsArchived/" + keyToRemove).set(requestInfo).then(function() {
+          
+            // Finally, remove the request from the live 'requests' key.
+            firebase.app("polyn-app").database().ref().child("users/" + self.user.uid + "/requests/" + keyToRemove).remove().then(function() {
+              self.splice('requests', self.indexToDelete, 1);
+            });
+          });
+        }
+      }
+
+      _getUserRole(buyerId) {
+        console.log("RequestsView._getUserRole: buyerId = " + buyerId);
+
+        if(!this.user) {
+          console.log("  User Role = 'unknown'");
+          return "unknown";
+        }
+
+        if(this.user.uid != buyerId) {
+          // Did the user create this request - if not - the current user is a seller.
+          console.log("  User Role = 'seller'");
+          return "seller";
+        } else {
+          // The current user is the buyer who made this request!
+          console.log("  User Role = 'buyer'");
+          return "buyer";
+        }
+      }
+
       _onTappedRequest(e) {
         console.log("RequestsView._onTappedRequest");
 
@@ -177,8 +300,7 @@
 
         //console.log("this.requests[index]: " + JSON.stringify(this.requests[index], null, 4));
 
-        // Did the user create this request - if not - the current user is a seller.
-        if(this.user.uid != this.requests[index].buyerId) {
+        if(this._getUserRole(this.requests[index].buyerId) == "seller") {
 
           // Have we already created a chat session with this buyer?
           if(this.requests[index].chatId) {
@@ -223,6 +345,7 @@
 
           } else {
             console.log("No sellers have created a chat session yet.");
+            this.$.noChatsDialog.toggle();
           }
         }
       }
