@@ -99,20 +99,16 @@
 
         @media (max-width: 767px) {
 
-          .main-container {
-          display: flex;
-          align-items: center;
-          width: 100%;
-          @apply --layout-vertical;
-          
-        }
-
         .top-border {
+          
+          @apply(--layout-vertical);
+          @apply(--layout-justified);
           border-top-style: none;
           border-top-color: none;
           border-top-width: 0px;
           margin-top: 0px;
           padding-top: 0px;
+          
         }
 
         .business-img {
@@ -123,32 +119,34 @@
         .card {
           width: 95%;
           @apply(--layout-horizontal);
+          @apply(--layout-start-justified);
           padding: 0;
           margin: 0.5rem;
         }
 
-        .top-border {
-          display: hidden;
-        }
-
         .seller-title {
-          padding: 0.5em; 
+          flex: flex-grow; 
         }
 
         .short-description {
           display: none;
         }
 
+        h1 {
+          color: grey;
+        }
+
         h2 {
           font-size: 1rem;
+          margin-left: 25px;
+          margin-top: 10px;
+          color: black;
           
         }
 
         .miles-away {
           font-size: 0.5 rem;
-          display: flex; 
-          align-content: center; 
-          
+          margin-left: 25px;
         }
 
         #sticky-btn {
@@ -184,10 +182,11 @@
               <div class="seller-title">
                 <center><h2>[[seller.name]]</h2></center>
               </div>
-            </div>
+            
             <template is="dom-if" if="[[seller.distance]]">
               <div class="miles-away">
                 [[seller.distance]] miles away
+              </div>
               </div>
             </template>
              <div class="short-description">
