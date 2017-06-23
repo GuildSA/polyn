@@ -9,11 +9,12 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="requests-view">
   <template>
-    <style include="shared-styles">
+    <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
         display: block;
         padding: 10px;
@@ -52,9 +53,12 @@
       }
 
       #title-close {
-        display: flex;
-        flex-direction: row-reverse; 
-        justify-content: center;
+        
+        background: blue;
+      }
+
+      h2 {
+        color: black;
       }
       
     </style>
@@ -83,15 +87,21 @@
 
     <dom-repeat items="[[persistedRequests]]" as="request" initial-count="5">
       <template>
-        <div class="card" on-tap="_onTapRequest">
-          <div id="title-close">
-            <paper-icon-button id="closeBtn" icon="custom-icons:close" on-tap="_onTapDelete"></paper-icon-button>
-            <h2>[[request.title]]</h2>
+        <div class="flex layout horizontal center-justified">
+         <div class="card" on-tap="_onTapRequest">
+          <div class="layout horizontal">
+            <div class="layout vertical">
+              <h2>[[request.title]]</h2>
+            <div class="description">
+              [[request.desc]]
+            </div>
+            </div>
+          <div class="flex layout vertical">
+              <paper-icon-button id="closeBtn" icon="custom-icons:close" on-tap="_onTapDelete"></paper-icon-button>
           </div>
-          <div class="description">
-          <p>[[request.desc]]</p>
-          </div>
+         </div>
         </div>
+      </div>
       </template>
     </dom-repeat>
 
