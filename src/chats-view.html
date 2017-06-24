@@ -53,17 +53,23 @@
     <template>
       <div class="card" on-tap="_onTapMessage">
         <div class="horizontal justified layout">
-        <div class="thumbnail">
-          <img src="https://firebasestorage.googleapis.com/v0/b/polyn-3c431.appspot.com/o/users%2FpBnWlhghlWW4SQO0CiH4hO7Tzag2%2FphotoThumb?alt=media&token=c031a880-7de1-4a55-a298-3b2a20d01f9f" id="test-thumb">
-        </div>
-        <div class="vertical layout">
-          <p><b>[[chat.seller]]</b></p>
-        <div class="latest-message">
-          This should be where the latest message in the chat is located.
-        </div>
-        </div>
-        
-        
+
+          <div class="thumbnail">
+            <template is="dom-if" if="[[chat.photoThumbURL]]">
+              <iron-image id="test-thumb" sizing="cover" preload fade src="[[chat.photoThumbURL]]"></iron-image> 
+            </template>
+            <template is="dom-if" if="[[!chat.photoThumbURL]]">
+              <iron-image id="test-thumb" sizing="cover" preload fade src="images/anonymous_profile.png"></iron-image> 
+            </template>
+          </div>
+
+          <div class="vertical layout">
+            <p><b>[[chat.seller]]</b></p>
+            <div class="latest-message">
+              This should be where the latest message in the chat is located.
+            </div>
+          </div>
+
           <paper-icon-button id="closeBtn" icon="custom-icons:close" on-tap="_onTapDelete"></paper-icon-button>
         </div>
       </div>
@@ -132,6 +138,7 @@
         var self = this;
         this.splice("chats", 0, this.chats.length);
 
+        // Load all the chat sessions related to this request.
         firebase.app("polyn-app").database().ref("/users/" + this.user.uid + "/requests/" + this.requestId + "/chats").on('child_added', function(snapshot) {
         
           var childKey = snapshot.key;
@@ -140,7 +147,27 @@
           // Manually add the key for this data so we can pass it forward if selected.
           childData.key = childKey;
 
-          self.push('chats', childData);
+          //console.log("childData: " + JSON.stringify(childData, null, 4));
+
+          // Get the seller's info for each chat session so we can get access his or her's thumbnail url.
+          firebase.app("polyn-app").database().ref("/users/" + childData.sellerId + "/info").once('value').then(function(snapshot) {
+
+              const sellersInfo = snapshot.val();
+              //console.log("sellersInfo: " + JSON.stringify(sellersInfo, null, 4));
+
+              if(sellersInfo) {
+                // Manually add the photoThumbURL to this data so we can use it to build the UI.
+                childData.photoThumbURL = sellersInfo.photoThumbURL;
+              }
+
+              self.push('chats', childData);
+
+          }, function(error) {
+            console.error(error);
+            // Something went wrong trying to get the seller's info - just push what we have.
+            self.push('chats', childData);
+          });
+
         });
       }
 
