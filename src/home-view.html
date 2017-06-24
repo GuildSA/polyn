@@ -37,29 +37,12 @@
         height: 150px;
         border-radius: 2.5%;
         border-color: var(--app-accent-color);
-        /*transition: all 0.3s ease;*/
       }
-
-      /*.business-img:hover {
-        box-shadow: var(--app-shadow-large);
-        cursor: pointer;
-      }*/
 
       h2 {
         color: #70C187;
         margin: 0;
       }
-
-      /*.item {
-        transition-timing-function: ease-out;
-        transition-duration: .75s;
-        background: #eee;
-        width: 100%;
-      }
-
-      .item:hover {
-        opacity: .75;
-      }*/
 
       .main-container {
         display: flex;
@@ -108,10 +91,10 @@
           border-top-width: 0px;
           margin-top: 0px;
           padding-top: 0px;
-          
         }
 
         .business-img {
+          display: flex;
           height: 10vh;
           width: 15vh;
           border-radius: 0%;
@@ -123,10 +106,6 @@
           @apply(--layout-start-justified);
           padding: 0;
           margin: 0.5rem;
-        }
-
-        .seller-title {
-          flex: flex-grow; 
         }
 
         .short-description {
@@ -142,16 +121,15 @@
           margin-left: 25px;
           margin-top: 10px;
           color: black;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
           
         }
 
         .miles-away {
           font-size: 0.5 rem;
           margin-left: 25px;
-        }
-
-        #sticky-btn {
-          border-radius: 0px;
         }
 
       }
@@ -165,7 +143,7 @@
 
     <div class="main-container">
       <!-- Mobile Device Media Query -->
-      <iron-media-query query="(min-width:300px) and (max-width: 700px)" query-matches="{{mobileDevice}}"></iron-media-query>
+      <iron-media-query query="(min-width:300px) and (max-width: 767px)" query-matches="{{mobileDevice}}"></iron-media-query>
         <template is="dom-if" if="{{mobileDevice}}">
           <h1>Record Stores In Your Area</h1>
 
@@ -196,6 +174,7 @@
              </div>
           </div>
         </template>
+
       </dom-repeat>
 
       <div id="submit-request-container">
