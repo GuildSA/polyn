@@ -42,6 +42,8 @@
       h2 {
         color: #70C187;
         margin: 0;
+        display: flex;
+        justify-content: center;
       }
 
       .main-container {
@@ -98,6 +100,7 @@
           height: 10vh;
           width: 15vh;
           border-radius: 0%;
+          
         }
 
         .card {
@@ -124,7 +127,6 @@
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          
         }
 
         .miles-away {
@@ -158,16 +160,12 @@
           <div class="card" on-tap="_onTapBusiness">
             <iron-image class="business-img" style="background-color: lightgray;" sizing="cover" preload fade src="[[seller.photoUrl]]"></iron-image>
             <div class="top-border">
-              <div class="seller-title">
-                <center><h2>[[seller.name]]</h2></center>
-              </div>
-            
+                <h2>[[seller.name]]</h2>
             <template is="dom-if" if="[[seller.distance]]">
               <div class="miles-away">
                 [[seller.distance]] miles away
               </div>
             </div>
-            
             </template>
              <div class="short-description">
                 <p>[[seller.desc]]</p>
