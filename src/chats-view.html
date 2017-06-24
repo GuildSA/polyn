@@ -7,20 +7,32 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="chats-view">
   <template>
-  <style include="shared-styles">
+  <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
     :host {
       display: block;
       padding: 10px;
     }
 
-    #title-close {
+    /*#title-close {
       display: flex;
       flex-direction: row-reverse; 
       justify-content: center;
+    }*/
+
+    #test-thumb {
+      border-radius: 60px;
+      height: 50px;
+      width: 50px;
+      padding: 5px;
+    }
+
+    p {
+        margin: 10px 0;
     }
   </style>
 
@@ -40,9 +52,19 @@
   <dom-repeat items="[[persistedChats]]" as="chat" initial-count="5">
     <template>
       <div class="card" on-tap="_onTapMessage">
-        <div id="title-close">
+        <div class="horizontal justified layout">
+        <div class="thumbnail">
+          <img src="https://firebasestorage.googleapis.com/v0/b/polyn-3c431.appspot.com/o/users%2FpBnWlhghlWW4SQO0CiH4hO7Tzag2%2FphotoThumb?alt=media&token=c031a880-7de1-4a55-a298-3b2a20d01f9f" id="test-thumb">
+        </div>
+        <div class="vertical layout">
+          <p><b>[[chat.seller]]</b></p>
+        <div class="latest-message">
+          This should be where the latest message in the chat is located.
+        </div>
+        </div>
+        
+        
           <paper-icon-button id="closeBtn" icon="custom-icons:close" on-tap="_onTapDelete"></paper-icon-button>
-          <p>Seller: [[chat.seller]]</p>
         </div>
       </div>
     </template>
