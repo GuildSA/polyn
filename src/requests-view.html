@@ -237,7 +237,6 @@
         var self = this;
 
         const requestInfo = this.requests[this.indexToDelete];
-
         //console.log("  requestInfo: " + JSON.stringify(requestInfo, null, 4));
 
         if(this._getUserRole(requestInfo.buyerId) == "seller") {
@@ -246,14 +245,25 @@
 
           if(requestInfo.chatId) {
 
-            // First, If the seller is already engaged in a chat - mark it closed by seller.
-            firebase.app("polyn-app").database().ref(
-              "users/" + requestInfo.buyerId + "/requests/" + requestInfo.requestId + "/chats/" + requestInfo.chatId + "/deleted").set(true).then(function() {
-              // Finally, delete the request from the sellers 'request' key.
+            if(requestInfo.deleted) {
+
+              // If the buyer has already deleted the request - just delete the request from the sellers 'request' key.
               firebase.app("polyn-app").database().ref().child("users/" + self.user.uid + "/requests/" + requestInfo.key).remove().then(function() {
                 self.splice('requests', self.indexToDelete, 1);
               });
-            });
+
+            } else {
+
+              // If the buyer has NOT deleted the request yet, we need to do a two-step process to clean up.
+              // First, If the seller is already engaged in a chat - mark it closed by seller.
+              firebase.app("polyn-app").database().ref(
+                "users/" + requestInfo.buyerId + "/requests/" + requestInfo.requestId + "/chats/" + requestInfo.chatId + "/deleted").set(true).then(function() {
+                // Finally, delete the request from the sellers 'request' key.
+                firebase.app("polyn-app").database().ref().child("users/" + self.user.uid + "/requests/" + requestInfo.key).remove().then(function() {
+                  self.splice('requests', self.indexToDelete, 1);
+                });
+              });
+            }
 
           } else {
 
@@ -279,7 +289,10 @@
             for(var key in requestInfo.chats) {
               const chat = requestInfo.chats[key];
               //console.log("  chat: " + JSON.stringify(chat, null, 4));
-              firebase.app("polyn-app").database().ref("users/" + chat.sellerId + "/requests/" + chat.sellersRequestId + "/deleted").set(true);
+
+              if(!chat.deleted) {
+                firebase.app("polyn-app").database().ref("users/" + chat.sellerId + "/requests/" + chat.sellersRequestId + "/deleted").set(true);
+              }
             }
           }
 
@@ -320,25 +333,28 @@
           return;
         }
 
+        var self = this;
+
         const index = e.model.index;
 
-        //console.log("this.requests[index]: " + JSON.stringify(this.requests[index], null, 4));
+        const requestInfo = this.requests[index];
+        //console.log("  requestInfo: " + JSON.stringify(requestInfo, null, 4));
 
-        if(this._getUserRole(this.requests[index].buyerId) == "seller") {
+        if(this._getUserRole(requestInfo.buyerId) == "seller") {
 
-          if(this.requests[index].deleted) {
+          if(requestInfo.deleted) {
             this.noChatsMessage = "Im sorry, but the buyer has deleted this request.";
             this.$.noChatsDialog.toggle();
             return;
           }
 
           // Have we already created a chat session with this buyer?
-          if(this.requests[index].chatId) {
+          if(requestInfo.chatId) {
 
             // We've already created a chatId for this buyer - so load the chat session.
             var polynApp = document.getElementById("polynApp");
             var chatView = polynApp.pushPageOnCurrentTab("chat-view");
-            chatView.requestId = this.requests[index].key;
+            chatView.requestId = requestInfo.key;
 
             if(typeof chatView.reload === 'function') {
               chatView.reload();
@@ -346,15 +362,32 @@
 
           } else {
 
-            // No chat ID yet.
-            var polynApp = document.getElementById("polynApp");
-            var chatView = polynApp.pushPageOnCurrentTab("chat-view");
+            // No chat ID yet!
 
-            chatView.requestId = this.requests[index].key;
+            // Since we have no chat ID yet - we need to verify that this request is still active.
+            // It may have been deleted before we had a chance to respond.
 
-            if(typeof chatView.reload === 'function') {
-              chatView.reload();
-            }
+            firebase.app("polyn-app").database().ref("users/" + requestInfo.buyerId + "/requests/" + requestInfo.requestId ).once('value').then(function(snapshot) {
+
+              if(snapshot.exists()) {
+
+                // The request is still active - allow chatting!
+                var polynApp = document.getElementById("polynApp");
+                var chatView = polynApp.pushPageOnCurrentTab("chat-view");
+
+                chatView.requestId = requestInfo.key;
+
+                if(typeof chatView.reload === 'function') {
+                  chatView.reload();
+                }
+
+              } else {
+                // The request has been deleted - DO NOT allow chatting!
+                self.noChatsMessage = "The buyer has already deleted this request.";
+                self.$.noChatsDialog.toggle();
+              }
+
+            });
           }
 
         } else {
@@ -362,7 +395,6 @@
           // The current user is the buyer who made this request!
 
           // If there are any chats from any sellers - list them.
-          const requestInfo = this.requests[index];
 
           if(requestInfo.chats) {
 
