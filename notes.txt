@@ -60,6 +60,7 @@
     var data = snapshot.val();
   });
 
+---
 
   // Get some data just once.
   firebase.app("polyn-app").database().ref("/users/" + user.uid + "/info").once('value').then(function(snapshot) {
@@ -67,6 +68,7 @@
     var usersInfo = snapshot.val();
   });
 
+---
 
   // Upload the image to Cloud Storage.
   firebase.app("polyn-app").storage().ref("users/" + this.user.uid + "/photo").put(file).then(function(snapshot) {
@@ -74,11 +76,13 @@
     var fullUrlPath = snapshot.downloadURL;
   });
 
+---
 
   // Setting one key with no callback.
   var url = "https://some/url/here";
   firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/info/photoURL").set(url);
 
+---
 
   // Create or push a new key and then add some data under it.
   var newSellerKey = firebase.app("polyn-app").database().ref().child("sellers/").push().key;
@@ -92,9 +96,21 @@
 
   });
 
+---
 
   const refPathRequestCategory = "requests/" + targetCategory + "/sellers";
   firebase.app("polyn-app").database().ref().child(refPathRequestCategory + "/" + requestKeyToRemove).remove();
+
+---
+
+  firebase.app("polyn-app").database().ref("/users/" + childData.sellerId + "/info").once('value').then(function(snapshot) {
+
+    const sellersInfo = snapshot.val();
+
+  }, function(error) {
+    console.error(error);
+
+  });
 
 ------------------------------------------------------------------------
 

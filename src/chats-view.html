@@ -152,15 +152,15 @@
           // Get the seller's info for each chat session so we can get access his or her's thumbnail url.
           firebase.app("polyn-app").database().ref("/users/" + childData.sellerId + "/info").once('value').then(function(snapshot) {
 
-              const sellersInfo = snapshot.val();
-              //console.log("sellersInfo: " + JSON.stringify(sellersInfo, null, 4));
+            const sellersInfo = snapshot.val();
+            //console.log("sellersInfo: " + JSON.stringify(sellersInfo, null, 4));
 
-              if(sellersInfo) {
-                // Manually add the photoThumbURL to this data so we can use it to build the UI.
-                childData.photoThumbURL = sellersInfo.photoThumbURL;
-              }
+            if(sellersInfo) {
+              // Manually add the photoThumbURL to this data so we can use it to build the UI.
+              childData.photoThumbURL = sellersInfo.photoThumbURL;
+            }
 
-              self.push('chats', childData);
+            self.push('chats', childData);
 
           }, function(error) {
             console.error(error);
