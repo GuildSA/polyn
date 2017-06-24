@@ -288,7 +288,10 @@
 
       reload() {
         console.log("ChatView.reload");
-        this._loadChatInfo();
+
+        if(this.chatMessages && !this.chatMessages.length > 0) {
+          this._loadChatInfo();
+        }
       }
 
       poppedCallback() {
@@ -299,7 +302,7 @@
         this.subChatId = null;
         this.chatMessagesId = null;
         this.chatPhotoUrl = null;
-        this.chatMessages = [];
+        this.splice("chatMessages", 0, this.chatMessages.length);
 
         self.loading = true;
       }
