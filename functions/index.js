@@ -3,6 +3,8 @@
 // Import the Firebase SDK for Google Cloud Functions.
 var functions = require('firebase-functions');
 
+const GeoFire = require('geofire');
+
 // CORS Express middleware to enable CORS Requests.
 const cors = require('cors')({origin: true});
 
@@ -83,6 +85,50 @@ exports.sendMessage = functions.https.onRequest((req, res) => {
         res.status(500).end();
       });
   });
+});
+
+exports.testGeofire = functions.https.onRequest((req, res) => {
+
+  const categoryPath = req.query.categoryPath;
+  const title = req.query.title;
+  const desc = req.query.desc;
+  const buyerId = req.query.buyerId;
+  const buyer = req.query.buyer;
+  const requestId = req.query.requestId;
+
+  const lat = parseFloat(req.query.lat);
+  const long = parseFloat(req.query.long);
+  const rangeInKm = parseFloat(req.query.rangeInKm);
+
+  console.log("lat: ", lat);
+  console.log("long: ", long);
+  console.log("rangeInKm: ", rangeInKm);
+
+  cors(req, res, () => {
+
+    var sellersByLocationRef = admin.database().ref("locations/" + categoryPath + "/");
+    var geoFireSellersRef = new GeoFire(sellersByLocationRef);
+
+    var geoQuery = geoFireSellersRef.query({
+      center: [lat, long],
+      radius: rangeInKm // Kilometers
+    });
+
+    var onKeyEnteredRegistration = geoQuery.on("key_entered", function(key, location) {
+      console.log(key + " entered the query.");
+      console.log("location: " + JSON.stringify(location, null, 4));
+    });
+
+    var onReadyRegistration = geoQuery.on("ready", function() {
+      console.log("  The 'ready' event fired - cancelling query.");
+      geoQuery.cancel();
+      res.status(200).end();
+    })
+
+    //res.status(200).end();
+
+  });
+
 });
 
 exports.sendRequest = functions.https.onRequest((req, res) => {

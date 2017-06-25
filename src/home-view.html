@@ -279,8 +279,8 @@
           GeofireManager.getUsersLocation(null, // Pass null for user's info path since we don't actually need a user to do this.
 
             function(location) {
-              var latitude = location.coords.latitude;
-              var longitude = location.coords.longitude;
+              const latitude = location.coords.latitude;
+              const longitude = location.coords.longitude;
 
               // Cache the user's location.
               self.location = [latitude, longitude];

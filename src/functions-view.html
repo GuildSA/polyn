@@ -7,6 +7,7 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-request.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="geofire.html">
 
 <dom-module id="functions-view">
   <template>
@@ -63,6 +64,16 @@
       debounce-duration="300">
     </iron-ajax>
 
+    <iron-ajax
+      id="testGeofire"
+      url="https://us-central1-polyn-3c431.cloudfunctions.net/testGeofire"
+      method="POST"
+      loading="{{loading}}"
+      on-response="_handleTestGeofireResponse"
+      on-error="_handleTestGeofireError"
+      debounce-duration="300">
+    </iron-ajax>
+
     <paper-spinner id="spinner" active="[[loading]]" active></paper-spinner>
 
     <div class="card">
@@ -70,6 +81,7 @@
       <!--<paper-button on-tap="_onTapRequestText" raised>Request Text</paper-button>
       <paper-button on-tap="_onTapSendTextParameter" raised>Send Text Parameter</paper-button>-->
       <paper-button on-tap="_onTapSendMessage" raised>Send Message</paper-button>
+      <paper-button on-tap="_onTapTestGeofire" raised>Test Geofire</paper-button>
     </div>
 
   </template>
@@ -158,6 +170,50 @@
 
       _handleSendMessageError(e) {
         console.log("FunctionsView._handleSendMessageError");
+        console.log("  status = ", e.status, e.statusText);
+      }
+
+      _onTapTestGeofire() {
+
+        var self = this;
+
+        GeofireManager.getUsersLocation(null, // Pass null for user's info path since we don't actually need a user to do this.
+
+          function(location) {
+            const latitude = location.coords.latitude;
+            const longitude = location.coords.longitude;
+
+            // Send this info to the server.
+            const params = {
+              categoryPath: "collectables/sub/vinylRecords",
+              title: "Test Title",
+              desc: "Test Desc...",
+              buyerId: "XXX",
+              buyer: "XXX",
+              requestId: "XXX",
+
+              lat: latitude,
+              long: longitude,
+              rangeInKm: 30
+            };
+
+            self.$.testGeofire.params = params;
+            self.$.testGeofire.generateRequest(); // Calls: testGeofire()
+          },
+          
+          function(error) {
+            console.log("User Location error: " + error + "");
+        });
+
+      }
+
+      _handleTestGeofireResponse(data) {
+        console.log("FunctionsView._handleTestGeofireResponse");
+        console.log("  status = " + data.detail.status);
+      }
+
+      _handleTestGeofireError(e) {
+        console.log("FunctionsView._handleTestGeofireError");
         console.log("  status = ", e.status, e.statusText);
       }
     }
