@@ -79,15 +79,15 @@
       }
 
       .card {
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
       }
 
-        @media (max-width: 767px) {
+      @media (max-width: 767px) {
 
         .top-border {
           
-          @apply(--layout-vertical);
-          @apply(--layout-justified);
+          @apply --layout-vertical;
+          @apply --layout-justified;
           border-top-style: none;
           border-top-color: none;
           border-top-width: 0px;
@@ -100,13 +100,12 @@
           height: 10vh;
           width: 15vh;
           border-radius: 0%;
-          
         }
 
         .card {
           width: 95%;
-          @apply(--layout-horizontal);
-          @apply(--layout-start-justified);
+          @apply --layout-horizontal;
+          @apply --layout-start-justified;
           padding: 0;
           margin: 0.5rem;
         }
