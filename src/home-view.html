@@ -12,6 +12,10 @@
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
+
+<link rel="import" href="../bower_components/google-apis/google-apis.html">
+<link rel="import" href="../bower_components/google-apis/google-maps-api.html">
+
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="custom-icons.html">
 <link rel="import" href="geofire.html">
@@ -136,7 +140,19 @@
       }
     </style>
 
-      <app-indexeddb-mirror
+    <firebase-auth 
+      id="auth"
+      app-name="polyn-app"
+      user="{{user}}">
+    </firebase-auth>
+
+    <firebase-document
+      app-name="polyn-app"
+      id="usersinfo"
+      data="{{usersInfo}}">
+    </firebase-document>
+
+    <app-indexeddb-mirror
       key="sellers"
       data="{{sellers}}"
       persisted-data="{{persistedSellers}}">
@@ -186,6 +202,8 @@
       </div>
     </template>
 
+    <google-maps-api id="googleMapsApi" api-key="AIzaSyB3E3yJzc7-g6-0rZCJhCxAWtoD6d7DgrM"></google-maps-api>
+
   </template>
 
   <script>
@@ -194,6 +212,14 @@
 
       static get properties() {
         return {
+          user: {
+            type: Object,
+            observer: '_userChanged'
+          },
+          usersInfo: {
+            type: Object,
+            observer: '_usersInfoChanged'
+          },
           location: {
             type: Array,
             value: null
@@ -215,12 +241,102 @@
         };
       }
 
+      reload() {
+        console.log("HomeView.reload");
+
+        // if(this.chatMessages && !this.chatMessages.length > 0) {
+        //   this._loadChatInfo();
+        // }
+
+        //this._loadSellersNoLocation();
+        this._loadSellersByLocation(100);
+      }
+
       connectedCallback() {
         super.connectedCallback();
         console.log("HomeView.connectedCallback");
 
         //this._loadSellersNoLocation();
         this._loadSellersByLocation(100);
+
+        //
+        // Convert a Zipcode into a Lat/Long...
+        //
+
+// TODO: Make use of the lat/long based on zip code when the user rejects location.
+
+        var googleMapsApi = this.$.googleMapsApi;
+
+        googleMapsApi.addEventListener('api-load', function(e) {
+
+          var geocoder = new googleMapsApi.api.Geocoder();
+          //console.log("geocoder: " + geocoder);
+          //console.log("geocoder: " + JSON.stringify(geocoder));
+
+          //const address = "Plano, TX";
+          const address = "75025";
+          geocoder.geocode( {'address': address}, function(results, status) {
+
+            //console.log(" status: " + status);
+            //console.log(" esults: " + JSON.stringify(results, null, 4));
+
+            if(status == google.maps.GeocoderStatus.OK) {
+
+              const lat = results[0].geometry.location.lat();
+              const long = results[0].geometry.location.lng();
+
+              console.log("  The address: " + address + ", was converted into:");
+              console.log("    Lat: " + lat + ", Long: " + long);
+
+            } else {
+              console.log("  Geocode was not successful for the following reason: " + status);
+            }
+
+          });
+
+        });
+
+      }
+
+      _userChanged(user) {
+        console.log("HomeView._userChanged");
+        //console.log("HomeView._userChanged: " + JSON.stringify(user, null, 4));
+
+        // As soon as we get the user - get the users info so we can 
+        // learn more about them!
+        if(user && user.uid) {
+          this.$.usersinfo.path = "/users/" + user.uid + "/info";
+        }
+      }
+
+      _usersInfoChanged(usersInfo) {
+        console.log("ChatView._usersInfoChanged");
+        //console.log("HomeView._usersInfoChanged: " + JSON.stringify(usersInfo, null, 4));
+
+        if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
+          return;
+        }
+
+        if(!usersInfo.location) {
+
+          const self = this;
+
+          GeofireManager.getUsersLocation("users/" + this.user.uid + "/info",
+
+            function(location) {
+              const latitude = location.coords.latitude;
+              const longitude = location.coords.longitude;
+              // Cache the user's location.
+              self.location = [latitude, longitude];
+
+//const rangeInKm = 1.6 * parseFloat(rangeInMiles);
+//self._getSellerData(this.location[0], this.location[1], rangeInKm);
+            },
+            
+            function(error) {
+              console.log("User Location error: " + error + "");
+          });
+        }
       }
 
       _loadSellersNoLocation() {
