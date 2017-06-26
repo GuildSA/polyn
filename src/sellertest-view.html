@@ -87,7 +87,7 @@
 
         <template is="dom-if" if="[[!isAnonymous]]">
           <div class="layout horizontal center-justified">
-            <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="[[photoURL]]"></iron-image>
+            <iron-image sizing="contain" id="profile-image" alt="User's' Profile Image." src="[[photoUrl]]"></iron-image>
           </div>
           <div class="layout horizontal center-justified">
             <h1>Logged In As [[displayName]]</h1>
@@ -118,7 +118,7 @@
             type: String,
             value: true
           },
-          photoURL: {
+          photoUrl: {
             type: String
           },
           displayName: {
@@ -154,11 +154,11 @@
               // console.log("user.providerData: " + user.providerData);
               // console.log("user " + JSON.stringify(user, null, 4));
               // console.log("user.providerData: " + JSON.stringify(user.providerData, null, 4));
-              // console.log("user.providerData[0].photoURL: " + user.providerData[0].photoURL);
+              // console.log("user.providerData[0].photoUrl: " + user.providerData[0].photoUrl);
 
               // If the user is not anonymous, get their name and photo.
               this.displayName = user.providerData[0].displayName;
-              this.photoURL = user.providerData[0].photoURL;
+              this.photoUrl = user.providerData[0].photoUrl;
             }           
 
             // This element keeps track of if its own isAnonymous property.
@@ -168,7 +168,7 @@
         } else {
 
             this.displayName = "";
-            this.photoURL = "";
+            this.photoUrl = "";
             this.isAnonymous = true;
         }
       }

@@ -80,7 +80,7 @@
 
   // Setting one key with no callback.
   var url = "https://some/url/here";
-  firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/info/photoURL").set(url);
+  firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/info/photoUrl").set(url);
 
 ---
 
