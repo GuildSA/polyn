@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="utility.html">
@@ -34,8 +35,6 @@
       iron-icon {
         margin-right: 12px;
       }
-
-      
     </style>
 
     <firebase-auth 
@@ -67,6 +66,9 @@
           <template is="dom-if" if="[[usersInfo.sellerId]]">
             <center> <h1>Edit your business account</h1> </center>
           </template>
+          
+          <input id="camera" type="file" name="photo" accept="image/*;capture=camera" style="display:none;"></input>
+          <iron-image style="width:100%; height:250px; background-color: lightgray;" sizing="cover" preload fade src="[[photoURL]]" on-tap="_onTapSellerPhoto"></iron-image>
 
           <paper-input id="name" label="Business name" required auto-validate error-message="Please enter the name of your business"> 
             <iron-icon icon="custom-icons:business" slot="prefix"></iron-icon>
@@ -79,6 +81,21 @@
           </paper-input>
           <paper-input id="website" label="Website">
             <iron-icon icon="custom-icons:web" slot="prefix">
+          </paper-input>
+
+          <paper-input id="addressLine1" label="Address Line #1">
+          </paper-input>
+
+          <paper-input id="addressLine2" label="Address Line #2">
+          </paper-input>
+
+          <paper-input id="city" label="City">
+          </paper-input>
+
+          <paper-input id="state" label="State">
+          </paper-input>
+
+          <paper-input id="zip" label="Zip Code">
           </paper-input>
 
           <template is="dom-if" if="[[!usersInfo.sellerId]]">
@@ -113,8 +130,103 @@
           sellersInfo: {
             type: String,
             observer: '_sellersInfoChanged'
+          },
+          photoURL: {
+            type: String,
+            value: "images/seller_placeholder.png"
+          },
+          croppedImage: {
+            type: Object,
+            observer: '_croppedImageChanged'
+          },
+          editingSellerImage: {
+            type: Boolean,
+            observer: '_editingSellerImageChanged'
           }
         };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        console.log("SellerInfoView.connectedCallback")
+
+        var self = this;
+        var camera = this.$.camera;
+
+        // Use the hidden input called 'camera' to get a photo from the user 
+        // if they tap their profile photo!
+        camera.addEventListener('change', function(e) {
+
+          var file = e.target.files[0];
+
+          if(!file) {
+            Utility.showErrorToast("No image file selcted.");
+            return;
+          }
+
+          if(!file.type.match('image.*')) {
+            Utility.showErrorToast("You can only use images.");
+            return;
+          }
+
+          self.editingSellerImage = true;
+
+          var polynApp = document.getElementById("polynApp");
+          var cropperView = polynApp.pushPageOnCurrentTab("cropper-view");
+          cropperView.file = file;
+          cropperView.prevPage = self;
+        });
+      }
+
+      _croppedImageChanged(croppedImage) {
+        console.log("SellerInfoView._croppedImageChanged: " + croppedImage);
+
+        if(croppedImage) {
+          this.photoURL = URL.createObjectURL(croppedImage);
+          this._uploadSellersPhoto(croppedImage);
+          this.editingSellerImage = false;
+        }
+      }
+
+      _editingSellerImageChanged(val) {
+        console.log("SellerInfoView._editingSellerImageChanged: " + val);
+
+        if(val == false) {
+          this.$.camera.value = null;
+        }
+      }
+
+      _uploadSellersPhoto(file) {
+        console.log("SellerInfoView._uploadSellersPhoto");
+
+        var self = this;
+
+        // Upload the image to Cloud Storage.
+        firebase.app("polyn-app").storage().ref("/sellers/" + this.usersInfo.sellerId + "/photo").put(file).then(function(snapshot) {
+          // Get the file's storage URI and save into the database under the user's info key.
+          self._setSellersPhotoURL(snapshot.downloadURL);
+
+          // Create a thumbnail version of the profile image.
+          Utility.resizeImageToSpecificWidth(file, 100, function(dataUrl) {
+
+            var thumbnailBlob = Utility.dataURLtoBlob(dataUrl);
+
+            firebase.app("polyn-app").storage().ref("/sellers/" + self.usersInfo.sellerId + "/photoThumb").put(thumbnailBlob).then(function(snapshot) {
+              console.log("snapshot.downloadURL = " + snapshot.downloadURL);
+              self._setSellersPhotoThumbURL(snapshot.downloadURL);
+            });
+          });
+        });
+      }
+
+      _setSellersPhotoURL(url) {
+        console.log("SellerInfoView._setSellersPhotoURL");
+        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/photoUrl").set(url);
+      }
+
+      _setSellersPhotoThumbURL(url) {
+        console.log("ProfileView._setSellersPhotoThumbURL");
+        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/photoThumbUrl").set(url);
       }
 
       _userChanged(user) {
@@ -140,11 +252,24 @@
       _sellersInfoChanged(sellersInfo) {
         console.log("SellerInfoView._sellersInfoChanged: " + JSON.stringify(sellersInfo, null, 4));
 
+        if(!sellersInfo || Object.keys(sellersInfo).length === 0 && sellersInfo.constructor === Object) {
+          return;
+        }
+
         if(sellersInfo) {
+
           this.$.name.value = sellersInfo.name;
           this.$.email.value = sellersInfo.email;
           this.$.phone.value = sellersInfo.phone;
           this.$.website.value = sellersInfo.website;
+
+          this.$.addressLine1.value = sellersInfo.address.line1;
+          this.$.addressLine2.value = sellersInfo.address.line2;
+          this.$.city.value = sellersInfo.address.city;
+          this.$.state.value = sellersInfo.address.state;
+          this.$.zip.value = sellersInfo.address.zip;
+
+          this.photoUrl = sellersInfo.photoUrl;
         }
       }
 
@@ -197,6 +322,18 @@
         firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/email").set(this.$.email.value);
         firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/phone").set(this.$.phone.value);
         firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/website").set(this.$.website.value);
+
+        // Address:
+        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/line1").set(this.$.addressLine1.value);
+        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/line2").set(this.$.addressLine2.value);
+        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/city").set(this.$.city.value);
+        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/state").set(this.$.state.value);
+        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/zip").set(this.$.zip.value);
+      }
+
+      _onTapSellerPhoto() {
+        console.log("ProfileView._onTapSellerPhoto");
+        this.$.camera.click();
       }
 
       _registerNewSeller(targetCategory) {
@@ -225,13 +362,6 @@
 
             var newSellerData = {
               name: self.$.name.value,
-              address: {
-                line1: "l1",
-                line2: "l2",
-                city: "c",
-                state: "s",
-                zip: "z"
-              }
             };
 
             if(self.$.email.value && self.$.email.value.length > 0) {
@@ -244,6 +374,27 @@
 
             if(self.$.website.value && self.$.website.value.length > 0) {
               newSellerData.website = self.$.website.value;
+            }
+
+            // Address:
+            if(self.$.addressLine1.value && self.$.addressLine1.value.length > 0) {
+              newSellerData.address.line1 = this.$.addressLine1.value;
+            }
+
+            if(self.$.addressLine2.value && self.$.addressLine2.value.length > 0) {
+              newSellerData.address.line2 = this.$.addressLine2.value;
+            }
+
+            if(self.$.city.value && self.$.city.value.length > 0) {
+              newSellerData.address.city = this.$.city.value;
+            }
+
+            if(self.$.state.value && self.$.state.value.length > 0) {
+              newSellerData.address.state = this.$.state.value;
+            }
+
+            if(self.$.zip.value && self.$.zip.value.length > 0) {
+              newSellerData.address.zip = this.$.zip.value;
             }
 
             firebase.app("polyn-app").database().ref("sellers/" + newSellerKey).set(newSellerData).then(function() {
