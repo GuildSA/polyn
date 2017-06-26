@@ -105,7 +105,7 @@
 
         <template is="dom-if" if="[[user]]">
           <div class="layout horizontal center-justified">
-            <iron-image sizing="contain" id="profileImage" alt="User's' Profile Image." src="[[photoURL]]" on-tap="_onTapProfilePhoto"></iron-image>
+            <iron-image sizing="contain" id="profileImage" alt="User's' Profile Image." src="[[photoUrl]]" on-tap="_onTapProfilePhoto"></iron-image>
           </div>
           <div class="layout horizontal center-justified">
             <h1>Welcome [[displayName]]</h1>
@@ -173,7 +173,7 @@
           displayName: {
             type: String
           },
-          photoURL: {
+          photoUrl: {
             type: String
           },
           croppedImage: {
@@ -223,7 +223,7 @@
         console.log("ProfileView._croppedImageChanged: " + croppedImage);
 
         if(croppedImage) {
-          this.photoURL = URL.createObjectURL(croppedImage);
+          this.photoUrl = URL.createObjectURL(croppedImage);
           this._uploadUsersProfilePhoto(croppedImage);
           this.editingProfileImage = false;
         }
@@ -267,7 +267,7 @@
 
       _setUsersProfilePhotoURL(url) {
         console.log("ProfileView._setUsersProfilePhotoURL");
-        firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/info/photoURL").set(url);
+        firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/info/photoUrl").set(url);
       }
 
       _setUsersProfilePhotoThumbURL(url) {
@@ -293,7 +293,7 @@
         } else {
 
             this.displayName = "";
-            this.photoURL = "";
+            this.photoUrl = "";
         }
       }
 
@@ -309,8 +309,8 @@
         //   this.$.registerBusiness.textContent = "Edit Business";
         // }
 
-        if(usersInfo.photoURL) {
-          this.photoURL = usersInfo.photoURL;
+        if(usersInfo.photoUrl) {
+          this.photoUrl = usersInfo.photoUrl;
         }
 
         if(usersInfo.name) {
@@ -342,8 +342,8 @@
 
             var info = {};
 
-            // If name, email or photoURL is missing - add them!
-            if(!usersInfo.name || !usersInfo.email || !usersInfo.photoURL) {
+            // If name, email or photoUrl is missing - add them!
+            if(!usersInfo.name || !usersInfo.email || !usersInfo.photoUrl) {
 
               if(!usersInfo.name) {
                 // Force set this now, so the user can at least see something.
@@ -356,16 +356,16 @@
                 info.email = user.providerData[0].email;
               }
 
-              if(!usersInfo.photoURL) {
+              if(!usersInfo.photoUrl) {
                 // Force set this now, so the user can at least see something.
-                self.photoURL = user.providerData[0].photoURL;
+                self.photoUrl = user.providerData[0].photoUrl;
 
-                self._setUsersProfilePhotoURL(user.providerData[0].photoURL);
+                self._setUsersProfilePhotoURL(user.providerData[0].photoUrl);
 
 // TODO: Upload a copy of the image pulled from social including a thumbnail.
 
                 // // Create a thumbnail version of the profile image.
-                // var blob = Utility.dataURLtoBlob(user.providerData[0].photoURL);
+                // var blob = Utility.dataURLtoBlob(user.providerData[0].photoUrl);
                 // Utility.resizeImageToSpecificWidth(blob, 100, function(dataUrl) {
 
                 //   var thumbnailBlob = Utility.dataURLtoBlob(dataUrl);
@@ -393,13 +393,13 @@
 
             // Force set these now, so the user can at least see something.
             self.displayName = user.providerData[0].displayName;
-            self.photoURL = user.providerData[0].photoURL;
+            self.photoUrl = user.providerData[0].photoUrl;
 
             // The user's info key does NOT exist - so add one.
             var info = {};
             info.name = user.providerData[0].displayName;
             info.email = user.providerData[0].email;
-            info.photoURL = user.providerData[0].photoURL;
+            info.photoUrl = user.providerData[0].photoUrl;
             firebase.app("polyn-app").database().ref(refPath).update(info);
           }
         });
