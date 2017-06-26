@@ -68,7 +68,7 @@
           </template>
           
           <input id="camera" type="file" name="photo" accept="image/*;capture=camera" style="display:none;"></input>
-          <iron-image style="width:100%; height:250px; background-color: lightgray;" sizing="cover" preload fade src="[[photoURL]]" on-tap="_onTapSellerPhoto"></iron-image>
+          <iron-image style="width:100%; height:250px; background-color: lightgray;" sizing="cover" preload fade src="[[photoUrl]]" on-tap="_onTapSellerPhoto"></iron-image>
 
           <paper-input id="name" label="Business name" required auto-validate error-message="Please enter the name of your business"> 
             <iron-icon icon="custom-icons:business" slot="prefix"></iron-icon>
@@ -131,7 +131,7 @@
             type: String,
             observer: '_sellersInfoChanged'
           },
-          photoURL: {
+          photoUrl: {
             type: String,
             value: "images/seller_placeholder.png"
           },
@@ -182,7 +182,7 @@
         console.log("SellerInfoView._croppedImageChanged: " + croppedImage);
 
         if(croppedImage) {
-          this.photoURL = URL.createObjectURL(croppedImage);
+          this.photoUrl = URL.createObjectURL(croppedImage);
           this._uploadSellersPhoto(croppedImage);
           this.editingSellerImage = false;
         }
