@@ -70,6 +70,16 @@
         </p>
       </div>
 
+      <center>[[sellerInfo.address.line1]]</center>
+      <template is="dom-if" if="[[sellerInfo.address.line2]]">
+        <center>[[sellerInfo.address.line2]]</center>
+      </template>
+      <center>[[sellerInfo.address.city]], [[sellerInfo.address.state]] [[sellerInfo.address.zip]]</center>
+
+      <!--<template is="dom-if" if="[[sellerInfo.phone]]">
+        <center>[[sellerInfo.phone]]</center>
+      </template>-->
+
       <p>[[sellerInfo.desc]]</p>
 
       <div id="googleMap"></div>
