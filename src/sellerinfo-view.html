@@ -246,6 +246,11 @@
         // present - get the users seller info so we can learn more about their business!
         if(this.usersInfo.sellerId) {
           this.$.sellersinfo.path = "/sellers/" + this.usersInfo.sellerId;
+
+          // Hack for adding photos!
+          //const sellerId = "-Kh_Ynn7mV03w-ht3ayh";
+          //this.usersInfo.sellerId = sellerId;
+          //this.$.sellersinfo.path = "/sellers/" + sellerId;
         }
       }
 
