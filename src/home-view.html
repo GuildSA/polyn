@@ -13,8 +13,7 @@
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
 
-<link rel="import" href="../bower_components/google-apis/google-apis.html">
-<link rel="import" href="../bower_components/google-apis/google-maps-api.html">
+<!--<link rel="import" href="../bower_components/google-apis/google-maps-api.html">-->
 
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="custom-icons.html">
@@ -167,8 +166,6 @@
         </template>
       <!-- / Mobile Device Media Query -->
 
-  
-
       <dom-repeat items="[[persistedSellers]]" as="seller" initial-count="2">
       
         <template>
@@ -202,7 +199,7 @@
       </div>
     </template>
 
-    <google-maps-api id="googleMapsApi" api-key="AIzaSyB3E3yJzc7-g6-0rZCJhCxAWtoD6d7DgrM"></google-maps-api>
+    <!--<google-maps-api id="googleMapsApi" api-key="AIzaSyB3E3yJzc7-g6-0rZCJhCxAWtoD6d7DgrM"></google-maps-api>-->
 
   </template>
 
@@ -244,10 +241,6 @@
       reload() {
         console.log("HomeView.reload");
 
-        // if(this.chatMessages && !this.chatMessages.length > 0) {
-        //   this._loadChatInfo();
-        // }
-
         //this._loadSellersNoLocation();
         this._loadSellersByLocation(100);
       }
@@ -260,42 +253,34 @@
         this._loadSellersByLocation(100);
 
         //
-        // Convert a Zipcode into a Lat/Long...
+        // Convert a Zip Code into a Lat/Long...
         //
 
 // TODO: Make use of the lat/long based on zip code when the user rejects location.
 
-        var googleMapsApi = this.$.googleMapsApi;
+        //var googleMapsApi = this.$.googleMapsApi;
+        var polynApp = document.getElementById("polynApp");
+        var googleMapsApi = polynApp.$.googleMapsApi;
 
-        googleMapsApi.addEventListener('api-load', function(e) {
+        //googleMapsApi.addEventListener('api-load', function(e) {
 
           var geocoder = new googleMapsApi.api.Geocoder();
-          //console.log("geocoder: " + geocoder);
-          //console.log("geocoder: " + JSON.stringify(geocoder));
-
+          
           //const address = "Plano, TX";
           const address = "75025";
           geocoder.geocode( {'address': address}, function(results, status) {
-
             //console.log(" status: " + status);
             //console.log(" esults: " + JSON.stringify(results, null, 4));
-
             if(status == google.maps.GeocoderStatus.OK) {
-
               const lat = results[0].geometry.location.lat();
               const long = results[0].geometry.location.lng();
-
               console.log("  The address: " + address + ", was converted into:");
               console.log("    Lat: " + lat + ", Long: " + long);
-
             } else {
               console.log("  Geocode was not successful for the following reason: " + status);
             }
-
           });
-
-        });
-
+        //});
       }
 
       _userChanged(user) {
