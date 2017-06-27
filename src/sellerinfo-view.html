@@ -323,17 +323,38 @@
 
         var self = this;
 
-        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/name").set(this.$.name.value);
-        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/email").set(this.$.email.value);
-        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/phone").set(this.$.phone.value);
-        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/website").set(this.$.website.value);
+        if(this.$.name.value && this.$.name.value.length > 0) {
+          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/name").set(this.$.name.value);
+        }
+
+        if(this.$.email.value && this.$.email.value.length > 0) {
+          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/email").set(this.$.email.value);
+        }
+
+        if(this.$.phone.value && this.$.phone.value.length > 0) {
+          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/phone").set(this.$.phone.value);
+        }
+
+        if(this.$.website.value && this.$.website.value.length > 0) {
+          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/website").set(this.$.website.value);
+        }
 
         // Address:
-        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/line1").set(this.$.addressLine1.value);
-        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/line2").set(this.$.addressLine2.value);
-        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/city").set(this.$.city.value);
-        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/state").set(this.$.state.value);
-        firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/zip").set(this.$.zip.value);
+        if(this.$.addressLine1.value && this.$.addressLine1.value.length > 0) {
+          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/line1").set(this.$.addressLine1.value);
+        }
+        if(this.$.addressLine2.value && this.$.addressLine2.value.length > 0) {
+          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/line2").set(this.$.addressLine2.value);
+        }
+        if(this.$.city.value && this.$.city.value.length > 0) {
+          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/city").set(this.$.city.value);
+        }
+        if(this.$.state.value && this.$.state.value.length > 0) {
+          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/state").set(this.$.state.value);
+        }
+        if(this.$.zip.value && this.$.zip.value.length > 0) {
+          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/zip").set(this.$.zip.value);
+        }
       }
 
       _onTapSellerPhoto() {
