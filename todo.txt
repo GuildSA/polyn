@@ -6,13 +6,13 @@ Make use of the new geo location test code in the cloud function 'sendRequest'.
 
 Need cloud code to send emails when notifications can't be sent.
 
-Add image upload to business UI.
-
 Add paging to firebase calls that pull down a lot of data.
 
-Force the app to reset all tab view stacks after logout.
-
 Upload a copy of the image pulled from social including a thumbnail.
+
+
+DONE - Force the app to reset all tab view stacks after logout.
+DONE - Add image upload to business UI.
 
 --------------------------------------------------------------------------------
 

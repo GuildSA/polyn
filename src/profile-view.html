@@ -440,9 +440,12 @@
 
       _onTapSignOut() {
         console.log("ProfileView._onTapSignOut");
-        return this.$.auth.signOut();
 
-// TODO: Force the app to reset all tab view stacks after logout!
+        // Since the user is logging out - reset the UI's navigation.
+        var polynApp = document.getElementById("polynApp");
+        polynApp.resetNavigation();
+
+        return this.$.auth.signOut();
       }
 
       _onTapRegisterBusiness() {

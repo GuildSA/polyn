@@ -325,6 +325,15 @@
         }
       }
 
+      resetNavigation() {
+        console.log("PolynApp.resetNavigation")
+
+        // Reset the stacks used to keep track of page views for navigation.
+        this.tabViewStacks = [
+          [],[],[]
+        ];
+      }
+
       popPageOffCurrentTab() {
         console.log("PolynApp.popPageOffCurrentTab")
 
