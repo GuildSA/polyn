@@ -10,7 +10,6 @@ Add paging to firebase calls that pull down a lot of data.
 
 Upload a copy of the image pulled from social including a thumbnail.
 
-
 DONE - Force the app to reset all tab view stacks after logout.
 DONE - Add image upload to business UI.
 
@@ -22,14 +21,13 @@ Need UI to allow the user to set set parmaters for location searches.
   - Set zip when location is blocked.
   - Set range of searches.
 
-Add address inputs to business UI.
-
-Need UI for image upload on business UI.
-
 Need UI to explain the basic concept to new users who are buyers.
 
 Need UI to explain the basic concept to new users who are sellers.
 
 Need UI to help sellers claim a business that we added manually.
+
+DONE - Add address inputs to business UI.
+DONE - Need UI for image upload on business UI.
 
 --------------------------------------------------------------------------------
