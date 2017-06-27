@@ -358,9 +358,9 @@
 
               if(!usersInfo.photoUrl) {
                 // Force set this now, so the user can at least see something.
-                self.photoUrl = user.providerData[0].photoUrl;
+                self.photoUrl = user.providerData[0].photoURL;
 
-                self._setUsersProfilePhotoURL(user.providerData[0].photoUrl);
+                self._setUsersProfilePhotoURL(user.providerData[0].photoURL);
 
 // TODO: Upload a copy of the image pulled from social including a thumbnail.
 
@@ -393,13 +393,13 @@
 
             // Force set these now, so the user can at least see something.
             self.displayName = user.providerData[0].displayName;
-            self.photoUrl = user.providerData[0].photoUrl;
+            self.photoUrl = user.providerData[0].photoURL;
 
             // The user's info key does NOT exist - so add one.
             var info = {};
             info.name = user.providerData[0].displayName;
             info.email = user.providerData[0].email;
-            info.photoUrl = user.providerData[0].photoUrl;
+            info.photoUrl = user.providerData[0].photoURL;
             firebase.app("polyn-app").database().ref(refPath).update(info);
           }
         });
