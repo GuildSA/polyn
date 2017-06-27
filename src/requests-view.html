@@ -81,21 +81,15 @@
 
     <dom-repeat items="[[persistedRequests]]" as="request" initial-count="5">
       <template>
-        <div class="flex layout horizontal center-justified">
          <div class="card" on-tap="_onTapRequest">
-          <div class="layout horizontal">
-            <div class="layout vertical">
+          <div class="horizontal justified layout">
+            <div class="vertical layout">
               <h2>[[request.title]]</h2>
-            <div class="description">
-              [[request.desc]]
+                  [[request.desc]]
             </div>
-            </div>
-          <div class="flex layout vertical">
-              <paper-icon-button id="closeBtn" icon="custom-icons:close" on-tap="_onTapDelete"></paper-icon-button>
+            <paper-icon-button id="closeBtn" icon="custom-icons:close" on-tap="_onTapDelete"></paper-icon-button>
           </div>
          </div>
-        </div>
-      </div>
       </template>
     </dom-repeat>
 
