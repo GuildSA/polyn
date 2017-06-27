@@ -31,7 +31,7 @@
     "polymerfire": "^2.0.0",
     "geofire": "^4.1.2",
     "cropperjs": "^0.8.1",
-    "google-map": "2.0-preview",
+    "google-apis": "2.0-preview",
     "iron-list": "^2.0.1"
   },
   "devDependencies": {
