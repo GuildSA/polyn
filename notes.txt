@@ -1,3 +1,27 @@
+------------------------------------------------------------------------
+
+  -- Basic Paper Spinner  -- 
+
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner-behavior.html">
+
+<template is="dom-if" if="[[loading]]">
+  <div class="overlay">
+    <p>Loading Vinyl...</p>
+    <paper-spinner id="spinner" active="[[loading]]"></paper-spinner>
+  </div>
+</template>
+
+
+static get properties() {
+  return {
+    loading: {
+      type: Boolean,
+      notify: true,
+      value: true
+    }
+  };
+}
 
 ------------------------------------------------------------------------
 

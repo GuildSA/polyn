@@ -4,12 +4,11 @@
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
-<link rel="import" href="../bower_components/paper-spinner/paper-spinner-behavior.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/px-spinner/px-spinner.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="requests-view">
@@ -103,7 +102,7 @@
     <template is="dom-if" if="[[loading]]">
       <div class="overlay">
         <p>Loading Requests...</p>
-        <paper-spinner id="spinner" active="[[loading]]"></paper-spinner>
+        <px-spinner size="100" finished="[[!loading]]"></px-spinner>
       </div>
     </template>
 

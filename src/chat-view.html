@@ -2,8 +2,6 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
-<link rel="import" href="../bower_components/paper-spinner/paper-spinner-behavior.html">
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
@@ -12,7 +10,7 @@
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-
+<link rel="import" href="../bower_components/px-spinner/px-spinner.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="utility.html">
 
@@ -170,7 +168,7 @@
     <template is="dom-if" if="[[loading]]">
       <div class="overlay">
         <p>Loading Chat...</p>
-        <paper-spinner id="spinner" active="[[loading]]"></paper-spinner>
+        <px-spinner size="100" finished="[[!loading]]"></px-spinner>
       </div>
     </template>
 

@@ -32,7 +32,8 @@
     "geofire": "^4.1.2",
     "cropperjs": "^0.8.1",
     "google-apis": "2.0-preview",
-    "iron-list": "^2.0.1"
+    "iron-list": "^2.0.1",
+    "px-spinner": "^1.0.0"
   },
   "devDependencies": {
     "web-component-tester": "6.0.0"
