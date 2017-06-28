@@ -10,6 +10,8 @@ Add paging to firebase calls that pull down a lot of data.
 
 Upload a copy of the image pulled from social including a thumbnail.
 
+STARTED - Add code to drive the badge count for request.
+
 DONE - Force the app to reset all tab view stacks after logout.
 DONE - Add image upload to business UI.
 

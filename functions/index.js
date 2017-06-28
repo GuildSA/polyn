@@ -150,6 +150,7 @@ exports.sendRequest = functions.https.onRequest((req, res) => {
   };
 
   // Add the request under the given category.
+// TODO: So far, adding this to the database serves no purpose. Should we keep it?
   admin.database().ref('/requests/' + categoryPath + '/requests').push(request).then(snapshot => {
 
     // Get all the sellers for this category.

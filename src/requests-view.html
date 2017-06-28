@@ -184,12 +184,18 @@
 
         firebase.app("polyn-app").database().ref("/users/" + this.user.uid + "/requests").once('value').then(function(snapshot) {
 
+          var unViewed = 0;
+
           snapshot.forEach(function(childSnapshot) {
 
               var childKey = childSnapshot.key;
               var childData = childSnapshot.val();
               //console.log("childKey = " + childKey);
               //console.log("childData: " + JSON.stringify(childData, null, 4));
+
+              if(childData.viewed == false) {
+                unViewed++;
+              }
 
               // Manually add the key for this data so we can pass it forward if selected.
               childData.key = childKey;
@@ -199,6 +205,14 @@
 
             if(self.requests.length > 0) {
               self.hasMessages = true;
+            }
+
+            var polynApp = document.getElementById("polynApp");
+            if(unViewed > 0) {
+              polynApp.$.requestsBadge.label = unViewed.toString();
+              polynApp.$.requestsBadge.hidden = false;
+            } else {
+              polynApp.$.requestsBadge.hidden = true;
             }
 
             // No matter how fast it loads - show the spinner for at least 0.5 seconds.
