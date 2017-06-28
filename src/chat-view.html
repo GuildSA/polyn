@@ -184,10 +184,10 @@
 
               <div class="horizontal layout">
                 <div class="user-photo">
-                  <template is="dom-if" if="[[chatMessage.photoThumbURL]]">
-                    <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="[[chatMessage.photoThumbURL]]" class="item"></iron-image> 
+                  <template is="dom-if" if="[[chatMessage.photoThumbUrl]]">
+                    <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="[[chatMessage.photoThumbUrl]]" class="item"></iron-image> 
                   </template>
-                  <template is="dom-if" if="[[!chatMessage.photoThumbURL]]">
+                  <template is="dom-if" if="[[!chatMessage.photoThumbUrl]]">
                     <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="images/anonymous_profile.png" class="item"></iron-image> 
                   </template>
                 </div>
@@ -343,12 +343,12 @@
             //console.log(" snapshot: " + JSON.stringify(snapshot, null, 4));
 
             if(self.user.uid == val.senderId) {
-              if(self.usersInfo.photoThumbURL) {
-                val.photoThumbURL = self.usersInfo.photoThumbURL;
+              if(self.usersInfo.photoThumbUrl) {
+                val.photoThumbUrl = self.usersInfo.photoThumbUrl;
               }
             } else {
-              if(self.otherUsersInfo.photoThumbURL) {
-                val.photoThumbURL = self.otherUsersInfo.photoThumbURL;
+              if(self.otherUsersInfo.photoThumbUrl) {
+                val.photoThumbUrl = self.otherUsersInfo.photoThumbUrl;
               }
             }
 
@@ -377,7 +377,7 @@
             name: this.otherUsersInfo.name,
             text: this.chatInfo.desc,
             senderId: this.chatInfo.buyerId,
-            photoThumbURL: this.otherUsersInfo.photoThumbURL,
+            photoThumbUrl: this.otherUsersInfo.photoThumbUrl,
             timeStamp: firebase.database.ServerValue.TIMESTAMP
           };
 
@@ -540,7 +540,7 @@
             name: this.otherUsersInfo.name,
             text: this.chatInfo.desc,
             senderId: this.chatInfo.buyerId,
-            photoThumbURL: this.otherUsersInfo.photoThumbURL,
+            photoThumbUrl: this.otherUsersInfo.photoThumbUrl,
             timeStamp: firebase.database.ServerValue.TIMESTAMP
           };
 

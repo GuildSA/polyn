@@ -250,7 +250,7 @@
         // Upload the image to Cloud Storage.
         firebase.app("polyn-app").storage().ref("users/" + this.user.uid + "/photo").put(file).then(function(snapshot) {
           // Get the file's storage URI and save into the database under the user's info key.
-          self._setUsersProfilePhotoURL(snapshot.downloadURL);
+          self._setUsersProfilePhotoUrl(snapshot.downloadURL);
 
           // Create a thumbnail version of the profile image.
           Utility.resizeImageToSpecificWidth(file, 100, function(dataUrl) {
@@ -265,14 +265,14 @@
         });
       }
 
-      _setUsersProfilePhotoURL(url) {
-        console.log("ProfileView._setUsersProfilePhotoURL");
+      _setUsersProfilePhotoUrl(url) {
+        console.log("ProfileView._setUsersProfilePhotoUrl");
         firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/info/photoUrl").set(url);
       }
 
-      _setUsersProfilePhotoThumbURL(url) {
-        console.log("ProfileView._setUsersProfilePhotoThumbURL");
-        firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/info/photoThumbURL").set(url);
+      _setUsersProfilePhotoThumbUrl(url) {
+        console.log("ProfileView._setUsersProfilePhotoThumbUrl");
+        firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/info/photoThumbUrl").set(url);
       }
 
       _handleError(e, err) {
@@ -360,9 +360,12 @@
                 // Force set this now, so the user can at least see something.
                 self.photoUrl = user.providerData[0].photoURL;
 
-                self._setUsersProfilePhotoURL(user.providerData[0].photoURL);
+                // Force the user to use the same social image for both photo and thumbnailPhoto.
+                self._setUsersProfilePhotoUrl(user.providerData[0].photoURL);
+                self._setUsersProfilePhotoThumbUrl(user.providerData[0].photoURL);
 
 // TODO: Upload a copy of the image pulled from social including a thumbnail.
+// This is a lot harder tha it looks due to cross origin issues!
 
                 // // Create a thumbnail version of the profile image.
                 // var blob = Utility.dataURLtoBlob(user.providerData[0].photoUrl);
@@ -372,7 +375,7 @@
 
                 //   firebase.app("polyn-app").storage().ref("users/" + self.user.uid + "/photoThumb").put(thumbnailBlob).then(function(snapshot) {
                 //     console.log("snapshot.downloadURL = " + snapshot.downloadURL);
-                //     self._setUsersProfilePhotoThumbURL(snapshot.downloadURL);
+                //     self._setUsersProfilePhotoThumbUrl(snapshot.downloadURL);
                 //   });
                 // });
 

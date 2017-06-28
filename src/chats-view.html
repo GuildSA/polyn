@@ -57,10 +57,10 @@
         <div class="horizontal justified layout">
 
           <div class="thumbnail">
-            <template is="dom-if" if="[[chat.photoThumbURL]]">
-              <iron-image id="test-thumb" sizing="cover" preload fade src="[[chat.photoThumbURL]]"></iron-image> 
+            <template is="dom-if" if="[[chat.photoThumbUrl]]">
+              <iron-image id="test-thumb" sizing="cover" preload fade src="[[chat.photoThumbUrl]]"></iron-image> 
             </template>
-            <template is="dom-if" if="[[!chat.photoThumbURL]]">
+            <template is="dom-if" if="[[!chat.photoThumbUrl]]">
               <iron-image id="test-thumb" sizing="cover" preload fade src="images/anonymous_profile.png"></iron-image> 
             </template>
           </div>
@@ -166,8 +166,8 @@
               //console.log("sellersInfo: " + JSON.stringify(sellersInfo, null, 4));
 
               if(sellersInfo) {
-                // Manually add the photoThumbURL to this data so we can use it to build the UI.
-                childData.photoThumbURL = sellersInfo.photoThumbURL;
+                // Manually add the photoThumbUrl to this data so we can use it to build the UI.
+                childData.photoThumbUrl = sellersInfo.photoThumbUrl;
               }
 
               self.push('chats', childData);
@@ -211,8 +211,8 @@
         //     //console.log("sellersInfo: " + JSON.stringify(sellersInfo, null, 4));
 
         //     if(sellersInfo) {
-        //       // Manually add the photoThumbURL to this data so we can use it to build the UI.
-        //       childData.photoThumbURL = sellersInfo.photoThumbURL;
+        //       // Manually add the photoThumbUrl to this data so we can use it to build the UI.
+        //       childData.photoThumbUrl = sellersInfo.photoThumbUrl;
         //     }
 
         //     self.push('chats', childData);
