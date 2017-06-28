@@ -405,6 +405,20 @@
         return pushedPage;
       }
 
+      setRequestBadgeCount(badgeCount) {
+        
+        if(badgeCount > 0) {
+          this.$.requestsBadge.label = badgeCount.toString();
+          this.$.requestsBadge.hidden = false;
+        } else {
+          this.$.requestsBadge.hidden = true;
+        }
+      }
+
+      getRequestBadgeCount(){
+        return Number(this.$.requestsBadge.label);
+      }
+
       _onTapHomeTab() {
         console.log("PolynApp._onTapHomeTab: stack size = " + this.tabViewStacks[0].length + ", tab = " + this.$.tabs.selected);
 

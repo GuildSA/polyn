@@ -126,7 +126,7 @@
       }
 
       _userChanged(user) {
-        console.log("ChatsView._userChanged");
+        console.log("ChatsView._userChanged: " + user);
 
         // As soon as we get the user - get the users info so we can 
         // learn more about them!
@@ -141,36 +141,88 @@
         this.splice("chats", 0, this.chats.length);
 
         // Load all the chat sessions related to this request.
-        firebase.app("polyn-app").database().ref("/users/" + this.user.uid + "/requests/" + this.requestId + "/chats").on('child_added', function(snapshot) {
+        firebase.app("polyn-app").database().ref("/users/" + this.user.uid + "/requests/" + this.requestId + "/chats").once('value').then(function(snapshot) {
         
-          var childKey = snapshot.key;
-          var childData = snapshot.val();
+          var badgeCount = 0;
 
-          // Manually add the key for this data so we can pass it forward if selected.
-          childData.key = childKey;
+          snapshot.forEach(function(childSnapshot) {
 
-          //console.log("childData: " + JSON.stringify(childData, null, 4));
+            var childKey = childSnapshot.key;
+            var childData = childSnapshot.val();
 
-          // Get the seller's info for each chat session so we can get access his or her's thumbnail url.
-          firebase.app("polyn-app").database().ref("/users/" + childData.sellerId + "/info").once('value').then(function(snapshot) {
+            // Manually add the key for this data so we can pass it forward if selected.
+            childData.key = childKey;
 
-            const sellersInfo = snapshot.val();
-            //console.log("sellersInfo: " + JSON.stringify(sellersInfo, null, 4));
+            //console.log("childData: " + JSON.stringify(childData, null, 4));
 
-            if(sellersInfo) {
-              // Manually add the photoThumbURL to this data so we can use it to build the UI.
-              childData.photoThumbURL = sellersInfo.photoThumbURL;
+            if(childData.viewed == false) {
+              ++badgeCount;
             }
 
-            self.push('chats', childData);
+            // Get the seller's info for each chat session so we can get access his or her's thumbnail url.
+            firebase.app("polyn-app").database().ref("/users/" + childData.sellerId + "/info").once('value').then(function(snapshot) {
 
-          }, function(error) {
-            console.error(error);
-            // Something went wrong trying to get the seller's info - just push what we have.
-            self.push('chats', childData);
+              const sellersInfo = snapshot.val();
+              //console.log("sellersInfo: " + JSON.stringify(sellersInfo, null, 4));
+
+              if(sellersInfo) {
+                // Manually add the photoThumbURL to this data so we can use it to build the UI.
+                childData.photoThumbURL = sellersInfo.photoThumbURL;
+              }
+
+              self.push('chats', childData);
+
+            }, function(error) {
+              console.error(error);
+              // Something went wrong trying to get the seller's info - just push what we have.
+              self.push('chats', childData);
+            });
+
           });
 
+          console.log("  badgeCount = " + badgeCount);
+
+          if(badgeCount == 0) {
+            // If every chat session under this request has been viewed - mark the whole request viewed!
+            firebase.app("polyn-app").database().ref("/users/" + self.user.uid + "/requests/" + self.requestId + "/viewed").set(true);
+
+            var polynApp = document.getElementById("polynApp");
+            var badgeCount = polynApp.getRequestBadgeCount();
+            --badgeCount;
+            polynApp.setRequestBadgeCount(badgeCount);
+          }
         });
+
+        // // Load all the chat sessions related to this request.
+        // firebase.app("polyn-app").database().ref("/users/" + this.user.uid + "/requests/" + this.requestId + "/chats").on('child_added', function(snapshot) {
+        
+        //   var childKey = snapshot.key;
+        //   var childData = snapshot.val();
+
+        //   // Manually add the key for this data so we can pass it forward if selected.
+        //   childData.key = childKey;
+
+        //   //console.log("childData: " + JSON.stringify(childData, null, 4));
+
+        //   // Get the seller's info for each chat session so we can get access his or her's thumbnail url.
+        //   firebase.app("polyn-app").database().ref("/users/" + childData.sellerId + "/info").once('value').then(function(snapshot) {
+
+        //     const sellersInfo = snapshot.val();
+        //     //console.log("sellersInfo: " + JSON.stringify(sellersInfo, null, 4));
+
+        //     if(sellersInfo) {
+        //       // Manually add the photoThumbURL to this data so we can use it to build the UI.
+        //       childData.photoThumbURL = sellersInfo.photoThumbURL;
+        //     }
+
+        //     self.push('chats', childData);
+
+        //   }, function(error) {
+        //     console.error(error);
+        //     // Something went wrong trying to get the seller's info - just push what we have.
+        //     self.push('chats', childData);
+        //   });
+        // });
       }
 
       _onTapMessage(e) {

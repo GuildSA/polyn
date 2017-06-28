@@ -162,7 +162,7 @@
       }
 
       _userChanged(user) {
-        console.log("RequestsView._userChanged");
+        console.log("RequestsView._userChanged: " + user);
         //console.log("user: " + JSON.stringify(user, null, 4));
 
         if(user != null) {
@@ -184,7 +184,7 @@
 
         firebase.app("polyn-app").database().ref("/users/" + this.user.uid + "/requests").once('value').then(function(snapshot) {
 
-          var unViewed = 0;
+          var badgeCount = 0;
 
           snapshot.forEach(function(childSnapshot) {
 
@@ -194,7 +194,7 @@
               //console.log("childData: " + JSON.stringify(childData, null, 4));
 
               if(childData.viewed == false) {
-                unViewed++;
+                ++badgeCount;
               }
 
               // Manually add the key for this data so we can pass it forward if selected.
@@ -208,12 +208,7 @@
             }
 
             var polynApp = document.getElementById("polynApp");
-            if(unViewed > 0) {
-              polynApp.$.requestsBadge.label = unViewed.toString();
-              polynApp.$.requestsBadge.hidden = false;
-            } else {
-              polynApp.$.requestsBadge.hidden = true;
-            }
+            polynApp.setRequestBadgeCount(badgeCount);
 
             // No matter how fast it loads - show the spinner for at least 0.5 seconds.
             setTimeout(function() { self.loading = false; }, 500);

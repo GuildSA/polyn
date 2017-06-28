@@ -339,6 +339,7 @@
           var setMessage = function(snapshot) {
             var val = snapshot.val();
 
+            // Each chat message sent.
             //console.log(" snapshot: " + JSON.stringify(snapshot, null, 4));
 
             if(self.user.uid == val.senderId) {
@@ -363,6 +364,11 @@
 
           // No matter how fast it loads - show the spinner for at least 0.5 seconds.
           setTimeout(function() { self.loading = false; }, 500);
+
+          if(this.chatInfo.viewed == false) {
+            this._markThisUsersChatViewed();
+          }
+
         } else {
           this.loading = false;
 
@@ -380,8 +386,8 @@
       }
 
       _userChanged(user) {
-        //console.log("ChatView._userChanged");
-        console.log("ChatView._userChanged: " + JSON.stringify(user, null, 4));
+        console.log("ChatView._userChanged: " + user);
+        //console.log("ChatView._userChanged: " + JSON.stringify(user, null, 4));
 
         // As soon as we get the user - get the users info so we can 
         // learn more about them!
@@ -435,8 +441,8 @@
               self.chatMessagesId = chatInfo.chatId;
             }
 
-            //console.log("chatInfo: " + JSON.stringify(chatInfo, null, 4));
-            //console.log("chatId = " + self.chatMessagesId);
+            // console.log("chatInfo: " + JSON.stringify(chatInfo, null, 4));
+            // console.log("chatId = " + self.chatMessagesId);
 
             // As soon as we get the user and the chat info - get the other 
             // users info so we know who we're chatting with.
@@ -512,13 +518,13 @@
           // Save the chatMessagesId back to the chat entry.
 
 // TODO: Adding the chatId is now redundant since the key of the request is the chat id.
-firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/requests/" + this.requestId + "/chatId").set(this.chatMessagesId);
+// But... I think we're using this somewhere for keeping track if wether or not a chat was started.
+          firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/requests/" + this.requestId + "/chatId").set(this.chatMessagesId);
 
           // console.log("this.chatInfo.buyerId = " + this.chatInfo.buyerId);
           // console.log("this.chatInfo.requestId = " + this.chatInfo.requestId);
-
-          // console.log("seller = " + this.usersInfo.name);
-          // console.log("sellerId = " + this.usersInfo.sellerId);
+          // console.log("this.usersInfo.name = " + this.usersInfo.name);
+          // console.log("this.usersInfo.sellerId = " + this.usersInfo.sellerId);
 
           let newChatEntry = {
             sellersRequestId: this.requestId,
@@ -615,7 +621,7 @@ firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/r
           this.$.sendMessage.generateRequest();
         } else {
           console.log("  No token found for: " + this.otherUsersInfo.name);
-          this._markOtherUserUnviewed();
+          this._markOtherUsersChatUnviewed();
         }
       }
 
@@ -623,7 +629,7 @@ firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/r
         console.log("ChatView._handleSendMessageResponse");
         console.log("  status = " + data.detail.status);
 
-        this._markOtherUserUnviewed();
+        this._markOtherUsersChatUnviewed();
       }
 
       _handleSendMessageError(e) {
@@ -631,16 +637,16 @@ firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/r
         console.log("  status = ", e.status, e.statusText);
       }
 
-      _markOtherUserUnviewed() {
-        console.log("ChatView._handleSendMessageError");
+      _markOtherUsersChatUnviewed() {
+        console.log("ChatView._markOtherUsersChatUnviewed");
 
         if(this._getUserRole() == "seller") {
 
-// The seller is sending the message - mark the whole request as viewed 'false'.
+          // The seller is sending the message - mark the buyer's whole request as viewed 'false'.
           firebase.app("polyn-app").database().ref(
             "/users/" + this.chatInfo.buyerId + "/requests/" + this.chatInfo.requestId + "/viewed").set(false);
 
-          // The seller is sending the message - mark the buyer's chat info as viewed 'false'.
+          // Next, mark the buyer's SUB chat info as viewed 'false'.
           firebase.app("polyn-app").database().ref(
             "/users/" + this.chatInfo.buyerId + "/requests/" + this.chatInfo.requestId + "/chats/" + this.chatMessagesId + "/viewed").set(false);
 
@@ -650,6 +656,28 @@ firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/r
           firebase.app("polyn-app").database().ref(
             "/users/" + this.chatInfo.sellerId + "/requests/" + this.chatMessagesId + "/viewed").set(false);
         }
+      }
+
+      _markThisUsersChatViewed() {
+        console.log("ChatView._markThisUsersChatViewed");
+
+        if(this._getUserRole() == "seller") {
+
+          // The seller has viewed the latest chat messages - mark the seller's chat info as viewed 'true'.
+          firebase.app("polyn-app").database().ref(
+            "/users/" + this.user.uid + "/requests/" + this.chatMessagesId + "/viewed").set(true);
+
+        } else {
+
+          // The buyer has viewed the latest chat messages - mark the buyer's chat info as viewed 'true'.
+          firebase.app("polyn-app").database().ref(
+            "/users/" + this.user.uid + "/requests/" + this.requestId + "/chats/" + this.chatMessagesId + "/viewed").set(true);
+        }
+
+        var polynApp = document.getElementById("polynApp");
+        var badgeCount = polynApp.getRequestBadgeCount();
+        --badgeCount;
+        polynApp.setRequestBadgeCount(badgeCount);
       }
 
       _getUserRole() {
@@ -679,7 +707,6 @@ firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/r
 
         }
       }
-
     }
 
     window.customElements.define(ChatView.is, ChatView);
