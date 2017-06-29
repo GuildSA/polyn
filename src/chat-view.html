@@ -139,7 +139,8 @@
     <firebase-messaging
       id="messaging"
       app-name="polyn-app"
-      token="{{token}}">
+      token="{{token}}"
+      on-message="_onHandleMessage">
     </firebase-messaging>
 
     <firebase-document
@@ -326,6 +327,32 @@
             }
           });
         });
+      }
+
+      _onHandleMessage(payload) {
+        console.log("ChatView._onHandleMessage:");
+        console.log("  payload: " + JSON.stringify(payload, null, 4));
+
+        // This method will only fire if the app recives a message while it 
+        // has FOCUS - otherwise it is handled by setBackgroundMessageHandler 
+        // in [firebase-messaging-sw.js]
+
+// TODO: Where is the best place to put this _onHandleMessage? 
+// This is only called after the user has visited THIS view at least once!
+
+        // Example Payload:
+        // {
+        //     "isTrusted": false,
+        //     "detail": {
+        //         "message": {
+        //             "from": "962415122495",
+        //             "collapse_key": "do_not_collapse",
+        //             "notification": {
+        //                 "body": "Firebase"
+        //             }
+        //         }
+        //     }
+        // }
       }
 
       _loadChats() {

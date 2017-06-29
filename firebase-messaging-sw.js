@@ -1,3 +1,5 @@
+console.log("!!! SERVICE WORKER LOADING: Firebase Messaging");
+
 // Give the service worker access to Firebase Messaging.
 // Note that you can only use Firebase Messaging here, other Firebase libraries
 // are not available in the service worker.
@@ -19,7 +21,8 @@ const messaging = firebase.messaging();
 // implement this optional method.
 messaging.setBackgroundMessageHandler(function(payload) {
 
-  console.log('[firebase-messaging-sw.js] Received background message ', payload);
+  console.log('setBackgroundMessageHandler in [firebase-messaging-sw.js] received background message.');
+  console.log("  payload: " + JSON.stringify(payload, null, 4));
 
   // // Customize notification here
   // const notificationTitle = 'Background Message Title';
