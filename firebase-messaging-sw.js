@@ -1,8 +1,8 @@
 // Give the service worker access to Firebase Messaging.
 // Note that you can only use Firebase Messaging here, other Firebase libraries
 // are not available in the service worker.
-importScripts('https://www.gstatic.com/firebasejs/4.1.2/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/4.1.2/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/4.1.3/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/4.1.3/firebase-messaging.js');
 
 // Initialize the Firebase app in the service worker by passing in the
 // messagingSenderId. This came from the app's dashboard settings under Cloud Messaging.
@@ -18,14 +18,21 @@ const messaging = firebase.messaging();
 // background (Web app is closed or not in browser focus) then you should
 // implement this optional method.
 messaging.setBackgroundMessageHandler(function(payload) {
+
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
-  // Customize notification here
-  const notificationTitle = 'Background Message Title';
+
+  // // Customize notification here
+  // const notificationTitle = 'Background Message Title';
+  // const notificationOptions = {
+  //   body: 'Background Message body.'
+  // };
+
+  const notificationTitle = payload.data.title;
   const notificationOptions = {
-    body: 'Background Message body.',
-    icon: '/images/firebase-logo.png'
+    body: payload.data.body,
+    icon: payload.data.icon,
+    clickAction: payload.data.clickAction
   };
 
-  return self.registration.showNotification(notificationTitle,
-      notificationOptions);
+  return self.registration.showNotification(notificationTitle, notificationOptions);
 });

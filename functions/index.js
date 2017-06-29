@@ -65,8 +65,10 @@ exports.sendMessage = functions.https.onRequest((req, res) => {
   const title = req.query.title;
   const body = req.query.body;
 
+  // If you use notification over data - setBackgroundMessageHandler will not fire.
   let payload = {
-    notification: {
+    //notification: {
+    data: {
       title: title,
       body: body,
       icon: "/images/vr-msg.png",
@@ -186,8 +188,10 @@ exports.sendRequest = functions.https.onRequest((req, res) => {
 
                   console.log("token = " + usersInfo.token);
 
+                  // If you use notification over data - setBackgroundMessageHandler will not fire.
                   let payload = {
-                    notification: {
+                    //notification: {
+                    data: {
                       title: title,
                       body: desc,
                       icon: "/images/vr-msg.png",
