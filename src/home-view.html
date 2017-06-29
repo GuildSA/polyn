@@ -173,8 +173,7 @@
         <template is="dom-if" if="{{mobileDevice}}">
           <h1>Record Stores In Your Area</h1>
            <div class="layout horizontal center-justified" id="location">
-            <paper-input id="zip" type="number" maxlength="5">
-            <!--<paper-input id="zip" label="Enter your zip code" allowed-pattern="[0-9]" pattern="[0-9]">-->
+            <paper-input id="zip" type="number" allowed-pattern="[0-9]" pattern="[0-9]">
               <paper-icon-button icon="custom-icons:near-me" slot="prefix"></paper-icon-button>
             </paper-input>
           </div>

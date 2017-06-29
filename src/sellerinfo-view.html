@@ -95,7 +95,7 @@
           <paper-input id="state" label="State">
           </paper-input>
 
-          <paper-input id="zip" label="Zip Code" type="number" maxlength="5">
+          <paper-input id="zip" label="Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]">
           </paper-input>
 
           <template is="dom-if" if="[[!usersInfo.sellerId]]">
