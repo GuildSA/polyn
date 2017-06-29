@@ -48,12 +48,17 @@
       }
 
       .main-container {
-        display: flex;
+        /*display: flex;
         align-items: center;
         width: 100%;
         @apply --layout-vertical;
         @apply --layout-center;
-        @apply --layout-around-justified;
+        @apply --layout-around-justified;*/
+
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        grid-gap: 0px;
+
       }
 
       .seller-name {
@@ -79,14 +84,14 @@
         width: 100%;
       }
 
-      .card {
+      /*.card {
         @apply --layout-vertical;
-      }
+      }*/
 
-      @media (max-width: 767px) {
+      @media (max-width: 480px) {
 
         .top-border {
-          
+
           @apply --layout-vertical;
           @apply --layout-justified;
           border-top-style: none;
@@ -166,21 +171,22 @@
       persisted-data="{{persistedSellers}}">
     </app-indexeddb-mirror>
 
-    <div class="main-container">
+    
 
       <!-- Mobile Device Media Query -->
-      <iron-media-query query="(min-width:300px) and (max-width: 767px)" query-matches="{{mobileDevice}}"></iron-media-query>
+      <iron-media-query query="(min-width:300px) and (max-width: 480px)" query-matches="{{mobileDevice}}"></iron-media-query>
         <template is="dom-if" if="{{mobileDevice}}">
-          <h1>Record Stores In Your Area</h1>
+          <center><h1>Record Stores In Your Area</h1></center>
            <div class="layout horizontal center-justified" id="location">
             <paper-input id="zip" type="number" allowed-pattern="[0-9]" pattern="[0-9]">
               <paper-icon-button icon="custom-icons:near-me" slot="prefix"></paper-icon-button>
             </paper-input>
           </div>
         </template>    
-    </div>
+    
     <!-- / Mobile Device Media Query -->
 
+    <div class="main-container">
       <dom-repeat items="[[persistedSellers]]" as="seller" initial-count="2">
       
         <template>
@@ -201,7 +207,9 @@
         </template>
 
       </dom-repeat>
-
+      <!-- main container div -->
+    </div>
+      <!-- /main container div -->
       <div id="submit-request-container">
         <paper-button id="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message" >Create a Request</paper-button>
       </div>
