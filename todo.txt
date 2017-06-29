@@ -41,6 +41,8 @@ Need UI to explain the basic concept to new users who are sellers.
 
 Need UI to help sellers claim a business that we added manually.
 
+Need to find best way to truncate text on home page. 
+
 DONE - Add address inputs to business UI.
 DONE - Need UI for image upload on business UI.
 
