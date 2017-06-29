@@ -11,6 +11,8 @@
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../bower_components/px-spinner/px-spinner.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="custom-icons.html">
 <link rel="import" href="geofire.html">
@@ -115,6 +117,8 @@
 
         h1 {
           color: grey;
+          margin: 0;
+          padding: 10px;
         }
 
         h2 {
@@ -130,6 +134,15 @@
         .miles-away {
           font-size: 0.5 rem;
           margin-left: 25px;
+        }
+
+        #location {
+          --paper-input-container-focus-color: #70C187;
+        }
+
+        paper-input {
+          margin: 0;
+          padding: 0;
         }
 
       }
@@ -154,13 +167,23 @@
     </app-indexeddb-mirror>
 
     <div class="main-container">
+
       <!-- Mobile Device Media Query -->
       <iron-media-query query="(min-width:300px) and (max-width: 767px)" query-matches="{{mobileDevice}}"></iron-media-query>
         <template is="dom-if" if="{{mobileDevice}}">
           <h1>Record Stores In Your Area</h1>
+           <div class="layout horizontal center-justified" id="location">
+            <paper-input id="zip" label="Enter your zip code" allowed-pattern="[0-9]" pattern="[0-9]">
+              <paper-icon-button icon="custom-icons:near-me" slot="prefix"></paper-icon-button>
+            </paper-input>
+          </div>
+        </template>    
+    </div>
 
-        </template>
+       
       <!-- / Mobile Device Media Query -->
+
+     
 
       <dom-repeat items="[[persistedSellers]]" as="seller" initial-count="2">
       
@@ -190,7 +213,6 @@
 
     <template is="dom-if" if="[[loading]]">
       <div class="overlay">
-        <p>Loading Vinyl...</p>
         <px-spinner size="100" finished="[[!loading]]"></px-spinner>
       </div>
     </template>
