@@ -2,6 +2,19 @@
 
  -- App / Database --
 
+
+Sellers that do not have a location set cannot be found at all!
+  Do we force them all to add a location?
+  Or, do we pull them separately and add them to the final list?
+
+What do we do with sellers that we add manually but are not claimed - when a 
+request is submitted?
+
+Add an admin view for adding new sellers manually.
+
+Need code to scrap webistes for sellers so we can add them manually.
+  Python?
+
 Make use of the new geo location test code in the cloud function 'sendRequest'.
 
 Need cloud code to send emails when notifications can't be sent.
@@ -18,7 +31,7 @@ DONE - Add image upload to business UI.
 
  -- UI / UX --
 
-Need UI to allow the user to set set parmaters for location searches.
+Need UI to allow the user to set parameters for location searches.
   - Set zip when location is blocked.
   - Set range of searches.
 
@@ -32,3 +45,4 @@ DONE - Add address inputs to business UI.
 DONE - Need UI for image upload on business UI.
 
 --------------------------------------------------------------------------------
+
