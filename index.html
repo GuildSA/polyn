@@ -54,6 +54,10 @@
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
           navigator.serviceWorker.register(baseUrl + 'service-worker.js');
+
+// TODO: This seemed logical at first but it doesn't seem to work like I think.
+          //navigator.serviceWorker.register(baseUrl + 'firebase-messaging-sw.js');
+          
         });
       }
 
