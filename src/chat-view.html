@@ -339,9 +339,6 @@
           var setMessage = function(snapshot) {
             var val = snapshot.val();
 
-            // Each chat message sent.
-            //console.log(" snapshot: " + JSON.stringify(snapshot, null, 4));
-
             if(self.user.uid == val.senderId) {
               if(self.usersInfo.photoThumbUrl) {
                 val.photoThumbUrl = self.usersInfo.photoThumbUrl;
@@ -351,6 +348,9 @@
                 val.photoThumbUrl = self.otherUsersInfo.photoThumbUrl;
               }
             }
+
+            // Each chat message sent.
+            //console.log(" snapshot: " + JSON.stringify(snapshot, null, 4));
 
             self.push('chatMessages', val);
 
