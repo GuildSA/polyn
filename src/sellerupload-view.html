@@ -1,0 +1,142 @@
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="utility.html">
+<link rel="import" href="geofire.html">
+
+<dom-module id="sellerupload-view">
+  <template>
+  <style include="shared-styles">
+    :host {
+      display: block;
+      padding: 10px;
+    }
+  </style>
+
+  <div class="card">
+    <paper-input type="file" id="myFile" on-change="_handleFiles"></paper-input>
+  </div>
+
+  </template>
+
+    <script>
+      class SellerUploadView extends Polymer.GestureEventListeners(Polymer.Element) {
+        static get is() { return 'sellerupload-view'; }
+
+      // static get properties() {
+      //   return {
+      //     user: {
+      //       type: Object,
+      //       observer: '_userChanged'
+      //     }
+      //   };
+      // }
+
+      _handleFiles(e) {
+        console.log("SellerUploadView._handleFiles");
+
+        var self = this;
+
+        var file = e.target.inputElement.inputElement.files[0];
+        var read = new FileReader();
+
+        read.readAsBinaryString(file);
+
+        read.onloadend = function() {
+
+          //console.log(read.result);
+
+          var obj = JSON.parse(read.result);
+
+          for(var i = 0; i < obj.length; i++) {
+
+            console.log("--------------------------------");
+            //console.log("id = " + obj[i].id);
+            console.log("city = " + obj[i].city);
+            console.log("name = " + obj[i].name);
+            console.log("state = " + obj[i].state);
+            console.log("address = " + obj[i].address);
+            //console.log("view_url = " + obj[i].view_url);
+            console.log("latitude = " + obj[i].latitude);
+            console.log("longitude = " + obj[i].longitude);
+            console.log("website_address = " + obj[i].website_address);
+            //console.log("rsd_pledge_signed = " + obj[i].rsd_pledge_signed);
+            console.log("google_maps_searchstring = " + obj[i].google_maps_searchstring);
+
+            self._registerNewSeller(obj[i]);
+          }
+        }
+      }
+
+      _registerNewSeller(sellerObj) {
+        console.log("SellerUploadView._registerNewSeller");
+
+        var self = this;
+
+        //const rootKey = "sellers/";
+        //const targetCategory = "collectables/sub/vinylRecords";
+
+        const rootKey = "sellers/test/";
+        const targetCategory = "collectables/sub/vinylRecords/test";
+
+        // Add the new seller under the 'sellers' key
+        var newSellerKey = firebase.app("polyn-app").database().ref().child(rootKey).push().key;
+        //console.log("  newKey: " + newSellerKey);
+
+        var newSellerData = {
+          name: sellerObj.name,
+          address: {}
+        };
+
+        if(sellerObj.email && sellerObj.email.length > 0) {
+          newSellerData.email = sellerObj.email;
+        }
+
+        // if(sellerObj.phone && sellerObj.phone.length > 0) {
+        //   newSellerData.phone = sellerObj.phone;
+        // }
+
+        if(sellerObj.website_address && sellerObj.website_address.length > 0) {
+          newSellerData.website = sellerObj.website_address;
+        }
+
+        // Address:
+        if(sellerObj.address && sellerObj.address.length > 0) {
+          newSellerData.address.line1 = sellerObj.address;
+        }
+
+        if(sellerObj.city && sellerObj.city.length > 0) {
+          newSellerData.address.city = sellerObj.city;
+        }
+
+        if(sellerObj.state && sellerObj.state.length > 0) {
+          newSellerData.address.state = sellerObj.state;
+        }
+
+        if(sellerObj.google_maps_searchstring && sellerObj.google_maps_searchstring.length > 0) {
+          newSellerData.address.google_maps_search = sellerObj.google_maps_searchstring;
+        }
+
+        // if(sellerObj.zip && sellerObj.zip.length > 0) {
+        //   newSellerData.address.zip = sellerObj.zip;
+        // }
+
+        firebase.app("polyn-app").database().ref(rootKey + newSellerKey).set(newSellerData).then(function() {
+
+          const lat = parseFloat(sellerObj.latitude);
+          const long = parseFloat(sellerObj.longitude);
+
+          if(lat && long) {
+            GeofireManager.addSellerToLocations(targetCategory, newSellerKey, lat, long);
+          }
+
+        });
+      }
+    }
+
+    window.customElements.define(SellerUploadView.is, SellerUploadView);
+  </script>
+</dom-module>

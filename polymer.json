@@ -19,6 +19,7 @@
     "src/analytics-view.html",
     "src/sellertest-view.html",
     "src/list-view.html",
+    "src/sellerupload-view.html",
     "src/error404-view.html"
   ],
   "sources": [

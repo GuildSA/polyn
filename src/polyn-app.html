@@ -38,6 +38,7 @@
 <link rel="lazy-import" href="analytics-view.html">
 <link rel="lazy-import" href="sellertest-view.html">
 <link rel="lazy-import" href="list-view.html">
+<link rel="lazy-import" href="sellerupload-view.html">
 
 <dom-module id="polyn-app">
   <template>
@@ -132,6 +133,7 @@
       <app-drawer id="drawer" slot="drawer">
         <app-toolbar>Research</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+          <a name="sellerupload-view" on-tap="_onTapSellerUploadView">Seller Upload</a>
           <a name="list-view" on-tap="_onTapListTestView">Iron List Test</a>
           <a name="misctest-view" on-tap="_onTapMiscTestView">Misc Test</a>
           <a name="geofire-view" on-tap="_onTapGeofireView">Geofire</a>
@@ -198,6 +200,7 @@
           <geofire-view name="geofire-view"></geofire-view>
           <sellertest-view name="sellertest-view"></sellertest-view>
           <list-view name="list-view"></list-view>
+          <sellerupload-view name="sellerupload-view"></sellerupload-view>
         </iron-pages>
 
       </app-header-layout>
@@ -324,6 +327,13 @@
 
       _onTapListTestView() {
         this.page = 'list-view';
+        if(!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      }
+
+      _onTapSellerUploadView() {
+        this.page = 'sellerupload-view';
         if(!this.$.drawer.persistent) {
           this.$.drawer.close();
         }
