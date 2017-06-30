@@ -37,11 +37,11 @@
     </firebase-auth>
 
     <div class="card">
-      <paper-button on-tap="_onTapPickImage" raised="">Pick Image</paper-button>
       <paper-button on-tap="_onTapTestToast" raised>Test Toast</paper-button>
     </div>
 
     <div class="card">
+      <paper-button on-tap="_onTapPickImage" raised="">Pick Image</paper-button>
       <input id="camera" type="file" name="photo" accept="image/*;capture=camera" style="display:none;"></input>
       <div>
         <img id="originalImage">
@@ -50,7 +50,7 @@
     </div>
 
     <div class="card">
-      <iron-image id="croppedImage" alt="Cropped Image"></iron-image>
+      <iron-image id="croppedImage" alt="Cropped Image Results"></iron-image>
     </div>
 
   </template>
@@ -69,23 +69,6 @@
           }
         };
       }
-
-      // constructor() {
-      //     super()
-      //     console.log("MiscTestView.constructor")
-      // }
-
-      // ready() {
-      //     super.ready();
-
-      //     console.log("MiscTestView.ready")
-
-      //     // When possible, use afterNextRender to defer non-critical
-      //     // work until after first paint.
-      //     Polymer.RenderStatus.afterNextRender(this, function() {
-      //         console.log("MiscTestView.afterNextRender")
-      //     });
-      // }
 
       connectedCallback() {
         super.connectedCallback();
@@ -177,7 +160,6 @@
           });
         }
       }
-
     }
 
     window.customElements.define(MiscTestView.is, MiscTestView);
