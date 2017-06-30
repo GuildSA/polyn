@@ -83,11 +83,11 @@
             <iron-icon icon="custom-icons:web" slot="prefix">
           </paper-input>
 
-          <paper-input id="addressLine1" label="Address Line #1">
+          <paper-input id="address" label="Address">
           </paper-input>
 
-          <paper-input id="addressLine2" label="Address Line #2">
-          </paper-input>
+          <!--<paper-input id="addressLine2" label="Address Line #2">
+          </paper-input>-->
 
           <paper-input id="city" label="City">
           </paper-input>
@@ -268,11 +268,11 @@
           this.$.phone.value = sellersInfo.phone;
           this.$.website.value = sellersInfo.website;
 
-          this.$.addressLine1.value = sellersInfo.address.line1;
-          this.$.addressLine2.value = sellersInfo.address.line2;
-          this.$.city.value = sellersInfo.address.city;
-          this.$.state.value = sellersInfo.address.state;
-          this.$.zip.value = sellersInfo.address.zip;
+          this.$.address.value = sellersInfo.address;
+          //this.$.addressLine2.value = sellersInfo.address.line2;
+          this.$.city.value = sellersInfo.city;
+          this.$.state.value = sellersInfo.state;
+          this.$.zip.value = sellersInfo.zip;
 
           this.photoUrl = sellersInfo.photoUrl;
         }
@@ -340,20 +340,20 @@
         }
 
         // Address:
-        if(this.$.addressLine1.value && this.$.addressLine1.value.length > 0) {
-          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/line1").set(this.$.addressLine1.value);
+        if(this.$.address.value && this.$.address.value.length > 0) {
+          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address").set(this.$.address.value);
         }
-        if(this.$.addressLine2.value && this.$.addressLine2.value.length > 0) {
-          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/line2").set(this.$.addressLine2.value);
-        }
+        // if(this.$.addressLine2.value && this.$.addressLine2.value.length > 0) {
+        //   firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/line2").set(this.$.addressLine2.value);
+        // }
         if(this.$.city.value && this.$.city.value.length > 0) {
-          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/city").set(this.$.city.value);
+          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/city").set(this.$.city.value);
         }
         if(this.$.state.value && this.$.state.value.length > 0) {
-          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/state").set(this.$.state.value);
+          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/state").set(this.$.state.value);
         }
         if(this.$.zip.value && this.$.zip.value.length > 0) {
-          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/zip").set(this.$.zip.value);
+          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/zip").set(this.$.zip.value);
         }
       }
 
@@ -403,24 +403,24 @@
             }
 
             // Address:
-            if(self.$.addressLine1.value && self.$.addressLine1.value.length > 0) {
-              newSellerData.address.line1 = this.$.addressLine1.value;
+            if(self.$.address.value && self.$.address.value.length > 0) {
+              newSellerData.address = this.$.address;
             }
 
-            if(self.$.addressLine2.value && self.$.addressLine2.value.length > 0) {
-              newSellerData.address.line2 = this.$.addressLine2.value;
-            }
+            // if(self.$.addressLine2.value && self.$.addressLine2.value.length > 0) {
+            //   newSellerData.address.line2 = this.$.addressLine2.value;
+            // }
 
             if(self.$.city.value && self.$.city.value.length > 0) {
-              newSellerData.address.city = this.$.city.value;
+              newSellerData.city = this.$.city.value;
             }
 
             if(self.$.state.value && self.$.state.value.length > 0) {
-              newSellerData.address.state = this.$.state.value;
+              newSellerData.state = this.$.state.value;
             }
 
             if(self.$.zip.value && self.$.zip.value.length > 0) {
-              newSellerData.address.zip = this.$.zip.value;
+              newSellerData.zip = this.$.zip.value;
             }
 
             firebase.app("polyn-app").database().ref("sellers/" + newSellerKey).set(newSellerData).then(function() {
