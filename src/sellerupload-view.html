@@ -42,6 +42,10 @@
       // }
 
       // http://www.recordstoreday.com/
+      //
+      // &amp;  =   &
+      // &amp;#39; = 's
+      // &#39;  =  '
       _uploadDataFromRecordStoreDay(e) {
         console.log("SellerUploadView._uploadDataFromRecordStoreDay");
 
@@ -57,9 +61,6 @@
           //console.log(read.result);
 
           var obj = JSON.parse(read.result);
-
-// &amp;  =   &   but keep in google search?
-// &#39;  =  's
 
           for(var i = 0; i < obj.length; i++) {
 
