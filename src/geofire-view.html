@@ -154,7 +154,9 @@
 
         // Distance Plano to Tulsa 239 mi or 384.633 km
 
-        GeofireManager.addSellerToLocations("collectables/sub/vinylRecords", sellersKey, lat, long);
+        const rootKeyLocations = "locations/";
+
+        GeofireManager.addSellerToLocations(rootKeyLocations, "collectables/sub/vinylRecords", sellersKey, lat, long);
       }
 
       _addSellersEntry(sellersEntry) {

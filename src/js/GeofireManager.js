@@ -94,24 +94,24 @@ var GeofireManager = (function() {
     }
   };
   
-  var addSellerToLocations = function(sellersCategory, sellersKey, latitude, longitude) {
+  var addSellerToLocations = function(rootKey, sellersCategory, sellersKey, latitude, longitude) {
 
-    console.log("  sellersCategory: " + sellersCategory);
-    console.log("  sellersKey: " + sellersKey);
-    console.log("  latitude: " + latitude);
-    console.log("  longitude: " + longitude);
+    // console.log("  sellersCategory: " + sellersCategory);
+    // console.log("  sellersKey: " + sellersKey);
+    // console.log("  latitude: " + latitude);
+    // console.log("  longitude: " + longitude);
 
 // "collectables/sub/vinylRecords"
 
-    var sellersByLocationRef = firebase.app("polyn-app").database().ref("locations/" + sellersCategory);
+    var sellersByLocationRef = firebase.app("polyn-app").database().ref(rootKey + sellersCategory);
 
     // Create a new GeoFire instance pointing at the user's data.
     var geoFireSellersRef = new GeoFire(sellersByLocationRef);
 
     geoFireSellersRef.set(sellersKey, [latitude, longitude]).then(function() {
-      log("Seller location has been added to seller's key");
+      log("Seller location has been added to: " + sellersKey);
     }).catch(function(error) {
-      log("Error adding seller's location: " + error);
+      log("Error adding location to " + sellersKey + ": " + error);
     });
   }
 

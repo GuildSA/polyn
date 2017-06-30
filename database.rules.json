@@ -38,7 +38,11 @@
     "chats": {
       ".read": "auth != null",
       ".write": "auth != null"
-    }
+    },
     
+    "debug": {
+      ".read": "true",
+      ".write": "true"
+    }
   }
 }
