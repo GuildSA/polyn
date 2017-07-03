@@ -1,6 +1,6 @@
 {
   "name": "px-defaults-design",
-  "version": "1.0.6",
+  "version": "2.0.0-prerelease-1",
   "authors": [
     "General Electric",
     "Harry Roberts"
@@ -15,6 +15,7 @@
   "homepage": "https://github.com/PredixDev/px-defaults-design.git",
   "private": false,
   "ignore": [
+    "*.enc",
     "**/.*",
     "node_modules",
     "bower_components",
@@ -32,19 +33,19 @@
     "LICENSE.md"
   ],
   "dependencies": {
-    "px-functions-design": "^1.0.0"
+    "px-functions-design": "^2.0.0"
   },
   "devDependencies": {
     "px-starter-kit-design": "^1.0.0",
     "px-sass-doc": "^1.0.0"
   },
-  "_release": "1.0.6",
+  "_release": "2.0.0-prerelease-1",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.6",
-    "commit": "63c597caa3932449a27860d50c5c09602a6659c4"
+    "tag": "v2.0.0-prerelease-1",
+    "commit": "dee7cb79ea81c09862e248a6c6520f87ffc478b1"
   },
   "_source": "https://github.com/predixDev/px-defaults-design.git",
-  "_target": "^1.0.2",
+  "_target": "^2.0.0",
   "_originalSource": "px-defaults-design"
 }

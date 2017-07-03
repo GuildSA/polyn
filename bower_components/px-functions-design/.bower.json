@@ -1,6 +1,6 @@
 {
   "name": "px-functions-design",
-  "version": "1.0.10",
+  "version": "2.0.0-prerelease-1",
   "authors": [
     "General Electric"
   ],
@@ -14,6 +14,7 @@
   "homepage": "https://github.com/PredixDev/px-functions-design.git",
   "private": false,
   "ignore": [
+    "*.enc",
     "**/.*",
     "node_modules",
     "bower_components",
@@ -34,16 +35,16 @@
     "inuit-functions": "~0.2.0"
   },
   "devDependencies": {
-    "px-starter-kit-design": "^0.7.0",
-    "px-sass-doc": "^0.4.4"
+    "px-starter-kit-design": "^1.0.0",
+    "px-sass-doc": "^1.0.0"
   },
-  "_release": "1.0.10",
+  "_release": "2.0.0-prerelease-1",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.10",
-    "commit": "95813e3391dc70a1f160391881d57a55edbeb160"
+    "tag": "v2.0.0-prerelease-1",
+    "commit": "f68ce1eac56804469261d4a368c0c27afdb216b2"
   },
   "_source": "https://github.com/predixDev/px-functions-design.git",
-  "_target": "^1.0.0",
+  "_target": "^2.0.0",
   "_originalSource": "px-functions-design"
 }
