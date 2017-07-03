@@ -1,3 +1,9 @@
+ -- Mailgun --
+
+
+ curl -s --user 'api:key-c98353e35971fe63df28b952f140fe9c'     https://api.mailgun.net/v3/sandbox1c990119726f48d48148863f4dda077b.mailgun.org/messages         -F from='Mailgun Sandbox <postmaster@sandbox1c990119726f48d48148863f4dda077b.mailgun.org>'         -F to='Kevin <kharris@guildsa.com>'         -F subject='Hello Kevin'         -F text='Congratulations Kevin, you just sent an email with Mailgun!  You are truly awesome!' 
+
+
 ------------------------------------------------------------------------
 
   -- Basic Paper Spinner  -- 
