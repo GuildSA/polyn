@@ -2,18 +2,18 @@
 
  -- App / Database --
 
+Cache the zip code and the lat/long based on that zip code.
 
 Sellers that do not have a location set cannot be found at all!
   Do we force them all to add a location?
   Or, do we pull them separately and add them to the final list?
 
+Data that we scraped is still missing phone and email. Is this ok or should we fill them in?
+
 What do we do with sellers that we add manually but are not claimed - when a 
 request is submitted?
 
 Add an admin view for adding new sellers manually.
-
-Need code to scrap webistes for sellers so we can add them manually.
-  Python?
 
 Make use of the new geo location test code in the cloud function 'sendRequest'.
 
@@ -23,6 +23,8 @@ Add paging to firebase calls that pull down a lot of data.
 
 Upload a copy of the image pulled from social including a thumbnail.
 
+
+DONE - Need python code to scrap webistes for sellers so we can add them manually.
 DONE - Add code to drive the badge count for request.
 DONE - Force the app to reset all tab view stacks after logout.
 DONE - Add image upload to business UI.

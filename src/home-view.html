@@ -6,6 +6,7 @@
 <link rel="import" href="../bower_components/iron-iconset-svg/iron-iconset-svg.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
@@ -15,6 +16,7 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="custom-icons.html">
+<link rel="import" href="utility.html">
 <link rel="import" href="geofire.html">
 
 <dom-module id="home-view">
@@ -223,6 +225,15 @@
       </div>
     </div>
 
+    <paper-dialog id="requestZipDialog">
+      <p>We were unable to get your location. If you give us a zip code, we can still show you business near you.</p>
+      <paper-input id="zipDialogInput" label="Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]"></paper-input>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button on-tap="_onTapZipDialogBtn" dialog-confirm autofocus>Ok</paper-button>
+      </div>
+    </paper-dialog>
+
     <template is="dom-if" if="[[loading]]">
       <div class="overlay">
         <px-spinner size="100" finished="[[!loading]]"></px-spinner>
@@ -248,6 +259,9 @@
           location: {
             type: Array,
             value: null
+          },
+          rangeInKm: {
+            type: Number
           },
           sellers: {
             type: Array,
@@ -277,38 +291,10 @@
         super.connectedCallback();
         console.log("HomeView.connectedCallback");
 
+        this.rangeInKm = 1.6 * parseFloat(100);
+
         //this._loadSellersNoLocation();
         this._loadSellersByLocation(100);
-
-        //
-        // Convert a Zip Code into a Lat/Long...
-        //
-
-// TODO: Make use of the lat/long based on zip code when the user rejects location.
-
-        //var googleMapsApi = this.$.googleMapsApi;
-        var polynApp = document.getElementById("polynApp");
-        var googleMapsApi = polynApp.$.googleMapsApi;
-
-        //googleMapsApi.addEventListener('api-load', function(e) {
-
-          var geocoder = new googleMapsApi.api.Geocoder();
-          
-          //const address = "Plano, TX";
-          const address = "75025";
-          geocoder.geocode( {'address': address}, function(results, status) {
-            //console.log(" status: " + status);
-            //console.log(" esults: " + JSON.stringify(results, null, 4));
-            if(status == google.maps.GeocoderStatus.OK) {
-              const lat = results[0].geometry.location.lat();
-              const long = results[0].geometry.location.lng();
-              console.log("  The address: " + address + ", was converted into:");
-              console.log("    Lat: " + lat + ", Long: " + long);
-            } else {
-              console.log("  Geocode was not successful for the following reason: " + status);
-            }
-          });
-        //});
       }
 
       _userChanged(user) {
@@ -328,27 +314,6 @@
 
         if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
           return;
-        }
-
-        if(!usersInfo.location) {
-
-          const self = this;
-
-          GeofireManager.getUsersLocation("users/" + this.user.uid + "/info",
-
-            function(location) {
-              const latitude = location.coords.latitude;
-              const longitude = location.coords.longitude;
-              // Cache the user's location.
-              self.location = [latitude, longitude];
-
-//const rangeInKm = 1.6 * parseFloat(rangeInMiles);
-//self._getSellerData(this.location[0], this.location[1], rangeInKm);
-            },
-            
-            function(error) {
-              console.log("User Location error: " + error + "");
-          });
         }
       }
 
@@ -397,14 +362,20 @@
         this.loading = true;
 
         // Geofire only uses KM.
-        const rangeInKm = 1.6 * parseFloat(rangeInMiles);
+        //const rangeInKm = 1.6 * parseFloat(rangeInMiles);
 
         if(!this.location) {
 
           // If we don't know the user's current location - ask for it!
 
+          var userPath = null;
+
+          if(this.user && this.user.uid) {
+            userPath = "users/" + this.user.uid + "/info";
+          }
+
           //GeofireManager.getUsersLocation("users/" + this.user.uid + "/info", 
-          GeofireManager.getUsersLocation(null, // Pass null for user's info path since we don't actually need a user to do this.
+          GeofireManager.getUsersLocation(userPath, // Pass null for user's info path since we don't actually need a user to do this.
 
             function(location) {
               const latitude = location.coords.latitude;
@@ -415,20 +386,81 @@
 
               //console.log("User Location is lat: " + latitude + ", long: " + longitude + "");
 
-              self._getSellerData(latitude, longitude, rangeInKm);
+              self._getSellerData(latitude, longitude, self.rangeInKm);
             },
             
             function(error) {
               console.log("User Location error: " + error + "");
+
+              self.loading = false;
+
+              if(error.code == error.PERMISSION_DENIED) {
+                self.$.requestZipDialog.toggle();
+              }
+
               // We have no location to use - just get the sellers direclty from the selected category!
-              self._loadSellersNoLocation();
+              //self._loadSellersNoLocation();
           });
 
         } else {
 
           // If we already know the user's current location - just get the sellers!
-          self._getSellerData(this.location[0], this.location[1], rangeInKm);
+          self._getSellerData(this.location[0], this.location[1], self.rangeInKm);
         }
+      }
+
+      _onTapZipDialogBtn() {
+        console.log("HomeView._onTapZipDialogBtn");
+
+        const zip = this.$.zipDialogInput.value;
+
+        //console.log("  titleText: " + title);
+        //console.log("  descText: " + desc);
+
+        if(!zip || zip.length == 0) {
+          Utility.showErrorToast("A valid zip code must be provided.");
+          return;
+        }
+
+        //
+        // Convert a Zip Code into a Lat/Long...
+        //
+
+// TODO: Cache the zip code and the lat/long based on that zip code.
+
+        const self = this;
+
+        //var googleMapsApi = this.$.googleMapsApi;
+        var polynApp = document.getElementById("polynApp");
+        var googleMapsApi = polynApp.$.googleMapsApi;
+
+        //googleMapsApi.addEventListener('api-load', function(e) {
+
+          var geocoder = new googleMapsApi.api.Geocoder();
+          
+          //const address = "Plano, TX";
+          //const address = "75025";
+          const address = zip;
+          geocoder.geocode( {'address': address}, function(results, status) {
+            //console.log(" status: " + status);
+            //console.log(" esults: " + JSON.stringify(results, null, 4));
+            if(status == google.maps.GeocoderStatus.OK) {
+              const latitude = results[0].geometry.location.lat();
+              const longitude = results[0].geometry.location.lng();
+              console.log("  The address: " + address + ", was converted into:");
+              console.log("    Lat: " + latitude + ", Long: " + longitude);
+
+              self.location = [latitude, longitude];
+
+              //console.log("User Location is lat: " + latitude + ", long: " + longitude + "");
+
+              self._getSellerData(latitude, longitude, self.rangeInKm);
+
+            } else {
+              console.log("  Geocode was not successful for the following reason: " + status);
+            }
+          });
+        //});
       }
 
       _getSellerData(latitude, longitude, rangeInKm) {
