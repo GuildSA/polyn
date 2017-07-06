@@ -1,0 +1,115 @@
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="claimbusiness-view">
+  <template>
+    <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: flex;
+      }
+
+      h1 {
+        color: grey;
+      }
+
+      paper-button {
+        color: white;
+        background: var(--app-secondary-color);
+      }
+
+      paper-input {
+        --paper-input-container-focus-color: #70C187;
+      }
+
+      iron-icon {
+        margin-right: 12px;
+      }
+    </style>
+
+    <iron-ajax
+      id="claimBusiness"
+      url="https://us-central1-polyn-3c431.cloudfunctions.net/claimBusiness"
+      method="POST"
+      loading="{{loading}}"
+      on-response="_handleClaimBusinessResponse"
+      on-error="_handleClaimBusinessError"
+      debounce-duration="300">
+    </iron-ajax>
+
+    <div class="flex layout horizontal center-justified">
+      <div class="card">
+        <div class="layout vertical center-justified">
+          <h1>Claim "[[sellerInfo.name]]"</h1>
+          <p>Fill out the contact info below to claim ownership of this business.</p>
+
+          <paper-input id="name" label="Your Name" required auto-validate error-message="Please enter your name"> 
+            <iron-icon icon="custom-icons:account-circle" slot="prefix"></iron-icon>
+          </paper-input>
+          <paper-input id="email" label="Your Email" required auto-validate error-message="Please enter your email address">
+            <iron-icon icon="custom-icons:email" slot="prefix">
+          </paper-input>
+          <paper-input id="phone" label="Your Phone Number"  required auto-validate error-message="Please enter your phone number">
+            <iron-icon icon="custom-icons:phone" slot="prefix">
+          </paper-input>
+
+          <paper-button class="submit" on-tap="_onTapClaimBusiness">Claim Business</paper-button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    class ClaimBusinessView extends Polymer.Element {
+      static get is() { return 'claimbusiness-view'; }
+
+      static get properties() {
+        return {
+          sellerInfo: {
+            type: Object
+          },
+          sellersCategory: {
+            type: String
+          },
+          loading: {
+            type: Boolean,
+            notify: true,
+            value: false
+          }
+        };
+      }
+
+      _onTapClaimBusiness() {
+        console.log("ClaimBusinessView._onTapClaimBusiness");
+
+        var params = {
+          name: this.$.name,
+          email: this.$.email,
+          phone: this.$.phone
+        };
+
+        this.$.claimBusiness.params = params;
+        this.$.claimBusiness.generateRequest();
+      }
+
+      _handleClaimBusinessResponse(data) {
+        console.log("FunctionsView._handleClaimBusinessResponse");
+        console.log("  status = " + data.detail.status);
+      }
+
+      _handleClaimBusinessError(e) {
+        console.log("FunctionsView._handleClaimBusinessError");
+        console.log("  status = ", e.status, e.statusText);
+      }
+    }
+
+    window.customElements.define(ClaimBusinessView.is, ClaimBusinessView);
+
+  </script>
+</dom-module>

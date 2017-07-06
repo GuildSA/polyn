@@ -92,6 +92,10 @@
 
       <div id="googleMap"></div>
 
+      <template is="dom-if" if="[[!sellerInfo.claimed]]">
+        <paper-button on-tap="_onTapClaimBusiness">Claim This Business</paper-button>
+      </template>
+
     </div>
 
     <div id="submit-request-container">
@@ -155,6 +159,16 @@
             });
           }
         });
+      }
+
+      _onTapClaimBusiness() {
+        console.log("BusinessView._onTapClaimBusiness");
+
+// TODO:
+        var polynApp = document.getElementById("polynApp");
+        var claimBusinessView = polynApp.pushPageOnCurrentTab("claimbusiness-view");
+        claimBusinessView.sellerInfo = this.sellerInfo;
+        claimBusinessView.sellersCategory = this.sellersCategory;
       }
 
       _onTapCreateRequest() {

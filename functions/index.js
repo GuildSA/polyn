@@ -89,6 +89,22 @@ exports.sendMessage = functions.https.onRequest((req, res) => {
   });
 });
 
+exports.claimBusiness = functions.https.onRequest((req, res) => {
+
+  const name = req.query.name;
+  const email = req.query.email;
+  const phone = req.query.phone;
+
+  console.log("name: ", name);
+  console.log("email: ", email);
+  console.log("phone: ", phone);
+
+  cors(req, res, () => {
+// TODO: Send email to admin to verify this business owner!
+    res.status(200).end();
+  });
+});
+
 exports.testGeofire = functions.https.onRequest((req, res) => {
 
   const categoryPath = req.query.categoryPath;

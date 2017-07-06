@@ -23,6 +23,7 @@ Add paging to firebase calls that pull down a lot of data.
 
 Upload a copy of the image pulled from social including a thumbnail.
 
+Send email to admin to verify a new business owner asking to claim a business.
 
 DONE - Need python code to scrap webistes for sellers so we can add them manually.
 DONE - Add code to drive the badge count for request.

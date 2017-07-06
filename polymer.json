@@ -11,6 +11,7 @@
     "src/sellerinfo-view.html",
     "src/chat-view.html",
     "src/business-view.html",
+    "src/claimbusiness-view.html",
     "src/ajax-view.html",
     "src/functions-view.html",
     "src/messaging-view.html",

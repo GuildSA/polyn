@@ -17,7 +17,12 @@
 
     "sellers": {
       ".read": "true",
-      ".write": "auth != null"
+      ".write": "auth != null",
+
+      "claimed": {
+        ".read": "true",
+        ".write": "auth.uid === '9QfYl0K16OYk2gSKHslqQgB1XSM2'"
+      }
     },
 
     "categories": {
@@ -27,7 +32,22 @@
 
     "users": {
       ".read": "auth != null",
-      ".write": "auth != null"
+      ".write": "auth != null",
+
+      "$key": {
+          ".read": "auth != null",
+          ".write": "auth != null",
+
+        "info": {
+          ".read": "auth != null",
+          ".write": "auth != null",
+
+          "sellerID": {
+            ".read": "auth != null",
+            ".write": "auth.uid === '9QfYl0K16OYk2gSKHslqQgB1XSM2'"
+          }
+        }
+      }
     },
 
     "requests": {
