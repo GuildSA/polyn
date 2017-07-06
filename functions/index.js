@@ -101,6 +101,7 @@ exports.claimBusiness = functions.https.onRequest((req, res) => {
 
   cors(req, res, () => {
 // TODO: Send email to admin to verify this business owner!
+// https://github.com/bojand/mailgun-js
     res.status(200).end();
   });
 });

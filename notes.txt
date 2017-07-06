@@ -423,6 +423,8 @@ npm outdated
 npm update
 npm install
 
+npm install mailgun-js --save
+
 bower list
 
 cat bower_components/iron-pages/.bower.json

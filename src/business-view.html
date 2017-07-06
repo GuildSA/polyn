@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
@@ -53,6 +54,12 @@
 
     </style>
 
+    <firebase-auth 
+      id="auth"
+      app-name="polyn-app"
+      user="{{user}}">
+    </firebase-auth>
+
     <div class="card layout vertical">
 
       <template is="dom-if" if="[[!sellerInfo.photoUrl]]">
@@ -102,6 +109,26 @@
       <paper-button class="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message" >Create a Request</paper-button>
     </div>
 
+    <paper-dialog id="requestSigninForClaimDialog">
+      <h1>Claim Your Business</h1>
+      <p>Please sign-in or create an account to claim your business.</p>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button on-tap="_onTapSigninBtn" dialog-confirm autofocus>Sign In</paper-button>
+      </div>
+    </paper-dialog>
+
+    <paper-dialog id="requestSigninDialog">
+      <h1>Create a Request</h1>
+      <p>Awesome Choice!</p>
+      <p>Creating a request lets the record stores know what you're looking for and if they have it, they can send you some details via a private message right here in the app.</p>
+      <p>But... for this magic to work we need you to sign-in or create an account to make requests.</p>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button on-tap="_onTapSigninBtn" dialog-confirm autofocus>Sign In</paper-button>
+      </div>
+    </paper-dialog>
+
   </template>
 
   <script>
@@ -110,6 +137,9 @@
 
       static get properties() {
         return {
+          user: {
+            type: Object
+          },
           sellerInfo: {
             type: Object,
             observer: '_sellerInfoChanged'
@@ -150,7 +180,7 @@
               navigationControl: false,
               mapTypeControl: false,
               scaleControl: false,
-              draggable: false
+              draggable: true
             });
 
             var marker = new googleMapsApi.api.Marker({
@@ -164,17 +194,32 @@
       _onTapClaimBusiness() {
         console.log("BusinessView._onTapClaimBusiness");
 
-// TODO:
-        var polynApp = document.getElementById("polynApp");
-        var claimBusinessView = polynApp.pushPageOnCurrentTab("claimbusiness-view");
-        claimBusinessView.sellerInfo = this.sellerInfo;
-        claimBusinessView.sellersCategory = this.sellersCategory;
+        if(this.user) {
+          var polynApp = document.getElementById("polynApp");
+          var claimBusinessView = polynApp.pushPageOnCurrentTab("claimbusiness-view");
+          claimBusinessView.sellerInfo = this.sellerInfo;
+          claimBusinessView.sellersCategory = this.sellersCategory;
+        } else {
+          this.$.requestSigninForClaimDialog.toggle();
+        }
       }
 
       _onTapCreateRequest() {
         console.log("BusinessView._onTapCreateRequest");
-        var polynApp = document.getElementById("polynApp");
-        var requestView = polynApp.pushPageOnCurrentTab("request-view");
+        
+        if(this.user) {
+          var polynApp = document.getElementById("polynApp");
+          var requestView = polynApp.pushPageOnCurrentTab("request-view");
+        } else {
+          this.$.requestSigninDialog.toggle();
+        }
+      }
+
+      _onTapSigninBtn() {
+        console.log("BusinessView._onTapSigninBtn");
+
+        var profileView = polynApp.pushPageOnCurrentTab("profile-view");
+        profileView.autoPopAfterSignin = true;
       }
     }
 

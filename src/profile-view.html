@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="utility.html">
@@ -147,6 +148,14 @@
       </div>
     </div>
 
+    <!--<paper-dialog id="requestReturnDialog">
+      <p id="dialogMessage"></p>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button on-tap="_onTapSigninBtn" dialog-confirm autofocus>Return</paper-button>
+      </div>
+    </paper-dialog>-->
+
   </template>
 
   <script>
@@ -183,7 +192,11 @@
           editingProfileImage: {
             type: Boolean,
             observer: '_editingProfileImageChanged'
-          }
+          },
+          autoPopAfterSignin: {
+            type: Boolean,
+            value: false
+          },
         };
       }
 
@@ -217,6 +230,13 @@
           cropperView.file = file;
           cropperView.prevPage = self;
         });
+      }
+
+      poppedCallback() {
+        console.log("ProfileView.poppedCallback");
+
+        // If we're getting popped off - reset these!
+        this.autoPopAfterSignin = false;
       }
 
       _croppedImageChanged(croppedImage) {
@@ -299,11 +319,12 @@
 
       _usersInfoChanged(usersInfo) {
         console.log("ProfileView._usersInfoChanged");
+        //console.log("usersInfo: " + JSON.stringify(usersInfo, null, 4));
 
 // // TODO: Is this the best way to check for an empty JSON object?
-//         if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
-//           return;
-//         }
+        if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
+          return;
+        }
 
         // if(usersInfo.sellerId) {
         //   this.$.registerBusiness.textContent = "Edit Business";
@@ -315,6 +336,12 @@
 
         if(usersInfo.name) {
           this.displayName = usersInfo.name;
+        }
+
+        if(this.autoPopAfterSignin) {
+
+          var polynApp = document.getElementById("polynApp");
+          polynApp.popPageOffCurrentTab();
         }
       }
 

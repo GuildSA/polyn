@@ -27,6 +27,11 @@
         padding: 0px;
       }
 
+      paper-button {
+        color: white;
+        background: var(--app-secondary-color);
+      }
+
       .top-border {
         border-top-style: solid;
         border-top-color: var(--app-accent-color);
@@ -226,11 +231,23 @@
     </div>
 
     <paper-dialog id="requestZipDialog">
+      <h2>Zip Code</h2>
       <p>We were unable to get your location. If you give us a zip code, we can still show you business near you.</p>
       <paper-input id="zipDialogInput" label="Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]"></paper-input>
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
         <paper-button on-tap="_onTapZipDialogBtn" dialog-confirm autofocus>Ok</paper-button>
+      </div>
+    </paper-dialog>
+
+    <paper-dialog id="requestSigninDialog">
+      <h1>Create a Request</h1>
+      <p>Awesome Choice!</p>
+      <p>Creating a request lets the record stores know what you're looking for and if they have it, they can send you some details via a private message right here in the app.</p>
+      <p>But... for this magic to work we need you to sign-in or create an account to make requests.</p>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button on-tap="_onTapSigninBtn" dialog-confirm autofocus>Sign In</paper-button>
       </div>
     </paper-dialog>
 
@@ -519,8 +536,19 @@
       _onTapCreateRequest() {
         console.log("HomeView._onTapCreateRequest");
 
-        var polynApp = document.getElementById("polynApp");
-        var requestView = polynApp.pushPageOnCurrentTab("request-view");
+        if(this.user) {
+          var polynApp = document.getElementById("polynApp");
+          var requestView = polynApp.pushPageOnCurrentTab("request-view");
+        } else {
+          this.$.requestSigninDialog.toggle();
+        }
+      }
+
+      _onTapSigninBtn() {
+        console.log("HomeView._onTapSigninBtn");
+        
+        var profileView = polynApp.pushPageOnCurrentTab("profile-view");
+        profileView.autoPopAfterSignin = true;
       }
     }
 
