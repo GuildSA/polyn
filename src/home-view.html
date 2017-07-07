@@ -391,8 +391,7 @@
             userPath = "users/" + this.user.uid + "/info";
           }
 
-          //GeofireManager.getUsersLocation("users/" + this.user.uid + "/info", 
-          GeofireManager.getUsersLocation(userPath, // Pass null for user's info path since we don't actually need a user to do this.
+          GeofireManager.getUsersLocation(userPath,
 
             function(location) {
               const latitude = location.coords.latitude;
@@ -414,9 +413,6 @@
               if(error.code == error.PERMISSION_DENIED) {
                 self.$.requestZipDialog.toggle();
               }
-
-              // We have no location to use - just get the sellers direclty from the selected category!
-              //self._loadSellersNoLocation();
           });
 
         } else {

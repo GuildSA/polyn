@@ -22,6 +22,11 @@
         border-radius: 50%;
       }
 
+      paper-button {
+        color: white;
+        background: var(--app-secondary-color);
+      }
+
       paper-button.sign-in {
         background-color: #70C187;
         color: white;
@@ -117,7 +122,7 @@
 
         <template is="dom-if" if="[[!user]]">
           <div class="layout vertical">
-            <paper-button class="sign-in" id="continue-btn">Continue</paper-button>
+            <paper-button class="sign-in" id="continue-btn" on-tap="_onTapSignInUsingEmail">Continue</paper-button>
             <div class="layout horizontal center-justified">
               <h4>OR</h4>
             </div>
@@ -148,13 +153,13 @@
       </div>
     </div>
 
-    <!--<paper-dialog id="requestReturnDialog">
-      <p id="dialogMessage"></p>
+    <paper-dialog id="errorDialog">
+      <h2>Sign In Error</h2>
+      <p id="errorMessage"></p>
       <div class="buttons">
-        <paper-button dialog-dismiss>Cancel</paper-button>
-        <paper-button on-tap="_onTapSigninBtn" dialog-confirm autofocus>Return</paper-button>
+        <paper-button dialog-confirm autofocus>OK</paper-button>
       </div>
-    </paper-dialog>-->
+    </paper-dialog>
 
   </template>
 
@@ -296,7 +301,15 @@
       }
 
       _handleError(e, err) {
-        alert(err);
+        console.log("ProfileView._handleError: " + err);
+
+        // Ignore this error. 
+        if(err.code == "auth/email-already-in-use") {
+          return;
+        }
+
+        this.$.errorMessage.innerHTML = err;
+        this.$.errorDialog.toggle();
       }
 
       _userChanged(user) {
@@ -385,7 +398,11 @@
 
               if(!usersInfo.photoUrl) {
                 // Force set this now, so the user can at least see something.
-                self.photoUrl = user.providerData[0].photoURL;
+                if(user.providerData[0].photoURL) {
+                  self.photoUrl = user.providerData[0].photoURL;
+                } else {
+                  self.photoUrl = "/images/anonymous_profile.png";
+                }
 
                 // Force the user to use the same social image for both photo and thumbnailPhoto.
                 self._setUsersProfilePhotoUrl(user.providerData[0].photoURL);
@@ -433,6 +450,58 @@
             firebase.app("polyn-app").database().ref(refPath).update(info);
           }
         });
+      }
+
+      _onTapSignInUsingEmail() {
+        console.log("ProfileView._onTapSignInUsingEmail");
+        
+        if(this.user == null) {
+
+          var email = this.shadowRoot.querySelector('#email');
+          var password = this.shadowRoot.querySelector('#password');
+
+          if(!email.value || email.value.length == 0) {
+            Utility.showErrorToast("An email address must be provided.");
+            return;
+          }
+
+          if(!Utility.validateEmail(email.value)) {
+            Utility.showErrorToast("A valid email address must be provided.");
+            return;
+          }
+
+          if(!password.value || password.value.length == 0) {
+            Utility.showErrorToast("A password must be provided.");
+            return;
+          }
+
+          var self = this;
+
+          // First, try to create the user.
+          this.$.auth.createUserWithEmailAndPassword(email.value, password.value).then(function (user) {
+
+            email.value = "";
+            password.value = "";
+
+          }).catch(function (err) {
+              console.log("createUserWithEmailAndPassword error: " + JSON.stringify(err, null, 4));
+
+              // If createUserWithEmailAndPassword failed due to "email-already-in-use"
+              // attempt to sign in as an existing user.
+              if(err.code == "auth/email-already-in-use") {
+
+                self.$.auth.signInWithEmailAndPassword(email.value, password.value).then(function (user) {
+                  email.value = "";
+                  password.value = "";
+                }).catch(function (err) {
+                  console.log("signInWithEmailAndPassword error: " + JSON.stringify(err, null, 4));
+                });
+              }
+            });
+
+        } else {
+          console.log("  Already logged into an account!");
+        }
       }
 
       _onTapSignInUsingGmail() {

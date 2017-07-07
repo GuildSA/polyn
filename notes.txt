@@ -1,3 +1,17 @@
+
+------------------------------------------------------------------------
+
+ -- Uses this when this.$.someId Doesn't Work -- 
+
+var email = this.shadowRoot.querySelector('#email');
+console.log("email = " + email);
+
+var password = this.shadowRoot.querySelector('#password');
+console.log("password = " + password);
+
+------------------------------------------------------------------------
+
+
  -- Current Working Versions --
 
 GuildSA:polyn kharris$ node --version

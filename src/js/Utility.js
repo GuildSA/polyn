@@ -4,6 +4,12 @@ var Utility = (function() {
 
   var _errorToast;
 
+  var validateEmail = function(email) {
+    // https://stackoverflow.com/questions/46155/how-to-validate-email-address-in-javascript
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
+
   var showErrorToast = function(text) {
 
     if(!_errorToast) {
@@ -254,6 +260,7 @@ var Utility = (function() {
   // Define the public interface by explicitly revealing public pointers to the 
   // our private functions.
   return {
+    validateEmail: validateEmail,
     showErrorToast: showErrorToast,
     getOrientation: getOrientation,
     resetOrientation: resetOrientation,
