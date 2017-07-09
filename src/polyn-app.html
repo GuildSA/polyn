@@ -5,6 +5,7 @@
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/paper-badge/paper-badge.html">
@@ -20,11 +21,7 @@
 <link rel="import" href="custom-icons.html">
 
 <link rel="lazy-import" href="home-view.html">
-<link rel="lazy-import" href="ajax-view.html">
-<link rel="lazy-import" href="functions-view.html">
 <link rel="lazy-import" href="requests-view.html">
-<link rel="lazy-import" href="request-view.html">
-<link rel="lazy-import" href="chats-view.html">
 <link rel="lazy-import" href="profile-view.html">
 <link rel="lazy-import" href="cropper-view.html">
 <link rel="lazy-import" href="sellerinfo-view.html">
@@ -32,6 +29,11 @@
 <link rel="lazy-import" href="business-view.html">
 <link rel="lazy-import" href="claimbusiness-view.html">
 <link rel="lazy-import" href="error404-view.html">
+
+<link rel="lazy-import" href="ajax-view.html">
+<link rel="lazy-import" href="functions-view.html">
+<link rel="lazy-import" href="request-view.html">
+<link rel="lazy-import" href="chats-view.html">
 <link rel="lazy-import" href="messaging-view.html">
 <link rel="lazy-import" href="pageanim-view.html">
 <link rel="lazy-import" href="misctest-view.html">
@@ -151,7 +153,7 @@
 
         <app-header slot="header" condenses reveals effects="waterfall">
           <app-toolbar>
-            <paper-icon-button id="toolbarNavBtn" icon="custom-icons:menu" on-tap="popPageOffCurrentTab"></paper-icon-button>
+            <paper-icon-button id="toolbarNavBtn" icon="custom-icons:menu" on-tap="_onTapToolbarNavBtn"></paper-icon-button>
             <div class="logo" main-title>
               <picture>
                 <source media="(max-width: 767px)" sizes="(max-width:767px) 50vw, 10vw"
@@ -163,6 +165,7 @@
                 <img src="/images/logo/VinylRecords-medium-noborder.png">
               </picture>
             </div>
+            <paper-icon-button id="toolbarSearchBtn" icon="custom-icons:search" style="margin-left: auto" on-tap="_onTapToolbarSearchBtn"></paper-icon-button>
           </app-toolbar>
            
             <paper-tabs id="tabs" selected="0" sticky>
@@ -352,10 +355,30 @@
         this.$.requestsBadge.hidden = true;
       }
 
+      _onTapToolbarNavBtn() {
+        console.log("PolynApp._onTapToolbarNavBtn");
+        this.popPageOffCurrentTab();
+      }
+
+      _onTapToolbarSearchBtn() {
+        console.log("PolynApp._onTapToolbarSearchBtn");
+
+        const selectedTab = this.$.tabs.selected;
+
+        if(selectedTab == 0) {
+          if(this.page == "home-view") {
+            var currentPage = this.$.ironPages.selectedItem;
+            if(typeof currentPage.searchFilterBtnTapped === 'function') {
+              currentPage.searchFilterBtnTapped();
+            }
+          }
+        }
+      }
+
       popPageOffCurrentTab() {
         console.log("PolynApp.popPageOffCurrentTab")
 
-        var selectedTab = this.$.tabs.selected;
+        const selectedTab = this.$.tabs.selected;
 
         // If the current tab has any views in its stack, we need to do a back pop!
         if(this.tabViewStacks[selectedTab].length > 0) {
@@ -391,7 +414,7 @@
                 this.page = 'profile-view';
               }
 
-              this.$.toolbarNavBtn.icon = "custom-icons:menu"
+              this.$.toolbarNavBtn.icon = "custom-icons:menu";
             }
 
         } else {
@@ -434,6 +457,20 @@
         return Number(this.$.requestsBadge.label);
       }
 
+      _updateNavState(tabIndex) {
+        console.log("PolynApp._updateNavState: tabIndex = " + tabIndex);
+
+        if(tabIndex == 0) {
+
+// TODO: Why does hidden not work here!? It's in the DAMN docs people!
+          //this.$.toolbarSearchBtn.hidden = false;
+          this.$.toolbarSearchBtn.icon = "custom-icons:search";
+        } else {
+          //this.$.toolbarSearchBtn.hidden = true;
+          this.$.toolbarSearchBtn.icon = "";
+        }
+      }
+
       _onTapHomeTab() {
         console.log("PolynApp._onTapHomeTab: stack size = " + this.tabViewStacks[0].length + ", tab = " + this.$.tabs.selected);
 
@@ -447,6 +484,8 @@
           this.$.toolbarNavBtn.icon = "custom-icons:menu";
           this.page = 'home-view';
         }
+
+        this._updateNavState(0);
       }
 
       _onTapRequestsTab() {
@@ -462,6 +501,8 @@
           this.$.toolbarNavBtn.icon = "custom-icons:menu";
           this.page = 'requests-view';
         }
+
+        this._updateNavState(1);
       }
 
       _onTapProfileTab() {
@@ -477,6 +518,8 @@
           this.$.toolbarNavBtn.icon = "custom-icons:menu";
           this.page = 'profile-view';
         }
+
+        this._updateNavState(2);
       }
 
       _routePageChanged(page) {
@@ -491,7 +534,7 @@
         // Polymer 2.0 will also call with `components` for some 
         // unknown reason, so ignore it as well and redirect to Home.
         if(page == "components") {
-          page = "home-view"
+          page = "home-view";
         }
 
         // If no page was found in the route data, page will be an empty string.

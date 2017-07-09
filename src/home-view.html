@@ -178,19 +178,16 @@
       persisted-data="{{persistedSellers}}">
     </app-indexeddb-mirror>
 
-    
-
-      <!-- Mobile Device Media Query -->
-      <iron-media-query query="(min-width:300px) and (max-width: 480px)" query-matches="{{mobileDevice}}"></iron-media-query>
-        <template is="dom-if" if="{{mobileDevice}}">
-          <center><h1>Record Stores In Your Area</h1></center>
-           <div class="layout horizontal center-justified" id="location">
-            <paper-input id="zip" type="number" allowed-pattern="[0-9]" pattern="[0-9]">
-              <paper-icon-button icon="custom-icons:near-me" slot="prefix"></paper-icon-button>
-            </paper-input>
-          </div>
-        </template>    
-    
+    <!-- Mobile Device Media Query -->
+    <iron-media-query query="(min-width:300px) and (max-width: 480px)" query-matches="{{mobileDevice}}"></iron-media-query>
+    <template is="dom-if" if="{{mobileDevice}}">
+      <center><h1>Record Stores In Your Area</h1></center>
+        <!--<div class="layout horizontal center-justified" id="location">
+        <paper-input id="zip" type="number" allowed-pattern="[0-9]" pattern="[0-9]">
+          <paper-icon-button icon="custom-icons:near-me" slot="prefix"></paper-icon-button>
+        </paper-input>-->
+      </div>
+    </template>
     <!-- / Mobile Device Media Query -->
 
     <div class="main-container">
@@ -297,21 +294,28 @@
         };
       }
 
-      reload() {
-        console.log("HomeView.reload");
-
-        //this._loadSellersNoLocation();
-        this._loadSellersByLocation(100);
-      }
-
       connectedCallback() {
         super.connectedCallback();
         console.log("HomeView.connectedCallback");
 
-        this.rangeInKm = 1.6 * parseFloat(100);
+        this.rangeInKm = 1.6 * parseFloat(50); // 50 mile radius.
 
         //this._loadSellersNoLocation();
-        this._loadSellersByLocation(100);
+        this._loadSellersByLocation();
+      }
+
+      reload() {
+        console.log("HomeView.reload");
+
+        //this._loadSellersNoLocation();
+        this._loadSellersByLocation();
+      }
+
+      searchFilterBtnTapped() {
+        console.log("HomeView.searchFilterBtnTapped");
+
+// TODO: launch UI to set search settings!
+
       }
 
       _userChanged(user) {
@@ -372,8 +376,8 @@
         })
       }
 
-      _loadSellersByLocation(rangeInMiles) {
-        console.log("HomeView._loadSellersByLocation: " + rangeInMiles);
+      _loadSellersByLocation() {
+        console.log("HomeView._loadSellersByLocation");
 
         const self = this;
         this.loading = true;
