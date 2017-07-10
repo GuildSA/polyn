@@ -152,8 +152,9 @@
       <app-header-layout has-scrolling-region>
 
         <app-header slot="header" condenses reveals effects="waterfall">
+
           <app-toolbar>
-            <paper-icon-button id="toolbarNavBtn" icon="custom-icons:menu" on-tap="_onTapToolbarNavBtn"></paper-icon-button>
+            <paper-icon-button id="toolbarNavBtn" icon="custom-icons:menu" on-tap="_onTapLeftToolbarBtn"></paper-icon-button>
             <div class="logo" main-title>
               <picture>
                 <source media="(max-width: 767px)" sizes="(max-width:767px) 50vw, 10vw"
@@ -165,18 +166,16 @@
                 <img src="/images/logo/VinylRecords-medium-noborder.png">
               </picture>
             </div>
-            <paper-icon-button id="toolbarSearchBtn" icon="custom-icons:search" style="margin-left: auto" on-tap="_onTapToolbarSearchBtn"></paper-icon-button>
+            <paper-icon-button id="toolbarSearchBtn" icon="custom-icons:search" style="margin-left: auto" on-tap="_onTapRightToolbarBtn"></paper-icon-button>
           </app-toolbar>
            
-            <paper-tabs id="tabs" selected="0" sticky>
-              <paper-tab on-tap="_onTapHomeTab"><iron-icon id="home" noink icon="custom-icons:home" on-tap="_onTapHomeTab"></iron-icon></paper-tab>
-              <paper-tab on-tap="_onTapRequestsTab"><iron-icon id="requests" noink icon="custom-icons:question-answer" on-tap="_onTapRequestsTab"></iron-icon>
-                
-                <paper-badge id="requestsBadge" for="_" hidden="true" suffix></paper-badge>
-                
-              </paper-tab>
-              <paper-tab on-tap="_onTapProfileTab"><iron-icon id="profile" noink icon="custom-icons:account-circle" on-tap="_onTapProfileTab"></iron-icon></paper-tab>
-            </paper-tabs>
+          <paper-tabs id="tabs" selected="0" sticky>
+            <paper-tab on-tap="_onTapHomeTab"><iron-icon id="home" noink icon="custom-icons:home" on-tap="_onTapHomeTab"></iron-icon></paper-tab>
+            <paper-tab on-tap="_onTapRequestsTab"><iron-icon id="requests" noink icon="custom-icons:question-answer" on-tap="_onTapRequestsTab"></iron-icon>
+              <paper-badge id="requestsBadge" for="_" hidden="true" suffix></paper-badge>
+            </paper-tab>
+            <paper-tab on-tap="_onTapProfileTab"><iron-icon id="profile" noink icon="custom-icons:account-circle" on-tap="_onTapProfileTab"></iron-icon></paper-tab>
+          </paper-tabs>
             
         </app-header>
 
@@ -355,22 +354,20 @@
         this.$.requestsBadge.hidden = true;
       }
 
-      _onTapToolbarNavBtn() {
-        console.log("PolynApp._onTapToolbarNavBtn");
+      _onTapLeftToolbarBtn() {
+        console.log("PolynApp._onTapLeftToolbarBtn");
         this.popPageOffCurrentTab();
       }
 
-      _onTapToolbarSearchBtn() {
-        console.log("PolynApp._onTapToolbarSearchBtn");
+      _onTapRightToolbarBtn() {
+        console.log("PolynApp._onTapRightToolbarBtn");
 
         const selectedTab = this.$.tabs.selected;
 
-        if(selectedTab == 0) {
-          if(this.page == "home-view") {
-            var currentPage = this.$.ironPages.selectedItem;
-            if(typeof currentPage.searchFilterBtnTapped === 'function') {
-              currentPage.searchFilterBtnTapped();
-            }
+        if(this.page == "home-view") {
+          var currentPage = this.$.ironPages.selectedItem;
+          if(typeof currentPage.searchFilterBtnTapped === 'function') {
+            currentPage.searchFilterBtnTapped();
           }
         }
       }
@@ -422,6 +419,8 @@
           // If there's no view to pop off, so just open the fly out menu!
           this.$.drawer.open();
         }
+
+        this._updateNavState(this.$.tabs.selected);
       }
 
       pushPageOnCurrentTab(page) {
@@ -438,6 +437,8 @@
 // TODO: For some reason, this only works on the second time we visit the page - not on the first!
           pushedPage.pushedCallback();
         }
+
+        this._updateNavState(this.$.tabs.selected);
 
         // Return the newly selected item or page so we can set some data on it, if required.
         return pushedPage;
@@ -457,13 +458,12 @@
         return Number(this.$.requestsBadge.label);
       }
 
-      _updateNavState(tabIndex) {
-        console.log("PolynApp._updateNavState: tabIndex = " + tabIndex);
-
-        if(tabIndex == 0) {
+      _updateNavState() {
+        console.log("PolynApp._updateNavState");
 
 // TODO: Why does hidden not work here!? It's in the DAMN docs people!
-          //this.$.toolbarSearchBtn.hidden = false;
+        //this.$.toolbarSearchBtn.hidden = false;
+        if(this.page == "home-view") {
           this.$.toolbarSearchBtn.icon = "custom-icons:search";
         } else {
           //this.$.toolbarSearchBtn.hidden = true;
