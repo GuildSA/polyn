@@ -9,6 +9,7 @@
     "src/request-view.html",
     "src/cropper-view.html",
     "src/sellerinfo-view.html",
+    "src/searchfilter-view.html",
     "src/chat-view.html",
     "src/business-view.html",
     "src/claimbusiness-view.html",

@@ -325,9 +325,9 @@
 
       searchFilterBtnTapped() {
         console.log("HomeView.searchFilterBtnTapped");
-
-// TODO: launch UI to set search settings!
-
+        
+        var polynApp = document.getElementById("polynApp");
+        var chatView = polynApp.pushPageOnCurrentTab("searchfilter-view");
       }
 
       _userChanged(user) {

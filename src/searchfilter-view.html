@@ -1,0 +1,158 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../bower_components/neon-animation/web-animations.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+
+<link rel="import" href="shared-styles.html">
+<!--<link rel="import" href="utility.html">-->
+
+<dom-module id="searchfilter-view">
+  <template>
+    <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: flex;
+      }
+
+      paper-button.sign-in {
+        background-color: #70C187;
+        color: white;
+        margin-left: 24px;
+        margin-right: 24px;
+        margin-top: 8px;
+        margin-bottom: 8px;
+      }
+
+      h1 {
+        color: grey;
+      }
+
+      paper-input {
+        --paper-input-container-focus-color: #70C187;
+      }
+
+      paper-dropdown-menu, paper-listbox {
+        width: 250px;
+      }
+      paper-dropdown-menu {
+        height: 200px;
+        margin: auto;
+        display: block;
+      }
+
+    </style>
+
+    <firebase-auth 
+      id="auth" 
+      app-name="polyn-app" 
+      user="{{user}}">
+    </firebase-auth>
+
+    <firebase-document
+      app-name="polyn-app"
+      id="usersinfo"
+      data="{{usersInfo}}">
+    </firebase-document>
+
+    <div class="flex layout horizontal center-justified">
+      <div class="card">
+        <div class="layout vertical center-justified">
+
+          <center> <h1>Search Filter Settings</h1> </center>
+
+          <paper-dropdown-menu label="Get My Location Using" on-iron-select="_itemSelected">
+            <paper-listbox slot="dropdown-content" selected="0">
+              <paper-item>GPS On Device</paper-item>
+              <paper-item>Zip Code</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu>
+
+          <template is="dom-if" if="[[showZip]]">
+            <paper-input id="zip" label="Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]">
+            </paper-input>
+          </template>
+
+          <paper-button id="applyChanges" class="sign-in" on-tap="_onTapApplyChanges" raised>Apply Changes</paper-button>
+
+        </div>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    class SearchFilterView extends Polymer.GestureEventListeners(Polymer.Element) {
+
+      static get is() { return 'searchfilter-view'; }
+
+      static get properties() {
+        return {
+          user: {
+            type: Object,
+            observer: '_userChanged'
+          },
+          usersInfo: {
+            type: String,
+            observer: '_usersInfoChanged'
+          },
+          showZip: {
+            type: Boolean,
+            value: false
+          }
+        };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        console.log("SearchFilterView.connectedCallback")
+      }
+
+      _userChanged(user) {
+        console.log("SearchFilterView._userChanged");
+        //console.log("SearchFilterView._userChanged: " + JSON.stringify(user, null, 4));
+
+        // As soon as we get the user - get the users info so we can learn more about them!
+        if(user && user.uid) {
+          this.$.usersinfo.path = "/users/" + user.uid + "/info";
+        }
+      }
+
+      _usersInfoChanged(e) {
+        console.log("SearchFilterView._usersInfoChanged: " + JSON.stringify(e, null, 4));
+      }
+
+      _itemSelected(e) {
+        console.log("SearchFilterView._itemSelected: " + e);
+
+        var selectedItem = e.target.selectedItem;
+
+        if(selectedItem) {
+          const selectedText = selectedItem.innerText;
+          console.log("selectedText = " + selectedText);
+ 
+          if(selectedText == "Zip Code") {
+            this.showZip = true;
+          } else {
+            this.showZip = false;
+          }
+        }
+      }
+
+      _onTapApplyChanges() {
+        console.log("SearchFilterView._onTapApplyChanges");
+
+        var polynApp = document.getElementById("polynApp");
+        //this.prevPage.editingProfileImage = false;
+        polynApp.popPageOffCurrentTab();
+
+      }
+    }
+
+    window.customElements.define(SearchFilterView.is, SearchFilterView);
+  </script>
+</dom-module>
