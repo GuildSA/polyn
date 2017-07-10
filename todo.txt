@@ -46,6 +46,9 @@ Need UI to help sellers claim a business that we added manually.
 
 Need to find best way to truncate text on home page. 
 
+Need an image to display when the user has not entered in their zip code
+and we cannot get their current location. 
+
 DONE - Add address inputs to business UI.
 DONE - Need UI for image upload on business UI.
 

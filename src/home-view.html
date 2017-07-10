@@ -91,6 +91,11 @@
         width: 100%;
       }
 
+      #zipCode {
+        padding: 10px;
+        --paper-input-container-focus-color: #70C187;
+      }
+
       /*.card {
         @apply --layout-vertical;
       }*/
@@ -155,6 +160,11 @@
         paper-input {
           margin: 0;
           padding: 0;
+        }
+
+        #zipCode {
+          padding: 10px;
+          --paper-input-container-focus-color: #70C187;
         }
 
       }
@@ -229,8 +239,10 @@
 
     <paper-dialog id="requestZipDialog">
       <h2>Zip Code</h2>
-      <p>We were unable to get your location. If you give us a zip code, we can still show you business near you.</p>
-      <paper-input id="zipDialogInput" label="Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]"></paper-input>
+      <p>Please enter your zip code so that we can show you the record stores in your area.</p>
+      <div id="zipCode">
+        <paper-input id="zipDialogInput" label="Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]"></paper-input>
+      </div>
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
         <paper-button on-tap="_onTapZipDialogBtn" dialog-confirm autofocus>Ok</paper-button>
