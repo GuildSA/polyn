@@ -154,7 +154,7 @@
         <app-header slot="header" condenses reveals effects="waterfall">
 
           <app-toolbar>
-            <paper-icon-button id="toolbarNavBtn" icon="custom-icons:menu" on-tap="_onTapLeftToolbarBtn"></paper-icon-button>
+            <paper-icon-button id="leftToolbarBtn" icon="custom-icons:menu" on-tap="_onTapLeftToolbarBtn"></paper-icon-button>
             <div class="logo" main-title>
               <picture>
                 <source media="(max-width: 767px)" sizes="(max-width:767px) 50vw, 10vw"
@@ -166,7 +166,7 @@
                 <img src="/images/logo/VinylRecords-medium-noborder.png">
               </picture>
             </div>
-            <paper-icon-button id="toolbarSearchBtn" icon="custom-icons:search" style="margin-left: auto" on-tap="_onTapRightToolbarBtn"></paper-icon-button>
+            <paper-icon-button id="rightToolbarBtn" icon="custom-icons:search" style="margin-left: auto" on-tap="_onTapRightToolbarBtn"></paper-icon-button>
           </app-toolbar>
            
           <paper-tabs id="tabs" selected="0" sticky>
@@ -398,7 +398,7 @@
               console.log("  Element view to restore: " + viewName);
               this.page = viewName;
 
-              this.$.toolbarNavBtn.icon = "custom-icons:arrow-back";
+              this.$.leftToolbarBtn.icon = "custom-icons:arrow-back";
 
             } else {
 
@@ -411,7 +411,7 @@
                 this.page = 'profile-view';
               }
 
-              this.$.toolbarNavBtn.icon = "custom-icons:menu";
+              this.$.leftToolbarBtn.icon = "custom-icons:menu";
             }
 
         } else {
@@ -427,7 +427,7 @@
         console.log("PolynApp.pushPageViewOnCurrentTab: page = " + page + ", current tab = " + this.$.tabs.selected);
 
         this.page = page;
-        this.$.toolbarNavBtn.icon = "custom-icons:arrow-back";
+        this.$.leftToolbarBtn.icon = "custom-icons:arrow-back";
         this.tabViewStacks[this.$.tabs.selected].push(this.$.ironPages.selectedItem);
  
         var pushedPage = this.$.ironPages.selectedItem;
@@ -462,12 +462,12 @@
         console.log("PolynApp._updateNavState");
 
 // TODO: Why does hidden not work here!? It's in the DAMN docs people!
-        //this.$.toolbarSearchBtn.hidden = false;
+        //this.$.rightToolbarBtn.hidden = false;
         if(this.page == "home-view") {
-          this.$.toolbarSearchBtn.icon = "custom-icons:search";
+          this.$.rightToolbarBtn.icon = "custom-icons:search";
         } else {
-          //this.$.toolbarSearchBtn.hidden = true;
-          this.$.toolbarSearchBtn.icon = "";
+          //this.$.rightToolbarBtn.hidden = true;
+          this.$.rightToolbarBtn.icon = "";
         }
       }
 
@@ -476,12 +476,12 @@
 
         // Home tab = index 0!
         if(this.tabViewStacks[0].length > 0) {
-          this.$.toolbarNavBtn.icon = "custom-icons:arrow-back";
+          this.$.leftToolbarBtn.icon = "custom-icons:arrow-back";
           var viewName = this.tabViewStacks[0][this.tabViewStacks[0].length - 1].tagName.toLowerCase();
           console.log("  Element view to restore: " + viewName);
           this.page = viewName;
         } else {
-          this.$.toolbarNavBtn.icon = "custom-icons:menu";
+          this.$.leftToolbarBtn.icon = "custom-icons:menu";
           this.page = 'home-view';
         }
 
@@ -493,12 +493,12 @@
 
         // Requests tab = index 1!
         if(this.tabViewStacks[1].length > 0) {
-          this.$.toolbarNavBtn.icon = "custom-icons:arrow-back";
+          this.$.leftToolbarBtn.icon = "custom-icons:arrow-back";
           var viewName = this.tabViewStacks[1][this.tabViewStacks[1].length - 1].tagName.toLowerCase();
           console.log("  Element view to restore: " + viewName);
           this.page = viewName;
         } else {
-          this.$.toolbarNavBtn.icon = "custom-icons:menu";
+          this.$.leftToolbarBtn.icon = "custom-icons:menu";
           this.page = 'requests-view';
         }
 
@@ -510,12 +510,12 @@
 
         // Profile tab = index 2!
         if(this.tabViewStacks[2].length > 0) {
-          this.$.toolbarNavBtn.icon = "custom-icons:arrow-back";
+          this.$.leftToolbarBtn.icon = "custom-icons:arrow-back";
           var viewName = this.tabViewStacks[2][this.tabViewStacks[2].length - 1].tagName.toLowerCase();
           console.log("  Element view to restore: " + viewName);
           this.page = viewName;
         } else {
-          this.$.toolbarNavBtn.icon = "custom-icons:menu";
+          this.$.leftToolbarBtn.icon = "custom-icons:menu";
           this.page = 'profile-view';
         }
 
