@@ -2,15 +2,14 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/px-spinner/px-spinner.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-
 <link rel="import" href="../bower_components/neon-animation/web-animations.html">
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
-
 <link rel="import" href="shared-styles.html">
-<!--<link rel="import" href="utility.html">-->
+<link rel="import" href="utility.html">
 
 <dom-module id="searchfilter-view">
   <template>
@@ -36,15 +35,6 @@
         --paper-input-container-focus-color: #70C187;
       }
 
-      paper-dropdown-menu, paper-listbox {
-        width: 250px;
-      }
-      paper-dropdown-menu {
-        height: 200px;
-        margin: auto;
-        display: block;
-      }
-
     </style>
 
     <firebase-auth 
@@ -63,25 +53,39 @@
       <div class="card">
         <div class="layout vertical center-justified">
 
-          <center> <h1>Search Filter Settings</h1> </center>
+          <center> <h1>Location Settings</h1> </center>
 
-          <paper-dropdown-menu label="Get My Location Using" on-iron-select="_itemSelected">
-            <paper-listbox slot="dropdown-content" selected="0">
-              <paper-item>GPS On Device</paper-item>
+          <paper-dropdown-menu id="searchDropDown" label="Search Should Use" on-iron-select="_searchSelected">
+            <paper-listbox id="searchListBox" slot="dropdown-content" selected="0">
+              <paper-item>My Current Location</paper-item>
               <paper-item>Zip Code</paper-item>
             </paper-listbox>
           </paper-dropdown-menu>
 
           <template is="dom-if" if="[[showZip]]">
-            <paper-input id="zip" label="Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]">
+            <paper-input id="zip" value="[[zipValue]]" label="Your Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]">
             </paper-input>
           </template>
+
+          <paper-dropdown-menu id="distanceDropDown" label="Distance" on-iron-select="_distanceSelected">
+            <paper-listbox id="distanceListBox" slot="dropdown-content" selected="1">
+              <paper-item>25 Miles</paper-item>
+              <paper-item>50 Miles</paper-item>
+              <paper-item>100 Miles</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu>
 
           <paper-button id="applyChanges" class="sign-in" on-tap="_onTapApplyChanges" raised>Apply Changes</paper-button>
 
         </div>
       </div>
     </div>
+
+    <template is="dom-if" if="[[loading]]">
+      <div class="overlay">
+        <px-spinner size="100" finished="[[!loading]]"></px-spinner>
+      </div>
+    </template>
 
   </template>
 
@@ -103,13 +107,24 @@
           showZip: {
             type: Boolean,
             value: false
+          },
+          zipValue: {
+            type: String,
+            notify: true
+          },
+          loading: {
+            type: Boolean,
+            notify: true,
+            value: true
           }
         };
       }
 
       connectedCallback() {
         super.connectedCallback();
-        console.log("SearchFilterView.connectedCallback")
+        console.log("SearchFilterView.connectedCallback");
+
+        this.loading = true;
       }
 
       _userChanged(user) {
@@ -122,12 +137,46 @@
         }
       }
 
-      _usersInfoChanged(e) {
-        console.log("SearchFilterView._usersInfoChanged: " + JSON.stringify(e, null, 4));
+      _usersInfoChanged(usersInfo) {
+        console.log("SearchFilterView._usersInfoChanged: " + JSON.stringify(usersInfo, null, 4));
+
+        //searchOption
+
+        if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
+          return;
+        }
+
+        if(usersInfo.searchOption && usersInfo.searchOption == "zip") {
+
+          this.showZip = true;
+          this.$.searchListBox.selectIndex(1);
+
+          if(usersInfo.zipLocation && usersInfo.zipLocation.zipCode) {
+            this.zipValue = usersInfo.zipLocation.zipCode;
+          }
+        }
+
+        if(usersInfo.distance) {
+          switch(usersInfo.distance) {
+            case 25:
+              this.$.distanceListBox.selectIndex(0);
+              break;
+            case 50:
+              this.$.distanceListBox.selectIndex(1);
+              break;
+            case 50:
+              this.$.distanceListBox.selectIndex(2);
+            break;
+            default:
+              this.$.distanceListBox.selectIndex(1);
+          }
+        }
+
+        this.loading = false;
       }
 
-      _itemSelected(e) {
-        console.log("SearchFilterView._itemSelected: " + e);
+      _searchSelected(e) {
+        console.log("SearchFilterView._searchSelected: " + e);
 
         var selectedItem = e.target.selectedItem;
 
@@ -143,13 +192,95 @@
         }
       }
 
+      _distanceSelected(e) {
+        console.log("SearchFilterView._distanceSelected: " + e);
+
+        var selectedItem = e.target.selectedItem;
+
+        if(selectedItem) {
+          const selectedText = selectedItem.innerText;
+          console.log("selectedText = " + selectedText);
+        }
+      }
+
       _onTapApplyChanges() {
         console.log("SearchFilterView._onTapApplyChanges");
 
-        var polynApp = document.getElementById("polynApp");
-        //this.prevPage.editingProfileImage = false;
-        polynApp.popPageOffCurrentTab();
+        if(this.user == null) {
+          return;
+        }
 
+        const searchDropDown = this.$.searchDropDown.value;
+
+        if(searchDropDown == "Zip Code") {
+
+          const zip = this.shadowRoot.querySelector('#zip');
+
+          if(zip && zip.value && zip.value.length > 4) {
+
+            this.loading = true;
+
+            const self = this;
+
+            var polynApp = document.getElementById("polynApp");
+            var googleMapsApi = polynApp.$.googleMapsApi;
+
+            var geocoder = new googleMapsApi.api.Geocoder();
+            
+            const address = zip.value;
+            geocoder.geocode( {'address': address}, function(results, status) {
+
+              if(status == google.maps.GeocoderStatus.OK) {
+                const latitude = results[0].geometry.location.lat();
+                const longitude = results[0].geometry.location.lng();
+
+                if(latitude && longitude) {
+
+                  const zipLocation = {
+                    zipCode: zip.value,
+                    lat: latitude,
+                    long: longitude
+                  };
+
+                  firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/zipLocation").set(zipLocation);
+
+                  const distance = parseInt(self.$.distanceDropDown.value);
+                  if(distance) {
+                    firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/distance").set(distance);
+                  }
+
+                  firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/searchOption").set("zip");
+                          
+                  self.loading = false;
+
+                  var polynApp = document.getElementById("polynApp");
+                  polynApp.popPageOffCurrentTab();
+                }
+
+              } else {
+
+                console.log("  Geocode was not successful for the following reason: " + status);
+                self.loading = false;
+                Utility.showErrorToast("Sorry, but we were unable to use the zip code provided.");
+              }
+            });
+
+          } else {
+            Utility.showErrorToast("Please provide a zip code.");
+          }
+
+        } else {
+
+          const distance = parseInt(this.$.distanceDropDown.value);
+          if(distance) {
+            firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/info/distance").set(distance);
+          }
+
+          firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/info/searchOption").set("gps");
+
+          var polynApp = document.getElementById("polynApp");
+          polynApp.popPageOffCurrentTab();
+        }
       }
     }
 
