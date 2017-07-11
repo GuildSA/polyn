@@ -182,13 +182,14 @@
       signed-in="{{signedIn}}"
       user="{{user}}"
       status-known="{{statusKnown}}"
+      status-known-changed="_statusKnownChanged"
       on-error="_handleAuthError">
     </firebase-auth>
 
     <app-indexeddb-mirror
-      id="zipLocationIDB"
-      key="zipLocation"
-      data="{{zipLocation}}">
+      id="searchSettingsIDB"
+      key="searchSettings"
+      data="{{searchSettings}}">
     </app-indexeddb-mirror>
 
     <app-indexeddb-mirror
@@ -248,7 +249,7 @@
 
     <paper-dialog id="requestZipDialog">
       <h2>Zip Code</h2>
-      <p>Please enter your zip code so that we can show you the record stores in your area.</p>
+      <p>Please enter your zip code so we can show you the record stores in your area.</p>
       <div id="zipCode">
         <paper-input id="zipDialogInput" label="Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]"></paper-input>
       </div>
@@ -285,6 +286,7 @@
         return {
           user: {
             type: Object,
+            notify: true,
             observer: '_userChanged'
           },
           signedIn: {
@@ -308,8 +310,9 @@
             type: Array,
             value: []
           },
-          zipLocation: {
-            type: Object
+          searchSettings: {
+            type: Object,
+            notify: true
           },
           sellersCategory: {
             type: String,
@@ -328,14 +331,23 @@
         super.connectedCallback();
         console.log("HomeView.connectedCallback");
 
-        this.rangeInKm = 1.6 * parseFloat(50); // 50 mile radius is the default.
+        // If the user is not logged in - 50 mile radius is the default.
+        this.rangeInKm = 1.6 * 50;
+
+        this.loading = true;
       }
 
       reload() {
         console.log("HomeView.reload");
 
+        this.loading = true;
+
         if(this.user) {
+          // If we have a user - get the users info to get the searchSettings.
           this._loadUserInfo();
+        } else {
+          // If we have no user - just load the locally cached searchSettings.
+          this._loadCachedSearchSettings();
         }
       }
 
@@ -354,23 +366,70 @@
         //console.log("HomeView._userChanged");
         console.log("HomeView._userChanged: " + JSON.stringify(user, null, 4));
 
-        if(user && user.uid) {
-          // If we have a user - get the users info for location settings.
+        // console.log("XXX user: " + user);
+        // console.log("XXX statusKnown: " + this.statusKnown);
+
+        if(user) {
+          // If we have a user - get the users info to get the searchSettings.
           this._loadUserInfo();
         } else {
-          // If we have no user - just load the sellers using local location settings.
-          this._loadSellers();
+          // If we have no user - just load the locally cached searchSettings.
+          this._loadCachedSearchSettings();
         }
 
-        //console.log("  this.statusKnown: " + this.statusKnown)
-        // statusKnown=false, user=null: firebase is loading the user from storage/performing authentication
-        // statusKnown=true, user=null: authentication failed
-        // statusKnown=true, user=[Object]: User is authenticated
-        //if(this.statusKnown && user == null) {
-        // this._loadSellers();
-        //}
+// TODO: What's the deal with statusKnown? Does it ever work?
+
+        // // statusKnown=false, user=null: firebase is loading the user from storage/performing authentication
+        // // statusKnown=true, user=null: authentication failed
+        // // statusKnown=true, user=[Object]: User is authenticated
+        // if(this.statusKnown && user == null) {
+        //   // If we have no user - just load the locally cached searchSettings.
+        //   this._loadCachedSearchSettings();
+        // }
       }
 
+      _statusKnownChanged(e) {
+        console.log("XXXXXX HomeView._statusKnownChanged: " + e);
+
+      }
+
+      _loadCachedSearchSettings() {
+        console.log("HomeView._loadCachedSearchSettings");
+
+        var self = this;
+
+        // If the user is not logged in - try to pull searchSettings from indexdb.
+        this.$.searchSettingsIDB.getStoredValue("searchSettings").then((response) => {
+          console.log("searchSettings = " + JSON.stringify(response, null, 4));
+
+          if(response && response.distance) {
+
+            if(response.searchOption == "gps") {
+
+              self.rangeInKm = 1.6 * parseInt(response.distance);
+              self._getSellerDataWithUsersLocation();
+
+            } else if(response.searchOption == "zip" && response.lat && response.long && response.distance) {
+
+              // We got the location from the indexdb - use it.
+              const latitude = response.lat;
+              const longitude = response.long;
+              self.location = [latitude, longitude];
+              self.rangeInKm = 1.6 * parseInt(response.distance);
+              self._getSellerData(self.location[0], self.location[1], self.rangeInKm);
+            }
+
+          } else {
+
+// TODO: First visit!!!
+
+            self.loading = false;
+            // We did NOT get any searchSettings from the indexdb - prompt user for zip code.
+            self.$.requestZipDialog.toggle();
+          }
+        });
+      }
+      
       _loadUserInfo() {
         console.log("HomeView._loadUserInfo");
 
@@ -394,80 +453,85 @@
           return;
         }
 
-        if(usersInfo.distance) {
-          // Geofire only uses kilometers so convert the miles to kilometers.
-          this.rangeInKm = 1.6 * parseFloat(usersInfo.distance);
-        }
+        if(usersInfo.searchSettings) {
 
-        if(usersInfo.searchOption && usersInfo.searchOption == "zip") {
-          console.log("searchOption = zip");
-          if(usersInfo.zipLocation && usersInfo.zipLocation.lat && usersInfo.zipLocation.long) {
-            this.location = [usersInfo.zipLocation.lat, usersInfo.zipLocation.long];
+          if(usersInfo.searchSettings.distance) {
+            // Geofire only uses kilometers - so convert the miles to kilometers.
+            this.rangeInKm = 1.6 * parseInt(usersInfo.searchSettings.distance);
           }
-        } else {
-          console.log("searchOption = gps");
-        }
 
-        this._loadSellers();
+          if(usersInfo.searchSettings && usersInfo.searchSettings.searchOption == "zip") {
+
+            if(usersInfo.searchSettings.lat && usersInfo.searchSettings.long) {
+              this.location = [usersInfo.searchSettings.lat, usersInfo.searchSettings.long];
+              this._getSellerData(this.location[0], this.location[1], this.rangeInKm);
+            } else {
+              // Something bad happened - prompt user for zip code.
+              self.loading = false;
+              self.$.requestZipDialog.toggle();
+            }
+
+          } else {
+            this._getSellerDataWithUsersLocation();
+          }
+
+        } else {
+          this._getSellerDataWithUsersLocation();
+        }
       }
 
-      _loadSellers() {
-        console.log("HomeView._loadSellers");
+      _getSellerDataWithUsersLocation() {
+        console.log("HomeView._getSellerDataWithUsersLocation");
 
-        const self = this;
-        this.loading = true;
+        var userPath = null;
 
-        if(!this.location) {
-
-          // If we don't know the user's current location - ask for it!
-
-          var userPath = null;
-
-          if(this.user && this.user.uid) {
-            userPath = "users/" + this.user.uid + "/info";
-          }
-
-          GeofireManager.getUsersLocation(userPath,
-
-            function(location) {
-              // Cache the user's location.
-              const latitude = location.coords.latitude;
-              const longitude = location.coords.longitude;
-
-              self.location = [latitude, longitude];
-              self._getSellerData(latitude, longitude, self.rangeInKm);
-            },
-            
-            function(error) {
-              console.log("User Location error: " + error + "");
-
-              self.loading = false;
-
-              if(error.code == error.PERMISSION_DENIED) {
-
-                // If we're denied the user's current location - try to pull it from indexdb.
-                self.$.zipLocationIDB.getStoredValue("zipLocation").then((response) => {
-                  console.log("zipLocation = " + JSON.stringify(response, null, 4));
-
-                  if(response) {
-                    // We got the location from the indexdb - use it.
-                    const latitude = response.lat;
-                    const longitude = response.long;
-                    self.location = [latitude, longitude];
-                    self._getSellerData(self.location[0], self.location[1], self.rangeInKm);
-                  } else {
-                    // We did NOT get the location from the indexdb - prompt user for zip code.
-                    self.$.requestZipDialog.toggle();
-                  }
-                });
-              }
-          });
-
-        } else {
-
-          // If we already know the user's current location - just get the sellers!
-          self._getSellerData(this.location[0], this.location[1], self.rangeInKm);
+        if(this.user && this.user.uid) {
+          userPath = "users/" + this.user.uid + "/info";
         }
+
+        var self = this;
+
+        GeofireManager.getUsersLocation(userPath,
+
+          function(location) {
+            // Cache the user's location.
+            const latitude = location.coords.latitude;
+            const longitude = location.coords.longitude;
+
+            self.location = [latitude, longitude];
+            self._getSellerData(latitude, longitude, self.rangeInKm);
+          },
+          
+          function(error) {
+            console.log("User Location error: " + error + "");
+
+            self.loading = false;
+
+            if(error.code == error.PERMISSION_DENIED) {
+
+              // If we're denied the user's current location - try to pull it from indexdb.
+              self.$.searchSettingsIDB.getStoredValue("searchSettings").then((response) => {
+
+                console.log("searchSettings = " + JSON.stringify(response, null, 4));
+
+                if(response && response.searchOption == "zip") {
+
+                  // We got the location from the indexdb - use it.
+                  const latitude = response.lat;
+                  const longitude = response.long;
+                  self.location = [latitude, longitude];
+                  self.rangeInKm = 1.6 * parseInt(response.distance);
+                  self._getSellerData(self.location[0], self.location[1], self.rangeInKm);
+
+                } else {
+
+                  // We did NOT get the location from the indexdb - prompt user for zip code.
+                  self.loading = false;
+                  self.$.requestZipDialog.toggle();
+                }
+              });
+            }
+        });
       }
 
       _onTapZipDialogBtn() {
@@ -489,7 +553,7 @@
         //const address = "Plano, TX";
         const address = zip;
 
-      // Convert the given zip code into a lat/long.
+        // Convert the given zip code into a lat/long.
         geocoder.geocode( {'address': address}, function(results, status) {
 
           if(status == google.maps.GeocoderStatus.OK) {
@@ -500,29 +564,28 @@
 
             if(latitude && longitude) {
 
-              const zipLocation = {
+              const searchSettings = {
                 zipCode: zip,
                 lat: latitude,
-                long: longitude
+                long: longitude,
+                searchOption: "zip"
               };
 
+              if(self.usersInfo && self.usersInfo.distance) {
+                searchSettings.distance = self.usersInfo.distance;
+              } else {
+                searchSettings.distance = 50;
+              }
+
               // Cache zip in indexdb.
-              self.zipLocation = zipLocation;
+              self.searchSettings = searchSettings;
 
               if(self.user) {
-                // If the user is logged in - write the zip code data to info.
-                firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/zipLocation").set(zipLocation);
-                // const distance = 50;
-                // if(distance) {
-                //   firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/distance").set(distance);
-                // }
-                firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/searchOption").set("zip");
+                // If the user is logged in - write the data to info.
+                firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/searchSettings").set(searchSettings);
               }
 
               self._getSellerData(latitude, longitude, self.rangeInKm);
-
-              //const zipLocationPersisted = self.$.zipLocationIDB.persistedData;
-              //console.log("zipLocationPersisted = " + zipLocationPersisted);
             }
             
           } else {
@@ -531,7 +594,7 @@
         });
       }
 
-      _getSellerData(latitude, longitude, rangeInKm) {
+      _getSellerData(latitude, longitude, range) {
         console.log("HomeView._getSellerData");
 
         const self = this;
@@ -541,7 +604,7 @@
         // Find all the sellers within a circle defined by a 
         // lat/long for the center of a circle and a range in kilometers.
         // The lat/long should come from the user's current location.
-        GeofireManager.getSellersByLocation(this.sellersCategory, latitude, longitude, rangeInKm,
+        GeofireManager.getSellersByLocation(this.sellersCategory, latitude, longitude, range,
           function(key, distance) {
 
             //console.log("  got seller key: " + key);

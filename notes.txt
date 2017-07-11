@@ -1,4 +1,7 @@
 
+//const searchSettingsPersisted = self.$.searchSettingsIDB.persistedData;
+//console.log("searchSettingsPersisted = " + searchSettingsPersisted);
+
 ------------------------------------------------------------------------
 
  -- Uses this when this.$.someId Doesn't Work -- 

@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/px-spinner/px-spinner.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/neon-animation/web-animations.html">
@@ -36,6 +37,12 @@
       }
 
     </style>
+
+    <app-indexeddb-mirror
+      id="searchSettingsIDB"
+      key="searchSettings"
+      data="{{searchSettings}}">
+    </app-indexeddb-mirror>
 
     <firebase-auth 
       id="auth" 
@@ -112,6 +119,9 @@
             type: String,
             notify: true
           },
+          searchSettings: {
+            type: Object
+          },
           loading: {
             type: Boolean,
             notify: true,
@@ -120,55 +130,102 @@
         };
       }
 
-      connectedCallback() {
-        super.connectedCallback();
-        console.log("SearchFilterView.connectedCallback");
-
-        this.loading = true;
-      }
+      // connectedCallback() {
+      //   super.connectedCallback();
+      //   console.log("SearchFilterView.connectedCallback");
+      // }
 
       _userChanged(user) {
         console.log("SearchFilterView._userChanged");
         //console.log("SearchFilterView._userChanged: " + JSON.stringify(user, null, 4));
 
-        // As soon as we get the user - get the users info so we can learn more about them!
+        // As soon as we get the user - get the users info so we can get their searchSettings.
         if(user && user.uid) {
           this.$.usersinfo.path = "/users/" + user.uid + "/info";
+        } else {
+
+          var self = this;
+
+          this.$.searchSettingsIDB.getStoredValue("searchSettings").then((response) => {
+            console.log("searchSettings = " + JSON.stringify(response, null, 4));
+
+            if(response) {
+              // We got the location from the indexdb - use it.
+
+              if(response.searchOption && response.searchOption == "zip") {
+
+                self.showZip = true;
+                self.$.searchListBox.selectIndex(1);
+
+                if(response.zipCode) {
+                  self.zipValue = response.zipCode;
+                }
+
+              } else {
+                self.$.searchListBox.selectIndex(0); // Default
+              }
+
+              if(response.distance) {
+                switch(response.distance) {
+                  case 25:
+                    self.$.distanceListBox.selectIndex(0);
+                    break;
+                  case 50:
+                    self.$.distanceListBox.selectIndex(1);
+                    break;
+                  case 50:
+                    self.$.distanceListBox.selectIndex(2);
+                  break;
+                  default:
+                    self.$.distanceListBox.selectIndex(1); // Default
+                }
+              }
+
+            } else {
+
+              // We did NOT get the location from the indexdb - set defualt values.
+              self.$.searchListBox.selectIndex(0);
+              self.$.distanceListBox.selectIndex(1);
+            }
+          });
+
+          this.loading = false;
         }
       }
 
       _usersInfoChanged(usersInfo) {
         console.log("SearchFilterView._usersInfoChanged: " + JSON.stringify(usersInfo, null, 4));
 
-        //searchOption
-
         if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
           return;
         }
 
-        if(usersInfo.searchOption && usersInfo.searchOption == "zip") {
+        if(usersInfo.searchSettings) {
 
-          this.showZip = true;
-          this.$.searchListBox.selectIndex(1);
+          if(usersInfo.searchSettings && usersInfo.searchSettings.searchOption && usersInfo.searchSettings.searchOption == "zip") {
 
-          if(usersInfo.zipLocation && usersInfo.zipLocation.zipCode) {
-            this.zipValue = usersInfo.zipLocation.zipCode;
+            this.showZip = true;
+            this.$.searchListBox.selectIndex(1);
+
+            if(usersInfo.searchSettings.zipCode) {
+              this.zipValue = usersInfo.searchSettings.zipCode;
+            }
           }
-        }
 
-        if(usersInfo.distance) {
-          switch(usersInfo.distance) {
-            case 25:
-              this.$.distanceListBox.selectIndex(0);
+          if(usersInfo.searchSettings.distance) {
+            switch(usersInfo.searchSettings.distance) {
+              case 25:
+                this.$.distanceListBox.selectIndex(0);
+                break;
+              case 50:
+                this.$.distanceListBox.selectIndex(1);
+                break;
+              case 50:
+                this.$.distanceListBox.selectIndex(2);
               break;
-            case 50:
-              this.$.distanceListBox.selectIndex(1);
-              break;
-            case 50:
-              this.$.distanceListBox.selectIndex(2);
-            break;
-            default:
-              this.$.distanceListBox.selectIndex(1);
+              default:
+                this.$.distanceListBox.selectIndex(1);
+            }
           }
         }
 
@@ -206,10 +263,6 @@
       _onTapApplyChanges() {
         console.log("SearchFilterView._onTapApplyChanges");
 
-        if(this.user == null) {
-          return;
-        }
-
         const searchDropDown = this.$.searchDropDown.value;
 
         if(searchDropDown == "Zip Code") {
@@ -236,21 +289,20 @@
 
                 if(latitude && longitude) {
 
-                  const zipLocation = {
+                  const searchSettings = {
                     zipCode: zip.value,
                     lat: latitude,
-                    long: longitude
+                    long: longitude,
+                    distance: parseInt(self.$.distanceDropDown.value),
+                    searchOption: "zip"
                   };
 
-                  firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/zipLocation").set(zipLocation);
-
-                  const distance = parseInt(self.$.distanceDropDown.value);
-                  if(distance) {
-                    firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/distance").set(distance);
+                  if(self.user) {
+                    firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/searchSettings").set(searchSettings);
                   }
 
-                  firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/searchOption").set("zip");
-                          
+                  self.searchSettings = searchSettings;
+
                   self.loading = false;
 
                   var polynApp = document.getElementById("polynApp");
@@ -271,12 +323,16 @@
 
         } else {
 
-          const distance = parseInt(this.$.distanceDropDown.value);
-          if(distance) {
-            firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/info/distance").set(distance);
+          const searchSettings = {
+            distance: parseInt(this.$.distanceDropDown.value),
+            searchOption: "gps"
+          };
+
+          if(this.user) {
+            firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/info/searchSettings").set(searchSettings);
           }
 
-          firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/info/searchOption").set("gps");
+          this.searchSettings = searchSettings;
 
           var polynApp = document.getElementById("polynApp");
           polynApp.popPageOffCurrentTab();
