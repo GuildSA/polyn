@@ -166,21 +166,30 @@
           padding: 10px;
           --paper-input-container-focus-color: #70C187;
         }
-
       }
+
     </style>
 
-    <firebase-auth 
+    <!--<firebase-auth 
       id="auth"
       app-name="polyn-app"
       user="{{user}}">
+    </firebase-auth>-->
+
+    <firebase-auth
+      id="auth"
+      app-name="polyn-app"
+      signed-in="{{signedIn}}"
+      user="{{user}}"
+      status-known="{{statusKnown}}"
+      on-error="_handleAuthError">
     </firebase-auth>
 
-    <firebase-document
-      app-name="polyn-app"
-      id="usersinfo"
-      data="{{usersInfo}}">
-    </firebase-document>
+    <app-indexeddb-mirror
+      id="zipLocationIDB"
+      key="zipLocation"
+      data="{{zipLocation}}">
+    </app-indexeddb-mirror>
 
     <app-indexeddb-mirror
       key="sellers"
@@ -278,6 +287,12 @@
             type: Object,
             observer: '_userChanged'
           },
+          signedIn: {
+            type: Object
+          },
+          statusKnown:{
+            type: Object
+          },
           usersInfo: {
             type: Object,
             observer: '_usersInfoChanged'
@@ -292,6 +307,9 @@
           sellers: {
             type: Array,
             value: []
+          },
+          zipLocation: {
+            type: Object
           },
           sellersCategory: {
             type: String,
@@ -310,17 +328,19 @@
         super.connectedCallback();
         console.log("HomeView.connectedCallback");
 
-        this.rangeInKm = 1.6 * parseFloat(50); // 50 mile radius.
-
-        //this._loadSellersNoLocation();
-        this._loadSellersByLocation();
+        this.rangeInKm = 1.6 * parseFloat(50); // 50 mile radius is the default.
       }
 
       reload() {
         console.log("HomeView.reload");
 
-        //this._loadSellersNoLocation();
-        this._loadSellersByLocation();
+        if(this.user) {
+          this._loadUserInfo();
+        }
+      }
+
+      _handleAuthError(e, err) {
+        console.log("HomeView._handleAuthError: " + err);
       }
 
       searchFilterBtnTapped() {
@@ -331,71 +351,71 @@
       }
 
       _userChanged(user) {
-        console.log("HomeView._userChanged");
-        //console.log("HomeView._userChanged: " + JSON.stringify(user, null, 4));
+        //console.log("HomeView._userChanged");
+        console.log("HomeView._userChanged: " + JSON.stringify(user, null, 4));
 
-        // As soon as we get the user - get the users info so we can 
-        // learn more about them!
         if(user && user.uid) {
-          this.$.usersinfo.path = "/users/" + user.uid + "/info";
+          // If we have a user - get the users info for location settings.
+          this._loadUserInfo();
+        } else {
+          // If we have no user - just load the sellers using local location settings.
+          this._loadSellers();
         }
+
+        //console.log("  this.statusKnown: " + this.statusKnown)
+        // statusKnown=false, user=null: firebase is loading the user from storage/performing authentication
+        // statusKnown=true, user=null: authentication failed
+        // statusKnown=true, user=[Object]: User is authenticated
+        //if(this.statusKnown && user == null) {
+        // this._loadSellers();
+        //}
+      }
+
+      _loadUserInfo() {
+        console.log("HomeView._loadUserInfo");
+
+        var self = this;
+
+        const refPathInfo = "/users/" + this.user.uid + "/info";
+
+        firebase.app("polyn-app").database().ref(refPathInfo).once('value').then(function(snapshot) {
+          const usersInfo = snapshot.val();
+          if(usersInfo) {
+            self.usersInfo = usersInfo;
+          }
+        });
       }
 
       _usersInfoChanged(usersInfo) {
-        console.log("HomeView._usersInfoChanged");
-        //console.log("HomeView._usersInfoChanged: " + JSON.stringify(usersInfo, null, 4));
+        //console.log("HomeView._usersInfoChanged");
+        console.log("HomeView._usersInfoChanged: " + JSON.stringify(usersInfo, null, 4));
 
         if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
           return;
         }
+
+        if(usersInfo.distance) {
+          // Geofire only uses kilometers so convert the miles to kilometers.
+          this.rangeInKm = 1.6 * parseFloat(usersInfo.distance);
+        }
+
+        if(usersInfo.searchOption && usersInfo.searchOption == "zip") {
+          console.log("searchOption = zip");
+          if(usersInfo.zipLocation && usersInfo.zipLocation.lat && usersInfo.zipLocation.long) {
+            this.location = [usersInfo.zipLocation.lat, usersInfo.zipLocation.long];
+          }
+        } else {
+          console.log("searchOption = gps");
+        }
+
+        this._loadSellers();
       }
 
-      _loadSellersNoLocation() {
-        console.log("HomeView._loadSellersNoLocation");
-
-        const self = this;
-
-        this.sellers = [];
-
-        firebase.app("polyn-app").database().ref("/locations/" + this.sellersCategory).on('child_added', function(snapshot) {
-
-          const childKey = snapshot.key;
-
-          firebase.app("polyn-app").database().ref("/sellers/" + childKey).once('value').then(function(snapshot) {
-
-            var sellersInfo = snapshot.val();
-
-            if(sellersInfo) {
-
-              sellersInfo.key = snapshot.key; // Cache the key so we can look up the lat/long later.
-
-              self.push('sellers', sellersInfo);
-
-              // Since we don't know anything about the user's location - sort alphabetically by name.
-              self.sellers.sort(function(a, b){
-                if(a.name < b.name) return -1;
-                if(a.name > b.name) return 1;
-                return 0;
-              })
-
-              self.loading = false;
-
-            } else {
-              console.log("  Failed to get data for seller key: " + key);
-              self.loading = false;
-            }
-          });
-        })
-      }
-
-      _loadSellersByLocation() {
-        console.log("HomeView._loadSellersByLocation");
+      _loadSellers() {
+        console.log("HomeView._loadSellers");
 
         const self = this;
         this.loading = true;
-
-        // Geofire only uses KM.
-        //const rangeInKm = 1.6 * parseFloat(rangeInMiles);
 
         if(!this.location) {
 
@@ -410,14 +430,11 @@
           GeofireManager.getUsersLocation(userPath,
 
             function(location) {
+              // Cache the user's location.
               const latitude = location.coords.latitude;
               const longitude = location.coords.longitude;
 
-              // Cache the user's location.
               self.location = [latitude, longitude];
-
-              //console.log("User Location is lat: " + latitude + ", long: " + longitude + "");
-
               self._getSellerData(latitude, longitude, self.rangeInKm);
             },
             
@@ -427,7 +444,22 @@
               self.loading = false;
 
               if(error.code == error.PERMISSION_DENIED) {
-                self.$.requestZipDialog.toggle();
+
+                // If we're denied the user's current location - try to pull it from indexdb.
+                self.$.zipLocationIDB.getStoredValue("zipLocation").then((response) => {
+                  console.log("zipLocation = " + JSON.stringify(response, null, 4));
+
+                  if(response) {
+                    // We got the location from the indexdb - use it.
+                    const latitude = response.lat;
+                    const longitude = response.long;
+                    self.location = [latitude, longitude];
+                    self._getSellerData(self.location[0], self.location[1], self.rangeInKm);
+                  } else {
+                    // We did NOT get the location from the indexdb - prompt user for zip code.
+                    self.$.requestZipDialog.toggle();
+                  }
+                });
               }
           });
 
@@ -443,53 +475,60 @@
 
         const zip = this.$.zipDialogInput.value;
 
-        //console.log("  titleText: " + title);
-        //console.log("  descText: " + desc);
-
         if(!zip || zip.length == 0) {
           Utility.showErrorToast("A valid zip code must be provided.");
           return;
         }
 
-        //
-        // Convert a Zip Code into a Lat/Long...
-        //
-
-// TODO: Cache the zip code and the lat/long based on that zip code.
-
         const self = this;
 
-        //var googleMapsApi = this.$.googleMapsApi;
         var polynApp = document.getElementById("polynApp");
         var googleMapsApi = polynApp.$.googleMapsApi;
+        var geocoder = new googleMapsApi.api.Geocoder();
+        
+        //const address = "Plano, TX";
+        const address = zip;
 
-        //googleMapsApi.addEventListener('api-load', function(e) {
+      // Convert the given zip code into a lat/long.
+        geocoder.geocode( {'address': address}, function(results, status) {
 
-          var geocoder = new googleMapsApi.api.Geocoder();
-          
-          //const address = "Plano, TX";
-          //const address = "75025";
-          const address = zip;
-          geocoder.geocode( {'address': address}, function(results, status) {
-            //console.log(" status: " + status);
-            //console.log(" esults: " + JSON.stringify(results, null, 4));
-            if(status == google.maps.GeocoderStatus.OK) {
-              const latitude = results[0].geometry.location.lat();
-              const longitude = results[0].geometry.location.lng();
-              console.log("  The address: " + address + ", was converted into:");
-              console.log("    Lat: " + latitude + ", Long: " + longitude);
+          if(status == google.maps.GeocoderStatus.OK) {
 
-              self.location = [latitude, longitude];
+            const latitude = results[0].geometry.location.lat();
+            const longitude = results[0].geometry.location.lng();
+            self.location = [latitude, longitude];
 
-              //console.log("User Location is lat: " + latitude + ", long: " + longitude + "");
+            if(latitude && longitude) {
+
+              const zipLocation = {
+                zipCode: zip,
+                lat: latitude,
+                long: longitude
+              };
+
+              // Cache zip in indexdb.
+              self.zipLocation = zipLocation;
+
+              if(self.user) {
+                // If the user is logged in - write the zip code data to info.
+                firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/zipLocation").set(zipLocation);
+                // const distance = 50;
+                // if(distance) {
+                //   firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/distance").set(distance);
+                // }
+                firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/searchOption").set("zip");
+              }
 
               self._getSellerData(latitude, longitude, self.rangeInKm);
 
-            } else {
-              console.log("  Geocode was not successful for the following reason: " + status);
+              //const zipLocationPersisted = self.$.zipLocationIDB.persistedData;
+              //console.log("zipLocationPersisted = " + zipLocationPersisted);
             }
-          });
-        //});
+            
+          } else {
+            console.log("  Geocode was not successful for the following reason: " + status);
+          }
+        });
       }
 
       _getSellerData(latitude, longitude, rangeInKm) {

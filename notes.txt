@@ -522,6 +522,44 @@ cp -rn node_modules build/default/
 
 -------
 
+      // _loadSellersNoLocation() {
+      //   console.log("HomeView._loadSellersNoLocation");
+
+      //   const self = this;
+
+      //   this.sellers = [];
+
+      //   firebase.app("polyn-app").database().ref("/locations/" + this.sellersCategory).on('child_added', function(snapshot) {
+
+      //     const childKey = snapshot.key;
+
+      //     firebase.app("polyn-app").database().ref("/sellers/" + childKey).once('value').then(function(snapshot) {
+
+      //       var sellersInfo = snapshot.val();
+
+      //       if(sellersInfo) {
+
+      //         sellersInfo.key = snapshot.key; // Cache the key so we can look up the lat/long later.
+
+      //         self.push('sellers', sellersInfo);
+
+      //         // Since we don't know anything about the user's location - sort alphabetically by name.
+      //         self.sellers.sort(function(a, b){
+      //           if(a.name < b.name) return -1;
+      //           if(a.name > b.name) return 1;
+      //           return 0;
+      //         })
+
+      //         self.loading = false;
+
+      //       } else {
+      //         console.log("  Failed to get data for seller key: " + key);
+      //         self.loading = false;
+      //       }
+      //     });
+      //   })
+      // }
+      
 //      _linkGoogleAccount() {
 //           console.log("ProfileView._linkGoogleAccount");
 //

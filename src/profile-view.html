@@ -85,7 +85,7 @@
       signed-in="{{signedIn}}"
       user="{{user}}"
       status-known="{{statusKnown}}"
-      on-error="_handleError">
+      on-error="_handleAuthError">
     </firebase-auth>
 
     <firebase-document
@@ -300,8 +300,8 @@
         firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/info/photoThumbUrl").set(url);
       }
 
-      _handleError(e, err) {
-        console.log("ProfileView._handleError: " + err);
+      _handleAuthError(e, err) {
+        console.log("ProfileView._handleAuthError: " + err);
 
         // Ignore this error. 
         if(err.code == "auth/email-already-in-use") {
