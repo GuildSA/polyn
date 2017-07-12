@@ -36,6 +36,10 @@
         background: var(--app-secondary-color);
       }
 
+      .stacked-btn {
+        margin-top: 8px;
+      }
+
       .top-border {
         border-top-style: solid;
         border-top-color: var(--app-accent-color);
@@ -265,9 +269,9 @@
     <paper-dialog id="requestLocationPrefDialog">
       <h2>Location Settings</h2>
       <p>How should we get the location so we can show you the record stores in your area?</p>
-      <div class="buttons">
+      <div class="buttons layout vertical center-justified">
         <paper-button on-tap="_onTapUseZipDialogBtn" dialog-confirm>Use a zip code</paper-button>
-        <paper-button on-tap="_onTapUseLocationDialogBtn" dialog-confirm autofocus>Use My Location</paper-button>
+        <paper-button class="stacked-btn" on-tap="_onTapUseLocationDialogBtn" dialog-confirm autofocus>Use My Location</paper-button>
       </div>
     </paper-dialog>
     
