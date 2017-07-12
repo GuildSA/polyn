@@ -32,9 +32,9 @@
     "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^2.0.0",
     "paper-item": "PolymerElements/paper-item#^2.0.0",
     "paper-listbox": "PolymerElements/paper-listbox#^2.0.0",
-    "polymerfire": "^2.0.0",
+    "polymerfire": "^2.1.0",
     "geofire": "^4.1.2",
-    "cropperjs": "^0.8.1",
+    "cropperjs": "^1.0.0-rc.3",
     "google-apis": "2.0-preview",
     "px-spinner": "^2.0.0-prerelease-4",
     "papaparse": "^4.3.3"

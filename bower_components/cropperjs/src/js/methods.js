@@ -1,5 +1,25 @@
 import * as $ from './utilities';
 
+function getPointersCenter(pointers) {
+  let pageX = 0;
+  let pageY = 0;
+  let count = 0;
+
+  $.each(pointers, ({ startX, startY }) => {
+    pageX += startX;
+    pageY += startY;
+    count += 1;
+  });
+
+  pageX /= count;
+  pageY /= count;
+
+  return {
+    pageX,
+    pageY,
+  };
+}
+
 export default {
   // Show the crop box manually
   crop() {
@@ -146,7 +166,7 @@ export default {
       self.unbuild();
       $.removeClass(element, 'cropper-hidden');
     } else if (self.isImg) {
-      $.removeListener(element, 'load', self.start);
+      $.removeListener(element, 'load', self.onStart);
     } else if (image) {
       $.removeChild(image);
     }
@@ -245,16 +265,12 @@ export default {
     const height = canvasData.height;
     const naturalWidth = canvasData.naturalWidth;
     const naturalHeight = canvasData.naturalHeight;
-    let newWidth;
-    let newHeight;
-    let offset;
-    let center;
 
     ratio = Number(ratio);
 
     if (ratio >= 0 && self.ready && !self.disabled && options.zoomable) {
-      newWidth = naturalWidth * ratio;
-      newHeight = naturalHeight * ratio;
+      const newWidth = naturalWidth * ratio;
+      const newHeight = naturalHeight * ratio;
 
       if ($.dispatchEvent(self.element, 'zoom', {
         originalEvent: _originalEvent,
@@ -265,8 +281,9 @@ export default {
       }
 
       if (_originalEvent) {
-        offset = $.getOffset(self.cropper);
-        center = _originalEvent.touches ? $.getTouchesCenter(_originalEvent.touches) : {
+        const pointers = self.pointers;
+        const offset = $.getOffset(self.cropper);
+        const center = pointers && Object.keys(pointers).length ? getPointersCenter(pointers) : {
           pageX: _originalEvent.pageX,
           pageY: _originalEvent.pageY,
         };
@@ -637,12 +654,12 @@ export default {
         cropBoxData.top = data.top;
       }
 
-      if ($.isNumber(data.width)) {
+      if ($.isNumber(data.width) && data.width !== cropBoxData.width) {
         widthChanged = true;
         cropBoxData.width = data.width;
       }
 
-      if ($.isNumber(data.height)) {
+      if ($.isNumber(data.height) && data.height !== cropBoxData.height) {
         heightChanged = true;
         cropBoxData.height = data.height;
       }
@@ -674,13 +691,13 @@ export default {
       return null;
     }
 
-    // Return the whole canvas if not cropped
-    if (!self.cropped) {
-      return $.getSourceCanvas(self.image, self.imageData);
-    }
-
     if (!$.isPlainObject(options)) {
       options = {};
+    }
+
+    // Return the whole canvas if not cropped
+    if (!self.cropped) {
+      return $.getSourceCanvas(self.image, self.imageData, options);
     }
 
     const data = self.getData();
@@ -721,7 +738,7 @@ export default {
 
     // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D.drawImage
     const parameters = (() => {
-      const source = $.getSourceCanvas(self.image, self.imageData);
+      const source = $.getSourceCanvas(self.image, self.imageData, options);
       const sourceWidth = source.width;
       const sourceHeight = source.height;
       const canvasData = self.canvasData;
@@ -783,6 +800,12 @@ export default {
 
       return params;
     })();
+
+    context.imageSmoothingEnabled = !!options.imageSmoothingEnabled;
+
+    if (options.imageSmoothingQuality) {
+      context.imageSmoothingQuality = options.imageSmoothingQuality;
+    }
 
     context.drawImage(...parameters);
 

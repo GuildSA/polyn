@@ -22,7 +22,7 @@ const EVENT_CROP = 'crop';
 
 // RegExps
 const REGEXP_DATA_URL = /^data:/;
-const REGEXP_DATA_URL_JPEG = /^data:image\/jpeg.*;base64,/;
+const REGEXP_DATA_URL_JPEG = /^data:image\/jpeg;base64,/;
 
 let AnotherCropper;
 
@@ -46,6 +46,7 @@ class Cropper {
     self.canvasData = null;
     self.cropBoxData = null;
     self.previews = null;
+    self.pointers = {};
     self.init();
   }
 
@@ -100,7 +101,7 @@ class Cropper {
 
     // XMLHttpRequest disallows to open a Data URL in some browsers like IE11 and Safari
     if (REGEXP_DATA_URL.test(url)) {
-      if (REGEXP_DATA_URL_JPEG) {
+      if (REGEXP_DATA_URL_JPEG.test(url)) {
         self.read($.dataURLToArrayBuffer(url));
       } else {
         self.clone();
@@ -124,6 +125,7 @@ class Cropper {
 
     xhr.open('get', url);
     xhr.responseType = 'arraybuffer';
+    xhr.withCredentials = element.crossOrigin === 'use-credentials';
     xhr.send();
   }
 
@@ -326,9 +328,9 @@ class Cropper {
     options.aspectRatio = Math.max(0, options.aspectRatio) || NaN;
     options.viewMode = Math.max(0, Math.min(3, Math.round(options.viewMode))) || 0;
 
-    if (options.autoCrop) {
-      self.cropped = true;
+    self.cropped = options.autoCrop;
 
+    if (options.autoCrop) {
       if (options.modal) {
         $.addClass(dragBox, 'cropper-modal');
       }

@@ -35,21 +35,21 @@
     "tests",
     "test",
     "examples",
-    "assets",
-    "demo",
     "docs",
-    "gulpfile.js",
+    "build",
+    "postcss.config.json",
+    "rollup.config.js",
     "CONTRIBUTING.md",
     "ISSUE_TEMPLATE.md"
   ],
-  "version": "0.8.1",
-  "_release": "0.8.1",
+  "version": "1.0.0-rc.3",
+  "_release": "1.0.0-rc.3",
   "_resolution": {
     "type": "version",
-    "tag": "v0.8.1",
-    "commit": "903925ffa81f8f164c8f25a474e4018ae5de6020"
+    "tag": "v1.0.0-rc.3",
+    "commit": "ddd2c2ca0a29709c7f357aa5d19fe91ae98014d7"
   },
   "_source": "https://github.com/fengyuanchen/cropperjs.git",
-  "_target": "^0.8.1",
+  "_target": "^1.0.0-rc.3",
   "_originalSource": "cropperjs"
 }
