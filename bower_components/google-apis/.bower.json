@@ -43,11 +43,11 @@
   "resolutions": {
     "webcomponentsjs": "^1.0.0"
   },
-  "_release": "73bb1b7901",
+  "_release": "31bbd5071c",
   "_resolution": {
     "type": "branch",
     "branch": "2.0-preview",
-    "commit": "73bb1b79015598c2cec265e2c2678ac747299cc5"
+    "commit": "31bbd5071cbeacc0f352a4318aa5df4bc4e225f9"
   },
   "_source": "https://github.com/GoogleWebComponents/google-apis.git",
   "_target": "2.0-preview",
