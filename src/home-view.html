@@ -334,7 +334,7 @@
         // If the user is not logged in - 50 mile radius is the default.
         this.rangeInKm = 1.6 * 50;
 
-        this.loading = true;
+        //this.loading = true;
       }
 
       reload() {
@@ -389,7 +389,7 @@
       }
 
       _statusKnownChanged(e) {
-        console.log("XXXXXX HomeView._statusKnownChanged: " + e);
+        console.log("HomeView._statusKnownChanged: " + e);
 
       }
 
@@ -467,8 +467,8 @@
               this._getSellerData(this.location[0], this.location[1], this.rangeInKm);
             } else {
               // Something bad happened - prompt user for zip code.
-              self.loading = false;
-              self.$.requestZipDialog.toggle();
+              this.loading = false;
+              this.$.requestZipDialog.toggle();
             }
 
           } else {
