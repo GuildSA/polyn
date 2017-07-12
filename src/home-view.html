@@ -19,6 +19,10 @@
 <link rel="import" href="utility.html">
 <link rel="import" href="geofire.html">
 
+<!-- Why do these have to added manually for 'polymer build' to add them to Firebase? -->
+<script src="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror-worker.js" defer></script>
+<script src="../bower_components/app-storage/app-indexeddb-mirror/common-worker-scope.js" defer></script>
+
 <dom-module id="home-view">
   <template>
     <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
