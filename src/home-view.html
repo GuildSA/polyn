@@ -178,12 +178,6 @@
 
     </style>
 
-    <!--<firebase-auth 
-      id="auth"
-      app-name="polyn-app"
-      user="{{user}}">
-    </firebase-auth>-->
-
     <firebase-auth
       id="auth"
       app-name="polyn-app"
@@ -249,9 +243,11 @@
       <!-- main container div -->
     </div>
       <!-- /main container div -->
-      <div id="submit-request-container">
-        <paper-button id="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message" >Create a Request</paper-button>
-      </div>
+      <template is="dom-if" if="[[showRequestBtn]]">
+        <div id="submit-request-container">
+          <paper-button id="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message">Create a Request</paper-button>
+        </div>
+      </template>
     </div>
 
     <paper-dialog id="requestZipDialog">
@@ -267,7 +263,7 @@
     </paper-dialog>
 
     <paper-dialog id="requestLocationPrefDialog">
-      <h2>Location Settings</h2>
+      <h2 class="dialog-title">Location Settings</h2>
       <p>How should we get the location so we can show you the record stores in your area?</p>
       <div class="buttons layout vertical center-justified">
         <paper-button on-tap="_onTapUseZipDialogBtn" dialog-confirm>Use a zip code</paper-button>
@@ -342,6 +338,10 @@
             type: Boolean,
             notify: true,
             value: true
+          },
+          showRequestBtn: {
+            type: Boolean,
+            value: false
           }
         };
       }
@@ -352,13 +352,12 @@
 
         // If the user is not logged in - 50 mile radius is the default.
         this.rangeInKm = 1.6 * 50;
-
-        //this.loading = true;
       }
 
       reload() {
         console.log("HomeView.reload");
 
+        this.showRequestBtn = false;
         this.loading = true;
 
         if(this.user) {
@@ -668,6 +667,7 @@
 
 // TODO: We need a way to know how many in total will get pulled down.
                 self.loading = false;
+                self.showRequestBtn = true;
 
               } else {
                 console.log("  Failed to get data for seller key: " + key);
