@@ -186,7 +186,6 @@
       signed-in="{{signedIn}}"
       user="{{user}}"
       status-known="{{statusKnown}}"
-      status-known-changed="_statusKnownChanged"
       on-error="_handleAuthError">
     </firebase-auth>
 
@@ -252,7 +251,7 @@
     </div>
 
     <paper-dialog id="requestZipDialog">
-      <h2>Zip Code</h2>
+      <h2>Set Zip Code</h2>
       <p>Please enter your zip code so we can show you the record stores in your area.</p>
       <div id="zipCode">
         <paper-input id="zipDialogInput" label="Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]"></paper-input>
@@ -263,6 +262,15 @@
       </div>
     </paper-dialog>
 
+    <paper-dialog id="requestLocationPrefDialog">
+      <h2>Location Settings</h2>
+      <p>How should we get the location so we can show you the record stores in your area?</p>
+      <div class="buttons">
+        <paper-button on-tap="_onTapUseZipDialogBtn" dialog-confirm>Use a zip code</paper-button>
+        <paper-button on-tap="_onTapUseLocationDialogBtn" dialog-confirm autofocus>Use My Location</paper-button>
+      </div>
+    </paper-dialog>
+    
     <paper-dialog id="requestSigninDialog">
       <h1>Create a Request</h1>
       <p>Awesome Choice!</p>
@@ -294,10 +302,13 @@
             observer: '_userChanged'
           },
           signedIn: {
-            type: Object
+            type: Object,
+            notify: true
           },
           statusKnown:{
-            type: Object
+            type: Object,
+            notify: true,
+            observer: '_statusKnownChanged'
           },
           usersInfo: {
             type: Object,
@@ -367,34 +378,27 @@
       }
 
       _userChanged(user) {
-        //console.log("HomeView._userChanged");
-        console.log("HomeView._userChanged: " + JSON.stringify(user, null, 4));
-
-        // console.log("XXX user: " + user);
-        // console.log("XXX statusKnown: " + this.statusKnown);
-
-        if(user) {
-          // If we have a user - get the users info to get the searchSettings.
-          this._loadUserInfo();
-        } else {
-          // If we have no user - just load the locally cached searchSettings.
-          this._loadCachedSearchSettings();
-        }
-
-// TODO: What's the deal with statusKnown? Does it ever work?
-
-        // // statusKnown=false, user=null: firebase is loading the user from storage/performing authentication
-        // // statusKnown=true, user=null: authentication failed
-        // // statusKnown=true, user=[Object]: User is authenticated
-        // if(this.statusKnown && user == null) {
-        //   // If we have no user - just load the locally cached searchSettings.
-        //   this._loadCachedSearchSettings();
-        // }
+        console.log("HomeView._userChanged");
+        //console.log("HomeView._userChanged: " + JSON.stringify(user, null, 4));
       }
 
-      _statusKnownChanged(e) {
-        console.log("HomeView._statusKnownChanged: " + e);
+      _statusKnownChanged(statusKnown) {
+        console.log("HomeView._statusKnownChanged: " + statusKnown);
+        console.log("  statusKnown: " + this.statusKnown);
+        console.log("  user: " + this.user);
+        console.log("  signedIn: " + this.signedIn);
 
+        // NOT logged in - user = null,   statusKnown = false
+        // YES logged in - user = object, statusKnown = true
+        if(statusKnown) {
+          if(this.user) {
+            // If we have a user - get the users info to get the searchSettings.
+            this._loadUserInfo();
+          } else {
+            // If we have no user - just load the locally cached searchSettings.
+            this._loadCachedSearchSettings();
+          }
+        }
       }
 
       _loadCachedSearchSettings() {
@@ -425,11 +429,10 @@
 
           } else {
 
-// TODO: First visit!!!
-
+            // This is their first visit!
             self.loading = false;
-            // We did NOT get any searchSettings from the indexdb - prompt user for zip code.
-            self.$.requestZipDialog.toggle();
+            // We did NOT get any searchSettings from the indexdb - prompt user for initial searchSettings.
+            self.$.requestLocationPrefDialog.toggle();
           }
         });
       }
@@ -538,6 +541,33 @@
         });
       }
 
+       _onTapUseZipDialogBtn() {
+         this.$.requestZipDialog.toggle();
+       }
+
+      _onTapUseLocationDialogBtn() {
+
+        this.loading = true;
+
+        const searchSettings = {
+          searchOption: "gps"
+        };
+
+        if(this.usersInfo && this.usersInfo.distance) {
+          searchSettings.distance = this.usersInfo.distance;
+        } else {
+          searchSettings.distance = 50;
+        }
+        
+        if(this.user) {
+          firebase.app("polyn-app").database().ref().child("/users/" + this.user.uid + "/info/searchSettings").set(searchSettings);
+        }
+
+        this.searchSettings = searchSettings;
+
+        this._getSellerDataWithUsersLocation()
+       }
+
       _onTapZipDialogBtn() {
         console.log("HomeView._onTapZipDialogBtn");
 
@@ -547,6 +577,8 @@
           Utility.showErrorToast("A valid zip code must be provided.");
           return;
         }
+
+        this.loading = true;
 
         const self = this;
 
