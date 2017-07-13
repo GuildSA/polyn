@@ -46,6 +46,9 @@ and we cannot get their current location.
 
 Center the record image for when the business has no image chosen. 
 
+There is a flash that shows when the user is switching to the messages tab
+- Will need to add loading spinner and only show the view once the messages have loaded. 
+
 DONE - Need UI to allow the user to set parameters for location searches.
 DONE - Add address inputs to business UI.
 DONE - Need UI for image upload on business UI.
