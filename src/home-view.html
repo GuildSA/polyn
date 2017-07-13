@@ -55,11 +55,26 @@
         border-color: var(--app-accent-color);
       }
 
-      h2 {
+      .dialog-title {
         color: #70C187;
-        margin: 0;
         display: flex;
         justify-content: center;
+      }
+
+      .seller-name {
+        font-size: 1rem;
+        margin-left: 0px;
+        margin-top: 16px;
+        color: #70C187;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .miles-away {
+        font-size: 0.5 rem;
+        margin-left: 0px;
+        margin-bottom: 16px;
       }
 
       .main-container {
@@ -69,16 +84,10 @@
         @apply --layout-vertical;
         @apply --layout-center;
         @apply --layout-around-justified;*/
-
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
         grid-gap: 0px;
-
       }
-
-      .seller-name {
-         border-bottom: var(--app-accent-color);
-      } 
 
       #submit-request-container {
         @apply --layout-horizontal;
@@ -104,9 +113,10 @@
         --paper-input-container-focus-color: #70C187;
       }
 
-      /*.card {
-        @apply --layout-vertical;
-      }*/
+      #zipCode {
+        padding: 10px;
+        --paper-input-container-focus-color: #70C187;
+      } 
 
       @media (max-width: 480px) {
 
@@ -126,6 +136,7 @@
           height: 10vh;
           width: 10vh;
           border-radius: 0%;
+          margin: 8px;
         }
 
         .card {
@@ -146,21 +157,6 @@
           padding: 10px;
         }
 
-        h2 {
-          font-size: 1rem;
-          margin-left: 25px;
-          margin-top: 10px;
-          color: black;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        .miles-away {
-          font-size: 0.5 rem;
-          margin-left: 25px;
-        }
-
         #location {
           --paper-input-container-focus-color: #70C187;
         }
@@ -168,11 +164,6 @@
         paper-input {
           margin: 0;
           padding: 0;
-        }
-
-        #zipCode {
-          padding: 10px;
-          --paper-input-container-focus-color: #70C187;
         }
       }
 
@@ -218,7 +209,7 @@
           <div class="card" on-tap="_onTapBusiness">
 
             <template is="dom-if" if="[[!seller.photoUrl]]">
-              <iron-image class="business-img" style="background-color: lightgray;" sizing="cover" preload fade src="/images/svg/VinylRecord.svg"></iron-image>
+              <iron-image class="business-img" style="background-color: white;" sizing="cover" preload fade src="/images/svg/VinylRecord.svg"></iron-image>
             </template>
 
             <template is="dom-if" if="[[seller.photoUrl]]">
@@ -226,12 +217,12 @@
             </template>
 
             <div class="top-border">
-                <h2>[[seller.name]]</h2>
-            <template is="dom-if" if="[[seller.distance]]">
-              <div class="miles-away">
-                [[seller.distance]] miles away
+              <h2 class="seller-name">[[seller.name]]</h2>
+              <template is="dom-if" if="[[seller.distance]]">
+                <div class="miles-away">
+                  [[seller.distance]] miles away
+                </div>
               </div>
-            </div>
             </template>
              <div class="short-description">
                 <p>[[seller.desc]]</p>
@@ -251,8 +242,8 @@
     </div>
 
     <paper-dialog id="requestZipDialog">
-      <h2>Set Zip Code</h2>
-      <p>Please enter your zip code so we can show you the record stores in your area.</p>
+      <h2 class="dialog-title">Set Zip Code</h2>
+      <p>Enter a zip code for record stores near you.</p>
       <div id="zipCode">
         <paper-input id="zipDialogInput" label="Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]"></paper-input>
       </div>
@@ -264,18 +255,17 @@
 
     <paper-dialog id="requestLocationPrefDialog">
       <h2 class="dialog-title">Location Settings</h2>
-      <p>How should we get the location so we can show you the record stores in your area?</p>
-      <div class="buttons layout vertical center-justified">
+      <p>How should we get your location for record stores near you?</p>
+      <div class="layout vertical center-justified">
         <paper-button on-tap="_onTapUseZipDialogBtn" dialog-confirm>Use a zip code</paper-button>
         <paper-button class="stacked-btn" on-tap="_onTapUseLocationDialogBtn" dialog-confirm autofocus>Use My Location</paper-button>
       </div>
     </paper-dialog>
     
     <paper-dialog id="requestSigninDialog">
-      <h1>Create a Request</h1>
-      <p>Awesome Choice!</p>
-      <p>Creating a request lets the record stores know what you're looking for and if they have it, they can send you some details via a private message right here in the app.</p>
-      <p>But... for this magic to work we need you to sign-in or create an account to make requests.</p>
+      <h2 class="dialog-title">Create a Request</h2>
+      <p>By creating a request you can tell the record stores what you're looking for! If they have it, they can let you know via a private message right here in the app.</p>
+      <p>Stop Searching - Start Finding!</p>
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
         <paper-button on-tap="_onTapSigninBtn" dialog-confirm autofocus>Sign In</paper-button>
@@ -436,6 +426,11 @@
             self.loading = false;
             // We did NOT get any searchSettings from the indexdb - prompt user for initial searchSettings.
             self.$.requestLocationPrefDialog.toggle();
+
+            // HACK
+            //self.$.requestZipDialog.toggle();
+            //self.$.requestSigninDialog.toggle();
+
           }
         });
       }

@@ -18,6 +18,11 @@
         padding: 10px;
       }
 
+      paper-button {
+        color: white;
+        background: var(--app-secondary-color);
+      }
+
       .main-container {
         padding: 10px;
         display: flex;
@@ -30,6 +35,12 @@
         flex-direction: row;
         justify-content: center;
         word-wrap: break-word;
+      }
+
+      .dialog-title {
+        color: #70C187;
+        display: flex;
+        justify-content: center;
       }
 
       h3 {
@@ -101,6 +112,7 @@
     </template>
 
     <paper-dialog id="deleteDialog">
+      <h2 class="dialog-title">Delete Request</h2>
       <p>[[deletePrompt]]</p>
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
@@ -112,6 +124,16 @@
       <p>[[noChatsMessage]]</p>
       <div class="buttons">
         <paper-button dialog-confirm autofocus>OK</paper-button>
+      </div>
+    </paper-dialog>
+
+    <paper-dialog id="requestSigninDialog">
+      <h2 class="dialog-title">Create a Request</h2>
+      <p>By creating a request you can tell the record stores what you're looking for! If they have it, they can let you know via a private message right here in the app.</p>
+      <p>Stop Searching - Start Finding!</p>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button on-tap="_onTapSigninBtn" dialog-confirm autofocus>Sign In</paper-button>
       </div>
     </paper-dialog>
 
@@ -225,9 +247,9 @@
         this.indexToDelete = e.model.index;
 
         if(this._getUserRole(this.requests[this.indexToDelete].buyerId) == "seller") {
-          this.deletePrompt = "Delete buyer request?";
+          this.deletePrompt = "Do you wish to delete this buyer's request?";
         } else {
-          this.deletePrompt = "Delete your request?";
+          this.deletePrompt = "Do you wish to delete this request?";
         }
 
         this.$.deleteDialog.toggle();
@@ -436,8 +458,20 @@
 
       _onTapCreateRequest() {
         console.log("RequestsView._onTapCreateRequest");
-        var polynApp = document.getElementById("polynApp");
-        var requestView = polynApp.pushPageOnCurrentTab("request-view");
+
+        if(this.user) {
+          var polynApp = document.getElementById("polynApp");
+          var requestView = polynApp.pushPageOnCurrentTab("request-view");
+        } else {
+          this.$.requestSigninDialog.toggle();
+        }
+      }
+
+      _onTapSigninBtn() {
+        console.log("RequestsView._onTapSigninBtn");
+        
+        var profileView = polynApp.pushPageOnCurrentTab("profile-view");
+        profileView.autoPopAfterSignin = true;
       }
     }
 

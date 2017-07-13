@@ -2,8 +2,6 @@
 
  -- App / Database --
 
-Cache the zip code and the lat/long based on that zip code.
-
 Sellers that do not have a location set cannot be found at all!
   Do we force them all to add a location?
   Or, do we pull them separately and add them to the final list?
@@ -25,6 +23,7 @@ Upload a copy of the image pulled from social including a thumbnail.
 
 Send email to admin to verify a new business owner asking to claim a business.
 
+DONE - Cache the zip code and the lat/long based on that zip code.
 DONE - Need python code to scrap webistes for sellers so we can add them manually.
 DONE - Add code to drive the badge count for request.
 DONE - Force the app to reset all tab view stacks after logout.
@@ -33,10 +32,6 @@ DONE - Add image upload to business UI.
 --------------------------------------------------------------------------------
 
  -- UI / UX --
-
-Need UI to allow the user to set parameters for location searches.
-  - Set zip when location is blocked.
-  - Set range of searches.
 
 Need UI to explain the basic concept to new users who are buyers.
 
@@ -49,6 +44,7 @@ Need to find best way to truncate text on home page.
 Need an image to display when the user has not entered in their zip code
 and we cannot get their current location. 
 
+DONE - Need UI to allow the user to set parameters for location searches.
 DONE - Add address inputs to business UI.
 DONE - Need UI for image upload on business UI.
 
