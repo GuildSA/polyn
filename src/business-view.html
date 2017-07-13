@@ -29,6 +29,12 @@
         background: var(--app-secondary-color);
       }
 
+      .dialog-title {
+        color: #70C187;
+        display: flex;
+        justify-content: center;
+      }
+
       #submit-request-btn {
         max-width: 400px;
         margin: auto;
@@ -54,11 +60,15 @@
       #googleMap {
         height: 400px;
         width: 100%;
-       }
+      }
 
-       .claimBox {
-         margin-top: 0;
-       }
+      .claimBox {
+        margin-top: 0;
+      }
+
+      .contact-btn {
+        color: var(--app-accent-color);
+      }
 
     </style>
 
@@ -80,36 +90,16 @@
 
       <center><h2>[[sellerInfo.name]]</h2></center>
       <div class="layout horizontal center-justified">
-        <p><paper-icon-button icon="custom-icons:near-me"></paper-icon-button></p>
-        <p>
-          <a href="tel:[[sellerInfo.phone]]">
-            <paper-icon-button icon="custom-icons:phonelink-ring"></paper-icon-button>
-          </a>
-        </p>
-        <p>
-          <a href="[[sellerInfo.website]]" tabindex="-1">
-            <paper-icon-button icon="custom-icons:web"></paper-icon-button>
-          </a>
-        </p>
+        <p><paper-icon-button class="contact-btn" icon="custom-icons:near-me" on-tap="_onTapDirections"></paper-icon-button></p>
+        <p><paper-icon-button class="contact-btn" icon="custom-icons:phonelink-ring" on-tap="_onTapPlacePhoneCall"></paper-icon-button></p>
+        <p><paper-icon-button class="contact-btn" icon="custom-icons:web" on-tap="_onTapWebsite"></paper-icon-button></p>
       </div>
 
       <center>[[sellerInfo.address]]</center>
-      <!--<template is="dom-if" if="[[sellerInfo.address.line2]]">
-        <center>[[sellerInfo.address.line2]]</center>
-      </template>-->
       <center>[[sellerInfo.city]], [[sellerInfo.state]] [[sellerInfo.zip]]</center>
-
-      <!--<template is="dom-if" if="[[sellerInfo.phone]]">
-        <center>[[sellerInfo.phone]]</center>
-      </template>-->
-
       <p>[[sellerInfo.desc]]</p>
 
       <div id="googleMap"></div>
-
-      <!--<template is="dom-if" if="[[!sellerInfo.claimed]]">
-        <paper-button on-tap="_onTapClaimBusiness">Claim This Business</paper-button>
-      </template>-->
 
     </div>
 
@@ -125,12 +115,21 @@
         </div>
       </div>
     </div>
+
     <div id="submit-request-container">
       <paper-button class="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message">Create a Request</paper-button>
     </div>
 
+    <paper-dialog id="errorDialog">
+      <h2 class="dialog-title">Oops...</h2>
+      <p id="errorMessage"></p>
+      <div class="buttons">
+        <paper-button dialog-confirm autofocus>OK</paper-button>
+      </div>
+    </paper-dialog>
+
     <paper-dialog id="requestSigninForClaimDialog">
-      <h1>Claim Your Business</h1>
+      <h1 class="dialog-title">Claim Your Business</h1>
       <p>Please sign-in or create an account to claim your business.</p>
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
@@ -139,10 +138,9 @@
     </paper-dialog>
 
     <paper-dialog id="requestSigninDialog">
-      <h1>Create a Request</h1>
-      <p>Awesome Choice!</p>
-      <p>Creating a request lets the record stores know what you're looking for and if they have it, they can send you some details via a private message right here in the app.</p>
-      <p>But... for this magic to work we need you to sign-in or create an account to make requests.</p>
+      <h2 class="dialog-title">Create a Request</h2>
+      <p>By creating a request you can tell the record stores what you're looking for! If they have it, they can let you know via a private message right here in the app.</p>
+      <p>Stop Searching - Start Finding!</p>
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
         <paper-button on-tap="_onTapSigninBtn" dialog-confirm autofocus>Sign In</paper-button>
@@ -202,9 +200,10 @@
               scaleControl: false,
               draggable: true
             });
-
+            
             var marker = new googleMapsApi.api.Marker({
               position: latLong,
+              title: "TEST",
               map: map
             });
           }
@@ -240,6 +239,39 @@
 
         var profileView = polynApp.pushPageOnCurrentTab("profile-view");
         profileView.autoPopAfterSignin = true;
+      }
+
+      _onTapDirections() {
+        console.log("BusinessView._onTapDirections");
+
+        if(this.sellerInfo.google_maps_search) {
+          window.location.href = "http://maps.google.com/?q=" + this.sellerInfo.google_maps_search;
+        } else {
+          this.$.errorMessage.innerHTML = "Sorry. This business has not added their address yet. Maybe, you should let them know!";
+          this.$.errorDialog.toggle();
+        }
+      }
+
+      _onTapPlacePhoneCall() {
+        console.log("BusinessView._onTapPlacePhoneCall");
+
+        if(this.sellerInfo.phone) {
+          window.location.href = "tel:" + this.sellerInfo.phone;
+        } else {
+          this.$.errorMessage.innerHTML = "Sorry. This business has not added their phone number yet. Maybe, you should let them know!";
+          this.$.errorDialog.toggle();
+        }
+      }
+
+      _onTapWebsite() {
+        console.log("BusinessView._onTapWebsite");
+
+        if(this.sellerInfo.website) {
+          window.location.href = this.sellerInfo.website;
+        } else {
+          this.$.errorMessage.innerHTML = "Sorry. This business has not added their website yet. Maybe, you should let them know!";
+          this.$.errorDialog.toggle();
+        }
       }
     }
 
