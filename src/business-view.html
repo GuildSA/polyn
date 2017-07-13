@@ -16,6 +16,10 @@
         padding: 0px;
       }
 
+      #claim {
+        width: 100%;
+      }
+
       h2 {
         color: grey;
       }
@@ -50,6 +54,10 @@
       #googleMap {
         height: 400px;
         width: 100%;
+       }
+
+       .claimBox {
+         margin-top: 0;
        }
 
     </style>
@@ -99,14 +107,26 @@
 
       <div id="googleMap"></div>
 
-      <template is="dom-if" if="[[!sellerInfo.claimed]]">
+      <!--<template is="dom-if" if="[[!sellerInfo.claimed]]">
         <paper-button on-tap="_onTapClaimBusiness">Claim This Business</paper-button>
-      </template>
+      </template>-->
 
     </div>
 
+    <div class="layout vertical">
+      <div class="card claimBox">
+        <div class="layout horizontal center">
+          <template is="dom-if" if="[[!sellerInfo.claimed]]">
+            <p>Is this your business?</p>
+              <div class="claim-btn">
+               <paper-button id="claim" class="layout flex" on-tap="_onTapClaimBusiness">Claim Business</paper-button>
+              </div>
+          </template>
+        </div>
+      </div>
+    </div>
     <div id="submit-request-container">
-      <paper-button class="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message" >Create a Request</paper-button>
+      <paper-button class="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message">Create a Request</paper-button>
     </div>
 
     <paper-dialog id="requestSigninForClaimDialog">

@@ -44,6 +44,8 @@ Need to find best way to truncate text on home page.
 Need an image to display when the user has not entered in their zip code
 and we cannot get their current location. 
 
+Center the record image for when the business has no image chosen. 
+
 DONE - Need UI to allow the user to set parameters for location searches.
 DONE - Add address inputs to business UI.
 DONE - Need UI for image upload on business UI.
