@@ -427,10 +427,9 @@
             // We did NOT get any searchSettings from the indexdb - prompt user for initial searchSettings.
             self.$.requestLocationPrefDialog.toggle();
 
-            // HACK
+            // HACK for testing.
             //self.$.requestZipDialog.toggle();
             //self.$.requestSigninDialog.toggle();
-
           }
         });
       }
@@ -530,7 +529,8 @@
 
                 } else {
 
-                  // We did NOT get the location from the indexdb - prompt user for zip code.
+                  // We were denied the user's current locatione and we did NOT get the 
+                  // location from the indexdb - prompt user for zip code.
                   self.loading = false;
                   self.$.requestZipDialog.toggle();
                 }
