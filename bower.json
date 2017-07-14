@@ -37,7 +37,8 @@
     "cropperjs": "^1.0.0-rc.3",
     "google-apis": "2.0-preview",
     "px-spinner": "^2.0.0-prerelease-4",
-    "papaparse": "^4.3.3"
+    "papaparse": "^4.3.3",
+    "paper-checkbox": "PolymerElements/paper-checkbox#^2.0.1"
   },
   "devDependencies": {
     "web-component-tester": "6.0.0"
