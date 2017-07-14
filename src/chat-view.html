@@ -532,6 +532,11 @@
           return;
         }
 
+        // Sanity check the required user data!
+        if(!this.user || !this.requestId || !this.chatInfo.buyerId || !this.chatInfo.requestId) {
+          return;
+        }
+
         var self = this;
 
         if(this.chatMessagesId) {
@@ -608,6 +613,11 @@
         console.log("ChatView._sendChatMessage");
 
         if(!this.$.message.value && !this.chatPhotoUrl) {
+          return;
+        }
+
+        // Sanity check the required chatMessagesId!
+        if(!this.chatMessagesId) {
           return;
         }
 
