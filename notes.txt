@@ -1,4 +1,13 @@
 
+    .color-red {
+      background-color: red;
+    }
+
+    .color-yellow {
+      background-color: yellow;
+    }
+
+    
 //const searchSettingsPersisted = self.$.searchSettingsIDB.persistedData;
 //console.log("searchSettingsPersisted = " + searchSettingsPersisted);
 
