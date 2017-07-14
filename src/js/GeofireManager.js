@@ -66,6 +66,10 @@ var GeofireManager = (function() {
 
       }).catch(function(error) {
         log("Error adding user location to GeoFire");
+
+        if(_usersLocationError) {
+          _usersLocationError(error);
+        }
       });
 
     } else {
