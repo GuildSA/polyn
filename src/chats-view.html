@@ -18,12 +18,6 @@
       padding: 10px;
     }
 
-    /*#title-close {
-      display: flex;
-      flex-direction: row-reverse; 
-      justify-content: center;
-    }*/
-
     #test-thumb {
       border-radius: 60px;
       height: 50px;
@@ -33,7 +27,7 @@
     }
 
     p {
-        margin: 10px 0;
+      margin: 10px 0;
     }
     
   </style>
@@ -67,18 +61,22 @@
 
           <div class="vertical layout">
             <p><b>[[chat.seller]]</b></p>
-            <div class="latest-message">
-              This should be where the latest message in the chat is located.
+            <div class="seller-location">
+              [[chat.nameAndLocation]]
             </div>
           </div>
+          
+          <div class="close">
+            <paper-icon-button id="closeBtn" icon="custom-icons:close" on-tap="_onTapDelete"></paper-icon-button>
+          </div>
 
-          <paper-icon-button id="closeBtn" icon="custom-icons:close" on-tap="_onTapDelete"></paper-icon-button>
         </div>
       </div>
     </template>
   </dom-repeat>
 
     <paper-dialog id="deleteDialog">
+      <h2 class="dialog-title">Delete Chat</h2>
       <p>[[deletePrompt]]</p>
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
@@ -152,7 +150,6 @@
 
             // Manually add the key for this data so we can pass it forward if selected.
             childData.key = childKey;
-
             //console.log("childData: " + JSON.stringify(childData, null, 4));
 
             if(childData.viewed == false) {
@@ -162,22 +159,32 @@
             // Get the seller's info for each chat session so we can get access his or her's thumbnail url.
             firebase.app("polyn-app").database().ref("/users/" + childData.sellerId + "/info").once('value').then(function(snapshot) {
 
-              const sellersInfo = snapshot.val();
-              //console.log("sellersInfo: " + JSON.stringify(sellersInfo, null, 4));
+              const sellersUserInfo = snapshot.val();
+              //console.log("sellersUserInfo: " + JSON.stringify(sellersUserInfo, null, 4));
 
-              if(sellersInfo) {
-                // Manually add the photoThumbUrl to this data so we can use it to build the UI.
-                childData.photoThumbUrl = sellersInfo.photoThumbUrl;
-              }
+              firebase.app("polyn-app").database().ref("sellers/" + sellersUserInfo.sellerId).once('value').then(function(snapshot) {
 
-              self.push('chats', childData);
+                var sellersInfo = snapshot.val();
+                //console.log("sellersInfo: " + JSON.stringify(sellersInfo, null, 4));
 
+                if(sellersUserInfo && sellersUserInfo.photoThumbUrl) {
+                  // Manually add the photoThumbUrl to this data so we can use it to build the UI.
+                  childData.photoThumbUrl = sellersUserInfo.photoThumbUrl;
+                }
+
+                if(sellersInfo) {
+                  // Manually add the nameAndLocation to this data so we can use it to build the UI.
+                  childData.nameAndLocation = sellersInfo.name + " @ " + sellersInfo.city + ", " + sellersInfo.state;
+                }
+
+                self.push('chats', childData);
+              });
             }, function(error) {
+
               console.error(error);
               // Something went wrong trying to get the seller's info - just push what we have.
               self.push('chats', childData);
             });
-
           });
 
           console.log("  badgeCount = " + badgeCount);
@@ -251,7 +258,7 @@
         }
 
         this.indexToDelete = e.model.index;
-        this.deletePrompt = "Delete the chat with this seller?";
+        this.deletePrompt = "Do you wish to delete this chat?";
         this.$.deleteDialog.toggle();
       }
 
