@@ -2,10 +2,16 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/px-spinner/px-spinner.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/neon-animation/web-animations.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="utility.html">
 
@@ -23,6 +29,12 @@
         margin-right: 24px;
         margin-top: 8px;
         margin-bottom: 8px;
+      }
+
+      paper-checkbox.custom {
+        padding: 8px 8px;
+        --paper-checkbox-checked-color: #70C187;
+        --paper-checkbox-unchecked-color: var(--app-accent-color);
       }
 
       h1 {
@@ -58,11 +70,22 @@
     </firebase-document>
 
     <iron-ajax
-      id="sendRequet"
-      url="https://us-central1-polyn-3c431.cloudfunctions.net/sendRequest"
+      id="sendRequestLocation"
+      url="https://us-central1-polyn-3c431.cloudfunctions.net/sendRequestLocation"
       method="POST"
-      on-response="_handleSendRequestResponse"
-      on-error="_handleSendRequestError"
+      loading="{{loading}}"
+      on-response="_handleSendRequestLocationResponse"
+      on-error="_handleSendRequestLocationError"
+      debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax
+      id="sendRequestAll"
+      url="https://us-central1-polyn-3c431.cloudfunctions.net/sendRequestAll"
+      method="POST"
+      loading="{{loading}}"
+      on-response="_handleSendRequestAllResponse"
+      on-error="_handleSendRequestAllError"
       debounce-duration="300">
     </iron-ajax>
 
@@ -70,21 +93,64 @@
       <div class="card">
 
         <div class="layout horizontal center-justified">
-            <img src="/images/svg/VinylRecord.svg" id="profileImage" alt="Anonymous Profile Image." >
+            <img src="/images/svg/VinylRecord.svg" id="profileImage" alt="Anonymous Profile Image.">
         </div>
 
         <div class="layout vertical center-justified">
-            <center> <h1>Create a New Request</h1> </center>
-            <paper-input id="titleText" label="What can we find for you?" required auto-validate error-message="Please enter a title for what you are looking for" char-counter maxlength="140"> 
-              <iron-icon icon="custom-icons:search" slot="prefix"></iron-icon>
-            </paper-input>
-            <paper-textarea id="descText" label="Enter a detailed description of your item..." auto-validate error-message="Please enter a description of the item you are looking for" suffix="optional">
-              <iron-icon icon="custom-icons:email" slot="prefix">
-            </paper-textarea>
+          <center> <h1>Create a New Request</h1> </center>
+
+          <paper-input id="titleText" label="What can we find for you?" required auto-validate error-message="Please enter a title for what you are looking for" char-counter maxlength="140"> 
+            <iron-icon icon="custom-icons:search" slot="prefix"></iron-icon>
+          </paper-input>
+
+          <paper-textarea id="descText" label="Enter a detailed description of your item..." auto-validate error-message="Please enter a description of the item you are looking for" suffix="optional">
+            <iron-icon icon="custom-icons:email" slot="prefix">
+          </paper-textarea>
+
+          <paper-checkbox id="sendAll" class="custom" on-change="_onChangedRequestAllStores">
+            Send request to all stores!
+          </paper-checkbox>
+
+          <template is="dom-if" if="[[showLocationSettings]]">
+
+            <paper-dropdown-menu id="searchDropDown" label="Send request to stores near..." on-iron-select="_searchSelected">
+              <paper-listbox id="searchListBox" slot="dropdown-content" selected="0">
+                <paper-item>My Current Location</paper-item>
+                <paper-item>Zip Code</paper-item>
+              </paper-listbox>
+            </paper-dropdown-menu>
+
+            <template is="dom-if" if="[[showZip]]">
+              <paper-input id="zip" value="[[zipValue]]" label="Your Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]">
+              </paper-input>
+            </template>
+
+            <paper-dropdown-menu id="distanceDropDown" label="Using a distance of..." on-iron-select="_distanceSelected">
+              <paper-listbox id="distanceListBox" slot="dropdown-content" selected="1">
+                <paper-item>25 Miles</paper-item>
+                <paper-item>50 Miles</paper-item>
+                <paper-item>100 Miles</paper-item>
+              </paper-listbox>
+            </paper-dropdown-menu>
+
+          </template>
+
+          <paper-checkbox id="shipping" class="custom" on-change="_onChangedShipping">
+            I'm fine if the item has to be shipped.
+          </paper-checkbox>
+
           <paper-button class="sign-in" on-tap="_onTapSubmitRequest" raised>Submit Request</paper-button>
+
         </div>
+
       </div>
     </div>
+
+    <template is="dom-if" if="[[loading]]">
+      <div class="overlay">
+        <px-spinner size="100" finished="[[!loading]]"></px-spinner>
+      </div>
+    </template>
 
   </template>
 
@@ -102,8 +168,39 @@
           usersInfo: {
             type: String,
             observer: '_usersInfoChanged'
+          },
+          showZip: {
+            type: Boolean,
+            value: false
+          },
+          zipValue: {
+            type: String,
+            notify: true
+          },
+          showLocationSettings: {
+            type: Boolean,
+            value: true
+          },
+          searchSettings: {
+            type: Object
+          },
+          location: {
+            type: Array,
+            value: null
+          },
+          loading: {
+            type: Boolean,
+            notify: true,
+            value: true
           }
         };
+      }
+
+      reload() {
+        console.log("RequestView.reload");
+
+        //this.loading = true;
+        //this.showLocationSettings = true;
       }
 
       _userChanged(user) {
@@ -116,8 +213,86 @@
         }
       }
 
-      _usersInfoChanged(e) {
-        console.log("RequestView._usersInfoChanged: " + JSON.stringify(e, null, 4));
+      _usersInfoChanged(usersInfo) {
+        console.log("RequestView._usersInfoChanged: " + JSON.stringify(usersInfo, null, 4));
+
+        if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
+          return;
+        }
+
+        if(usersInfo.searchSettings) {
+
+          if(usersInfo.searchSettings && usersInfo.searchSettings.searchOption && usersInfo.searchSettings.searchOption == "zip") {
+
+            this.showZip = true;
+
+            var searchListBox = this.shadowRoot.querySelector('#searchListBox');
+            searchListBox.selectIndex(1);
+
+            if(usersInfo.searchSettings.zipCode) {
+              this.zipValue = usersInfo.searchSettings.zipCode;
+            }
+          }
+
+          if(usersInfo.searchSettings.distance) {
+
+            var distanceListBox = this.shadowRoot.querySelector('#distanceListBox');
+
+            switch(usersInfo.searchSettings.distance) {
+              case 25:
+                distanceListBox.selectIndex(0);
+                break;
+              case 50:
+                distanceListBox.selectIndex(1);
+                break;
+              case 50:
+                distanceListBox.selectIndex(2);
+              break;
+              default:
+                distanceListBox.selectIndex(1);
+            }
+          }
+        }
+
+        this.loading = false;
+      }
+
+      _onChangedRequestAllStores(e, detail) {
+        console.log("SearchFilterView._onChangedRequestAllStores: " + e.target.checked);
+
+        this.showLocationSettings = !e.target.checked;
+      }
+
+      _onChangedShipping(e, detail) {
+        console.log("SearchFilterView._onChangedShipping: " + e.target.checked);
+      }
+
+      _searchSelected(e) {
+        console.log("SearchFilterView._searchSelected: " + e);
+
+        var selectedItem = e.target.selectedItem;
+
+        if(selectedItem) {
+          const selectedText = selectedItem.innerText;
+          console.log("selectedText = " + selectedText);
+ 
+          if(selectedText == "Zip Code") {
+            this.showZip = true;
+          } else {
+            this.showZip = false;
+          }
+        }
+      }
+
+      _distanceSelected(e) {
+        console.log("SearchFilterView._distanceSelected: " + e);
+
+        var selectedItem = e.target.selectedItem;
+
+        if(selectedItem) {
+          const selectedText = selectedItem.innerText;
+          console.log("selectedText = " + selectedText);
+        }
       }
 
       _onTapSubmitRequest() {
@@ -131,9 +306,6 @@
         const title = this.$.titleText.value;
         const desc = this.$.descText.value;
 
-        //console.log("  titleText: " + title);
-        //console.log("  descText: " + desc);
-
         if(!title || title.length == 0) {
           Utility.showErrorToast("A Title must be provided.");
           return;
@@ -144,6 +316,107 @@
           return;
         }
 
+        this.loading = true;
+
+        if(this.$.sendAll.checked) {
+
+          this._submitRequestAll();
+
+        } else {
+
+          var self = this;
+
+          var searchListBox = this.shadowRoot.querySelector('#searchListBox');
+          const selectedText = searchListBox.selectedItem.innerText;
+
+          var distanceDropDown = this.shadowRoot.querySelector('#distanceDropDown');
+          const distance = parseInt(distanceDropDown.value);
+
+console.log("XXX searchListBox: " + selectedText);
+console.log("XXX distanceDropDown: " + distance);
+
+          if(selectedText == "Zip Code") {
+
+            const zip = this.shadowRoot.querySelector('#zip');
+
+            if(zip && zip.value && zip.value.length > 4) {
+
+              this.loading = true;
+
+              const self = this;
+
+              var polynApp = document.getElementById("polynApp");
+              var googleMapsApi = polynApp.$.googleMapsApi;
+
+              var geocoder = new googleMapsApi.api.Geocoder();
+              
+              const address = zip.value;
+              geocoder.geocode( {'address': address}, function(results, status) {
+
+                if(status == google.maps.GeocoderStatus.OK) {
+                  const latitude = results[0].geometry.location.lat();
+                  const longitude = results[0].geometry.location.lng();
+
+                  if(latitude && longitude) {
+                    self.location = [latitude, longitude];
+                    self._submitRequestLocation();
+                  } else {
+                    self.loading = false;
+                    Utility.showErrorToast("Sorry, but we were unable to use the zip code provided.");
+                  }
+
+                } else {
+
+                  console.log("  Geocode was not successful for the following reason: " + status);
+                  self.loading = false;
+                  Utility.showErrorToast("Sorry, but we were unable to use the zip code provided.");
+                }
+              });
+
+            } else {
+              self.loading = false;
+              Utility.showErrorToast("Please provide a zip code.");
+            }
+
+          } else {
+
+            // var userPath = null;
+
+            // if(this.user && this.user.uid) {
+            //   userPath = "users/" + this.user.uid + "/info";
+            // }
+
+            GeofireManager.getUsersLocation( null, //userPath,
+
+              function(location) {
+                // Cache the user's location.
+                const latitude = location.coords.latitude;
+                const longitude = location.coords.longitude;
+
+                if(latitude && longitude) {
+                  self.location = [latitude, longitude];
+                  self._submitRequestLocation();
+                } else {
+                  self.loading = false;
+                  Utility.showErrorToast("Sorry, but we were unable to get your location.");
+                }
+              },
+              
+              function(error) {
+                console.log("User Location error: " + error + "");
+                self.loading = false;
+                Utility.showErrorToast("Sorry, but we were unable to get your location.");
+            });
+          }
+        }
+      }
+
+      _submitRequestAll() {
+        console.log("RequestView._submitRequestAll");
+
+        const title = this.$.titleText.value;
+        const desc = this.$.descText.value;
+
         var self = this;
 
         const requestKey = firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/requests').push().key;
@@ -152,10 +425,13 @@
         let request = {
           title: title,
           desc: desc,
+          shipping: self.$.shipping.checked,
           buyerId: self.user.uid,
           buyer: self.usersInfo.name,
           timeStamp: firebase.database.ServerValue.TIMESTAMP
         };
+
+console.log("ALL request = " + JSON.stringify(request, null, 4));
 
         firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/requests/' + requestKey).set(request).then(snapshot => {
 
@@ -169,19 +445,107 @@
             requestId: requestKey
           };
 
-          this.$.sendRequet.params = params;
-          this.$.sendRequet.generateRequest(); // Calls: sendRequest()
+console.log("ALL params = " + JSON.stringify(params, null, 4));
+
+// KRH
+//this.$.sendRequestAll.params = params;
+//this.$.sendRequestAll.generateRequest(); // Calls: sendRequestAll()
+this.loading = false;
+
         });
       }
 
-      _handleSendRequestResponse(data) {
-        console.log("RequestView._handleSendRequestResponse");
+      _handleSendRequestAllResponse(data) {
+        console.log("RequestView._handleSendRequestAllResponse");
         console.log("  status = " + data.detail.status);
+
+        this.loading = false;
       }
 
-      _handleSendRequestError(e) {
-        console.log("RequestView._handleSendRequestError");
+      _handleSendRequestAllError(e) {
+        console.log("RequestView._handleSendRequestAllError");
         console.log("  status = ", e.status, e.statusText);
+
+        this.loading = false;
+      }
+
+      _submitRequestLocation() {
+        console.log("RequestView._submitRequestLocation");
+
+        const title = this.$.titleText.value;
+        const desc = this.$.descText.value;
+
+        var self = this;
+
+        const requestKey = firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/requests').push().key;
+
+        // Add the user's new request to their 'requests' key as a reference.
+        let request = {
+          title: title,
+          desc: desc,
+          shipping: self.$.shipping.checked,
+          buyerId: self.user.uid,
+          buyer: self.usersInfo.name,
+          timeStamp: firebase.database.ServerValue.TIMESTAMP
+        };
+
+console.log("LOC request = " + JSON.stringify(request, null, 4));
+        
+        firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/requests/' + requestKey).set(request).then(snapshot => {
+
+          // Send this info to the server.
+          // var params = {
+          //   categoryPath: "collectables/sub/vinylRecords",
+          //   title: title,
+          //   desc: desc,
+          //   buyerId: self.user.uid,
+          //   buyer: self.usersInfo.name,
+          //   requestId: requestKey
+          // };
+
+          var distanceDropDown = self.shadowRoot.querySelector('#distanceDropDown');
+          const distanceMiles = parseInt(distanceDropDown.value);
+
+console.log("XXX distanceMiles: " + distanceMiles);
+
+          const params = {
+            categoryPath: "collectables/sub/vinylRecords",
+            title: title,
+            desc: desc,
+            shipping: self.$.shipping.checked,
+            buyerId: self.user.uid,
+            buyer: self.usersInfo.name,
+            requestId: requestKey,
+
+            lat: self.location[0],
+            long: self.location[1],
+            rangeInKm: 1.6 * distanceMiles
+          };
+
+console.log("LOC params = " + JSON.stringify(params, null, 4));
+
+// KRH
+self.$.sendRequestLocation.params = params;
+self.$.sendRequestLocation.generateRequest(); // Calls: sendRequestLocation()
+//this.loading = false;
+        });
+      }
+
+      _handleSendRequestLocationResponse(data) {
+        console.log("RequestView._handleSendRequestLocationResponse");
+        console.log("  status = " + data.detail.status);
+
+        this.loading = false;
+
+        // var polynApp = document.getElementById("polynApp");
+        // polynApp.popPageOffCurrentTab();
+      }
+
+      _handleSendRequestLocationError(e) {
+        console.log("RequestView._handleSendRequestLocationError");
+        console.log("  status = ", e.status, e.statusText);
+
+        this.loading = false;
       }
     }
 

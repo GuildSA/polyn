@@ -106,11 +106,12 @@ exports.claimBusiness = functions.https.onRequest((req, res) => {
   });
 });
 
-exports.testGeofire = functions.https.onRequest((req, res) => {
+exports.sendRequestLocation = functions.https.onRequest((req, res) => {
 
   const categoryPath = req.query.categoryPath;
   const title = req.query.title;
   const desc = req.query.desc;
+  const shipping = req.query.shipping;
   const buyerId = req.query.buyerId;
   const buyer = req.query.buyer;
   const requestId = req.query.requestId;
@@ -123,38 +124,181 @@ exports.testGeofire = functions.https.onRequest((req, res) => {
   console.log("long: ", long);
   console.log("rangeInKm: ", rangeInKm);
 
-  cors(req, res, () => {
+  let request = {
+    title: title,
+    desc: desc,
+    shipping: shipping,
+    buyer: buyer,
+    buyerId: buyerId,
+    requestId: requestId,
+    timeStamp: admin.database.ServerValue.TIMESTAMP
+  };
 
-    var sellersByLocationRef = admin.database().ref("locations/" + categoryPath + "/");
-    var geoFireSellersRef = new GeoFire(sellersByLocationRef);
+  // Add the request under the given category.
+// TODO: So far, adding this to the database serves no purpose. Should we keep it?
+  admin.database().ref('/requests/' + categoryPath + '/requests').push(request).then(snapshot => {
+    cors(req, res, () => {
 
-    var geoQuery = geoFireSellersRef.query({
-      center: [lat, long],
-      radius: rangeInKm // Kilometers
+      var sellersByLocationRef = admin.database().ref("locations/" + categoryPath + "/");
+      var geoFireSellersRef = new GeoFire(sellersByLocationRef);
+
+      var geoQuery = geoFireSellersRef.query({
+        center: [lat, long],
+        radius: rangeInKm // Kilometers
+      });
+
+      var onKeyEnteredRegistration = geoQuery.on("key_entered", function(key, location) {
+        console.log(key + " entered the query.");
+        console.log("location: " + JSON.stringify(location, null, 4));
+
+        // Use the location key to get the seller key under the target categoryPath.
+        admin.database().ref('/requests/' + categoryPath + '/sellers/' + key).once('value').then(function(snapshot) {
+
+          var sellerKey = snapshot.val();
+
+          if(sellerKey) {
+            console.log("sellerKey: " + JSON.stringify(sellerKey, null, 4));
+
+            // The sellerKey points to the User's ID so we can get their info.
+            admin.database().ref('/users/' + sellerKey + '/info').once('value').then(function(snapshot) {
+
+              var usersInfo = snapshot.val();
+
+              // Use the User's info to get their token and send a message.
+              if(usersInfo) {
+                console.log("usersInfo: " + JSON.stringify(usersInfo, null, 4));
+
+// TODO: !!!!
+
+              } else {
+                console.log("usersInfo: null");
+              }
+
+            });
+
+          } else {
+            console.log("sellerEntry: null");
+          }
+
+        });
+
+
+
+      });
+
+      var onReadyRegistration = geoQuery.on("ready", function() {
+        console.log("  The 'ready' event fired - cancelling query.");
+        geoQuery.cancel();
+        res.status(200).end();
+      })
+
+      //res.status(200).end();
     });
 
-    var onKeyEnteredRegistration = geoQuery.on("key_entered", function(key, location) {
-      console.log(key + " entered the query.");
-      console.log("location: " + JSON.stringify(location, null, 4));
+
+    // // Get all the sellers for this category.
+    // admin.database().ref('/requests/' + categoryPath + '/sellers').once('value').then(function(snapshot) {
+
+    //   // For each seller - get their user ID.
+    //   snapshot.forEach(function(childSnapshot) {
+
+    //     var childKey = childSnapshot.key;
+    //     var childData = childSnapshot.val();
+
+    //     console.log(childKey + " = " + childData); // The childData is the user's ID who wants the message!
+
+    //     // Use the User's ID to get their info.
+    //     admin.database().ref('/users/' + childData + '/info').once('value').then(function(snapshot) {
+
+    //       var usersInfo = snapshot.val();
+
+    //       // Use the User's info to get their token and send a message.
+    //       if(usersInfo) {
+            
+    //         // For our seller, add the request to the user's 'requests' key.
+    //         let request = {
+    //           title: title,
+    //           desc: desc,
+    //           shipping: shipping,
+    //           buyer: buyer,
+    //           buyerId: buyerId,
+    //           requestId: requestId,
+    //           timeStamp: admin.database.ServerValue.TIMESTAMP
+    //         };
+
+    //         admin.database().ref('/users/' + childData + '/requests').push(request).then(snapshot => {
+
+    //           console.log("token = " + usersInfo.token);
+
+    //           // If you use notification over data - setBackgroundMessageHandler will not fire.
+    //           let payload = {
+    //             //notification: {
+    //             data: {
+    //               title: title,
+    //               body: desc,
+    //               icon: "/images/vr-msg.png",
+    //               clickAction: "https://vinylrecords.io/"
+    //             }
+    //           };
+
+    //           admin.messaging().sendToDevice(usersInfo.token, payload)
+    //           .then(function(response) {
+    //             console.log("Successfully sent message:", response);
+    //             res.status(200).end();
+    //           })
+    //           .catch(function(error) {
+    //             console.log("Error sending message:", error);
+    //             res.status(500).end();
+    //           });
+    //         });
+    //       }
+    //     });
+    //   });
     });
 
-    var onReadyRegistration = geoQuery.on("ready", function() {
-      console.log("  The 'ready' event fired - cancelling query.");
-      geoQuery.cancel();
-      res.status(200).end();
-    })
+  //   cors(req, res, () => {
+  //     //res.redirect(303, snapshot.ref); // Redirect with 303 SEE OTHER to the URL of the pushed object in the Firebase console.
+  //     //res.send("SUCCESS");
+  //     res.status(200).end();
+  //   });
+  // });
 
-    //res.status(200).end();
+//   cors(req, res, () => {
 
-  });
+//     var sellersByLocationRef = admin.database().ref("locations/" + categoryPath + "/");
+//     var geoFireSellersRef = new GeoFire(sellersByLocationRef);
+
+//     var geoQuery = geoFireSellersRef.query({
+//       center: [lat, long],
+//       radius: rangeInKm // Kilometers
+//     });
+
+//     var onKeyEnteredRegistration = geoQuery.on("key_entered", function(key, location) {
+//       console.log(key + " entered the query.");
+//       console.log("location: " + JSON.stringify(location, null, 4));
+
+// // TODO: Send out request!
+
+//     });
+
+//     var onReadyRegistration = geoQuery.on("ready", function() {
+//       console.log("  The 'ready' event fired - cancelling query.");
+//       geoQuery.cancel();
+//       res.status(200).end();
+//     })
+
+//     //res.status(200).end();
+
+//   });
 
 });
 
-exports.sendRequest = functions.https.onRequest((req, res) => {
+exports.sendRequestAll = functions.https.onRequest((req, res) => {
 
   const categoryPath = req.query.categoryPath;
   const title = req.query.title;
   const desc = req.query.desc;
+  const shipping = req.query.shipping;
   const buyerId = req.query.buyerId;
   const buyer = req.query.buyer;
   const requestId = req.query.requestId;
@@ -162,6 +306,7 @@ exports.sendRequest = functions.https.onRequest((req, res) => {
   let request = {
       title: title,
       desc: desc,
+      shipping: shipping,
       buyer: buyer,
       buyerId: buyerId,
       requestId: requestId,
@@ -178,57 +323,58 @@ exports.sendRequest = functions.https.onRequest((req, res) => {
       // For each seller - get their user ID.
       snapshot.forEach(function(childSnapshot) {
 
-          var childKey = childSnapshot.key;
-          var childData = childSnapshot.val();
+        var childKey = childSnapshot.key;
+        var childData = childSnapshot.val();
 
-          console.log(childKey + " = " + childData); // The childData is the user's ID who wants the message!
+        console.log(childKey + " = " + childData); // The childData is the user's ID who wants the message!
 
-            // Use the User's ID to get their info.
-            admin.database().ref('/users/' + childData + '/info').once('value').then(function(snapshot) {
+        // Use the User's ID to get their info.
+        admin.database().ref('/users/' + childData + '/info').once('value').then(function(snapshot) {
 
-              var usersInfo = snapshot.val();
+          var usersInfo = snapshot.val();
 
-              // Use the User's info to get their token and send a message.
-              if(usersInfo) {
-                
-                // For our seller, add the request to the user's 'requests' key.
-                let request = {
+          // Use the User's info to get their token and send a message.
+          if(usersInfo) {
+            
+            // For our seller, add the request to the user's 'requests' key.
+            let request = {
+              title: title,
+              desc: desc,
+              shipping: shipping,
+              buyer: buyer,
+              buyerId: buyerId,
+              requestId: requestId,
+              timeStamp: admin.database.ServerValue.TIMESTAMP
+            };
+
+            admin.database().ref('/users/' + childData + '/requests').push(request).then(snapshot => {
+
+              console.log("token = " + usersInfo.token);
+
+              // If you use notification over data - setBackgroundMessageHandler will not fire.
+              let payload = {
+                //notification: {
+                data: {
                   title: title,
-                  desc: desc,
-                  buyer: buyer,
-                  buyerId: buyerId,
-                  requestId: requestId,
-                  timeStamp: admin.database.ServerValue.TIMESTAMP
-                };
+                  body: desc,
+                  icon: "/images/vr-msg.png",
+                  clickAction: "https://vinylrecords.io/"
+                }
+              };
 
-                admin.database().ref('/users/' + childData + '/requests').push(request).then(snapshot => {
-
-                  console.log("token = " + usersInfo.token);
-
-                  // If you use notification over data - setBackgroundMessageHandler will not fire.
-                  let payload = {
-                    //notification: {
-                    data: {
-                      title: title,
-                      body: desc,
-                      icon: "/images/vr-msg.png",
-                      clickAction: "https://vinylrecords.io/"
-                    }
-                  };
-
-                  admin.messaging().sendToDevice(usersInfo.token, payload)
-                  .then(function(response) {
-                    console.log("Successfully sent message:", response);
-                    res.status(200).end();
-                  })
-                  .catch(function(error) {
-                    console.log("Error sending message:", error);
-                    res.status(500).end();
-                  });
-                });
-              }
+              admin.messaging().sendToDevice(usersInfo.token, payload)
+              .then(function(response) {
+                console.log("Successfully sent message:", response);
+                res.status(200).end();
+              })
+              .catch(function(error) {
+                console.log("Error sending message:", error);
+                res.status(500).end();
+              });
             });
+          }
         });
+      });
     });
 
     cors(req, res, () => {

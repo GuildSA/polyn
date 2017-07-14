@@ -65,8 +65,8 @@
     </iron-ajax>
 
     <iron-ajax
-      id="testGeofire"
-      url="https://us-central1-polyn-3c431.cloudfunctions.net/testGeofire"
+      id="sendRequestLocation"
+      url="https://us-central1-polyn-3c431.cloudfunctions.net/sendRequestLocation"
       method="POST"
       loading="{{loading}}"
       on-response="_handleTestGeofireResponse"
@@ -191,14 +191,15 @@
               buyerId: "XXX",
               buyer: "XXX",
               requestId: "XXX",
+              shipping: false,
 
               lat: latitude,
               long: longitude,
               rangeInKm: 30
             };
 
-            self.$.testGeofire.params = params;
-            self.$.testGeofire.generateRequest(); // Calls: testGeofire()
+            self.$.sendRequestLocation.params = params;
+            self.$.sendRequestLocation.generateRequest(); // Calls: sendRequestLocation()
           },
           
           function(error) {
