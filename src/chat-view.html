@@ -354,6 +354,15 @@
         // }
       }
 
+      _isTimeStampPresent(timeStamp, theArray) {
+        for(var i = 0; i < theArray.length; i++) {
+          if(theArray[i].timeStamp == timeStamp) {
+            return true;
+          }
+        }
+        return false;
+      }
+
       _loadChats() {
 
         if(this.chatMessagesId) {
@@ -364,6 +373,9 @@
 
           var setMessage = function(snapshot) {
             var val = snapshot.val();
+
+            // var key = snapshot.key;
+            // console.log(" key: " + key);
 
             if(self.user.uid == val.senderId) {
               if(self.usersInfo.photoThumbUrl) {
@@ -378,9 +390,11 @@
             // Each chat message sent.
             //console.log(" snapshot: " + JSON.stringify(snapshot, null, 4));
 
-            self.push('chatMessages', val);
-
-            self.chatMessages.sort(function(a, b){return a.timeStamp - b.timeStamp});
+            // Use timeStamp to check for duplicates in the chatMessages array.
+            if(!self._isTimeStampPresent(snapshot.timeStamp, self.chatMessages)) {
+              self.push('chatMessages', val);
+              self.chatMessages.sort(function(a, b){return a.timeStamp - b.timeStamp});
+            }
 
 // TODO: We need a way to know how many in total will get pulled down.
             //self.loading = false;
