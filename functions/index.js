@@ -135,7 +135,7 @@ exports.sendRequestLocation = functions.https.onRequest((req, res) => {
   };
 
   // Add the request under the given category.
-// TODO: So far, adding this to the database serves no purpose. Should we keep it?
+  // TODO: So far, adding this to the database serves no purpose. Should we keep it?
   admin.database().ref('/requests/' + categoryPath + '/requests').push(request).then(snapshot => {
     cors(req, res, () => {
 
@@ -166,24 +166,52 @@ exports.sendRequestLocation = functions.https.onRequest((req, res) => {
 
               // Use the User's info to get their token and send a message.
               if(usersInfo) {
-                console.log("usersInfo: " + JSON.stringify(usersInfo, null, 4));
+                
+                // For our seller, add the request to the user's 'requests' key.
+                let request = {
+                  title: title,
+                  desc: desc,
+                  shipping: shipping,
+                  buyer: buyer,
+                  buyerId: buyerId,
+                  requestId: requestId,
+                  timeStamp: admin.database.ServerValue.TIMESTAMP
+                };
 
-// TODO: !!!!
+                admin.database().ref('/users/' + sellerKey + '/requests').push(request).then(snapshot => {
 
+                  console.log("token = " + usersInfo.token);
+
+                  // If you use notification over data - setBackgroundMessageHandler will not fire.
+                  let payload = {
+                    //notification: {
+                    data: {
+                      title: title,
+                      body: desc,
+                      icon: "/images/vr-msg.png",
+                      clickAction: "https://vinylrecords.io/"
+                    }
+                  };
+
+                  admin.messaging().sendToDevice(usersInfo.token, payload)
+                  .then(function(response) {
+                    console.log("Successfully sent message:", response);
+                    res.status(200).end();
+                  })
+                  .catch(function(error) {
+                    console.log("Error sending message:", error);
+                    res.status(500).end();
+                  });
+                });
               } else {
                 console.log("usersInfo: null");
               }
-
             });
 
           } else {
-            console.log("sellerEntry: null");
+            console.log("sellerKey: null");
           }
-
         });
-
-
-
       });
 
       var onReadyRegistration = geoQuery.on("ready", function() {
@@ -191,106 +219,8 @@ exports.sendRequestLocation = functions.https.onRequest((req, res) => {
         geoQuery.cancel();
         res.status(200).end();
       })
-
-      //res.status(200).end();
     });
-
-
-    // // Get all the sellers for this category.
-    // admin.database().ref('/requests/' + categoryPath + '/sellers').once('value').then(function(snapshot) {
-
-    //   // For each seller - get their user ID.
-    //   snapshot.forEach(function(childSnapshot) {
-
-    //     var childKey = childSnapshot.key;
-    //     var childData = childSnapshot.val();
-
-    //     console.log(childKey + " = " + childData); // The childData is the user's ID who wants the message!
-
-    //     // Use the User's ID to get their info.
-    //     admin.database().ref('/users/' + childData + '/info').once('value').then(function(snapshot) {
-
-    //       var usersInfo = snapshot.val();
-
-    //       // Use the User's info to get their token and send a message.
-    //       if(usersInfo) {
-            
-    //         // For our seller, add the request to the user's 'requests' key.
-    //         let request = {
-    //           title: title,
-    //           desc: desc,
-    //           shipping: shipping,
-    //           buyer: buyer,
-    //           buyerId: buyerId,
-    //           requestId: requestId,
-    //           timeStamp: admin.database.ServerValue.TIMESTAMP
-    //         };
-
-    //         admin.database().ref('/users/' + childData + '/requests').push(request).then(snapshot => {
-
-    //           console.log("token = " + usersInfo.token);
-
-    //           // If you use notification over data - setBackgroundMessageHandler will not fire.
-    //           let payload = {
-    //             //notification: {
-    //             data: {
-    //               title: title,
-    //               body: desc,
-    //               icon: "/images/vr-msg.png",
-    //               clickAction: "https://vinylrecords.io/"
-    //             }
-    //           };
-
-    //           admin.messaging().sendToDevice(usersInfo.token, payload)
-    //           .then(function(response) {
-    //             console.log("Successfully sent message:", response);
-    //             res.status(200).end();
-    //           })
-    //           .catch(function(error) {
-    //             console.log("Error sending message:", error);
-    //             res.status(500).end();
-    //           });
-    //         });
-    //       }
-    //     });
-    //   });
-    });
-
-  //   cors(req, res, () => {
-  //     //res.redirect(303, snapshot.ref); // Redirect with 303 SEE OTHER to the URL of the pushed object in the Firebase console.
-  //     //res.send("SUCCESS");
-  //     res.status(200).end();
-  //   });
-  // });
-
-//   cors(req, res, () => {
-
-//     var sellersByLocationRef = admin.database().ref("locations/" + categoryPath + "/");
-//     var geoFireSellersRef = new GeoFire(sellersByLocationRef);
-
-//     var geoQuery = geoFireSellersRef.query({
-//       center: [lat, long],
-//       radius: rangeInKm // Kilometers
-//     });
-
-//     var onKeyEnteredRegistration = geoQuery.on("key_entered", function(key, location) {
-//       console.log(key + " entered the query.");
-//       console.log("location: " + JSON.stringify(location, null, 4));
-
-// // TODO: Send out request!
-
-//     });
-
-//     var onReadyRegistration = geoQuery.on("ready", function() {
-//       console.log("  The 'ready' event fired - cancelling query.");
-//       geoQuery.cancel();
-//       res.status(200).end();
-//     })
-
-//     //res.status(200).end();
-
-//   });
-
+  });
 });
 
 exports.sendRequestAll = functions.https.onRequest((req, res) => {
@@ -314,7 +244,7 @@ exports.sendRequestAll = functions.https.onRequest((req, res) => {
   };
 
   // Add the request under the given category.
-// TODO: So far, adding this to the database serves no purpose. Should we keep it?
+  // TODO: So far, adding this to the database serves no purpose. Should we keep it?
   admin.database().ref('/requests/' + categoryPath + '/requests').push(request).then(snapshot => {
 
     // Get all the sellers for this category.
