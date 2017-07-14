@@ -403,9 +403,12 @@
             name: this.otherUsersInfo.name,
             text: this.chatInfo.desc,
             senderId: this.chatInfo.buyerId,
-            photoThumbUrl: this.otherUsersInfo.photoThumbUrl,
             timeStamp: firebase.database.ServerValue.TIMESTAMP
           };
+
+          if(this.otherUsersInfo.photoThumbUrl) {
+            fakedMessage.photoThumbUrl = this.otherUsersInfo.photoThumbUrl;
+          }
 
           this.push('chatMessages', fakedMessage);
         }
@@ -566,9 +569,12 @@
             name: this.otherUsersInfo.name,
             text: this.chatInfo.desc,
             senderId: this.chatInfo.buyerId,
-            photoThumbUrl: this.otherUsersInfo.photoThumbUrl,
             timeStamp: firebase.database.ServerValue.TIMESTAMP
           };
+
+          if(this.otherUsersInfo.photoThumbUrl) {
+            firstMessage.photoThumbUrl = this.otherUsersInfo.photoThumbUrl;
+          }
 
           this.chatMessages = []; // Get rid of the faked message.
 
