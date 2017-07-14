@@ -2,32 +2,33 @@
 
  -- App / Database --
 
-Sellers that do not have a location set cannot be found at all!
-  Do we force them all to add a location?
-  Or, do we pull them separately and add them to the final list?
-
-Data that we scraped is still missing phone and email. Is this ok or should we fill them in?
+The sellerinfo view needs to set the seller's location based on address given.
 
 What do we do with sellers that we add manually but are not claimed - when a 
 request is submitted?
 
 Add an admin view for adding new sellers manually.
 
-Make use of the new geo location test code in the cloud function 'sendRequest'.
-
 Need cloud code to send emails when notifications can't be sent.
 
 Add paging to firebase calls that pull down a lot of data.
 
-Upload a copy of the image pulled from social including a thumbnail.
-
 Send email to admin to verify a new business owner asking to claim a business.
 
+
+DONE - Make use of the new geo location test code in the cloud function 'sendRequest'.
 DONE - Cache the zip code and the lat/long based on that zip code.
 DONE - Need python code to scrap webistes for sellers so we can add them manually.
 DONE - Add code to drive the badge count for request.
 DONE - Force the app to reset all tab view stacks after logout.
 DONE - Add image upload to business UI.
+
+DONE - Upload a copy of the image pulled from social including a thumbnail.
+  NOTE: Not going to do it. Maybe later.
+DONE - Data that we scraped is still missing phone and email. Is this ok or should we fill them in?
+  NOTE: Just leave phone and email empty. Code added to catch this.
+DONE - Sellers that do not have a location set cannot be found at all!
+  NOTE: We'll force eveyone to have a location.
 
 --------------------------------------------------------------------------------
 
@@ -36,8 +37,6 @@ DONE - Add image upload to business UI.
 Need UI to explain the basic concept to new users who are buyers.
 
 Need UI to explain the basic concept to new users who are sellers.
-
-Need UI to help sellers claim a business that we added manually.
 
 Need to find best way to truncate text on home page. 
 
@@ -49,6 +48,7 @@ Center the record image for when the business has no image chosen.
 There is a flash that shows when the user is switching to the messages tab
 - Will need to add loading spinner and only show the view once the messages have loaded. 
 
+DONE - Need UI to help sellers claim a business that we added manually.
 DONE - Need UI to allow the user to set parameters for location searches.
 DONE - Add address inputs to business UI.
 DONE - Need UI for image upload on business UI.
