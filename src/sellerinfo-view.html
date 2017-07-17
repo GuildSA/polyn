@@ -73,10 +73,10 @@
           <paper-input id="name" label="Business name" required auto-validate error-message="Please enter the name of your business"> 
             <iron-icon icon="custom-icons:business" slot="prefix"></iron-icon>
           </paper-input>
-          <paper-input id="email" label="Business email" required auto-validate error-message="Please enter your business email address">
+          <paper-input id="email" label="Business email" auto-validate error-message="Please enter your business email address">
             <iron-icon icon="custom-icons:email" slot="prefix">
           </paper-input>
-          <paper-input id="phone" label="Phone number"  required auto-validate error-message="Please enter a valid phone number">
+          <paper-input id="phone" label="Phone number" auto-validate error-message="Please enter a valid phone number">
             <iron-icon icon="custom-icons:phone" slot="prefix">
           </paper-input>
           <paper-input id="website" label="Website">
@@ -95,7 +95,7 @@
           <paper-input id="state" label="State">
           </paper-input>
 
-          <paper-input id="zip" label="Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]">
+          <paper-input id="zip" label="Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]" required>
           </paper-input>
 
           <template is="dom-if" if="[[!usersInfo.sellerId]]">
@@ -105,6 +105,8 @@
           <template is="dom-if" if="[[usersInfo.sellerId]]">
             <paper-button id="registerbusiness" class="sign-in" on-tap="_onTapSaveBusiness" raised>Save</paper-button>
           </template>
+
+<!-- <paper-button id="test" class="sign-in" on-tap="_onTapTest" raised>TEST</paper-button> -->
 
         </div>
       </div>
@@ -119,6 +121,11 @@
 
       static get properties() {
         return {
+          sellersCategory: {
+            type: String,
+            value: "collectables/sub/vinylRecords",
+            readOnly: true
+          },
           user: {
             type: Object,
             observer: '_userChanged'
@@ -133,7 +140,7 @@
           },
           photoUrl: {
             type: String,
-            value: "images/seller_placeholder.png"
+            value: "images/svg/VinylRecord.svg"
           },
           croppedImage: {
             type: Object,
@@ -143,6 +150,10 @@
             type: Boolean,
             observer: '_editingSellerImageChanged'
           }
+          // location: {
+          //   type: Array,
+          //   value: null
+          // }
         };
       }
 
@@ -269,7 +280,6 @@
           this.$.website.value = sellersInfo.website;
 
           this.$.address.value = sellersInfo.address;
-          //this.$.addressLine2.value = sellersInfo.address.line2;
           this.$.city.value = sellersInfo.city;
           this.$.state.value = sellersInfo.state;
           this.$.zip.value = sellersInfo.zip;
@@ -283,6 +293,11 @@
 
         if(!this.$.name.value || this.$.name.value.length == 0) {
           Utility.showErrorToast("A Business Name must be provided.");
+          return;
+        }
+
+        if(!this.$.zip.value || this.$.zip.value.length == 0) {
+          Utility.showErrorToast("We need at least a zip code to establish a general location.");
           return;
         }
 
@@ -302,12 +317,12 @@
         //   return;
         // }
 
-        this._registerNewSeller("collectables/sub/vinylRecords");
+        this._registerNewSeller();
       }
 
       _onTapSaveBusiness() {
         console.log("SellerInfoView._onTapSaveBusiness");
-        this._saveSeller("collectables/sub/vinylRecords");
+        this._saveSeller();
       }
 
       _saveSeller() {
@@ -321,40 +336,103 @@
           console.log("  Error: User Info is not defined!");
         }
 
-        var self = this;
-
-        if(this.$.name.value && this.$.name.value.length > 0) {
-          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/name").set(this.$.name.value);
+        if(!this.$.name.value || this.$.name.value.length == 0) {
+          Utility.showErrorToast("A Business Name must be provided.");
+          return;
         }
 
+        if(!this.$.zip.value || this.$.zip.value.length == 0) {
+          Utility.showErrorToast("We need at least a zip code to establish a general location.");
+          return;
+        }
+
+        var sellerData = {
+          name: this.$.name.value,
+        };
+
+        // Example: "Record Guys , 701 S. Leggett , Abilene, TX 79562, United States of America"
+// TODO: Including the name is risky. If the business is new or not listed on Google - it will fail!
+        //var google_maps_search = this.$.name.value + " , ";
+        sellerData.google_maps_search = "";
+
         if(this.$.email.value && this.$.email.value.length > 0) {
-          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/email").set(this.$.email.value);
+          sellerData.email = this.$.email.value;
         }
 
         if(this.$.phone.value && this.$.phone.value.length > 0) {
-          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/phone").set(this.$.phone.value);
+          sellerData.phone = this.$.phone.value;
         }
 
         if(this.$.website.value && this.$.website.value.length > 0) {
-          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/website").set(this.$.website.value);
+          sellerData.website = this.$.website.value;
         }
 
         // Address:
+
+        var fullAddressAttempt = false;
+
         if(this.$.address.value && this.$.address.value.length > 0) {
-          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address").set(this.$.address.value);
+          sellerData.address = this.$.address.value;
+          sellerData.google_maps_search += this.$.address.value + " , ";
+          fullAddressAttempt = true;
         }
-        // if(this.$.addressLine2.value && this.$.addressLine2.value.length > 0) {
-        //   firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/address/line2").set(this.$.addressLine2.value);
-        // }
+
         if(this.$.city.value && this.$.city.value.length > 0) {
-          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/city").set(this.$.city.value);
+          sellerData.city = this.$.city.value;
+          sellerData.google_maps_search += this.$.city.value + " , ";
         }
+
         if(this.$.state.value && this.$.state.value.length > 0) {
-          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/state").set(this.$.state.value);
+          sellerData.state = this.$.state.value;
+          sellerData.google_maps_search += this.$.state.value + " ";
         }
+
         if(this.$.zip.value && this.$.zip.value.length > 0) {
-          firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/zip").set(this.$.zip.value);
+          sellerData.zip = this.$.zip.value;
+
+          if(fullAddressAttempt) {
+            sellerData.google_maps_search += this.$.zip.value + ", United States of America";
+          } else {
+            // We don't have a full address - just use zip code alone to at least have a general location.
+            // This might mean the seller doesn't have a brick and mortar buisness and doesn't want
+            // to give out their home address.
+            sellerData.google_maps_search = this.$.zip.value;
+          }
         }
+
+        //console.log("google_maps_search = " + sellerData.google_maps_search);
+
+        var polynApp = document.getElementById("polynApp");
+        var googleMapsApi = polynApp.$.googleMapsApi;
+        var geocoder = new googleMapsApi.api.Geocoder();
+        
+        var self = this;
+
+        // Convert the given business address into a lat/long.
+        geocoder.geocode( {'address': sellerData.google_maps_search}, function(results, status) {
+
+          if(status == google.maps.GeocoderStatus.OK) {
+
+            const latitude = results[0].geometry.location.lat();
+            const longitude = results[0].geometry.location.lng();
+
+            //console.log("" + latitude + ", " + longitude);
+
+            if(latitude && longitude) {
+
+              firebase.app("polyn-app").database().ref("sellers/" + self.usersInfo.sellerId).set(sellerData).then(function() {
+                // Record the updated location of the business.
+                GeofireManager.addSellerToLocations("locations/", self.sellersCategory, self.usersInfo.sellerId, latitude, longitude);
+              });
+  
+            } else {
+              Utility.showErrorToast("Sorry, we were unable to convert your address into a valid location.");
+            }
+          } else {
+            console.log("  Geocode was not successful for the following reason: " + status);
+            Utility.showErrorToast("Sorry, we were unable to convert your address into a valid location.");
+          }
+        });
       }
 
       _onTapSellerPhoto() {
@@ -362,8 +440,8 @@
         this.$.camera.click();
       }
 
-      _registerNewSeller(targetCategory) {
-        console.log("ProfileView._registerNewSeller: " + targetCategory);
+      _registerNewSeller() {
+        console.log("ProfileView._registerNewSeller");
 
         if(!this.user.uid) {
           console.log("  Error: User is not defined!");
@@ -390,6 +468,11 @@
               name: self.$.name.value,
             };
 
+            // Example: "Record Guys , 701 S. Leggett , Abilene, TX 79562, United States of America"
+// TODO: Including the name is risky. If the business is new or not listed on Google - it will fail!
+            //newSellerData.google_maps_search = self.$.name.value + " , ";
+            newSellerData.google_maps_search = "";
+
             if(self.$.email.value && self.$.email.value.length > 0) {
               newSellerData.email = self.$.email.value;
             }
@@ -403,34 +486,79 @@
             }
 
             // Address:
+
+            var fullAddressAttempt = false;
+
             if(self.$.address.value && self.$.address.value.length > 0) {
-              newSellerData.address = this.$.address;
+              newSellerData.address = self.$.address.value;
+              newSellerData.google_maps_search += self.$.address.value + " , ";
+              fullAddressAttempt = true;
             }
 
-            // if(self.$.addressLine2.value && self.$.addressLine2.value.length > 0) {
-            //   newSellerData.address.line2 = this.$.addressLine2.value;
-            // }
-
             if(self.$.city.value && self.$.city.value.length > 0) {
-              newSellerData.city = this.$.city.value;
+              newSellerData.city = self.$.city.value;
+              newSellerData.google_maps_search += self.$.city.value + " , ";
             }
 
             if(self.$.state.value && self.$.state.value.length > 0) {
-              newSellerData.state = this.$.state.value;
+              newSellerData.state = self.$.state.value;
+              newSellerData.google_maps_search += self.$.state.value + " ";
             }
 
             if(self.$.zip.value && self.$.zip.value.length > 0) {
-              newSellerData.zip = this.$.zip.value;
+              newSellerData.zip = self.$.zip.value;
+
+              if(fullAddressAttempt) {
+                newSellerData.google_maps_search += self.$.zip.value + ", United States of America";
+              } else {
+                // We don't have a full address - just use zip code alone to at least have a general location.
+                // This might mean the seller doesn't have a brick and mortar buisness and doesn't want
+                // to give out their home address.
+                newSellerData.google_maps_search = self.$.zip.value;
+              }
             }
 
-            firebase.app("polyn-app").database().ref("sellers/" + newSellerKey).set(newSellerData).then(function() {
+            //console.log("google_maps_search = " + newSellerData.google_maps_search);
 
-              // Record the new 'sellerId' under the user's 'info'.
-              const refPathSellerId = refPathInfo + "/sellerId";
-              firebase.app("polyn-app").database().ref(refPathSellerId).set(newSellerKey);
+            var polynApp = document.getElementById("polynApp");
+            var googleMapsApi = polynApp.$.googleMapsApi;
+            var geocoder = new googleMapsApi.api.Geocoder();
+            
+            // Convert the given business address into a lat/long.
+            geocoder.geocode( {'address': newSellerData.google_maps_search}, function(results, status) {
 
-              self._verifySellerOnCategory(targetCategory);
+              if(status == google.maps.GeocoderStatus.OK) {
+
+                const latitude = results[0].geometry.location.lat();
+                const longitude = results[0].geometry.location.lng();
+
+                //console.log("" + latitude + ", " + longitude);
+
+                if(latitude && longitude) {
+
+                  //console.log("  newSellerData: " + JSON.stringify(newSellerData, null, 4));
+
+                  firebase.app("polyn-app").database().ref("sellers/" + newSellerKey).set(newSellerData).then(function() {
+
+                    // Record the new 'sellerId' under the user's 'info'.
+                    const refPathSellerId = refPathInfo + "/sellerId";
+                    firebase.app("polyn-app").database().ref(refPathSellerId).set(newSellerKey);
+
+                    // Use the new 'sellerId' to record the location of the new business.
+                    GeofireManager.addSellerToLocations("locations/", self.sellersCategory, newSellerKey, latitude, longitude);
+
+                    self._verifySellerOnCategory(self.sellersCategory);
+                  });
+
+                } else {
+                  Utility.showErrorToast("Sorry, we were unable to convert your address into a valid location.");
+                }
+              } else {
+                console.log("  Geocode was not successful for the following reason: " + status);
+                Utility.showErrorToast("Sorry, we were unable to convert your address into a valid location.");
+              }
             });
+
           } else {
             console.log("  " + self.user.uid + " has already been added as a seller.");
           }
