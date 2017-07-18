@@ -18,7 +18,7 @@
       padding: 10px;
     }
 
-    #test-thumb {
+    #thumbnail {
       border-radius: 60px;
       height: 50px;
       width: 50px;
@@ -48,18 +48,16 @@
   <dom-repeat items="[[persistedChats]]" as="chat" initial-count="5">
     <template>
       <div class="card" on-tap="_onTapMessage">
-        <div class="horizontal justified layout">
+        <div class="flex horizontal justified layout">
 
-          <div class="thumbnail">
-            <template is="dom-if" if="[[chat.photoThumbUrl]]">
-              <iron-image id="test-thumb" sizing="cover" preload fade src="[[chat.photoThumbUrl]]"></iron-image> 
-            </template>
-            <template is="dom-if" if="[[!chat.photoThumbUrl]]">
-              <iron-image id="test-thumb" sizing="cover" preload fade src="images/anonymous_profile.png"></iron-image> 
-            </template>
-          </div>
+          <template is="dom-if" if="[[chat.photoThumbUrl]]">
+            <iron-image id="thumbnail" sizing="cover" preload fade src="[[chat.photoThumbUrl]]"></iron-image> 
+          </template>
+          <template is="dom-if" if="[[!chat.photoThumbUrl]]">
+            <iron-image id="thumbnail" sizing="cover" preload fade src="images/anonymous_profile.png"></iron-image> 
+          </template>
 
-          <div class="vertical layout">
+          <div class="flex vertical layout">
             <p><b>[[chat.seller]]</b></p>
             <div class="seller-location">
               [[chat.nameAndLocation]]
@@ -67,7 +65,7 @@
           </div>
           
           <div class="close">
-            <paper-icon-button id="closeBtn" icon="custom-icons:close" on-tap="_onTapDelete"></paper-icon-button>
+            <paper-icon-button icon="custom-icons:close" on-tap="_onTapDelete"></paper-icon-button>
           </div>
 
         </div>
