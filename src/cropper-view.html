@@ -2,11 +2,13 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="cropper.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <dom-module id="cropper-view">
 
   <template>
-    <style include="shared-styles cropper-styles">
+    <style include="shared-styles cropper-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
         display: block;
         padding: 10px;
@@ -16,14 +18,30 @@
         max-width: 100%;
       }
 
+      .cropButtons {
+        @apply(--layout-horizontal);
+        margin-bottom: 15px; 
+      }
+
+      #cropBtn {
+        @apply(--layout-flex);
+      }
+
+      #cancelBtn {
+        background-color: #F57951;
+      }
+
     </style>
 
     <div class="card">
-      <paper-button on-tap="_onTapCropImage" raised="">Crop Image</paper-button>
-      <paper-button on-tap="_onTapCancel" raised="">Cancel</paper-button>
+      <div class="cropButtons">
+        <paper-button id="cancelBtn" on-tap="_onTapCancel" raised="">Cancel</paper-button>
+        <paper-button id="cropBtn" on-tap="_onTapCropImage" raised="">Crop Image</paper-button>
+      </div>
       <div>
         <img id="originalImage">
       </div>
+
     </div>
 
   </template>
