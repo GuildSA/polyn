@@ -292,6 +292,7 @@ will only render 20.
 
   /* Polymer.OptionalMutableDataBehavior is only available with Polymer 2.0. */
   if (!Polymer.OptionalMutableDataBehavior) {
+    /* @polymerBehavior */
     Polymer.OptionalMutableDataBehavior = {};
   }
 
@@ -765,13 +766,6 @@ will only render 20.
 
     get _physicalRows() {
       return Math.ceil(this._physicalCount / this._itemsPerRow);
-    },
-
-    /**
-     * The parent node for the _userTemplate.
-     */
-    get _itemsParent() {
-      return Polymer.dom(Polymer.dom(this._userTemplate).parentNode);
     },
 
     get _scrollOffset() {
@@ -1500,7 +1494,7 @@ will only render 20.
      * Selects the item at the given index in the items array.
      *
      * @method selectIndex
-     * @param {Object} index The item instance.
+     * @param {number} index The index of the item in the items array.
      */
     selectIndex: function(index) {
       if (index < 0 || index >= this._virtualCount) {

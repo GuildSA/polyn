@@ -15,8 +15,7 @@
  */
 
 @import 'px-defaults-design/_settings.defaults.scss';
-@import 'inuit-responsive-settings/_settings.responsive.scss';
-@import 'inuit-responsive-tools/_tools.responsive.scss';
+@import 'px-helpers-design/_generic.helpers.scss';
 
 /// Prepend value for all generated classes
 /// @group px-layout-design:variables:style
@@ -109,282 +108,210 @@ $inuit-global-border-box            : false !default;
  */
 .#{$inuit-layout-namespace}layout,
 %#{$inuit-layout-namespace}layout {
-    display: flex; /* [1] */
-    flex-wrap: wrap;
-    list-style: none;
-    margin: 0;
-    margin-left: -$inuit-base-spacing-unit;
-    padding: 0;
-
-    > {
-
-      /**
-       * 1. Space columns apart.
-       * 2. Full-width unless told to behave otherwise.
-       * 3. Required to combine fluid widths and fixed gutters.
-       */
-      .#{$inuit-layout-namespace}layout__item,
-      %#{$inuit-layout-namespace}layout__item {
-          padding-left: $inuit-base-spacing-unit; /* [1] */
-          flex: 1; /* [2] */
-          flex-basis: calculateRem($inuit-layout-min-width);
-
-          &:nth-last-child(-n+4):first-child,
-          &:nth-last-child(-n+4):first-child ~ .layout__item {
-            flex-basis: calculateRem($inuit-layout-min-width * 1.5);
-            @include media-query(desk) {
-              flex-basis: 0;
-            }
-          }
-
-          &:nth-last-child(-n+3):first-child,
-          &:nth-last-child(-n+3):first-child ~ .layout__item {
-            flex-basis: calculateRem($inuit-layout-min-width * 2);
-            @include media-query(desk) {
-              flex-basis: 0;
-            }
-          }
-
-          @include media-query(desk) {
-            flex-basis: 0;
-          }
-
-          @if $inuit-global-border-box == false {
-            box-sizing: border-box; /* [3] */
-          }
-
+  display: flex; /* [1] */
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  margin-left: -$inuit-base-spacing-unit;
+  padding: 0;
+  > {
+    /**
+      * 1. Space columns apart.
+      * 2. Full-width unless told to behave otherwise.
+      * 3. Required to combine fluid widths and fixed gutters.
+      */
+    .#{$inuit-layout-namespace}layout__item,
+    %#{$inuit-layout-namespace}layout__item {
+      padding-left: $inuit-base-spacing-unit; /* [1] */
+      flex: 1; /* [2] */
+      flex-basis: calculateRem($inuit-layout-min-width);
+      &:nth-last-child(-n+4):first-child,
+      &:nth-last-child(-n+4):first-child ~ .layout__item {
+        flex-basis: calculateRem($inuit-layout-min-width * 1.5);
+        @include media-query(desk) {
+          flex-basis: 0;
+        }
+      }
+      &:nth-last-child(-n+3):first-child,
+      &:nth-last-child(-n+3):first-child ~ .layout__item {
+        flex-basis: calculateRem($inuit-layout-min-width * 2);
+        @include media-query(desk) {
+          flex-basis: 0;
+        }
+      }
+      @include media-query(desk) {
+        flex-basis: 0;
+      }
+      @if $inuit-global-border-box == false {
+        box-sizing: border-box; /* [3] */
       }
     }
-
+  }
 }
 
 
 
 @if ($inuit-enable-layout--tiny == true) {
-
-    /**
-     * Layouts with tiny gutters.
-     */
-
-    .#{$inuit-layout-namespace}layout--tiny,
-    %#{$inuit-layout-namespace}layout--tiny {
-        margin-left: -($inuit-base-spacing-unit--tiny);
-
-        > .#{$inuit-layout-namespace}layout__item,
-        > %#{$inuit-layout-namespace}layout__item {
-            padding-left: $inuit-base-spacing-unit--tiny;
-        }
-
+  /**
+    * Layouts with tiny gutters.
+    */
+  .#{$inuit-layout-namespace}layout--tiny,
+  %#{$inuit-layout-namespace}layout--tiny {
+    margin-left: -($inuit-base-spacing-unit--tiny);
+    > .#{$inuit-layout-namespace}layout__item,
+    > %#{$inuit-layout-namespace}layout__item {
+        padding-left: $inuit-base-spacing-unit--tiny;
     }
-
+  }
 }
 
 @if ($inuit-enable-layout--small == true) {
-
-    /**
-     * Layouts with small gutters.
-     */
-
-    .#{$inuit-layout-namespace}layout--small,
-    %#{$inuit-layout-namespace}layout--small {
-        margin-left: -($inuit-base-spacing-unit--small);
-
-        > .#{$inuit-layout-namespace}layout__item,
-        > %#{$inuit-layout-namespace}layout__item {
-            padding-left: $inuit-base-spacing-unit--small;
-        }
-
+  /**
+    * Layouts with small gutters.
+    */
+  .#{$inuit-layout-namespace}layout--small,
+  %#{$inuit-layout-namespace}layout--small {
+    margin-left: -($inuit-base-spacing-unit--small);
+    > .#{$inuit-layout-namespace}layout__item,
+    > %#{$inuit-layout-namespace}layout__item {
+        padding-left: $inuit-base-spacing-unit--small;
     }
-
+  }
 }
 
 @if ($inuit-enable-layout--large == true) {
-
-    /**
-     * Layouts with large gutters.
-     */
-
-    .#{$inuit-layout-namespace}layout--large,
-    %#{$inuit-layout-namespace}layout--large {
-        margin-left: -($inuit-base-spacing-unit--large);
-
-        > .#{$inuit-layout-namespace}layout__item,
-        > %#{$inuit-layout-namespace}layout__item {
-            padding-left: $inuit-base-spacing-unit--large;
-        }
-
+  /**
+    * Layouts with large gutters.
+    */
+  .#{$inuit-layout-namespace}layout--large,
+  %#{$inuit-layout-namespace}layout--large {
+    margin-left: -($inuit-base-spacing-unit--large);
+    > .#{$inuit-layout-namespace}layout__item,
+    > %#{$inuit-layout-namespace}layout__item {
+        padding-left: $inuit-base-spacing-unit--large;
     }
-
+  }
 }
 
 @if ($inuit-enable-layout--huge == true) {
-
-    /**
-     * Layouts with huge gutters.
-     */
-
-    .#{$inuit-layout-namespace}layout--huge,
-    %#{$inuit-layout-namespace}layout--huge {
-        margin-left: -($inuit-base-spacing-unit--huge);
-
-        > .#{$inuit-layout-namespace}layout__item,
-        > %#{$inuit-layout-namespace}layout__item {
-            padding-left: $inuit-base-spacing-unit--huge;
-        }
-
+  /**
+    * Layouts with huge gutters.
+    */
+  .#{$inuit-layout-namespace}layout--huge,
+  %#{$inuit-layout-namespace}layout--huge {
+    margin-left: -($inuit-base-spacing-unit--huge);
+    > .#{$inuit-layout-namespace}layout__item,
+    > %#{$inuit-layout-namespace}layout__item {
+        padding-left: $inuit-base-spacing-unit--huge;
     }
-
+  }
 }
-
-
-
-
 
 @if ($inuit-enable-layout--flush == true) {
-
-    /**
-     * Layouts with no gutters.
-     */
-
-    .#{$inuit-layout-namespace}layout--flush,
-    %#{$inuit-layout-namespace}layout--flush {
-        margin-left: 0;
-
-        > .#{$inuit-layout-namespace}layout__item,
-        > %#{$inuit-layout-namespace}layout__item {
-            padding-left: 0;
-        }
-
+  /**
+    * Layouts with no gutters.
+    */
+  .#{$inuit-layout-namespace}layout--flush,
+  %#{$inuit-layout-namespace}layout--flush {
+    margin-left: 0;
+    > .#{$inuit-layout-namespace}layout__item,
+    > %#{$inuit-layout-namespace}layout__item {
+        padding-left: 0;
     }
-
+  }
 }
-
-
-
-
 
 @if ($inuit-enable-layout--rev == true) {
-
-    /**
-     * Reversed rendered order of layout items, e.g. items 1, 2, 3, 4 in your
-     * markup will display in order 4, 3, 2, 1 on your page.
-     */
-
-    .#{$inuit-layout-namespace}layout--rev,
-    %#{$inuit-layout-namespace}layout--rev {
-        flex-direction: row-reverse;
-    }
-
+  /**
+    * Reversed rendered order of layout items, e.g. items 1, 2, 3, 4 in your
+    * markup will display in order 4, 3, 2, 1 on your page.
+    */
+  .#{$inuit-layout-namespace}layout--rev,
+  %#{$inuit-layout-namespace}layout--rev {
+    flex-direction: row-reverse;
+  }
 }
 
-
-
-
-
 @if ($inuit-enable-layout--middle == true) {
-
-    /**
-     * Align layout items to the vertical centers of each other.
-     */
-
-    .#{$inuit-layout-namespace}layout--middle,
-    %#{$inuit-layout-namespace}layout--middle {
-        align-items: center;
-    }
-
+  /**
+    * Align layout items to the vertical centers of each other.
+    */
+  .#{$inuit-layout-namespace}layout--middle,
+  %#{$inuit-layout-namespace}layout--middle {
+    align-items: center;
+  }
 }
 
 @if ($inuit-enable-layout--bottom == true) {
-
-    /**
-     * Align layout items to the vertical bottoms of each other.
-     */
-
-    .#{$inuit-layout-namespace}layout--bottom,
-    %#{$inuit-layout-namespace}layout--bottom {
-        align-items: flex-end;
-    }
-
+  /**
+    * Align layout items to the vertical bottoms of each other.
+    */
+  .#{$inuit-layout-namespace}layout--bottom,
+  %#{$inuit-layout-namespace}layout--bottom {
+    align-items: flex-end;
+  }
 }
 
 @if ($inuit-enable-layout--full == true) {
-
-    /**
-     * Align layout items to all be the same height.
-     */
-
-    .#{$inuit-layout-namespace}layout--full,
-    %#{$inuit-layout-namespace}layout--full {
-      > .layout__item {
-        display: flex;
-      }
+  /**
+    * Align layout items to all be the same height.
+    */
+  .#{$inuit-layout-namespace}layout--full,
+  %#{$inuit-layout-namespace}layout--full {
+    > .layout__item {
+      display: flex;
     }
-
+  }
 }
 
 @if ($inuit-enable-layout--right == true) {
-
-    /**
-     * Make the layout items fill up from the right hand side.
-     */
-
-    .#{$inuit-layout-namespace}layout--right,
-    %#{$inuit-layout-namespace}layout--right {
-        justify-content: flex-end;
-    }
-
+  /**
+    * Make the layout items fill up from the right hand side.
+    */
+  .#{$inuit-layout-namespace}layout--right,
+  %#{$inuit-layout-namespace}layout--right {
+    justify-content: flex-end;
+  }
 }
 
 @if ($inuit-enable-layout--center == true) {
-
-    /**
-     * Make the layout items fill up from the center outward.
-     */
-
-    .#{$inuit-layout-namespace}layout--center,
-    %#{$inuit-layout-namespace}layout--center {
-        justify-content: center;
-    }
-
+  /**
+    * Make the layout items fill up from the center outward.
+    */
+  .#{$inuit-layout-namespace}layout--center,
+  %#{$inuit-layout-namespace}layout--center {
+    justify-content: center;
+  }
 }
 
 
 
 @if ($inuit-enable-layout__item--full == true) {
-
   /**
    * Make an individual layout item fill up the height of its layout.
    */
-
   .#{$inuit-layout-namespace}layout__item--full,
   %#{$inuit-layout-namespace}layout__item--full {
-      align-self: stretch;
+    align-self: stretch;
   }
-
 }
 
 @if ($inuit-enable-layout__item--center == true) {
-
-    /**
-     * Make an individual layout item fill up from the center vertically.
-     */
-
-    .#{$inuit-layout-namespace}layout__item--center,
-    %#{$inuit-layout-namespace}layout__item--center {
-        align-self: center;
-    }
-
+  /**
+    * Make an individual layout item fill up from the center vertically.
+    */
+  .#{$inuit-layout-namespace}layout__item--center,
+  %#{$inuit-layout-namespace}layout__item--center {
+    align-self: center;
+  }
 }
 
 @if ($inuit-enable-layout__item--bottom == true) {
-
-    /**
-     * Make an individual layout item fill up from the bottom up.
-     */
-
-    .#{$inuit-layout-namespace}layout__item--bottom,
-    %#{$inuit-layout-namespace}layout__item--bottom {
-        align-self: flex-end;
-    }
-
+  /**
+    * Make an individual layout item fill up from the bottom up.
+    */
+  .#{$inuit-layout-namespace}layout__item--bottom,
+  %#{$inuit-layout-namespace}layout__item--bottom {
+    align-self: flex-end;
+  }
 }
