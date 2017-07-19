@@ -41,7 +41,9 @@ Need UI to explain the basic concept to new users who are sellers.
 Need to find best way to truncate text on home page. 
 
 Need an image to display when the user has not entered in their zip code
-and we cannot get their current location. 
+and we cannot get their current location.
+
+The cropper-view needs layout cleanup.
 
 DONE - There is a flash that shows when the user is switching to the messages tab
        Will need to add loading spinner and only show the view once the messages have loaded. 

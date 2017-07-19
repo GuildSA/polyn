@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/px-spinner/px-spinner.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
@@ -37,10 +38,13 @@
       }
     </style>
 
-    <firebase-auth 
-      id="auth" 
-      app-name="polyn-app" 
-      user="{{user}}">
+    <firebase-auth
+      id="auth"
+      app-name="polyn-app"
+      signed-in="{{signedIn}}"
+      user="{{user}}"
+      status-known="{{statusKnown}}"
+      on-error="_handleAuthError">
     </firebase-auth>
 
     <firebase-document
@@ -83,34 +87,28 @@
             <iron-icon icon="custom-icons:web" slot="prefix">
           </paper-input>
 
-          <paper-input id="address" label="Address">
-          </paper-input>
-
-          <!--<paper-input id="addressLine2" label="Address Line #2">
-          </paper-input>-->
-
-          <paper-input id="city" label="City">
-          </paper-input>
-
-          <paper-input id="state" label="State">
-          </paper-input>
-
-          <paper-input id="zip" label="Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]" required>
-          </paper-input>
+          <paper-input id="address" label="Address"></paper-input>
+          <paper-input id="city" label="City"></paper-input>
+          <paper-input id="state" label="State"></paper-input>
+          <paper-input id="zip" label="Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]" required></paper-input>
 
           <template is="dom-if" if="[[!usersInfo.sellerId]]">
-            <paper-button id="registerbusiness" class="sign-in" on-tap="_onTapRegisterBusiness" raised>Complete Signup</paper-button>
+            <paper-button class="sign-in" on-tap="_onTapRegisterBusiness" raised>Complete Signup</paper-button>
           </template>
 
           <template is="dom-if" if="[[usersInfo.sellerId]]">
-            <paper-button id="registerbusiness" class="sign-in" on-tap="_onTapSaveBusiness" raised>Save</paper-button>
+            <paper-button class="sign-in" on-tap="_onTapSaveBusiness" raised>Save</paper-button>
           </template>
-
-<!-- <paper-button id="test" class="sign-in" on-tap="_onTapTest" raised>TEST</paper-button> -->
 
         </div>
       </div>
     </div>
+
+    <template is="dom-if" if="[[loading]]">
+      <div class="overlay">
+        <px-spinner size="100" finished="[[!loading]]"></px-spinner>
+      </div>
+    </template>
 
   </template>
 
@@ -121,14 +119,23 @@
 
       static get properties() {
         return {
+          user: {
+            type: Object,
+            observer: '_userChanged'
+          },
+          signedIn: {
+            type: Object,
+            notify: true
+          },
+          statusKnown:{
+            type: Object,
+            notify: true,
+            observer: '_statusKnownChanged'
+          },
           sellersCategory: {
             type: String,
             value: "collectables/sub/vinylRecords",
             readOnly: true
-          },
-          user: {
-            type: Object,
-            observer: '_userChanged'
           },
           usersInfo: {
             type: String,
@@ -140,7 +147,10 @@
           },
           photoUrl: {
             type: String,
-            value: "images/svg/VinylRecord.svg"
+            value: "/images/svg/VinylRecord.svg"
+          },
+          photoThumbUrl: {
+            type: String
           },
           croppedImage: {
             type: Object,
@@ -149,11 +159,12 @@
           editingSellerImage: {
             type: Boolean,
             observer: '_editingSellerImageChanged'
+          },
+          loading: {
+            type: Boolean,
+            notify: true,
+            value: true
           }
-          // location: {
-          //   type: Array,
-          //   value: null
-          // }
         };
       }
 
@@ -171,7 +182,7 @@
           var file = e.target.files[0];
 
           if(!file) {
-            Utility.showErrorToast("No image file selcted.");
+            Utility.showErrorToast("No image file selected.");
             return;
           }
 
@@ -210,6 +221,8 @@
       _uploadSellersPhoto(file) {
         console.log("SellerInfoView._uploadSellersPhoto");
 
+        this.loading = true;
+
         var self = this;
 
         // Upload the image to Cloud Storage.
@@ -225,6 +238,7 @@
             firebase.app("polyn-app").storage().ref("/sellers/" + self.usersInfo.sellerId + "/photoThumb").put(thumbnailBlob).then(function(snapshot) {
               console.log("snapshot.downloadURL = " + snapshot.downloadURL);
               self._setSellersPhotoThumbURL(snapshot.downloadURL);
+              self.loading = false;
             });
           });
         });
@@ -233,21 +247,53 @@
       _setSellersPhotoURL(url) {
         console.log("SellerInfoView._setSellersPhotoURL");
         firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/photoUrl").set(url);
+        this.photoUrl = url;
       }
 
       _setSellersPhotoThumbURL(url) {
         console.log("ProfileView._setSellersPhotoThumbURL");
         firebase.app("polyn-app").database().ref().child("/sellers/" + this.usersInfo.sellerId + "/photoThumbUrl").set(url);
+        this.photoThumbUrl = url;
       }
 
       _userChanged(user) {
         console.log("SellerInfoView._userChanged");
         //console.log("SellerInfoView._userChanged: " + JSON.stringify(user, null, 4));
+      }
 
-        // As soon as we get the user - get the users info so we can learn more about them!
-        if(user && user.uid) {
-          this.$.usersinfo.path = "/users/" + user.uid + "/info";
+      _statusKnownChanged(statusKnown) {
+        console.log("SellerInfoView._statusKnownChanged: " + statusKnown);
+        // console.log("  statusKnown: " + this.statusKnown);
+        // console.log("  user: " + this.user);
+        // console.log("  signedIn: " + this.signedIn);
+
+        // NOT logged in - user = null,   statusKnown = false
+        // YES logged in - user = object, statusKnown = true
+        if(statusKnown) {
+          if(this.user) {
+            // If we have a user - get the users info to get the searchSettings.
+            this._loadUserInfo();
+          } else {
+            this.loading = false;
+          }
         }
+      }
+
+       _loadUserInfo() {
+        console.log("SellerInfoView._loadUserInfo");
+
+        var self = this;
+
+        const refPathInfo = "/users/" + this.user.uid + "/info";
+
+        firebase.app("polyn-app").database().ref(refPathInfo).once('value').then(function(snapshot) {
+          const usersInfo = snapshot.val();
+          if(usersInfo) {
+            self.usersInfo = usersInfo;
+          }
+
+          self.loading = false;
+        });
       }
 
       _usersInfoChanged(e) {
@@ -258,10 +304,12 @@
         if(this.usersInfo.sellerId) {
           this.$.sellersinfo.path = "/sellers/" + this.usersInfo.sellerId;
 
-// HACK for adding photos!
+// HACK for adding photos to new sellers!
           // const sellerId = "-Knv8PZq7GUVAM036T1U";
           // this.usersInfo.sellerId = sellerId;
           // this.$.sellersinfo.path = "/sellers/" + sellerId;
+        } else {
+          self.loading = false;
         }
       }
 
@@ -284,7 +332,16 @@
           this.$.state.value = sellersInfo.state;
           this.$.zip.value = sellersInfo.zip;
 
-          this.photoUrl = sellersInfo.photoUrl;
+          if(sellersInfo.photoUrl && sellersInfo.photoUrl.length > 0) {
+            this.photoUrl = sellersInfo.photoUrl;
+          }
+
+          if(sellersInfo.photoThumbUrl && sellersInfo.photoThumbUrl.length > 0) {
+            this.photoThumbUrl = sellersInfo.photoThumbUrl;
+          }
+
+          var self = this;
+          setTimeout(function() { self.loading = false; }, 500);
         }
       }
 
@@ -300,6 +357,8 @@
           Utility.showErrorToast("We need at least a zip code to establish a general location.");
           return;
         }
+
+        this.loading = true;
 
 // TODO: How much data is optional for a Business?
         // if(!this.$.email.value || this.$.email.value.length == 0) {
@@ -346,9 +405,20 @@
           return;
         }
 
+        this.loading = true;
+
         var sellerData = {
           name: this.$.name.value,
         };
+
+        // The photo is saved when ever it changes so we treat it a little different.
+        if(this.photoUrl && this.photoUrl.length > 0 && this.photoUrl !== "/images/svg/VinylRecord.svg") {
+          sellerData.photoUrl = this.sellersInfo.photoUrl;
+        }
+
+        if(this.photoThumbUrl && this.photoThumbUrl.length > 0) {
+          sellerData.photoThumbUrl = this.photoThumbUrl;
+        }
 
         // Example: "Record Guys , 701 S. Leggett , Abilene, TX 79562, United States of America"
 // TODO: Including the name is risky. If the business is new or not listed on Google - it will fail!
@@ -423,13 +493,17 @@
               firebase.app("polyn-app").database().ref("sellers/" + self.usersInfo.sellerId).set(sellerData).then(function() {
                 // Record the updated location of the business.
                 GeofireManager.addSellerToLocations("locations/", self.sellersCategory, self.usersInfo.sellerId, latitude, longitude);
+                //self.loading = false;
+                setTimeout(function() { self.loading = false; }, 500);
               });
   
             } else {
+              self.loading = false;
               Utility.showErrorToast("Sorry, we were unable to convert your address into a valid location.");
             }
           } else {
             console.log("  Geocode was not successful for the following reason: " + status);
+            self.loading = false;
             Utility.showErrorToast("Sorry, we were unable to convert your address into a valid location.");
           }
         });
@@ -437,6 +511,12 @@
 
       _onTapSellerPhoto() {
         console.log("ProfileView._onTapSellerPhoto");
+
+        if(!this.usersInfo || !this.usersInfo.sellerId) {
+          Utility.showErrorToast("You must create your business before setting the photo.");
+          return;
+        }
+
         this.$.camera.click();
       }
 
@@ -445,6 +525,7 @@
 
         if(!this.user.uid) {
           console.log("  Error: User is not defined!");
+          this.loading = false;
         }
 
         var self = this;
@@ -467,6 +548,15 @@
             var newSellerData = {
               name: self.$.name.value,
             };
+
+            // You can't save a photo until you create the business.
+            // if(self.photoUrl && self.photoUrl.length > 0 && self.photoUrl !== "/images/svg/VinylRecord.svg") {
+            //   newSellerData.photoUrl = self.photoUrl;
+            // }
+            //
+            // if(self.photoThumbUrl && self.photoThumbUrl.length > 0) {
+            //   newSellerData.photoThumbUrl = self.photoThumbUrl;
+            // }
 
             // Example: "Record Guys , 701 S. Leggett , Abilene, TX 79562, United States of America"
 // TODO: Including the name is risky. If the business is new or not listed on Google - it will fail!
@@ -547,19 +637,26 @@
                     // Use the new 'sellerId' to record the location of the new business.
                     GeofireManager.addSellerToLocations("locations/", self.sellersCategory, newSellerKey, latitude, longitude);
 
+                    // Reload these to update the UI.
+                    self._loadUserInfo();
+                    self.$.sellersinfo.path = "/sellers/" + newSellerKey;
+
                     self._verifySellerOnCategory(self.sellersCategory);
                   });
 
                 } else {
+                  self.loading = false;
                   Utility.showErrorToast("Sorry, we were unable to convert your address into a valid location.");
                 }
               } else {
                 console.log("  Geocode was not successful for the following reason: " + status);
+                self.loading = false;
                 Utility.showErrorToast("Sorry, we were unable to convert your address into a valid location.");
               }
             });
 
           } else {
+            self.loading = false;
             console.log("  " + self.user.uid + " has already been added as a seller.");
           }
         });
@@ -570,6 +667,7 @@
 
         if(!this.user.uid) {
           console.log("  Error: User is not defined!");
+          this.loading = false;
         }
 
         var self = this;
@@ -604,6 +702,7 @@
 
             if(foundCategory) {
               console.log("  The users is already subscribed to this category!");
+              self.loading = false;
             } else {
               self._addSellerToCategory(targetCategory);
             }
@@ -616,6 +715,7 @@
 
         if(!this.user.uid) {
           console.log("  Error: User is not defined!");
+          self.loading = false;
         }
 
         var self = this;
@@ -637,6 +737,7 @@
 
         firebase.app("polyn-app").database().ref(refPathCategories + "/" + newCategoryKey).set(categoryData).then(function() {
           console.log(" " + self.user.uid + " was added to category!");
+          self.loading = false;
         });
       }
     }
