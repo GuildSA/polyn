@@ -43,6 +43,10 @@ Need to find best way to truncate text on home page.
 Need an image to display when the user has not entered in their zip code
 and we cannot get their current location.
 
+Need button or link to recover a lost password on the profile view.
+
+Make sure links posted in chat messages wrap correctly.
+
 DONE - Error messages need to be softened. 
 DONE - The cropper-view needs layout cleanup.
 DONE - There is a flash that shows when the user is switching to the messages tab
