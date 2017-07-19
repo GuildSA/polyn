@@ -186,6 +186,8 @@
       _loadRequests() {
         console.log("RequestsView._loadRequests");
 
+        this.loading = true;
+
         var self = this;
 
         this.splice("requests", 0, this.requests.length);

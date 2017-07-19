@@ -12,66 +12,74 @@
 
 <dom-module id="chats-view">
   <template>
-  <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
-    :host {
-      display: block;
-      padding: 10px;
-    }
+    <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: block;
+        padding: 10px;
+      }
 
-    #thumbnail {
-      border-radius: 60px;
-      height: 50px;
-      width: 50px;
-      padding: 5px;
-      margin: 10px;
-    }
+      #thumbnail {
+        border-radius: 60px;
+        height: 50px;
+        width: 50px;
+        padding: 5px;
+        margin: 10px;
+      }
 
-    p {
-      margin: 10px 0;
-    }
-    
-  </style>
+      p {
+        margin: 10px 0;
+      }
+      
+    </style>
 
-  <firebase-auth 
-    id="auth" 
-    app-name="polyn-app" 
-    user="{{user}}">
-  </firebase-auth>
+    <firebase-auth 
+      id="auth" 
+      app-name="polyn-app" 
+      user="{{user}}">
+    </firebase-auth>
 
-  <app-indexeddb-mirror
-    session="[[user.uid]]"
-    key="chats"
-    data="{{chats}}"
-    persisted-data="{{persistedChats}}">
-  </app-indexeddb-mirror>
+    <app-indexeddb-mirror
+      session="[[user.uid]]"
+      key="chats"
+      data="{{chats}}"
+      persisted-data="{{persistedChats}}">
+    </app-indexeddb-mirror>
 
-  <dom-repeat items="[[persistedChats]]" as="chat" initial-count="5">
-    <template>
-      <div class="card" on-tap="_onTapMessage">
-        <div class="flex horizontal justified layout">
+    <dom-repeat items="[[persistedChats]]" as="chat" initial-count="5">
+      <template>
+        <div class="card" on-tap="_onTapMessage">
+          <div class="flex horizontal justified layout">
 
-          <template is="dom-if" if="[[chat.photoThumbUrl]]">
-            <iron-image id="thumbnail" sizing="cover" preload fade src="[[chat.photoThumbUrl]]"></iron-image> 
-          </template>
-          <template is="dom-if" if="[[!chat.photoThumbUrl]]">
-            <iron-image id="thumbnail" sizing="cover" preload fade src="images/anonymous_profile.png"></iron-image> 
-          </template>
+            <template is="dom-if" if="[[chat.photoThumbUrl]]">
+              <iron-image id="thumbnail" sizing="cover" preload fade src="[[chat.photoThumbUrl]]"></iron-image> 
+            </template>
+            <template is="dom-if" if="[[!chat.photoThumbUrl]]">
+              <iron-image id="thumbnail" sizing="cover" preload fade src="images/anonymous_profile.png"></iron-image> 
+            </template>
 
-          <div class="flex vertical layout">
-            <p><b>[[chat.seller]]</b></p>
-            <div class="seller-location">
-              [[chat.nameAndLocation]]
+            <div class="flex vertical layout">
+              <p><b>[[chat.seller]]</b></p>
+              <div class="seller-location">
+                [[chat.nameAndLocation]]
+              </div>
             </div>
-          </div>
-          
-          <div class="close">
-            <paper-icon-button icon="custom-icons:close" on-tap="_onTapDelete"></paper-icon-button>
-          </div>
+            
+            <div class="close">
+              <paper-icon-button icon="custom-icons:close" on-tap="_onTapDelete"></paper-icon-button>
+            </div>
 
+          </div>
         </div>
+      </template>
+    </dom-repeat>
+
+    <template is="dom-if" if="[[loading]]">
+      <div class="overlay">
+        <px-spinner size="100" finished="[[!loading]]"></px-spinner>
       </div>
     </template>
-  </dom-repeat>
+
+    <!-- There’s a shader bug that causes the watch faces to render pure black on emulators. -->
 
     <paper-dialog id="deleteDialog">
       <h2 class="dialog-title">Delete Chat</h2>
@@ -104,6 +112,11 @@
           deletePrompt: {
             type: String,
             value: ""
+          },
+          loading: {
+            type: Boolean,
+            notify: true,
+            value: true
           }
         };
       }
@@ -133,7 +146,10 @@
 
       _loadChats() {
 
+        this.loading = true;
+
         var self = this;
+
         this.splice("chats", 0, this.chats.length);
 
         // Load all the chat sessions related to this request.
@@ -177,11 +193,18 @@
 
                 self.push('chats', childData);
               });
+
+              // No matter how fast it loads - show the spinner for at least 0.5 seconds.
+              setTimeout(function() { self.loading = false; }, 500);
+
             }, function(error) {
 
               console.error(error);
               // Something went wrong trying to get the seller's info - just push what we have.
               self.push('chats', childData);
+
+              // No matter how fast it loads - show the spinner for at least 0.5 seconds.
+              setTimeout(function() { self.loading = false; }, 500);
             });
           });
 
