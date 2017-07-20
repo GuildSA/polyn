@@ -173,7 +173,6 @@
     </template>
 
     <div class="card">
-      
       <dom-repeat items="[[persistedChatMessages]]" as="chatMessage">
         <template>
           <div class="bottom-border">
@@ -182,28 +181,28 @@
               <iron-image src="[[chatMessage.photoUrl]]"></iron-image> 
             </template>
 
-              <div class="horizontal layout">
-                <div class="user-photo">
-                  <template is="dom-if" if="[[chatMessage.photoThumbUrl]]">
-                    <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="[[chatMessage.photoThumbUrl]]" class="item"></iron-image> 
-                  </template>
-                  <template is="dom-if" if="[[!chatMessage.photoThumbUrl]]">
-                    <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="images/anonymous_profile.png" class="item"></iron-image> 
-                  </template>
-                </div>
-
-                <div class="vertical layout">
-                  <div class="username">
-                    [[chatMessage.name]]
-                  </div>
-
-                  <template is="dom-if" if="[[chatMessage.text]]">
-                    <div class="chat">
-                      <p class="flex">[[chatMessage.text]]</p>
-                    </div>
-                  </template>
-                </div>
+            <div class="horizontal layout">
+              <div class="user-photo">
+                <template is="dom-if" if="[[chatMessage.photoThumbUrl]]">
+                  <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="[[chatMessage.photoThumbUrl]]" class="item"></iron-image> 
+                </template>
+                <template is="dom-if" if="[[!chatMessage.photoThumbUrl]]">
+                  <iron-image style="height:50px; background-color: lightgray;" sizing="cover" class="business-pic" preload fade src="images/anonymous_profile.png" class="item"></iron-image> 
+                </template>
               </div>
+
+              <div class="vertical layout">
+                <div class="username">
+                  [[chatMessage.name]]
+                </div>
+                <template is="dom-if" if="[[chatMessage.text]]">
+                  <div class="chat">
+                    <p class="flex">[[chatMessage.text]]</p>
+                  </div>
+                </template>
+              </div>
+            </div>
+
           </div>
         </template>
       </dom-repeat>
@@ -214,13 +213,11 @@
         <paper-textarea id="message" label="Message..."></paper-textarea>
       </div>
       <div class="flex layout horizontal right-justified">
-        <paper-button id="image-btn" on-tap="_onTapImageBtn"  dialog-confirm autofocus raised type="submit"><iron-icon icon="custom-icons:insert-photo"></iron-icon></paper-button>
-        <paper-button id="send-btn" on-tap="_onTapSendDialogBtn" class="flex" dialog-confirm autofocus raised type="submit"><iron-icon icon="custom-icons:send"></iron-icon></paper-button>
+        <paper-button id="image-btn" on-tap="_onTapImageBtn" raised type="submit"><iron-icon icon="custom-icons:insert-photo"></iron-icon></paper-button>
+        <paper-button id="send-btn" on-tap="_onTapSendDialogBtn" class="flex" raised type="submit"><iron-icon icon="custom-icons:send"></iron-icon></paper-button>
       </div>
     </div>
     
-  </div>
-
     <input id="camera" type="file" name="photo" accept="image/*;capture=camera" style="display:none;"></input>
       
   </template>
@@ -508,13 +505,13 @@
 
               firebase.app("polyn-app").database().ref("/users/" + otherUsersId + "/info").once('value').then(function(snapshot) {
 
-                  const otherUsersInfo = snapshot.val();
-                  //console.log("otherUsersInfo: " + JSON.stringify(otherUsersInfo, null, 4));
+                const otherUsersInfo = snapshot.val();
+                //console.log("otherUsersInfo: " + JSON.stringify(otherUsersInfo, null, 4));
 
-                  if(otherUsersInfo) {
-                    self.otherUsersInfo = otherUsersInfo;
-                    self._loadChats();
-                  }
+                if(otherUsersInfo) {
+                  self.otherUsersInfo = otherUsersInfo;
+                  self._loadChats();
+                }
               });
             }
           }
