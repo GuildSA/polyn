@@ -159,6 +159,8 @@
   </template>
 
   <script>
+    "use strict";
+    
     class ProfileView extends Polymer.GestureEventListeners(Polymer.Element) {
 
       static get is() { return 'profile-view'; }
@@ -204,14 +206,14 @@
         super.connectedCallback();
         console.log("ProfileView.connectedCallback")
 
-        var self = this;
-        var camera = this.$.camera;
+        const self = this;
+        const camera = this.$.camera;
 
         // Use the hidden input called 'camera' to get a photo from the user 
         // if they tap their profile photo!
         camera.addEventListener('change', function(e) {
 
-          var file = e.target.files[0];
+          const file = e.target.files[0];
 
           if(!file) {
             Utility.showErrorToast("No image file selcted.");
@@ -225,8 +227,8 @@
 
           self.editingProfileImage = true;
 
-          var polynApp = document.getElementById("polynApp");
-          var cropperView = polynApp.pushPageOnCurrentTab("cropper-view");
+          const polynApp = document.getElementById("polynApp");
+          const cropperView = polynApp.pushPageOnCurrentTab("cropper-view");
           cropperView.file = file;
           cropperView.prevPage = self;
         });
@@ -265,7 +267,7 @@
       _uploadUsersProfilePhoto(file) {
         console.log("ProfileView._uploadUsersProfilePhoto");
 
-        var self = this;
+        const self = this;
 
         // Upload the image to Cloud Storage.
         firebase.app("polyn-app").storage().ref("users/" + this.user.uid + "/photo").put(file).then(function(snapshot) {
@@ -275,7 +277,7 @@
           // Create a thumbnail version of the profile image.
           Utility.resizeImageToSpecificWidth(file, 100, function(dataUrl) {
 
-            var thumbnailBlob = Utility.dataURLtoBlob(dataUrl);
+            const thumbnailBlob = Utility.dataURLtoBlob(dataUrl);
 
             firebase.app("polyn-app").storage().ref("users/" + self.user.uid + "/photoThumb").put(thumbnailBlob).then(function(snapshot) {
               console.log("snapshot.downloadURL = " + snapshot.downloadURL);
@@ -312,16 +314,13 @@
         //console.log("user: " + JSON.stringify(user, null, 4));
 
         if(user != null) {
-
-            if(user.isAnonymous == false) {
-              // As soon as we get the user - verify the users info data.
-              this._verifyUserInfo(user);
-            }
-
+          if(user.isAnonymous == false) {
+            // As soon as we get the user - verify the users info data.
+            this._verifyUserInfo(user);
+          }
         } else {
-
-            this.displayName = "";
-            this.photoUrl = "";
+          this.displayName = "";
+          this.photoUrl = "";
         }
       }
 
@@ -348,7 +347,7 @@
 
         if(this.autoPopAfterSignin) {
 
-          var polynApp = document.getElementById("polynApp");
+          const polynApp = document.getElementById("polynApp");
           polynApp.popPageOffCurrentTab();
         }
       }
@@ -361,13 +360,13 @@
       _verifyUserInfo(user) {
         console.log("ProfileView._verifyUserInfo");
 
-        var self = this;
+        const self = this;
 
         const refPath = "/users/" + user.uid + "/info";
 
         firebase.app("polyn-app").database().ref(refPath).once('value').then(function(snapshot) {
 
-          var usersInfo = snapshot.val();
+          const usersInfo = snapshot.val();
 
           if(usersInfo) {
 
@@ -375,7 +374,7 @@
 
             console.log("  usersInfo: " + JSON.stringify(usersInfo, null, 4));
 
-            var info = {};
+            const info = {};
 
             // If name, email or photoUrl is missing - add them!
             if(!usersInfo.name || !usersInfo.email || !usersInfo.photoUrl) {
@@ -407,10 +406,10 @@
 // This is a lot harder tha it looks due to cross origin issues!
 
                 // // Create a thumbnail version of the profile image.
-                // var blob = Utility.dataURLtoBlob(user.providerData[0].photoUrl);
+                // const blob = Utility.dataURLtoBlob(user.providerData[0].photoUrl);
                 // Utility.resizeImageToSpecificWidth(blob, 100, function(dataUrl) {
 
-                //   var thumbnailBlob = Utility.dataURLtoBlob(dataUrl);
+                //   const thumbnailBlob = Utility.dataURLtoBlob(dataUrl);
 
                 //   firebase.app("polyn-app").storage().ref("users/" + self.user.uid + "/photoThumb").put(thumbnailBlob).then(function(snapshot) {
                 //     console.log("snapshot.downloadURL = " + snapshot.downloadURL);
@@ -438,7 +437,7 @@
             self.photoUrl = user.providerData[0].photoURL;
 
             // The user's info key does NOT exist - so add one.
-            var info = {};
+            const info = {};
             info.name = user.providerData[0].displayName;
             info.email = user.providerData[0].email;
             info.photoUrl = user.providerData[0].photoURL;
@@ -452,8 +451,8 @@
         
         if(this.user == null) {
 
-          var email = this.shadowRoot.querySelector('#email');
-          var password = this.shadowRoot.querySelector('#password');
+          const email = this.shadowRoot.querySelector('#email');
+          const password = this.shadowRoot.querySelector('#password');
 
           if(!email.value || email.value.length == 0) {
             Utility.showErrorToast("An email address must be provided.");
@@ -470,7 +469,7 @@
             return;
           }
 
-          var self = this;
+          const self = this;
 
           // First, try to create the user.
           this.$.auth.createUserWithEmailAndPassword(email.value, password.value).then(function (user) {
@@ -536,7 +535,7 @@
         console.log("ProfileView._onTapSignOut");
 
         // Since the user is logging out - reset the UI's navigation.
-        var polynApp = document.getElementById("polynApp");
+        const polynApp = document.getElementById("polynApp");
         polynApp.resetNavigation();
 
         return this.$.auth.signOut();
@@ -545,8 +544,8 @@
       _onTapRegisterBusiness() {
         console.log("ProfileView._onTapRegisterBusiness");
 
-        var polynApp = document.getElementById("polynApp");
-        var sellerInfoView = polynApp.pushPageOnCurrentTab("sellerinfo-view");
+        const polynApp = document.getElementById("polynApp");
+        const sellerInfoView = polynApp.pushPageOnCurrentTab("sellerinfo-view");
       }
     }
 

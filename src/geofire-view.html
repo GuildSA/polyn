@@ -58,9 +58,11 @@
 
   </template>
 
-    <script>
-      class GeofireView extends Polymer.GestureEventListeners(Polymer.Element) {
-        static get is() { return 'geofire-view'; }
+  <script>
+    "use strict";
+
+    class GeofireView extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'geofire-view'; }
 
       static get properties() {
         return {
@@ -88,8 +90,8 @@
         //   GeofireManager.getUsersLocation("users/" + user.uid + "/info", 
 
         //     function (location) {
-        //       var latitude = location.coords.latitude;
-        //       var longitude = location.coords.longitude;
+        //       const latitude = location.coords.latitude;
+        //       const longitude = location.coords.longitude;
         //       console.log("User Location is lat: " + latitude + ", long: " + longitude + "");
         //       alert("User Location is lat: " + latitude + ", long: " + longitude + "");
         //     },
@@ -106,14 +108,14 @@
 
         if(this.user && this.user.uid) {
 
-          var self = this;
+          const self = this;
 
           // Ask for location permission.
           GeofireManager.getUsersLocation("users/" + this.user.uid + "/info", 
 
             function (location) {
-              var latitude = location.coords.latitude;
-              var longitude = location.coords.longitude;
+              const latitude = location.coords.latitude;
+              const longitude = location.coords.longitude;
 
               // Cache the user's location.
               self.location = [latitude, longitude];
@@ -172,7 +174,7 @@
           alert("Missing range in miles!");
         }
 
-        var self = this;
+        const self = this;
 
         // Geofire only uses KM.
         const rangeInKm = 1.6 * parseFloat(this.$.range.value);
@@ -184,8 +186,8 @@
           GeofireManager.getUsersLocation("users/" + this.user.uid + "/info", 
 
             function(location) {
-              var latitude = location.coords.latitude;
-              var longitude = location.coords.longitude;
+              vaconstr latitude = location.coords.latitude;
+              const longitude = location.coords.longitude;
 
               // Cache the user's location.
               self.location = [latitude, longitude];
@@ -210,7 +212,7 @@
       _getSellerData(sellersCategory, latitude, longitude, rangeInKm) {
         console.log("GeofireView._getSellerData");
 
-        var self = this;
+        const self = this;
 
         this.sellers = [];
 
@@ -226,10 +228,10 @@
             const refPath = "/sellers/" + key;
             firebase.app("polyn-app").database().ref(refPath).once('value').then(function(snapshot) {
 
-              var sellersInfo = snapshot.val();
+              const sellersInfo = snapshot.val();
 
               if(sellersInfo) {
-                var roundedDistance = parseFloat(distance).toFixed(1);
+                const roundedDistance = parseFloat(distance).toFixed(1);
                 sellersInfo.distance = roundedDistance + " miles away";
                 self._addSellersEntry(sellersInfo);
               } else {

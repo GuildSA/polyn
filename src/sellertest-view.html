@@ -108,6 +108,8 @@
   </template>
 
   <script>
+    "use strict";
+
     class SellerTest extends Polymer.Element {
 
       static get is() { return 'sellertest-view'; }
@@ -185,24 +187,24 @@
           console.log("  Error: User is not defined!");
         }
 
-        var self = this;
+        const self = this;
 
         // Get the 'info' key under the user's id, so we can check for a 'sellerId'.
         const refPathInfo = "/users/" + this.user.uid + "/info";
 
         firebase.app("polyn-app").database().ref(refPathInfo).once('value').then(function(snapshot) {
 
-          var usersInfo = snapshot.val();
+          const usersInfo = snapshot.val();
           //console.log("  sellerId: " + usersInfo.sellerId);
 
           // If the user doesn't already have a 'sellerId' in 'info' - create one.
           if(!usersInfo.sellerId) {
 
             // Add the new seller under the 'sellers' key
-            var newSellerKey = firebase.app("polyn-app").database().ref().child("sellers/").push().key;
+            const newSellerKey = firebase.app("polyn-app").database().ref().child("sellers/").push().key;
             //console.log("  newKey: " + newSellerKey);
 
-            var newSellerData = {
+            const newSellerData = {
               name: usersInfo.name,
               email: usersInfo.email
             };
@@ -228,14 +230,14 @@
           console.log("  Error: User is not defined!");
         }
 
-        var self = this;
+        const self = this;
 
         // Get the 'info' key under the user's id, so we can check for a 'sellerId'.
         const refPathCategories = "/users/" + this.user.uid + "/info/categories";
 
         firebase.app("polyn-app").database().ref(refPathCategories).once('value').then(function(snapshot) {
 
-          var categories = snapshot.val();
+          const categories = snapshot.val();
           //console.log("  categories: " + JSON.stringify(categories, null, 4));
 
           if(categories == null) {
@@ -245,9 +247,9 @@
 
           } else {
 
-            var foundCategory = false;
+            const foundCategory = false;
 
-            for(var key in categories) {
+            for(let key in categories) {
 
               if(categories.hasOwnProperty(key)) {
                 //console.log("  path = " + categories[key].path);
@@ -279,19 +281,19 @@
           console.log("  Error: User is not defined!");
         }
 
-        var self = this;
+        const self = this;
 
         // Add the user's id under the category that they wish to listen to!
         const refPathRequestCategory = "requests/" + targetCategory + "/sellers";
-        var newSellersKey = firebase.app("polyn-app").database().ref().child(refPathRequestCategory).push().key;
+        const newSellersKey = firebase.app("polyn-app").database().ref().child(refPathRequestCategory).push().key;
         console.log("  newSellersKey: " + newSellersKey);
 
         firebase.app("polyn-app").database().ref(refPathRequestCategory + "/" + newSellersKey).set(this.user.uid);
 
         const refPathCategories = "/users/" + this.user.uid + "/info/categories";
-        var newCategoryKey = firebase.app("polyn-app").database().ref().child(refPathCategories).push().key;
+        const newCategoryKey = firebase.app("polyn-app").database().ref().child(refPathCategories).push().key;
 
-        var categoryData = {
+        const categoryData = {
           path: targetCategory,
           sellersKey: newSellersKey
         };
@@ -313,14 +315,14 @@
           console.log("  Error: User is not defined!");
         }
 
-        var self = this;
+        const self = this;
 
         // Get the 'info' key under the user's id, so we can check for a 'sellerId'.
         const refPathCategories = "/users/" + this.user.uid + "/info/categories";
 
         firebase.app("polyn-app").database().ref(refPathCategories).once('value').then(function(snapshot) {
 
-          var categories = snapshot.val();
+          const categories = snapshot.val();
 
           //console.log("  categories: " + JSON.stringify(categories, null, 4));
 
@@ -330,11 +332,11 @@
 
           } else {
 
-            var foundCategory = false;
-            var requestKeyToRemove = null;
-            var categoryKeyToRemove = null;
+            let foundCategory = false;
+            let requestKeyToRemove = null;
+            let categoryKeyToRemove = null;
 
-            for(var key in categories) {
+            for(let key in categories) {
 
               if(categories.hasOwnProperty(key)) {
                 //console.log("  key = " + key);

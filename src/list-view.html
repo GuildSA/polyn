@@ -168,6 +168,8 @@ flex-direction: column;*/
   </template>
 
   <script>
+    "use strict";
+    
     class Listiew extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'list-view'; }
 
@@ -253,7 +255,7 @@ flex-direction: column;*/
 
           firebase.app("polyn-app").database().ref("/sellers/" + childKey).once('value').then(function(snapshot) {
 
-            var sellersInfo = snapshot.val();
+            const sellersInfo = snapshot.val();
 
             if(sellersInfo) {
 
@@ -294,8 +296,8 @@ flex-direction: column;*/
           GeofireManager.getUsersLocation(null, // Pass null for user's info path since we don't actually need a user to do this.
 
             function(location) {
-              var latitude = location.coords.latitude;
-              var longitude = location.coords.longitude;
+              const latitude = location.coords.latitude;
+              const longitude = location.coords.longitude;
 
               // Cache the user's location.
               self.location = [latitude, longitude];
@@ -336,13 +338,13 @@ flex-direction: column;*/
 
             firebase.app("polyn-app").database().ref("/sellers/" + key).once('value').then(function(snapshot) {
 
-              var sellersInfo = snapshot.val();
+              const sellersInfo = snapshot.val();
 
               if(sellersInfo) {
 
                 sellersInfo.key = snapshot.key; // Cache the key so we can look up the lat/long later.
 
-                var roundedDistance = parseFloat(distance).toFixed(1);
+                const roundedDistance = parseFloat(distance).toFixed(1);
                 sellersInfo.distance = roundedDistance; // Cache the distance for the UI.
 
                 self.push('sellers', sellersInfo);
@@ -363,8 +365,8 @@ flex-direction: column;*/
       _onTapBusiness(e) {
         console.log("Listiew._onTapBusiness: " + e);
 
-        var polynApp = document.getElementById("polynApp");
-        var businessView = polynApp.pushPageOnCurrentTab("business-view");
+        const polynApp = document.getElementById("polynApp");
+        const businessView = polynApp.pushPageOnCurrentTab("business-view");
 
         const index = e.model.index;
         businessView.sellerInfo = this.sellers[index];
@@ -373,8 +375,8 @@ flex-direction: column;*/
       _onTapCreateRequest() {
         console.log("Listiew._onTapCreateRequest");
 
-        var polynApp = document.getElementById("polynApp");
-        var requestView = polynApp.pushPageOnCurrentTab("request-view");
+        const polynApp = document.getElementById("polynApp");
+        const requestView = polynApp.pushPageOnCurrentTab("request-view");
       }
     }
 

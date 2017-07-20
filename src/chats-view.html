@@ -94,6 +94,8 @@
   </template>
 
   <script>
+    "use strict";
+    
     class ChatsView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'chats-view'; }
 
@@ -149,19 +151,19 @@
 
         this.loading = true;
 
-        var self = this;
+        const self = this;
 
         this.splice("chats", 0, this.chats.length);
 
         // Load all the chat sessions related to this request.
         firebase.app("polyn-app").database().ref("/users/" + this.user.uid + "/requests/" + this.requestId + "/chats").once('value').then(function(snapshot) {
         
-          var badgeCount = 0;
+          let badgeCount = 0;
 
           snapshot.forEach(function(childSnapshot) {
 
-            var childKey = childSnapshot.key;
-            var childData = childSnapshot.val();
+            const childKey = childSnapshot.key;
+            const childData = childSnapshot.val();
 
             // Manually add the key for this data so we can pass it forward if selected.
             childData.key = childKey;
@@ -179,7 +181,7 @@
 
               firebase.app("polyn-app").database().ref("sellers/" + sellersUserInfo.sellerId).once('value').then(function(snapshot) {
 
-                var sellersInfo = snapshot.val();
+                const sellersInfo = snapshot.val();
                 //console.log("sellersInfo: " + JSON.stringify(sellersInfo, null, 4));
 
                 if(sellersUserInfo && sellersUserInfo.photoThumbUrl) {
@@ -215,8 +217,8 @@
             // If every chat session under this request has been viewed - mark the whole request viewed!
             firebase.app("polyn-app").database().ref("/users/" + self.user.uid + "/requests/" + self.requestId + "/viewed").set(true);
 
-            var polynApp = document.getElementById("polynApp");
-            var badgeCount = polynApp.getRequestBadgeCount();
+            const polynApp = document.getElementById("polynApp");
+            const badgeCount = polynApp.getRequestBadgeCount();
             --badgeCount;
             polynApp.setRequestBadgeCount(badgeCount);
           }
@@ -225,8 +227,8 @@
         // // Load all the chat sessions related to this request.
         // firebase.app("polyn-app").database().ref("/users/" + this.user.uid + "/requests/" + this.requestId + "/chats").on('child_added', function(snapshot) {
         
-        //   var childKey = snapshot.key;
-        //   var childData = snapshot.val();
+        //   const childKey = snapshot.key;
+        //   const childData = snapshot.val();
 
         //   // Manually add the key for this data so we can pass it forward if selected.
         //   childData.key = childKey;
@@ -259,8 +261,8 @@
 
         const index = e.model.index;
 
-        var polynApp = document.getElementById("polynApp");
-        var chatView = polynApp.pushPageOnCurrentTab("chat-view");
+        const polynApp = document.getElementById("polynApp");
+        const chatView = polynApp.pushPageOnCurrentTab("chat-view");
 
         chatView.subChatId = this.chats[index].key;
         chatView.requestId = this.requestId;
@@ -287,7 +289,7 @@
       _onTapDeleteDialogBtn() {
         console.log("ChatsView._onTapDeleteDialogBtn");
 
-        var self = this;
+        const self = this;
 
         const requestChatInfo = this.chats[this.indexToDelete];
         //console.log("  requestChatInfo: " + JSON.stringify(requestChatInfo, null, 4));

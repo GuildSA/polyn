@@ -155,6 +155,8 @@
   </template>
 
   <script>
+    "use strict";
+    
     class RequestView extends Polymer.GestureEventListeners(Polymer.Element) {
 
       static get is() { return 'request-view'; }
@@ -226,7 +228,7 @@
 
             this.showZip = true;
 
-            var searchListBox = this.shadowRoot.querySelector('#searchListBox');
+            const searchListBox = this.shadowRoot.querySelector('#searchListBox');
             searchListBox.selectIndex(1);
 
             if(usersInfo.searchSettings.zipCode) {
@@ -236,7 +238,7 @@
 
           if(usersInfo.searchSettings.distance) {
 
-            var distanceListBox = this.shadowRoot.querySelector('#distanceListBox');
+            const distanceListBox = this.shadowRoot.querySelector('#distanceListBox');
 
             switch(usersInfo.searchSettings.distance) {
               case 25:
@@ -270,7 +272,7 @@
       _searchSelected(e) {
         console.log("SearchFilterView._searchSelected: " + e);
 
-        var selectedItem = e.target.selectedItem;
+        const selectedItem = e.target.selectedItem;
 
         if(selectedItem) {
           const selectedText = selectedItem.innerText;
@@ -287,7 +289,7 @@
       _distanceSelected(e) {
         console.log("SearchFilterView._distanceSelected: " + e);
 
-        var selectedItem = e.target.selectedItem;
+        const selectedItem = e.target.selectedItem;
 
         if(selectedItem) {
           const selectedText = selectedItem.innerText;
@@ -324,16 +326,13 @@
 
         } else {
 
-          var self = this;
+          const self = this;
 
-          var searchListBox = this.shadowRoot.querySelector('#searchListBox');
+          const searchListBox = this.shadowRoot.querySelector('#searchListBox');
           const selectedText = searchListBox.selectedItem.innerText;
 
-          var distanceDropDown = this.shadowRoot.querySelector('#distanceDropDown');
+          const distanceDropDown = this.shadowRoot.querySelector('#distanceDropDown');
           const distance = parseInt(distanceDropDown.value);
-
-console.log("XXX searchListBox: " + selectedText);
-console.log("XXX distanceDropDown: " + distance);
 
           if(selectedText == "Zip Code") {
 
@@ -345,10 +344,10 @@ console.log("XXX distanceDropDown: " + distance);
 
               const self = this;
 
-              var polynApp = document.getElementById("polynApp");
-              var googleMapsApi = polynApp.$.googleMapsApi;
+              const polynApp = document.getElementById("polynApp");
+              const googleMapsApi = polynApp.$.googleMapsApi;
 
-              var geocoder = new googleMapsApi.api.Geocoder();
+              const geocoder = new googleMapsApi.api.Geocoder();
               
               const address = zip.value;
               geocoder.geocode( {'address': address}, function(results, status) {
@@ -380,7 +379,7 @@ console.log("XXX distanceDropDown: " + distance);
 
           } else {
 
-            // var userPath = null;
+            // const userPath = null;
 
             // if(this.user && this.user.uid) {
             //   userPath = "users/" + this.user.uid + "/info";
@@ -417,12 +416,12 @@ console.log("XXX distanceDropDown: " + distance);
         const title = this.$.titleText.value;
         const desc = this.$.descText.value;
 
-        var self = this;
+        const self = this;
 
         const requestKey = firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/requests').push().key;
 
         // Add the user's new request to their 'requests' key as a reference.
-        let request = {
+        const request = {
           title: title,
           desc: desc,
           shipping: self.$.shipping.checked,
@@ -436,7 +435,7 @@ console.log("ALL request = " + JSON.stringify(request, null, 4));
         firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/requests/' + requestKey).set(request).then(snapshot => {
 
           // Send this info to the server.
-          var params = {
+          const params = {
             categoryPath: "collectables/sub/vinylRecords",
             title: title,
             desc: desc,
@@ -448,9 +447,9 @@ console.log("ALL request = " + JSON.stringify(request, null, 4));
 console.log("ALL params = " + JSON.stringify(params, null, 4));
 
 // KRH
-//this.$.sendRequestAll.params = params;
-//this.$.sendRequestAll.generateRequest(); // Calls: sendRequestAll()
-this.loading = false;
+this.$.sendRequestAll.params = params;
+this.$.sendRequestAll.generateRequest(); // Calls: sendRequestAll()
+//this.loading = false;
 
         });
       }
@@ -475,12 +474,12 @@ this.loading = false;
         const title = this.$.titleText.value;
         const desc = this.$.descText.value;
 
-        var self = this;
+        const self = this;
 
         const requestKey = firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/requests').push().key;
 
         // Add the user's new request to their 'requests' key as a reference.
-        let request = {
+        const request = {
           title: title,
           desc: desc,
           shipping: self.$.shipping.checked,
@@ -494,7 +493,7 @@ console.log("LOC request = " + JSON.stringify(request, null, 4));
         firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/requests/' + requestKey).set(request).then(snapshot => {
 
           // Send this info to the server.
-          // var params = {
+          // const params = {
           //   categoryPath: "collectables/sub/vinylRecords",
           //   title: title,
           //   desc: desc,
@@ -503,7 +502,7 @@ console.log("LOC request = " + JSON.stringify(request, null, 4));
           //   requestId: requestKey
           // };
 
-          var distanceDropDown = self.shadowRoot.querySelector('#distanceDropDown');
+          const distanceDropDown = self.shadowRoot.querySelector('#distanceDropDown');
           const distanceMiles = parseInt(distanceDropDown.value);
 
 console.log("XXX distanceMiles: " + distanceMiles);
@@ -537,7 +536,7 @@ self.$.sendRequestLocation.generateRequest(); // Calls: sendRequestLocation()
 
         this.loading = false;
 
-        // var polynApp = document.getElementById("polynApp");
+        // const polynApp = document.getElementById("polynApp");
         // polynApp.popPageOffCurrentTab();
       }
 

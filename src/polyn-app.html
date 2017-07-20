@@ -367,7 +367,7 @@
         const selectedTab = this.$.tabs.selected;
 
         if(this.page == "home-view") {
-          var currentPage = this.$.ironPages.selectedItem;
+          const currentPage = this.$.ironPages.selectedItem;
           if(typeof currentPage.searchFilterBtnTapped === 'function') {
             currentPage.searchFilterBtnTapped();
           }
@@ -382,7 +382,7 @@
         // If the current tab has any views in its stack, we need to do a back pop!
         if(this.tabViewStacks[selectedTab].length > 0) {
 
-            var poppedPage = this.tabViewStacks[selectedTab].pop();
+            const poppedPage = this.tabViewStacks[selectedTab].pop();
 
             if(typeof poppedPage.poppedCallback === 'function') {
               // If a page is being popped - this it's chance to cleanup anything.
@@ -396,7 +396,7 @@
             if(this.tabViewStacks[selectedTab].length > 0) {
 
               // If the tab's view stack is NOT empty - restore the next view.
-              var viewName = this.tabViewStacks[selectedTab][this.tabViewStacks[selectedTab].length - 1].tagName.toLowerCase();
+              const viewName = this.tabViewStacks[selectedTab][this.tabViewStacks[selectedTab].length - 1].tagName.toLowerCase();
               console.log("  Element view to restore: " + viewName);
               this.page = viewName;
 
@@ -432,7 +432,7 @@
         this.$.leftToolbarBtn.icon = "custom-icons:arrow-back";
         this.tabViewStacks[this.$.tabs.selected].push(this.$.ironPages.selectedItem);
  
-        var pushedPage = this.$.ironPages.selectedItem;
+        const pushedPage = this.$.ironPages.selectedItem;
 
         if(typeof pushedPage.pushedCallback === 'function') {
           // If a page is being pushed - this it's chance to reset anything.
@@ -479,7 +479,7 @@
         // Home tab = index 0!
         if(this.tabViewStacks[0].length > 0) {
           this.$.leftToolbarBtn.icon = "custom-icons:arrow-back";
-          var viewName = this.tabViewStacks[0][this.tabViewStacks[0].length - 1].tagName.toLowerCase();
+          const viewName = this.tabViewStacks[0][this.tabViewStacks[0].length - 1].tagName.toLowerCase();
           console.log("  Element view to restore: " + viewName);
           this.page = viewName;
         } else {
@@ -496,7 +496,7 @@
         // Requests tab = index 1!
         if(this.tabViewStacks[1].length > 0) {
           this.$.leftToolbarBtn.icon = "custom-icons:arrow-back";
-          var viewName = this.tabViewStacks[1][this.tabViewStacks[1].length - 1].tagName.toLowerCase();
+          const viewName = this.tabViewStacks[1][this.tabViewStacks[1].length - 1].tagName.toLowerCase();
           console.log("  Element view to restore: " + viewName);
           this.page = viewName;
         } else {
@@ -513,7 +513,7 @@
         // Profile tab = index 2!
         if(this.tabViewStacks[2].length > 0) {
           this.$.leftToolbarBtn.icon = "custom-icons:arrow-back";
-          var viewName = this.tabViewStacks[2][this.tabViewStacks[2].length - 1].tagName.toLowerCase();
+          const viewName = this.tabViewStacks[2][this.tabViewStacks[2].length - 1].tagName.toLowerCase();
           console.log("  Element view to restore: " + viewName);
           this.page = viewName;
         } else {
@@ -553,7 +553,7 @@
         console.log("PolynApp._pageChanged: " + page);
 
         // Load page import on demand. Show 404 page if fails
-        var resolvedPageUrl = this.resolveUrl(page + '.html');
+        const resolvedPageUrl = this.resolveUrl(page + '.html');
         console.log("  resolved URL: " + resolvedPageUrl);
 
         Polymer.importHref(
@@ -564,7 +564,7 @@
 
         // If the next page supports the reload method - call it!
         // We need to tell it to prepare for a reload so it can refresh its data.
-        var nextPage = this.$.ironPages.selectedItem;
+        const nextPage = this.$.ironPages.selectedItem;
         if(nextPage && typeof nextPage.reload === 'function') {
           nextPage.reload();
         }

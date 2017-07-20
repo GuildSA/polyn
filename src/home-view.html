@@ -265,6 +265,8 @@
   </template>
 
   <script>
+    "use strict";
+    
     class HomeView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'home-view'; }
 
@@ -350,8 +352,8 @@
       searchFilterBtnTapped() {
         console.log("HomeView.searchFilterBtnTapped");
         
-        var polynApp = document.getElementById("polynApp");
-        var chatView = polynApp.pushPageOnCurrentTab("searchfilter-view");
+        const polynApp = document.getElementById("polynApp");
+        const chatView = polynApp.pushPageOnCurrentTab("searchfilter-view");
       }
 
       _userChanged(user) {
@@ -381,7 +383,7 @@
       _loadCachedSearchSettings() {
         console.log("HomeView._loadCachedSearchSettings");
 
-        var self = this;
+        const self = this;
 
         // If the user is not logged in - try to pull searchSettings from indexdb.
         this.$.searchSettingsIDB.getStoredValue("searchSettings").then((response) => {
@@ -421,7 +423,7 @@
       _loadUserInfo() {
         console.log("HomeView._loadUserInfo");
 
-        var self = this;
+        const self = this;
 
         const refPathInfo = "/users/" + this.user.uid + "/info";
 
@@ -471,13 +473,13 @@
       _getSellerDataWithUsersLocation() {
         console.log("HomeView._getSellerDataWithUsersLocation");
 
-        var userPath = null;
+        let userPath = null;
 
         if(this.user && this.user.uid) {
           userPath = "users/" + this.user.uid + "/info";
         }
 
-        var self = this;
+        const self = this;
 
         GeofireManager.getUsersLocation(userPath,
 
@@ -564,9 +566,9 @@
 
         const self = this;
 
-        var polynApp = document.getElementById("polynApp");
-        var googleMapsApi = polynApp.$.googleMapsApi;
-        var geocoder = new googleMapsApi.api.Geocoder();
+        const polynApp = document.getElementById("polynApp");
+        const googleMapsApi = polynApp.$.googleMapsApi;
+        const geocoder = new googleMapsApi.api.Geocoder();
         
         //const address = "Plano, TX";
         const address = zip;
@@ -630,13 +632,13 @@
 
             firebase.app("polyn-app").database().ref("/sellers/" + key).once('value').then(function(snapshot) {
 
-              var sellersInfo = snapshot.val();
+              const sellersInfo = snapshot.val();
 
               if(sellersInfo) {
 
                 sellersInfo.key = snapshot.key; // Cache the key so we can look up the lat/long later.
 
-                var roundedDistance = parseFloat(distance).toFixed(1);
+                const roundedDistance = parseFloat(distance).toFixed(1);
                 sellersInfo.distance = roundedDistance; // Cache the distance for the UI.
 
                 self.push('sellers', sellersInfo);
@@ -659,8 +661,8 @@
       _onTapBusiness(e) {
         console.log("HomeView._onTapBusiness: " + e);
 
-        var polynApp = document.getElementById("polynApp");
-        var businessView = polynApp.pushPageOnCurrentTab("business-view");
+        const polynApp = document.getElementById("polynApp");
+        const businessView = polynApp.pushPageOnCurrentTab("business-view");
 
         const index = e.model.index;
         businessView.sellerInfo = this.sellers[index];
@@ -670,8 +672,8 @@
         console.log("HomeView._onTapCreateRequest");
 
         if(this.user) {
-          var polynApp = document.getElementById("polynApp");
-          var requestView = polynApp.pushPageOnCurrentTab("request-view");
+          const polynApp = document.getElementById("polynApp");
+          const requestView = polynApp.pushPageOnCurrentTab("request-view");
         } else {
           this.$.requestSigninDialog.toggle();
         }
@@ -680,7 +682,7 @@
       _onTapSigninBtn() {
         console.log("HomeView._onTapSigninBtn");
         
-        var profileView = polynApp.pushPageOnCurrentTab("profile-view");
+        const profileView = polynApp.pushPageOnCurrentTab("profile-view");
         profileView.autoPopAfterSignin = true;
       }
     }

@@ -226,6 +226,8 @@
   </template>
 
   <script>
+    "use strict";
+
     class ChatView extends Polymer.Element {
 
       static get is() { return 'chat-view'; }
@@ -296,14 +298,14 @@
         super.connectedCallback();
         console.log("ChatView.connectedCallback")
 
-        var self = this;
-        var camera = this.$.camera;
+        const self = this;
+        const camera = this.$.camera;
 
         // Use the hidden input called 'camera' to get a photo from the user 
         // if they tap the image button!
         camera.addEventListener('change', function(e) {
 
-          var file = e.target.files[0];
+          const file = e.target.files[0];
 
           if(!file) {
             return;
@@ -354,7 +356,7 @@
       }
 
       _isTimeStampPresent(timeStamp, theArray) {
-        for(var i = 0; i < theArray.length; i++) {
+        for(let i = 0; i < theArray.length; i++) {
           if(theArray[i].timeStamp == timeStamp) {
             return true;
           }
@@ -366,14 +368,14 @@
 
         if(this.chatMessagesId) {
 
-          var self = this;
+          const self = this;
 
           self.loading = true;
 
-          var setMessage = function(snapshot) {
-            var val = snapshot.val();
+          const setMessage = function(snapshot) {
+            const val = snapshot.val();
 
-            // var key = snapshot.key;
+            // const key = snapshot.key;
             // console.log(" key: " + key);
 
             if(self.user.uid == val.senderId) {
@@ -412,7 +414,7 @@
           setTimeout(function() { self.loading = false; }, 500);
 
           // Create a fake message from the buyer so the seller has something to read.
-          var fakedMessage = {
+          const fakedMessage = {
             name: this.otherUsersInfo.name,
             text: this.chatInfo.desc,
             senderId: this.chatInfo.buyerId,
@@ -457,9 +459,9 @@
       _loadChatInfo() {
         console.log("ChatView._loadChatInfo");
 
-        var self = this;
+        const self = this;
 
-        var fullChatInfoPath;
+        let fullChatInfoPath;
 
         if(this.subChatId) {
           fullChatInfoPath = "/users/" + this.user.uid + "/requests/" + this.requestId + "/chats/" + this.subChatId;
@@ -471,7 +473,7 @@
 
         firebase.app("polyn-app").database().ref(fullChatInfoPath).once('value').then(function(snapshot) {
 
-          var chatInfo = snapshot.val();
+          const chatInfo = snapshot.val();
 
           if(chatInfo) {
 
@@ -488,7 +490,7 @@
 
             // As soon as we get the user and the chat info - get the other 
             // users info so we know who we're chatting with.
-            var otherUsersId;
+            let otherUsersId;
 
             if(self.subChatId) {
               // If the subChatId is set - we're looking at our own request and the info about the chat is in a list of chats.
@@ -506,11 +508,10 @@
 
               firebase.app("polyn-app").database().ref("/users/" + otherUsersId + "/info").once('value').then(function(snapshot) {
 
-                  var otherUsersInfo = snapshot.val();
+                  const otherUsersInfo = snapshot.val();
                   //console.log("otherUsersInfo: " + JSON.stringify(otherUsersInfo, null, 4));
 
                   if(otherUsersInfo) {
-
                     self.otherUsersInfo = otherUsersInfo;
                     self._loadChats();
                   }
@@ -550,14 +551,14 @@
           return;
         }
 
-        var self = this;
+        const self = this;
 
         if(this.chatMessagesId) {
           this._sendChatMessage();
         } else {
 
           // We don't have a chatMessagesId yet so create it first and then send a message.
-          //var newChatMessagesId = firebase.app("polyn-app").database().ref().child("chats/").push().key;
+          //const newChatMessagesId = firebase.app("polyn-app").database().ref().child("chats/").push().key;
 
           // We don't have a chatMessagesId yet! Just use the seller's requestId as the new key for a new chatMessagesId!
           this.chatMessagesId = this.requestId;
@@ -573,7 +574,7 @@
           // console.log("this.usersInfo.name = " + this.usersInfo.name);
           // console.log("this.usersInfo.sellerId = " + this.usersInfo.sellerId);
 
-          let newChatEntry = {
+          const newChatEntry = {
             sellersRequestId: this.requestId,
             seller : this.usersInfo.name,
             sellerId: this.user.uid,
@@ -583,7 +584,7 @@
           firebase.app("polyn-app").database().ref().child("/users/" + this.chatInfo.buyerId + "/requests/" + this.chatInfo.requestId + "/chats/" + this.chatMessagesId).set(newChatEntry);
 
           // Set the fake message from the buyer so the chat thread starts off with some context.
-          var firstMessage = {
+          const firstMessage = {
             name: this.otherUsersInfo.name,
             text: this.chatInfo.desc,
             senderId: this.chatInfo.buyerId,
@@ -610,10 +611,10 @@
       _uploadChatPhoto(file) {
         console.log("ChatView._uploadChatPhoto");
 
-        var self = this;
+        const self = this;
 
         // Upload the image to Cloud Storage.
-        var newImageKey = firebase.app("polyn-app").database().ref().child("users/" + self.user.uid + "/chatphotos").push().key;
+        const newImageKey = firebase.app("polyn-app").database().ref().child("users/" + self.user.uid + "/chatphotos").push().key;
 
         firebase.app("polyn-app").storage().ref("users/" + self.user.uid + "/chatphotos" + "/" + newImageKey).put(file).then(function(snapshot) {
           //console.log("snapshot.downloadURL = " + snapshot.downloadURL);
@@ -639,7 +640,7 @@
 
         const newKey = firebase.app("polyn-app").database().ref().child("chats/" + this.chatMessagesId).push().key;
 
-        var chatMessage = {
+        const chatMessage = {
           name: this.usersInfo.name,
           senderId: this.user.uid,
           timeStamp: firebase.database.ServerValue.TIMESTAMP
@@ -662,7 +663,7 @@
 
         if(this.otherUsersInfo.token) {
 
-          var params = {
+          const params = {
             token: this.otherUsersInfo.token,
             title: this.usersInfo.name + " sent you a message.",
             body: text,
@@ -729,8 +730,8 @@
             "/users/" + this.user.uid + "/requests/" + this.requestId + "/chats/" + this.chatMessagesId + "/viewed").set(true);
         }
 
-        var polynApp = document.getElementById("polynApp");
-        var badgeCount = polynApp.getRequestBadgeCount();
+        const polynApp = document.getElementById("polynApp");
+        const badgeCount = polynApp.getRequestBadgeCount();
         --badgeCount;
         polynApp.setRequestBadgeCount(badgeCount);
       }

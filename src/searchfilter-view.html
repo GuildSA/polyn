@@ -97,6 +97,8 @@
   </template>
 
   <script>
+    "use strict";
+    
     class SearchFilterView extends Polymer.GestureEventListeners(Polymer.Element) {
 
       static get is() { return 'searchfilter-view'; }
@@ -139,7 +141,7 @@
           this.$.usersinfo.path = "/users/" + user.uid + "/info";
         } else {
 
-          var self = this;
+          const self = this;
 
           this.$.searchSettingsIDB.getStoredValue("searchSettings").then((response) => {
             console.log("searchSettings = " + JSON.stringify(response, null, 4));
@@ -230,7 +232,7 @@
       _searchSelected(e) {
         console.log("SearchFilterView._searchSelected: " + e);
 
-        var selectedItem = e.target.selectedItem;
+        const selectedItem = e.target.selectedItem;
 
         if(selectedItem) {
           const selectedText = selectedItem.innerText;
@@ -247,7 +249,7 @@
       _distanceSelected(e) {
         console.log("SearchFilterView._distanceSelected: " + e);
 
-        var selectedItem = e.target.selectedItem;
+        const selectedItem = e.target.selectedItem;
 
         if(selectedItem) {
           const selectedText = selectedItem.innerText;
@@ -270,10 +272,10 @@
 
             const self = this;
 
-            var polynApp = document.getElementById("polynApp");
-            var googleMapsApi = polynApp.$.googleMapsApi;
+            const polynApp = document.getElementById("polynApp");
+            const googleMapsApi = polynApp.$.googleMapsApi;
 
-            var geocoder = new googleMapsApi.api.Geocoder();
+            const geocoder = new googleMapsApi.api.Geocoder();
             
             const address = zip.value;
             geocoder.geocode( {'address': address}, function(results, status) {
@@ -300,7 +302,7 @@
 
                   self.loading = false;
 
-                  var polynApp = document.getElementById("polynApp");
+                  const polynApp = document.getElementById("polynApp");
                   polynApp.popPageOffCurrentTab();
                 }
 
@@ -329,7 +331,7 @@
 
           this.searchSettings = searchSettings;
 
-          var polynApp = document.getElementById("polynApp");
+          const polynApp = document.getElementById("polynApp");
           polynApp.popPageOffCurrentTab();
         }
       }

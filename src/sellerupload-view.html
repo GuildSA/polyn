@@ -28,9 +28,11 @@
 
   </template>
 
-    <script>
-      class SellerUploadView extends Polymer.GestureEventListeners(Polymer.Element) {
-        static get is() { return 'sellerupload-view'; }
+  <script>
+    "use strict";
+    
+    class SellerUploadView extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'sellerupload-view'; }
 
       // static get properties() {
       //   return {
@@ -49,10 +51,10 @@
       _uploadDataFromRecordStoreDay(e) {
         console.log("SellerUploadView._uploadDataFromRecordStoreDay");
 
-        var self = this;
+        const self = this;
 
-        var file = e.target.inputElement.inputElement.files[0];
-        var read = new FileReader();
+        const file = e.target.inputElement.inputElement.files[0];
+        const read = new FileReader();
 
         read.readAsBinaryString(file);
 
@@ -60,9 +62,9 @@
 
           //console.log(read.result);
 
-          var obj = JSON.parse(read.result);
+          const obj = JSON.parse(read.result);
 
-          for(var i = 0; i < obj.length; i++) {
+          for(let i = 0; i < obj.length; i++) {
 
             // console.log("--------------------------------");
             // //console.log("id = " + obj[i].id);
@@ -92,11 +94,11 @@
 
         const results = Papa.parse(address, {header: false, delimiter: ","});
 
-        // for(var i = 0; i < results.errors.length; i++) {
+        // for(let i = 0; i < results.errors.length; i++) {
         //   console.log("  error " + i + " : " + results.errors[i]);
         // }
 
-        // for(var i = 0; i < results.data[0].length; i++) {
+        // for(let i = 0; i < results.data[0].length; i++) {
         //   console.log("  result " + i + " : " + results.data[0][i]);
         // }
 
@@ -104,7 +106,7 @@
 
           //console.log("  2nd to last " + results.data[0][results.data[0].length - 2]);
 
-          var stateAndZip = results.data[0][results.data[0].length - 2]
+          let stateAndZip = results.data[0][results.data[0].length - 2]
 
           if(stateAndZip) {
             stateAndZip = stateAndZip.trim();
@@ -112,11 +114,11 @@
 
             const results2 = Papa.parse(stateAndZip, {header: false, delimiter: " "});
 
-            // for(var i = 0; i < results2.errors.length; i++) {
+            // for(let i = 0; i < results2.errors.length; i++) {
             //   console.log("  error " + i + " : " + results2.errors[i]);
             // }
 
-            // for(var i = 0; i < results2.data[0].length; i++) {
+            // for(let i = 0; i < results2.data[0].length; i++) {
             //   console.log("  result " + i + " : " + results2.data[0][i]);
             // }
 
@@ -138,7 +140,7 @@
           return;
         }
 
-        var self = this;
+        const self = this;
 
 // PRODUCTION ONLY
         //const rootKeySellers = "sellers/";
@@ -150,12 +152,12 @@
         const targetCategory = "collectables/sub/vinylRecords";
 
         // Add the new seller under the 'sellers' key
-        var newSellerKey = firebase.app("polyn-app").database().ref().child(rootKeySellers).push().key;
+        const newSellerKey = firebase.app("polyn-app").database().ref().child(rootKeySellers).push().key;
 
         console.log("-----------------------------------------");
         console.log("Regsitering: '" + sellerObj.name + "' at " + newSellerKey);
 
-        var newSellerData = {
+        const newSellerData = {
           name: sellerObj.name
         };
 

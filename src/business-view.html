@@ -139,6 +139,8 @@
   </template>
 
   <script>
+    "use strict";
+    
     class BusinessView extends Polymer.Element {
       static get is() { return 'business-view'; }
 
@@ -171,16 +173,16 @@
 
         firebase.app("polyn-app").database().ref("/locations/" + this.sellersCategory + "/" + sellerInfo.key).once('value').then(function(snapshot) {
 
-          var locationData = snapshot.val();
+          const locationData = snapshot.val();
 
           if(locationData) {
             //console.log("  locationData: " + JSON.stringify(locationData, null, 4))
 
-            var polynApp = document.getElementById("polynApp");
-            var googleMapsApi = polynApp.$.googleMapsApi;
+            const polynApp = document.getElementById("polynApp");
+            const googleMapsApi = polynApp.$.googleMapsApi;
             
-            var latLong = {lat: locationData.l[0], lng: locationData.l[1]};
-            var map = new googleMapsApi.api.Map(self.$.googleMap, {
+            const latLong = {lat: locationData.l[0], lng: locationData.l[1]};
+            const map = new googleMapsApi.api.Map(self.$.googleMap, {
               zoom: 15,
               center: latLong,
               scrollwheel: false,
@@ -190,7 +192,7 @@
               draggable: true
             });
             
-            var marker = new googleMapsApi.api.Marker({
+            const marker = new googleMapsApi.api.Marker({
               position: latLong,
               title: "TEST",
               map: map
@@ -203,8 +205,8 @@
         console.log("BusinessView._onTapClaimBusiness");
 
         if(this.user) {
-          var polynApp = document.getElementById("polynApp");
-          var claimBusinessView = polynApp.pushPageOnCurrentTab("claimbusiness-view");
+          const polynApp = document.getElementById("polynApp");
+          const claimBusinessView = polynApp.pushPageOnCurrentTab("claimbusiness-view");
           claimBusinessView.sellerInfo = this.sellerInfo;
           claimBusinessView.sellersCategory = this.sellersCategory;
         } else {
@@ -216,8 +218,8 @@
         console.log("BusinessView._onTapCreateRequest");
         
         if(this.user) {
-          var polynApp = document.getElementById("polynApp");
-          var requestView = polynApp.pushPageOnCurrentTab("request-view");
+          const polynApp = document.getElementById("polynApp");
+          const requestView = polynApp.pushPageOnCurrentTab("request-view");
         } else {
           this.$.requestSigninDialog.toggle();
         }
@@ -226,7 +228,7 @@
       _onTapSigninBtn() {
         console.log("BusinessView._onTapSigninBtn");
 
-        var profileView = polynApp.pushPageOnCurrentTab("profile-view");
+        const profileView = polynApp.pushPageOnCurrentTab("profile-view");
         profileView.autoPopAfterSignin = true;
       }
 

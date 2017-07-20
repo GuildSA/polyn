@@ -113,6 +113,8 @@
   </template>
 
   <script>
+    "use strict";
+
     class SellerInfoView extends Polymer.GestureEventListeners(Polymer.Element) {
 
       static get is() { return 'sellerinfo-view'; }
@@ -172,14 +174,14 @@
         super.connectedCallback();
         console.log("SellerInfoView.connectedCallback")
 
-        var self = this;
-        var camera = this.$.camera;
+        const self = this;
+        const camera = this.$.camera;
 
         // Use the hidden input called 'camera' to get a photo from the user 
         // if they tap their profile photo!
         camera.addEventListener('change', function(e) {
 
-          var file = e.target.files[0];
+          const file = e.target.files[0];
 
           if(!file) {
             Utility.showErrorToast("No image file selected.");
@@ -193,8 +195,8 @@
 
           self.editingSellerImage = true;
 
-          var polynApp = document.getElementById("polynApp");
-          var cropperView = polynApp.pushPageOnCurrentTab("cropper-view");
+          const polynApp = document.getElementById("polynApp");
+          const cropperView = polynApp.pushPageOnCurrentTab("cropper-view");
           cropperView.file = file;
           cropperView.prevPage = self;
         });
@@ -223,7 +225,7 @@
 
         this.loading = true;
 
-        var self = this;
+        const self = this;
 
         // Upload the image to Cloud Storage.
         firebase.app("polyn-app").storage().ref("/sellers/" + this.usersInfo.sellerId + "/photo").put(file).then(function(snapshot) {
@@ -233,7 +235,7 @@
           // Create a thumbnail version of the profile image.
           Utility.resizeImageToSpecificWidth(file, 100, function(dataUrl) {
 
-            var thumbnailBlob = Utility.dataURLtoBlob(dataUrl);
+            const thumbnailBlob = Utility.dataURLtoBlob(dataUrl);
 
             firebase.app("polyn-app").storage().ref("/sellers/" + self.usersInfo.sellerId + "/photoThumb").put(thumbnailBlob).then(function(snapshot) {
               console.log("snapshot.downloadURL = " + snapshot.downloadURL);
@@ -279,10 +281,10 @@
         }
       }
 
-       _loadUserInfo() {
+      _loadUserInfo() {
         console.log("SellerInfoView._loadUserInfo");
 
-        var self = this;
+        const self = this;
 
         const refPathInfo = "/users/" + this.user.uid + "/info";
 
@@ -340,7 +342,7 @@
             this.photoThumbUrl = sellersInfo.photoThumbUrl;
           }
 
-          var self = this;
+          const self = this;
           setTimeout(function() { self.loading = false; }, 500);
         }
       }
@@ -407,7 +409,7 @@
 
         this.loading = true;
 
-        var sellerData = {
+        const sellerData = {
           name: this.$.name.value,
         };
 
@@ -422,7 +424,7 @@
 
         // Example: "Record Guys , 701 S. Leggett , Abilene, TX 79562, United States of America"
 // TODO: Including the name is risky. If the business is new or not listed on Google - it will fail!
-        //var google_maps_search = this.$.name.value + " , ";
+        //const google_maps_search = this.$.name.value + " , ";
         sellerData.google_maps_search = "";
 
         if(this.$.email.value && this.$.email.value.length > 0) {
@@ -439,7 +441,7 @@
 
         // Address:
 
-        var fullAddressAttempt = false;
+        let fullAddressAttempt = false;
 
         if(this.$.address.value && this.$.address.value.length > 0) {
           sellerData.address = this.$.address.value;
@@ -472,11 +474,11 @@
 
         //console.log("google_maps_search = " + sellerData.google_maps_search);
 
-        var polynApp = document.getElementById("polynApp");
-        var googleMapsApi = polynApp.$.googleMapsApi;
-        var geocoder = new googleMapsApi.api.Geocoder();
+        const polynApp = document.getElementById("polynApp");
+        const googleMapsApi = polynApp.$.googleMapsApi;
+        const geocoder = new googleMapsApi.api.Geocoder();
         
-        var self = this;
+        const self = this;
 
         // Convert the given business address into a lat/long.
         geocoder.geocode( {'address': sellerData.google_maps_search}, function(results, status) {
@@ -528,24 +530,24 @@
           this.loading = false;
         }
 
-        var self = this;
+        const self = this;
 
         // Get the 'info' key under the user's id, so we can check for a 'sellerId'.
         const refPathInfo = "/users/" + this.user.uid + "/info";
 
         firebase.app("polyn-app").database().ref(refPathInfo).once('value').then(function(snapshot) {
 
-          var usersInfo = snapshot.val();
+          const usersInfo = snapshot.val();
           //console.log("  sellerId: " + usersInfo.sellerId);
 
           // If the user doesn't already have a 'sellerId' in 'info' - create one.
           if(!usersInfo.sellerId) {
 
             // Add the new seller under the 'sellers' key
-            var newSellerKey = firebase.app("polyn-app").database().ref().child("sellers/").push().key;
+            const newSellerKey = firebase.app("polyn-app").database().ref().child("sellers/").push().key;
             //console.log("  newKey: " + newSellerKey);
 
-            var newSellerData = {
+            const newSellerData = {
               name: self.$.name.value,
             };
 
@@ -577,7 +579,7 @@
 
             // Address:
 
-            var fullAddressAttempt = false;
+            let fullAddressAttempt = false;
 
             if(self.$.address.value && self.$.address.value.length > 0) {
               newSellerData.address = self.$.address.value;
@@ -610,9 +612,9 @@
 
             //console.log("google_maps_search = " + newSellerData.google_maps_search);
 
-            var polynApp = document.getElementById("polynApp");
-            var googleMapsApi = polynApp.$.googleMapsApi;
-            var geocoder = new googleMapsApi.api.Geocoder();
+            const polynApp = document.getElementById("polynApp");
+            const googleMapsApi = polynApp.$.googleMapsApi;
+            const geocoder = new googleMapsApi.api.Geocoder();
             
             // Convert the given business address into a lat/long.
             geocoder.geocode( {'address': newSellerData.google_maps_search}, function(results, status) {
@@ -670,14 +672,14 @@
           this.loading = false;
         }
 
-        var self = this;
+        const self = this;
 
         // Get the 'info' key under the user's id, so we can check for a 'sellerId'.
         const refPathCategories = "/users/" + this.user.uid + "/info/categories";
 
         firebase.app("polyn-app").database().ref(refPathCategories).once('value').then(function(snapshot) {
 
-          var categories = snapshot.val();
+          const categories = snapshot.val();
           //console.log("  categories: " + JSON.stringify(categories, null, 4));
 
           if(categories == null) {
@@ -687,9 +689,9 @@
 
           } else {
 
-            var foundCategory = false;
+            let foundCategory = false;
 
-            for(var key in categories) {
+            for(let key in categories) {
 
               if(categories.hasOwnProperty(key)) {
                 //console.log("  path = " + categories[key].path);
@@ -718,19 +720,19 @@
           self.loading = false;
         }
 
-        var self = this;
+        const self = this;
 
         // Add the user's id under the category that they wish to listen to!
         const refPathRequestCategory = "requests/" + targetCategory + "/sellers";
-        var newSellersKey = firebase.app("polyn-app").database().ref().child(refPathRequestCategory).push().key;
+        const newSellersKey = firebase.app("polyn-app").database().ref().child(refPathRequestCategory).push().key;
         console.log("  newSellersKey: " + newSellersKey);
 
         firebase.app("polyn-app").database().ref(refPathRequestCategory + "/" + newSellersKey).set(this.user.uid);
 
         const refPathCategories = "/users/" + this.user.uid + "/info/categories";
-        var newCategoryKey = firebase.app("polyn-app").database().ref().child(refPathCategories).push().key;
+        const newCategoryKey = firebase.app("polyn-app").database().ref().child(refPathCategories).push().key;
 
-        var categoryData = {
+        const categoryData = {
           path: targetCategory,
           sellersKey: newSellersKey
         };

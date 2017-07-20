@@ -47,6 +47,7 @@
   </template>
 
   <script>
+    "use strict";
 
     class CropperView extends Polymer.Element {
 
@@ -93,7 +94,7 @@
       _onTapCancel() {
         console.log("CropperView._onTapCancel:");
         
-        var polynApp = document.getElementById("polynApp");
+        const polynApp = document.getElementById("polynApp");
         this.prevPage.editingProfileImage = false;
         polynApp.popPageOffCurrentTab();
       }
@@ -103,11 +104,11 @@
 
         if(this.cropper) {
 
-          var self = this;
+          const self = this;
 
           this.cropper.getCroppedCanvas().toBlob(function(blob) {
 
-            var polynApp = document.getElementById("polynApp");
+            const polynApp = document.getElementById("polynApp");
             self.prevPage.croppedImage = blob;
             polynApp.popPageOffCurrentTab();
           });

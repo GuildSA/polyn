@@ -129,6 +129,8 @@
   </template>
 
   <script>
+    "use strict";
+
     class RequestsView extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'requests-view'; }
 
@@ -188,19 +190,19 @@
 
         this.loading = true;
 
-        var self = this;
+        const self = this;
 
         this.splice("requests", 0, this.requests.length);
         this.hasMessages = false;
 
         firebase.app("polyn-app").database().ref("/users/" + this.user.uid + "/requests").once('value').then(function(snapshot) {
 
-          var badgeCount = 0;
+          let badgeCount = 0;
 
           snapshot.forEach(function(childSnapshot) {
 
-              var childKey = childSnapshot.key;
-              var childData = childSnapshot.val();
+              const childKey = childSnapshot.key;
+              const childData = childSnapshot.val();
               //console.log("childKey = " + childKey);
               //console.log("childData: " + JSON.stringify(childData, null, 4));
 
@@ -218,7 +220,7 @@
               self.hasMessages = true;
             }
 
-            var polynApp = document.getElementById("polynApp");
+            const polynApp = document.getElementById("polynApp");
             polynApp.setRequestBadgeCount(badgeCount);
 
             // No matter how fast it loads - show the spinner for at least 0.5 seconds.
@@ -249,7 +251,7 @@
       _onTapDeleteDialogBtn() {
         console.log("RequestsView._onTapDeleteDialogBtn");
 
-        var self = this;
+        const self = this;
 
         const requestInfo = this.requests[this.indexToDelete];
         //console.log("  requestInfo: " + JSON.stringify(requestInfo, null, 4));
@@ -301,7 +303,7 @@
 
           // First, mark all the chats the buyer is engaged in as closed by buyer.
           if(requestInfo.chats) {
-            for(var key in requestInfo.chats) {
+            for(let key in requestInfo.chats) {
               const chat = requestInfo.chats[key];
               //console.log("  chat: " + JSON.stringify(chat, null, 4));
 
@@ -348,7 +350,7 @@
           return;
         }
 
-        var self = this;
+        const self = this;
 
         const index = e.model.index;
 
@@ -367,8 +369,8 @@
           if(requestInfo.chatId) {
 
             // We've already created a chatId for this buyer - so load the chat session.
-            var polynApp = document.getElementById("polynApp");
-            var chatView = polynApp.pushPageOnCurrentTab("chat-view");
+            const polynApp = document.getElementById("polynApp");
+            const chatView = polynApp.pushPageOnCurrentTab("chat-view");
             chatView.requestId = requestInfo.key;
 
             if(typeof chatView.reload === 'function') {
@@ -387,8 +389,8 @@
               if(snapshot.exists()) {
 
                 // The request is still active - allow chatting!
-                var polynApp = document.getElementById("polynApp");
-                var chatView = polynApp.pushPageOnCurrentTab("chat-view");
+                const polynApp = document.getElementById("polynApp");
+                const chatView = polynApp.pushPageOnCurrentTab("chat-view");
 
                 chatView.requestId = requestInfo.key;
 
@@ -413,9 +415,9 @@
 
           if(requestInfo.chats) {
 
-            var numActiveChats = false;
+            let numActiveChats = false;
 
-            for(var key in requestInfo.chats) {
+            for(let key in requestInfo.chats) {
               const chat = requestInfo.chats[key];
               if(!chat.deleted) {
                 numActiveChats++;
@@ -424,8 +426,8 @@
 
             if(numActiveChats > 0) {
 
-              var polynApp = document.getElementById("polynApp");
-              var chatsView = polynApp.pushPageOnCurrentTab("chats-view");
+              const polynApp = document.getElementById("polynApp");
+              const chatsView = polynApp.pushPageOnCurrentTab("chats-view");
 
               chatsView.requestId = requestInfo.key;
 
@@ -451,8 +453,8 @@
         console.log("RequestsView._onTapCreateRequest");
 
         if(this.user) {
-          var polynApp = document.getElementById("polynApp");
-          var requestView = polynApp.pushPageOnCurrentTab("request-view");
+          const polynApp = document.getElementById("polynApp");
+          const requestView = polynApp.pushPageOnCurrentTab("request-view");
         } else {
           this.$.requestSigninDialog.toggle();
         }
@@ -461,7 +463,7 @@
       _onTapSigninBtn() {
         console.log("RequestsView._onTapSigninBtn");
         
-        var profileView = polynApp.pushPageOnCurrentTab("profile-view");
+        const profileView = polynApp.pushPageOnCurrentTab("profile-view");
         profileView.autoPopAfterSignin = true;
       }
     }

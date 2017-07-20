@@ -61,6 +61,8 @@
   </template>
 
   <script>
+    "use strict";
+    
     class ClaimBusinessView extends Polymer.Element {
       static get is() { return 'claimbusiness-view'; }
 
@@ -83,7 +85,7 @@
       _onTapClaimBusiness() {
         console.log("ClaimBusinessView._onTapClaimBusiness");
 
-        var params = {
+        const params = {
           name: this.$.name,
           email: this.$.email,
           phone: this.$.phone

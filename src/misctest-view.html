@@ -80,14 +80,14 @@
         // Works in both Chrome and Safari.
         //
 
-        var camera = this.$.camera;
-        var frame = this.$.frame;
+        const camera = this.$.camera;
+        const frame = this.$.frame;
 
-        var self = this;
+        const self = this;
 
         camera.addEventListener('change', function(e) {
 
-          var file = e.target.files[0];
+          const file = e.target.files[0];
 
           if(!file) {
             return;
@@ -144,14 +144,14 @@
 
         if(this.cropper) {
 
-          var self = this;
+          const self = this;
 
           this.cropper.getCroppedCanvas().toBlob(function(blob) {
 
             self.$.croppedImage.src = URL.createObjectURL(blob);
 
             // Upload the image to Cloud Storage.
-            var newImageKey = firebase.app("polyn-app").database().ref().child("tests").push().key;
+            const newImageKey = firebase.app("polyn-app").database().ref().child("tests").push().key;
 
             firebase.app("polyn-app").storage().ref("tests/" + newImageKey).put(blob).then(function(snapshot) {
               console.log("snapshot.downloadURL = " + snapshot.downloadURL);

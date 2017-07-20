@@ -2,18 +2,18 @@
 // https://github.com/firebase/geofire-js/blob/master/examples/html5Geolocation/index.html
 // https://medium.freecodecamp.com/javascript-modules-a-beginner-s-guide-783f7d7a5fcc
 
-var GeofireManager = (function() {
+let GeofireManager = (function() {
   "use strict";
 
-  var _firebaseRef;
-  var _geoFire;
-  var _usersLocationCallback;
-  var _usersLocationError;
-  var _sellerFoundCallback;
-  var _usersInfoKeyPath;
+  let _firebaseRef;
+  let _geoFire;
+  let _usersLocationCallback;
+  let _usersLocationError;
+  let _sellerFoundCallback;
+  let _usersInfoKeyPath;
 
   // Uses the HTML5 geolocation API to get the current user's location.
-  var getUsersLocation = function(usersInfoKeyPath, usersLocationCallback, usersLocationError) {
+  let getUsersLocation = function(usersInfoKeyPath, usersLocationCallback, usersLocationError) {
 
     _usersLocationCallback = usersLocationCallback;
     _usersLocationError = usersLocationError;
@@ -28,7 +28,7 @@ var GeofireManager = (function() {
     if(typeof navigator !== "undefined" && typeof navigator.geolocation !== "undefined") {
       log("Asking user to get their location");
 
-      var positionOptions = { 
+      const positionOptions = { 
         enableHighAccuracy: false,
         timeout: 5000
       };
@@ -40,16 +40,16 @@ var GeofireManager = (function() {
   };
   
   // Callback method from the geolocation API which receives the current user's location.
-  var geolocationCallback = function(location) {
+  let geolocationCallback = function(location) {
 
-    var latitude = location.coords.latitude;
-    var longitude = location.coords.longitude;
+    const latitude = location.coords.latitude;
+    const longitude = location.coords.longitude;
     log("Retrieved user's location: [" + latitude + ", " + longitude + "]");
 
 // TODO: Should we store the location at user's info location or not? Is there any benefit to this?
     if(_usersInfoKeyPath) {
 
-      var locationKey = "location";
+      const locationKey = "location";
       _geoFire.set(locationKey, [latitude, longitude]).then(function() {
 
         log("Current user's location has been added to GeoFire");
@@ -81,7 +81,7 @@ var GeofireManager = (function() {
   }
 
   // Handles any errors from trying to get the user's current location.
-  var errorHandler = function(error) {
+  let errorHandler = function(error) {
 
     if(error.code == 1) {
       log("Error: PERMISSION_DENIED: User denied access to their location");
@@ -98,7 +98,7 @@ var GeofireManager = (function() {
     }
   };
   
-  var addSellerToLocations = function(rootKey, sellersCategory, sellersKey, latitude, longitude) {
+  let addSellerToLocations = function(rootKey, sellersCategory, sellersKey, latitude, longitude) {
 
     // console.log("  sellersCategory: " + sellersCategory);
     // console.log("  sellersKey: " + sellersKey);
@@ -107,10 +107,10 @@ var GeofireManager = (function() {
 
 // "collectables/sub/vinylRecords"
 
-    var sellersByLocationRef = firebase.app("polyn-app").database().ref(rootKey + sellersCategory);
+    const sellersByLocationRef = firebase.app("polyn-app").database().ref(rootKey + sellersCategory);
 
     // Create a new GeoFire instance pointing at the user's data.
-    var geoFireSellersRef = new GeoFire(sellersByLocationRef);
+    const geoFireSellersRef = new GeoFire(sellersByLocationRef);
 
     geoFireSellersRef.set(sellersKey, [latitude, longitude]).then(function() {
       log("Seller location has been added to: " + sellersKey);
@@ -134,13 +134,13 @@ var GeofireManager = (function() {
   //           'K' is kilometers
   //           'N' is nautical miles
   //--------------------------------------------------------------------------
-  var getDistance = function(lat1, lon1, lat2, lon2, unit) {
+  let getDistance = function(lat1, lon1, lat2, lon2, unit) {
 
-    var radlat1 = Math.PI * lat1/180
-    var radlat2 = Math.PI * lat2/180
-    var theta = lon1-lon2
-    var radtheta = Math.PI * theta/180
-    var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+    const radlat1 = Math.PI * lat1/180
+    const radlat2 = Math.PI * lat2/180
+    const theta = lon1-lon2
+    const radtheta = Math.PI * theta/180
+    let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
     dist = Math.acos(dist)
     dist = dist * 180/Math.PI
     dist = dist * 60 * 1.1515
@@ -149,7 +149,7 @@ var GeofireManager = (function() {
     return dist
   }
 
-  var getSellersByLocation = function(sellersCategory, latitude, longitude, range, sellerFoundCallback) {
+  let getSellersByLocation = function(sellersCategory, latitude, longitude, range, sellerFoundCallback) {
 
     console.log("  sellersCategory: " + sellersCategory);
     console.log("  latitude: " + latitude);
@@ -158,15 +158,15 @@ var GeofireManager = (function() {
 
     _sellerFoundCallback = sellerFoundCallback;
 
-    var sellersByLocationRef = firebase.app("polyn-app").database().ref("locations/" + sellersCategory + "/");
-    var geoFireSellersRef = new GeoFire(sellersByLocationRef);
+    const sellersByLocationRef = firebase.app("polyn-app").database().ref("locations/" + sellersCategory + "/");
+    const geoFireSellersRef = new GeoFire(sellersByLocationRef);
 
-    var geoQuery = geoFireSellersRef.query({
+    const geoQuery = geoFireSellersRef.query({
         center: [latitude, longitude],
         radius: range // Kilometers
       });
 
-    var onKeyEnteredRegistration = geoQuery.on("key_entered", function(key, location) {
+    const onKeyEnteredRegistration = geoQuery.on("key_entered", function(key, location) {
 
       //log(key + " entered the query.");
       //log("location: " + JSON.stringify(location, null, 4));
@@ -179,7 +179,7 @@ var GeofireManager = (function() {
       }
     });
 
-    var onReadyRegistration = geoQuery.on("ready", function() {
+    const onReadyRegistration = geoQuery.on("ready", function() {
 
       log("  The 'ready' event fired - cancelling query.");
 
