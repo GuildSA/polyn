@@ -131,6 +131,63 @@ static get properties() {
 
 ------------------------------------------------------------------------
 
+ -- Research into using 'shallow=true' with Firebase REST API --
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-request.html">
+
+...
+
+    <!--
+      url="https://polyn-3c431.firebaseio.com/users/[[user.uid]]/requests.json?access_token=[[accessToken]]&shallow=true"
+      url="https://polyn-3c431.firebaseio.com/users/[[user.uid]]/requests.json?shallow=true"
+    -->
+    <iron-ajax
+      id="getRequests"
+      url="https://polyn-3c431.firebaseio.com/users/[[user.uid]]/requests.json?access_token=[[accessToken]]&shallow=true"
+      method="GET"
+      loading="{{loading}}"
+      on-response="_handleGetRequestsResponse"
+      on-error="_handleGetRequestsError"
+      debounce-duration="300">
+    </iron-ajax>
+
+    ...
+
+      static get properties() {
+        return {
+          accessToken: {
+            type: String
+          }
+        };
+      }
+
+  ...
+
+      _userChanged(user) {
+        //console.log("RequestsView._userChanged: " + user);
+        console.log("user: " + JSON.stringify(user, null, 4));
+
+        if(user != null) {
+          this._loadRequests();
+
+// console.log("XXXX user.stsTokenManager: " + user.uid);
+// console.log("XXXX user.stsTokenManager: " + JSON.stringify(user.stsTokenManager, null, 4));
+// this.accessToken = user.stsTokenManager.accessToken;
+//this.$.getRequests.generateRequest();
+
+        var self = this;
+        user.getToken().then(token => { 
+
+          console.log("XXXX token: " + token);
+          self.accessToken = token;
+          self.$.getRequests.generateRequest();
+
+        });
+
+------------------------------------------------------------------------
+
   -- Firebase Examples -- 
 
   // Get all data under a key one-at-a-time.
