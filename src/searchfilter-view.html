@@ -149,7 +149,7 @@
             if(response) {
               // We got the location from the indexdb - use it.
 
-              if(response.searchOption && response.searchOption == "zip") {
+              if(response.searchOption && response.searchOption === "zip") {
 
                 self.showZip = true;
                 self.$.searchListBox.selectIndex(1);
@@ -199,7 +199,7 @@
 
         if(usersInfo.searchSettings) {
 
-          if(usersInfo.searchSettings && usersInfo.searchSettings.searchOption && usersInfo.searchSettings.searchOption == "zip") {
+          if(usersInfo.searchSettings && usersInfo.searchSettings.searchOption && usersInfo.searchSettings.searchOption === "zip") {
 
             this.showZip = true;
             this.$.searchListBox.selectIndex(1);
@@ -238,7 +238,7 @@
           const selectedText = selectedItem.innerText;
           console.log("selectedText = " + selectedText);
  
-          if(selectedText == "Zip Code") {
+          if(selectedText === "Zip Code") {
             this.showZip = true;
           } else {
             this.showZip = false;
@@ -262,7 +262,7 @@
 
         const searchDropDown = this.$.searchDropDown.value;
 
-        if(searchDropDown == "Zip Code") {
+        if(searchDropDown === "Zip Code") {
 
           const zip = this.shadowRoot.querySelector('#zip');
 
@@ -280,7 +280,7 @@
             const address = zip.value;
             geocoder.geocode( {'address': address}, function(results, status) {
 
-              if(status == google.maps.GeocoderStatus.OK) {
+              if(status === google.maps.GeocoderStatus.OK) {
                 const latitude = results[0].geometry.location.lat();
                 const longitude = results[0].geometry.location.lng();
 

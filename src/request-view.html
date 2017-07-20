@@ -224,7 +224,7 @@
 
         if(usersInfo.searchSettings) {
 
-          if(usersInfo.searchSettings && usersInfo.searchSettings.searchOption && usersInfo.searchSettings.searchOption == "zip") {
+          if(usersInfo.searchSettings && usersInfo.searchSettings.searchOption && usersInfo.searchSettings.searchOption === "zip") {
 
             this.showZip = true;
 
@@ -278,7 +278,7 @@
           const selectedText = selectedItem.innerText;
           console.log("selectedText = " + selectedText);
  
-          if(selectedText == "Zip Code") {
+          if(selectedText === "Zip Code") {
             this.showZip = true;
           } else {
             this.showZip = false;
@@ -308,12 +308,12 @@
         const title = this.$.titleText.value;
         const desc = this.$.descText.value;
 
-        if(!title || title.length == 0) {
+        if(!title || title.length === 0) {
           Utility.showErrorToast("A Title must be provided.");
           return;
         }
 
-        if(!desc || desc.length == 0) {
+        if(!desc || desc.length === 0) {
           Utility.showErrorToast("A brief Description must be provided.");
           return;
         }
@@ -334,7 +334,7 @@
           const distanceDropDown = this.shadowRoot.querySelector('#distanceDropDown');
           const distance = parseInt(distanceDropDown.value);
 
-          if(selectedText == "Zip Code") {
+          if(selectedText === "Zip Code") {
 
             const zip = this.shadowRoot.querySelector('#zip');
 
@@ -352,7 +352,7 @@
               const address = zip.value;
               geocoder.geocode( {'address': address}, function(results, status) {
 
-                if(status == google.maps.GeocoderStatus.OK) {
+                if(status === google.maps.GeocoderStatus.OK) {
                   const latitude = results[0].geometry.location.lat();
                   const longitude = results[0].geometry.location.lng();
 

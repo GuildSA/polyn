@@ -354,7 +354,7 @@
 
       _isTimeStampPresent(timeStamp, theArray) {
         for(let i = 0; i < theArray.length; i++) {
-          if(theArray[i].timeStamp == timeStamp) {
+          if(theArray[i].timeStamp === timeStamp) {
             return true;
           }
         }
@@ -375,7 +375,7 @@
             // const key = snapshot.key;
             // console.log(" key: " + key);
 
-            if(self.user.uid == val.senderId) {
+            if(self.user.uid === val.senderId) {
               if(self.usersInfo.photoThumbUrl) {
                 val.photoThumbUrl = self.usersInfo.photoThumbUrl;
               }
@@ -403,7 +403,7 @@
           // No matter how fast it loads - show the spinner for at least 0.5 seconds.
           setTimeout(function() { self.loading = false; }, 500);
 
-          if(this.chatInfo.viewed == false) {
+          if(this.chatInfo.viewed === false) {
             this._markThisUsersChatViewed();
           }
 
@@ -693,7 +693,7 @@
       _markOtherUsersChatUnviewed() {
         console.log("ChatView._markOtherUsersChatUnviewed");
 
-        if(this._getUserRole() == "seller") {
+        if(this._getUserRole() === "seller") {
 
           // The seller is sending the message - mark the buyer's whole request as viewed 'false'.
           firebase.app("polyn-app").database().ref(
@@ -714,7 +714,7 @@
       _markThisUsersChatViewed() {
         console.log("ChatView._markThisUsersChatViewed");
 
-        if(this._getUserRole() == "seller") {
+        if(this._getUserRole() === "seller") {
 
           // The seller has viewed the latest chat messages - mark the seller's chat info as viewed 'true'.
           firebase.app("polyn-app").database().ref(

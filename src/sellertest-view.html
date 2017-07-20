@@ -151,7 +151,7 @@
 
             console.log("  user.isAnonymous = " + user.isAnonymous);
 
-            if(user.isAnonymous == false) {
+            if(user.isAnonymous === false) {
 
               // console.log("user.providerData: " + user.providerData);
               // console.log("user " + JSON.stringify(user, null, 4));
@@ -240,7 +240,7 @@
           const categories = snapshot.val();
           //console.log("  categories: " + JSON.stringify(categories, null, 4));
 
-          if(categories == null) {
+          if(categories === null) {
 
             // info/categories doesn't even exist - just add it to the user!
             self._addSellerToCategory(targetCategory);
@@ -254,7 +254,7 @@
               if(categories.hasOwnProperty(key)) {
                 //console.log("  path = " + categories[key].path);
                 //console.log("  sellersKey = " + categories[key].sellersKey);
-                if(categories[key].path == targetCategory) {
+                if(categories[key].path === targetCategory) {
                   foundCategory = true;
                 }
               }
@@ -326,7 +326,7 @@
 
           //console.log("  categories: " + JSON.stringify(categories, null, 4));
 
-          if(categories == null) {
+          if(categories === null) {
 
             console.log("  The user has no categories key! Removal pointless.");
 
@@ -342,7 +342,7 @@
                 //console.log("  key = " + key);
                 //console.log("    path = " + categories[key].path);
                 //console.log("    sellersKey = " + categories[key].sellersKey);
-                if(categories[key].path == targetCategory) {
+                if(categories[key].path === targetCategory) {
                   foundCategory = true;
                   requestKeyToRemove = categories[key].sellersKey;
                   categoryKeyToRemove = key;

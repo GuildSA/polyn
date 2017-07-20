@@ -254,7 +254,7 @@
       _editingProfileImageChanged(val) {
         console.log("ProfileView._editingProfileImageChanged: " + val);
 
-        if(val == false) {
+        if(val === false) {
           this.$.camera.value = null;
         }
       }
@@ -301,7 +301,7 @@
         console.log("ProfileView._handleAuthError: " + err);
 
         // Ignore this error. 
-        if(err.code == "auth/email-already-in-use") {
+        if(err.code === "auth/email-already-in-use") {
           return;
         }
 
@@ -314,7 +314,7 @@
         //console.log("user: " + JSON.stringify(user, null, 4));
 
         if(user != null) {
-          if(user.isAnonymous == false) {
+          if(user.isAnonymous === false) {
             // As soon as we get the user - verify the users info data.
             this._verifyUserInfo(user);
           }
@@ -449,12 +449,12 @@
       _onTapSignInUsingEmail() {
         console.log("ProfileView._onTapSignInUsingEmail");
         
-        if(this.user == null) {
+        if(this.user === null) {
 
           const email = this.shadowRoot.querySelector('#email');
           const password = this.shadowRoot.querySelector('#password');
 
-          if(!email.value || email.value.length == 0) {
+          if(!email.value || email.value.length === 0) {
             Utility.showErrorToast("An email address must be provided.");
             return;
           }
@@ -464,7 +464,7 @@
             return;
           }
 
-          if(!password.value || password.value.length == 0) {
+          if(!password.value || password.value.length === 0) {
             Utility.showErrorToast("A password must be provided.");
             return;
           }
@@ -482,7 +482,7 @@
 
               // If createUserWithEmailAndPassword failed due to "email-already-in-use"
               // attempt to sign in as an existing user.
-              if(err.code == "auth/email-already-in-use") {
+              if(err.code === "auth/email-already-in-use") {
 
                 self.$.auth.signInWithEmailAndPassword(email.value, password.value).then(function (user) {
                   email.value = "";
@@ -501,7 +501,7 @@
       _onTapSignInUsingGmail() {
         console.log("ProfileView._onTapSignInUsingGmail");
 
-        if(this.user == null) {
+        if(this.user === null) {
           this.$.auth.provider = "google";
           return this.$.auth.signInWithPopup();
         } else {
@@ -512,7 +512,7 @@
       _onTapSignInUsingFacebook() {
         console.log("ProfileView._onTapSignInUsingFacebook");
 
-        if(this.user == null) {
+        if(this.user === null) {
           this.$.auth.provider = "facebook";
           return this.$.auth.signInWithPopup();
         } else {
@@ -523,7 +523,7 @@
       // _onTapSignInUsingTwitter() {
       //   console.log("ProfileView._onTapSignInUsingTwitter");
       //
-      //   if(this.user == null) {
+      //   if(this.user === null) {
       //     this.$.auth.provider = "twitter";
       //     return this.$.auth.signInWithPopup();
       //   } else {

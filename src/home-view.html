@@ -391,12 +391,12 @@
 
           if(response && response.distance) {
 
-            if(response.searchOption == "gps") {
+            if(response.searchOption === "gps") {
 
               self.rangeInKm = 1.6 * parseInt(response.distance);
               self._getSellerDataWithUsersLocation();
 
-            } else if(response.searchOption == "zip" && response.lat && response.long && response.distance) {
+            } else if(response.searchOption === "zip" && response.lat && response.long && response.distance) {
 
               // We got the location from the indexdb - use it.
               const latitude = response.lat;
@@ -450,7 +450,7 @@
             this.rangeInKm = 1.6 * parseInt(usersInfo.searchSettings.distance);
           }
 
-          if(usersInfo.searchSettings && usersInfo.searchSettings.searchOption == "zip") {
+          if(usersInfo.searchSettings && usersInfo.searchSettings.searchOption === "zip") {
 
             if(usersInfo.searchSettings.lat && usersInfo.searchSettings.long) {
               this.location = [usersInfo.searchSettings.lat, usersInfo.searchSettings.long];
@@ -497,14 +497,14 @@
 
             self.loading = false;
 
-            if(error.code == error.PERMISSION_DENIED) {
+            if(error.code === error.PERMISSION_DENIED) {
 
               // If we're denied the user's current location - try to pull it from indexdb.
               self.$.searchSettingsIDB.getStoredValue("searchSettings").then((response) => {
 
                 console.log("searchSettings = " + JSON.stringify(response, null, 4));
 
-                if(response && response.searchOption == "zip") {
+                if(response && response.searchOption === "zip") {
 
                   // We got the location from the indexdb - use it.
                   const latitude = response.lat;
@@ -557,7 +557,7 @@
 
         const zip = this.$.zipDialogInput.value;
 
-        if(!zip || zip.length == 0) {
+        if(!zip || zip.length === 0) {
           Utility.showErrorToast("A valid zip code must be provided.");
           return;
         }
@@ -576,7 +576,7 @@
         // Convert the given zip code into a lat/long.
         geocoder.geocode( {'address': address}, function(results, status) {
 
-          if(status == google.maps.GeocoderStatus.OK) {
+          if(status === google.maps.GeocoderStatus.OK) {
 
             const latitude = results[0].geometry.location.lat();
             const longitude = results[0].geometry.location.lng();

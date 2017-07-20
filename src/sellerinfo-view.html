@@ -215,7 +215,7 @@
       _editingSellerImageChanged(val) {
         console.log("SellerInfoView._editingSellerImageChanged: " + val);
 
-        if(val == false) {
+        if(val === false) {
           this.$.camera.value = null;
         }
       }
@@ -350,12 +350,12 @@
       _onTapRegisterBusiness() {
         console.log("SellerInfoView._onTapRegisterBusiness");
 
-        if(!this.$.name.value || this.$.name.value.length == 0) {
+        if(!this.$.name.value || this.$.name.value.length === 0) {
           Utility.showErrorToast("A Business Name must be provided.");
           return;
         }
 
-        if(!this.$.zip.value || this.$.zip.value.length == 0) {
+        if(!this.$.zip.value || this.$.zip.value.length === 0) {
           Utility.showErrorToast("We need at least a zip code to establish a general location.");
           return;
         }
@@ -363,17 +363,17 @@
         this.loading = true;
 
 // TODO: How much data is optional for a Business?
-        // if(!this.$.email.value || this.$.email.value.length == 0) {
+        // if(!this.$.email.value || this.$.email.value.length === 0) {
         //   Utility.showErrorToast("A Business Email must be provided.");
         //   return;
         // }
 
-        // if(!this.$.phone.value || this.$.phone.value.length == 0) {
+        // if(!this.$.phone.value || this.$.phone.value.length === 0) {
         //   Utility.showErrorToast("A Business Phone must be provided.");
         //   return;
         // }
 
-        // if(!this.$.website.value || this.$.website.value.length == 0) {
+        // if(!this.$.website.value || this.$.website.value.length === 0) {
         //   Utility.showErrorToast("A Business Website must be provided.");
         //   return;
         // }
@@ -397,12 +397,12 @@
           console.log("  Error: User Info is not defined!");
         }
 
-        if(!this.$.name.value || this.$.name.value.length == 0) {
+        if(!this.$.name.value || this.$.name.value.length === 0) {
           Utility.showErrorToast("A Business Name must be provided.");
           return;
         }
 
-        if(!this.$.zip.value || this.$.zip.value.length == 0) {
+        if(!this.$.zip.value || this.$.zip.value.length === 0) {
           Utility.showErrorToast("We need at least a zip code to establish a general location.");
           return;
         }
@@ -483,7 +483,7 @@
         // Convert the given business address into a lat/long.
         geocoder.geocode( {'address': sellerData.google_maps_search}, function(results, status) {
 
-          if(status == google.maps.GeocoderStatus.OK) {
+          if(status === google.maps.GeocoderStatus.OK) {
 
             const latitude = results[0].geometry.location.lat();
             const longitude = results[0].geometry.location.lng();
@@ -619,7 +619,7 @@
             // Convert the given business address into a lat/long.
             geocoder.geocode( {'address': newSellerData.google_maps_search}, function(results, status) {
 
-              if(status == google.maps.GeocoderStatus.OK) {
+              if(status === google.maps.GeocoderStatus.OK) {
 
                 const latitude = results[0].geometry.location.lat();
                 const longitude = results[0].geometry.location.lng();
@@ -682,7 +682,7 @@
           const categories = snapshot.val();
           //console.log("  categories: " + JSON.stringify(categories, null, 4));
 
-          if(categories == null) {
+          if(categories === null) {
 
             // info/categories doesn't even exist - just add it to the user!
             self._addSellerToCategory(targetCategory);
@@ -696,7 +696,7 @@
               if(categories.hasOwnProperty(key)) {
                 //console.log("  path = " + categories[key].path);
                 //console.log("  sellersKey = " + categories[key].sellersKey);
-                if(categories[key].path == targetCategory) {
+                if(categories[key].path === targetCategory) {
                   foundCategory = true;
                 }
               }

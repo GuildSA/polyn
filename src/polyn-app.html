@@ -271,7 +271,7 @@
 
       //   console.log("PolynApp._checkForAnonymousSignIn")
 
-      //   if(this.signedIn == false) {
+      //   if(this.signedIn === false) {
       //     console.log("  Signing IN Anonymously!");
       //     this.$.auth.signInAnonymously();
       //   } else {
@@ -366,7 +366,7 @@
 
         const selectedTab = this.$.tabs.selected;
 
-        if(this.page == "home-view") {
+        if(this.page === "home-view") {
           const currentPage = this.$.ironPages.selectedItem;
           if(typeof currentPage.searchFilterBtnTapped === 'function') {
             currentPage.searchFilterBtnTapped();
@@ -405,11 +405,11 @@
             } else {
 
               // If the tab's view stack is empty - restore the default view for the tab.
-              if(this.$.tabs.selected == 0) {
+              if(this.$.tabs.selected === 0) {
                 this.page = 'home-view';
-              } else if(this.$.tabs.selected == 1) {
+              } else if(this.$.tabs.selected === 1) {
                 this.page = 'requests-view';
-              } else if(this.$.tabs.selected == 2) {
+              } else if(this.$.tabs.selected === 2) {
                 this.page = 'profile-view';
               }
 
@@ -465,7 +465,7 @@
 
 // TODO: Why does hidden not work here!? It's in the DAMN docs people!
         //this.$.rightToolbarBtn.hidden = false;
-        if(this.page == "home-view") {
+        if(this.page === "home-view") {
           this.$.rightToolbarBtn.icon = "custom-icons:search";
         } else {
           //this.$.rightToolbarBtn.hidden = true;
@@ -535,7 +535,7 @@
 
         // Polymer 2.0 will also call with `components` for some 
         // unknown reason, so ignore it as well and redirect to Home.
-        if(page == "components") {
+        if(page === "components") {
           page = "home-view";
         }
 

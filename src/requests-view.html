@@ -206,7 +206,7 @@
               //console.log("childKey = " + childKey);
               //console.log("childData: " + JSON.stringify(childData, null, 4));
 
-              if(childData.viewed == false) {
+              if(childData.viewed === false) {
                 ++badgeCount;
               }
 
@@ -239,7 +239,7 @@
 
         this.indexToDelete = e.model.index;
 
-        if(this._getUserRole(this.requests[this.indexToDelete].buyerId) == "seller") {
+        if(this._getUserRole(this.requests[this.indexToDelete].buyerId) === "seller") {
           this.deletePrompt = "Do you wish to delete this buyer's request?";
         } else {
           this.deletePrompt = "Do you wish to delete this request and all related chats?";
@@ -256,7 +256,7 @@
         const requestInfo = this.requests[this.indexToDelete];
         //console.log("  requestInfo: " + JSON.stringify(requestInfo, null, 4));
 
-        if(this._getUserRole(requestInfo.buyerId) == "seller") {
+        if(this._getUserRole(requestInfo.buyerId) === "seller") {
 
           // The seller is deleting the request.
 
@@ -357,7 +357,7 @@
         const requestInfo = this.requests[index];
         //console.log("  requestInfo: " + JSON.stringify(requestInfo, null, 4));
 
-        if(this._getUserRole(requestInfo.buyerId) == "seller") {
+        if(this._getUserRole(requestInfo.buyerId) === "seller") {
 
           if(requestInfo.deleted) {
             this.noChatsMessage = "Im sorry, but the buyer has deleted this request.";

@@ -169,7 +169,7 @@
             childData.key = childKey;
             //console.log("childData: " + JSON.stringify(childData, null, 4));
 
-            if(childData.viewed == false) {
+            if(childData.viewed === false) {
               ++badgeCount;
             }
 
@@ -211,16 +211,16 @@
             });
           });
 
-          console.log("  badgeCount = " + badgeCount);
+          //console.log("  badgeCount = " + badgeCount);
 
-          if(badgeCount == 0) {
+          if(badgeCount === 0) {
             // If every chat session under this request has been viewed - mark the whole request viewed!
             firebase.app("polyn-app").database().ref("/users/" + self.user.uid + "/requests/" + self.requestId + "/viewed").set(true);
 
             const polynApp = document.getElementById("polynApp");
-            const badgeCount = polynApp.getRequestBadgeCount();
-            --badgeCount;
-            polynApp.setRequestBadgeCount(badgeCount);
+            let currentBadgeCount = polynApp.getRequestBadgeCount();
+            --currentBadgeCount;
+            polynApp.setRequestBadgeCount(currentBadgeCount);
           }
         });
 

@@ -134,7 +134,7 @@
       _registerNewSeller(sellerObj) {
         console.log("SellerUploadView._registerNewSeller");
 
-        if(!sellerObj.name || sellerObj.name.length == 0) {
+        if(!sellerObj.name || sellerObj.name.length === 0) {
           console.log("-----------------------------------------");
           console.log("  Failed to regsiter - no name!");
           return;

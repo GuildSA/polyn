@@ -83,7 +83,7 @@ let GeofireManager = (function() {
   // Handles any errors from trying to get the user's current location.
   let errorHandler = function(error) {
 
-    if(error.code == 1) {
+    if(error.code === 1) {
       log("Error: PERMISSION_DENIED: User denied access to their location");
     } else if(error.code === 2) {
       log("Error: POSITION_UNAVAILABLE: Network is down or positioning satellites cannot be reached");
