@@ -186,7 +186,7 @@
           GeofireManager.getUsersLocation("users/" + this.user.uid + "/info", 
 
             function(location) {
-              vaconstr latitude = location.coords.latitude;
+              const latitude = location.coords.latitude;
               const longitude = location.coords.longitude;
 
               // Cache the user's location.
