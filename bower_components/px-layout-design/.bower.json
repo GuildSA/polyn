@@ -1,6 +1,6 @@
 {
   "name": "px-layout-design",
-  "version": "1.0.0-prerelease-4",
+  "version": "1.0.0",
   "authors": [
     "General Electric"
   ],
@@ -43,11 +43,11 @@
   "resolutions": {
     "webcomponentsjs": "^0.7.24"
   },
-  "_release": "1.0.0-prerelease-4",
+  "_release": "1.0.0",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.0-prerelease-4",
-    "commit": "adca50eef9433450da1fbd3bf2c03898a29e6027"
+    "tag": "v1.0.0",
+    "commit": "0617adc73dcc57722243458d022064a3f7d1f5e1"
   },
   "_source": "https://github.com/predixDev/px-layout-design.git",
   "_target": "^1.0.0",

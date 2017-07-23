@@ -6,7 +6,7 @@
   "license": "",
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.1",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.3",
     "web-animations-js": "^2.2.5",
     "app-layout": "PolymerElements/app-layout#^2.0.0",
     "app-route": "PolymerElements/app-route#^2.0.0",
@@ -36,7 +36,7 @@
     "geofire": "^4.1.2",
     "cropperjs": "^1.0.0-rc.3",
     "google-apis": "2.0-preview",
-    "px-spinner": "^2.0.0-prerelease-4",
+    "px-spinner": "^2.0.0",
     "papaparse": "^4.3.3",
     "paper-checkbox": "PolymerElements/paper-checkbox#^2.0.1"
   },
