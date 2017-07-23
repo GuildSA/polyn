@@ -53,6 +53,22 @@
       h2 {
         color: #000000;
       }
+
+      .request-title {
+        font-size: 1rem;
+        margin-left: 0px;
+        margin-top: 16px;
+        color: #000000;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .request-desc {
+        font-size: 0.5 rem;
+        margin-left: 0px;
+        margin-bottom: 16px;
+      }
       
     </style>
 
@@ -83,8 +99,10 @@
          <div class="card" on-tap="_onTapRequest">
           <div class="horizontal justified layout">
             <div class="vertical layout">
-              <h2>[[request.title]]</h2>
-              [[request.desc]]
+              <h2 class="request-title">[[request.title]]</h2>
+              <div class="request.desc">
+                [[request.desc]]
+              </div>
             </div>
             <div class="close">
               <paper-icon-button id="closeBtn" icon="custom-icons:close" on-tap="_onTapDelete"></paper-icon-button>

@@ -542,9 +542,9 @@
         if(!this.$.message.value && !this.chatPhotoUrl) {
           return;
         }
-
+        
         // Sanity check the required user data!
-        if(!this.user || !this.requestId || !this.chatInfo.buyerId || !this.chatInfo.requestId) {
+        if(!this.user || !this.requestId) {
           return;
         }
 
@@ -728,9 +728,9 @@
         }
 
         const polynApp = document.getElementById("polynApp");
-        const badgeCount = polynApp.getRequestBadgeCount();
-        --badgeCount;
-        polynApp.setRequestBadgeCount(badgeCount);
+        let currentBadgeCount = polynApp.getRequestBadgeCount();
+        --currentBadgeCount;
+        polynApp.setRequestBadgeCount(currentBadgeCount);
       }
 
       _getUserRole() {

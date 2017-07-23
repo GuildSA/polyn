@@ -66,7 +66,7 @@ exports.sendMessage = functions.https.onRequest((req, res) => {
   const body = req.query.body;
 
   // If you use notification over data - setBackgroundMessageHandler will not fire.
-  let payload = {
+  const payload = {
     //notification: {
     data: {
       title: title,
@@ -124,7 +124,7 @@ exports.sendRequestLocation = functions.https.onRequest((req, res) => {
   console.log("long: ", long);
   console.log("rangeInKm: ", rangeInKm);
 
-  let request = {
+  const request = {
     title: title,
     desc: desc,
     shipping: shipping,
@@ -139,22 +139,25 @@ exports.sendRequestLocation = functions.https.onRequest((req, res) => {
   admin.database().ref('/requests/' + categoryPath + '/requests').push(request).then(snapshot => {
     cors(req, res, () => {
 
-      var sellersByLocationRef = admin.database().ref("locations/" + categoryPath + "/");
-      var geoFireSellersRef = new GeoFire(sellersByLocationRef);
+      const sellersByLocationRef = admin.database().ref("locations/" + categoryPath + "/");
+      const geoFireSellersRef = new GeoFire(sellersByLocationRef);
 
-      var geoQuery = geoFireSellersRef.query({
+      const geoQuery = geoFireSellersRef.query({
         center: [lat, long],
         radius: rangeInKm // Kilometers
       });
 
-      var onKeyEnteredRegistration = geoQuery.on("key_entered", function(key, location) {
+      const onKeyEnteredRegistration = geoQuery.on("key_entered", function(key, location) {
         console.log(key + " entered the query.");
         console.log("location: " + JSON.stringify(location, null, 4));
 
         // Use the location key to get the seller key under the target categoryPath.
         admin.database().ref('/requests/' + categoryPath + '/sellers/' + key).once('value').then(function(snapshot) {
 
-          var sellerKey = snapshot.val();
+// At this point the attempt to send a request is bascially a 'success' even though there maybe no sellers actually listening.
+          res.status(200).end();
+
+          const sellerKey = snapshot.val();
 
           if(sellerKey) {
             console.log("sellerKey: " + JSON.stringify(sellerKey, null, 4));
@@ -162,13 +165,13 @@ exports.sendRequestLocation = functions.https.onRequest((req, res) => {
             // The sellerKey points to the User's ID so we can get their info.
             admin.database().ref('/users/' + sellerKey + '/info').once('value').then(function(snapshot) {
 
-              var usersInfo = snapshot.val();
+              const usersInfo = snapshot.val();
 
               // Use the User's info to get their token and send a message.
               if(usersInfo) {
                 
                 // For our seller, add the request to the user's 'requests' key.
-                let request = {
+                const request = {
                   title: title,
                   desc: desc,
                   shipping: shipping,
@@ -183,7 +186,7 @@ exports.sendRequestLocation = functions.https.onRequest((req, res) => {
                   console.log("token = " + usersInfo.token);
 
                   // If you use notification over data - setBackgroundMessageHandler will not fire.
-                  let payload = {
+                  const payload = {
                     //notification: {
                     data: {
                       title: title,
@@ -196,11 +199,9 @@ exports.sendRequestLocation = functions.https.onRequest((req, res) => {
                   admin.messaging().sendToDevice(usersInfo.token, payload)
                   .then(function(response) {
                     console.log("Successfully sent message:", response);
-                    res.status(200).end();
                   })
                   .catch(function(error) {
                     console.log("Error sending message:", error);
-                    res.status(500).end();
                   });
                 });
               } else {
@@ -211,15 +212,23 @@ exports.sendRequestLocation = functions.https.onRequest((req, res) => {
           } else {
             console.log("sellerKey: null");
           }
+        }, function(error) {
+          console.error(error);
+          // Failed to get sellers for the category!
+          res.status(500).end();
         });
       });
 
-      var onReadyRegistration = geoQuery.on("ready", function() {
+      const onReadyRegistration = geoQuery.on("ready", function() {
         console.log("  The 'ready' event fired - cancelling query.");
         geoQuery.cancel();
-        res.status(200).end();
       })
-    });
+    }); // End cors...
+
+  }, function(error) {
+    console.error(error);
+    // Failed to push new request!
+    res.status(500).end();
   });
 });
 
@@ -233,84 +242,93 @@ exports.sendRequestAll = functions.https.onRequest((req, res) => {
   const buyer = req.query.buyer;
   const requestId = req.query.requestId;
 
-  let request = {
-      title: title,
-      desc: desc,
-      shipping: shipping,
-      buyer: buyer,
-      buyerId: buyerId,
-      requestId: requestId,
-      timeStamp: admin.database.ServerValue.TIMESTAMP
+  const request = {
+    title: title,
+    desc: desc,
+    shipping: shipping,
+    buyer: buyer,
+    buyerId: buyerId,
+    requestId: requestId,
+    timeStamp: admin.database.ServerValue.TIMESTAMP
   };
 
   // Add the request under the given category.
   // TODO: So far, adding this to the database serves no purpose. Should we keep it?
   admin.database().ref('/requests/' + categoryPath + '/requests').push(request).then(snapshot => {
+    cors(req, res, () => {
 
-    // Get all the sellers for this category.
-    admin.database().ref('/requests/' + categoryPath + '/sellers').once('value').then(function(snapshot) {
+      // Get all the sellers for this category.
+      admin.database().ref('/requests/' + categoryPath + '/sellers').once('value').then(function(snapshot) {
 
-      // For each seller - get their user ID.
-      snapshot.forEach(function(childSnapshot) {
+        // At this point the attempt to send a request is bascially a 'success' even though there maybe no sellers actually listening.
+        res.status(200).end();
 
-        var childKey = childSnapshot.key;
-        var childData = childSnapshot.val();
+        // For each seller - get their user ID.
+        snapshot.forEach(function(childSnapshot) {
 
-        console.log(childKey + " = " + childData); // The childData is the user's ID who wants the message!
+          const childKey = childSnapshot.key;
+          const childData = childSnapshot.val();
 
-        // Use the User's ID to get their info.
-        admin.database().ref('/users/' + childData + '/info').once('value').then(function(snapshot) {
+          console.log(childKey + " = " + childData); // The childData is the user's ID who wants the message!
 
-          var usersInfo = snapshot.val();
+          // Use the User's ID to get their info.
+          admin.database().ref('/users/' + childData + '/info').once('value').then(function(snapshot) {
 
-          // Use the User's info to get their token and send a message.
-          if(usersInfo) {
-            
-            // For our seller, add the request to the user's 'requests' key.
-            let request = {
-              title: title,
-              desc: desc,
-              shipping: shipping,
-              buyer: buyer,
-              buyerId: buyerId,
-              requestId: requestId,
-              timeStamp: admin.database.ServerValue.TIMESTAMP
-            };
+            const usersInfo = snapshot.val();
 
-            admin.database().ref('/users/' + childData + '/requests').push(request).then(snapshot => {
-
-              console.log("token = " + usersInfo.token);
-
-              // If you use notification over data - setBackgroundMessageHandler will not fire.
-              let payload = {
-                //notification: {
-                data: {
-                  title: title,
-                  body: desc,
-                  icon: "/images/vr-msg.png",
-                  clickAction: "https://vinylrecords.io/"
-                }
+            // Use the User's info to get their token and send a message.
+            if(usersInfo) {
+              
+              // For our seller, add the request to the user's 'requests' key.
+              let request = {
+                title: title,
+                desc: desc,
+                shipping: shipping,
+                buyer: buyer,
+                buyerId: buyerId,
+                requestId: requestId,
+                timeStamp: admin.database.ServerValue.TIMESTAMP
               };
 
-              admin.messaging().sendToDevice(usersInfo.token, payload)
-              .then(function(response) {
-                console.log("Successfully sent message:", response);
-                res.status(200).end();
-              })
-              .catch(function(error) {
-                console.log("Error sending message:", error);
-                res.status(500).end();
-              });
-            });
-          }
-        });
-      });
-    });
+              admin.database().ref('/users/' + childData + '/requests').push(request).then(snapshot => {
 
-    cors(req, res, () => {
-      //res.redirect(303, snapshot.ref); // Redirect with 303 SEE OTHER to the URL of the pushed object in the Firebase console.
-      //res.send("SUCCESS");
-      res.status(200).end();
-    });
+                console.log("token = " + usersInfo.token);
+
+                // If you use notification over data - setBackgroundMessageHandler will not fire.
+                const payload = {
+                  //notification: {
+                  data: {
+                    title: title,
+                    body: desc,
+                    icon: "/images/vr-msg.png",
+                    clickAction: "https://vinylrecords.io/"
+                  }
+                };
+
+                admin.messaging().sendToDevice(usersInfo.token, payload)
+                .then(function(response) {
+                  console.log("Successfully sent message:", response);
+                })
+                .catch(function(error) {
+                  console.log("Error sending message:", error);
+                });
+              });
+            } else {
+              // usersInfo was null!
+              console.log("Error sending message: usersInfo was null!");
+            }
+          });
+        });
+      }, function(error) {
+        console.error(error);
+        // Failed to get sellers for the category!
+        res.status(500).end();
+      });
+    }); // End cors...
+
+  }, function(error) {
+    console.error(error);
+    // Failed to push new request!
+    res.status(500).end();
   });
 });

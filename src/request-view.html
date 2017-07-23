@@ -201,8 +201,7 @@
       reload() {
         console.log("RequestView.reload");
 
-        //this.loading = true;
-        //this.showLocationSettings = true;
+        this._resetUI();
       }
 
       _userChanged(user) {
@@ -297,8 +296,32 @@
         }
       }
 
+      _resetUI() {
+        console.log("RequestView._resetUI");
+
+        this.$.titleText.value = "";
+        this.$.descText.value = "";
+
+        const searchListBox = this.shadowRoot.querySelector('#searchListBox');
+        searchListBox.selectIndex(0);
+
+        const distanceListBox = this.shadowRoot.querySelector('#distanceListBox');
+        distanceListBox.selectIndex(1);
+
+        this.$.sendAll.checked = false;
+        this.$.shipping.checked = false;
+
+        this.showLocationSettings = true;
+      }
+
       _onTapSubmitRequest() {
         console.log("RequestView._onTapSubmitRequest");
+
+
+// this._resetUI();
+// return; // XXXXXXXXX
+
+
 
         if(!this.user || !this.usersInfo) {
           Utility.showErrorToast("You must be signed in to make a request.");
@@ -430,7 +453,7 @@
           timeStamp: firebase.database.ServerValue.TIMESTAMP
         };
 
-console.log("ALL request = " + JSON.stringify(request, null, 4));
+        //console.log("ALL request = " + JSON.stringify(request, null, 4));
 
         firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/requests/' + requestKey).set(request).then(snapshot => {
 
@@ -439,18 +462,16 @@ console.log("ALL request = " + JSON.stringify(request, null, 4));
             categoryPath: "collectables/sub/vinylRecords",
             title: title,
             desc: desc,
+            shipping: self.$.shipping.checked,
             buyerId: self.user.uid,
             buyer: self.usersInfo.name,
             requestId: requestKey
           };
 
-console.log("ALL params = " + JSON.stringify(params, null, 4));
+          //console.log("ALL params = " + JSON.stringify(params, null, 4));
 
-// KRH
-this.$.sendRequestAll.params = params;
-this.$.sendRequestAll.generateRequest(); // Calls: sendRequestAll()
-//this.loading = false;
-
+          this.$.sendRequestAll.params = params;
+          this.$.sendRequestAll.generateRequest(); // Calls: sendRequestAll()
         });
       }
 
@@ -458,7 +479,11 @@ this.$.sendRequestAll.generateRequest(); // Calls: sendRequestAll()
         console.log("RequestView._handleSendRequestAllResponse");
         console.log("  status = " + data.detail.status);
 
+        this._resetUI();
         this.loading = false;
+
+        const polynApp = document.getElementById("polynApp");
+        polynApp.popPageOffCurrentTab();
       }
 
       _handleSendRequestAllError(e) {
@@ -466,6 +491,7 @@ this.$.sendRequestAll.generateRequest(); // Calls: sendRequestAll()
         console.log("  status = ", e.status, e.statusText);
 
         this.loading = false;
+        Utility.showErrorToast("Unknown error while sending request.");
       }
 
       _submitRequestLocation() {
@@ -488,7 +514,7 @@ this.$.sendRequestAll.generateRequest(); // Calls: sendRequestAll()
           timeStamp: firebase.database.ServerValue.TIMESTAMP
         };
 
-console.log("LOC request = " + JSON.stringify(request, null, 4));
+        //console.log("LOC request = " + JSON.stringify(request, null, 4));
         
         firebase.app("polyn-app").database().ref('/users/' + this.user.uid + '/requests/' + requestKey).set(request).then(snapshot => {
 
@@ -505,7 +531,7 @@ console.log("LOC request = " + JSON.stringify(request, null, 4));
           const distanceDropDown = self.shadowRoot.querySelector('#distanceDropDown');
           const distanceMiles = parseInt(distanceDropDown.value);
 
-console.log("XXX distanceMiles: " + distanceMiles);
+          //console.log("LOC distanceMiles: " + distanceMiles);
 
           const params = {
             categoryPath: "collectables/sub/vinylRecords",
@@ -521,12 +547,10 @@ console.log("XXX distanceMiles: " + distanceMiles);
             rangeInKm: 1.6 * distanceMiles
           };
 
-console.log("LOC params = " + JSON.stringify(params, null, 4));
+          //console.log("LOC params = " + JSON.stringify(params, null, 4));
 
-// KRH
-self.$.sendRequestLocation.params = params;
-self.$.sendRequestLocation.generateRequest(); // Calls: sendRequestLocation()
-//this.loading = false;
+          self.$.sendRequestLocation.params = params;
+          self.$.sendRequestLocation.generateRequest(); // Calls: sendRequestLocation()
         });
       }
 
@@ -534,10 +558,11 @@ self.$.sendRequestLocation.generateRequest(); // Calls: sendRequestLocation()
         console.log("RequestView._handleSendRequestLocationResponse");
         console.log("  status = " + data.detail.status);
 
+        this._resetUI();
         this.loading = false;
 
-        // const polynApp = document.getElementById("polynApp");
-        // polynApp.popPageOffCurrentTab();
+        const polynApp = document.getElementById("polynApp");
+        polynApp.popPageOffCurrentTab();
       }
 
       _handleSendRequestLocationError(e) {
@@ -545,6 +570,7 @@ self.$.sendRequestLocation.generateRequest(); // Calls: sendRequestLocation()
         console.log("  status = ", e.status, e.statusText);
 
         this.loading = false;
+        Utility.showErrorToast("Unknown error while sending request.");
       }
     }
 
