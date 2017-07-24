@@ -5,8 +5,8 @@
   "display": "standalone",
   "orientation": "portrait",
   "gcm_sender_id": "103953800507",
-  "theme_color": "#3f51b5",
-  "background_color": "#3f51b5",
+  "theme_color": "#81362C",
+  "background_color": "#81362C",
   "icons": [
     {
       "src": "images/manifest/icon-48x48.png",
