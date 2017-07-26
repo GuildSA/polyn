@@ -2,6 +2,9 @@
 
  -- App / Database --
 
+Fix bug where refreshing on one device causes the chat list to duplicate on another 
+device that has the same user logged in!
+
 Are we keeping the drawer menu and if so, what will be in it?
 
 What do we do with sellers that we add manually but are not claimed - when a 
