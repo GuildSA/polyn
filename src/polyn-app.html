@@ -31,10 +31,8 @@
 <link rel="lazy-import" href="searchfilter-view.html">
 <link rel="lazy-import" href="error404-view.html">
 
-<link rel="lazy-import" href="functions-view.html">
 <link rel="lazy-import" href="request-view.html">
 <link rel="lazy-import" href="chats-view.html">
-<link rel="lazy-import" href="messaging-view.html">
 <link rel="lazy-import" href="misctest-view.html">
 <link rel="lazy-import" href="geofire-view.html">
 <link rel="lazy-import" href="analytics-view.html">
@@ -140,8 +138,6 @@
           <a name="misctest-view" on-tap="_onTapMiscTestView">Misc Test</a>
           <a name="geofire-view" on-tap="_onTapGeofireView">Geofire</a>
           <a name="sellertest-view" on-tap="_onTapSellerTestView">Seller Test</a>
-          <a name="messaging-view" on-tap="_onTapMessagingView">Messaging</a>
-          <a name="functions-view" on-tap="_onTapFunctionsView">Cloud Functions</a>
         </iron-selector>
       </app-drawer>
 
@@ -194,8 +190,6 @@
           <claimbusiness-view name="claimbusiness-view"></claimbusiness-view>
           <searchfilter-view name="searchfilter-view"></searchfilter-view>
           <error404-view name="error404-view"></error404-view>
-          <functions-view name="functions-view"></functions-view>
-          <messaging-view name="messaging-view"></messaging-view>
           <misctest-view name="misctest-view"></misctest-view>
           <geofire-view name="geofire-view"></geofire-view>
           <sellertest-view name="sellertest-view"></sellertest-view>
@@ -275,20 +269,6 @@
       //     console.log("  Already Signed IN.");
       //   }
       // }
-
-      _onTapFunctionsView() {
-        this.page = 'functions-view';
-        if(!this.$.drawer.persistent) {
-          this.$.drawer.close();
-        }
-      }
-
-      _onTapMessagingView() {
-        this.page = 'messaging-view';
-        if(!this.$.drawer.persistent) {
-          this.$.drawer.close();
-        }
-      }
 
       _onTapMiscTestView() {
         this.page = 'misctest-view';
