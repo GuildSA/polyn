@@ -30,15 +30,15 @@
 <link rel="lazy-import" href="claimbusiness-view.html">
 <link rel="lazy-import" href="searchfilter-view.html">
 <link rel="lazy-import" href="error404-view.html">
-
 <link rel="lazy-import" href="request-view.html">
 <link rel="lazy-import" href="chats-view.html">
-<link rel="lazy-import" href="misctest-view.html">
-<link rel="lazy-import" href="geofire-view.html">
 <link rel="lazy-import" href="analytics-view.html">
+
+<link rel="lazy-import" href="geofire-view.html">
+<link rel="lazy-import" href="misctest-view.html">
 <link rel="lazy-import" href="sellertest-view.html">
 <link rel="lazy-import" href="list-view.html">
-<link rel="lazy-import" href="sellerupload-view.html">
+<link rel="lazy-import" href="sellerupload-view.html"> 
 
 <dom-module id="polyn-app">
   <template>
@@ -130,7 +130,7 @@
 
     <app-drawer-layout fullbleed>
       <!-- Drawer content -->
-      <app-drawer id="drawer" slot="drawer">
+       <app-drawer id="drawer" slot="drawer">
         <app-toolbar>Research</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="sellerupload-view" on-tap="_onTapSellerUploadView">Seller Upload</a>
@@ -139,7 +139,7 @@
           <a name="geofire-view" on-tap="_onTapGeofireView">Geofire</a>
           <a name="sellertest-view" on-tap="_onTapSellerTestView">Seller Test</a>
         </iron-selector>
-      </app-drawer>
+      </app-drawer> 
 
       <!-- Main content -->
       <app-header-layout has-scrolling-region>
