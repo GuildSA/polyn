@@ -318,6 +318,10 @@
           showRequestBtn: {
             type: Boolean,
             value: false
+          },
+          forceReload: {
+            type: Boolean,
+            value: false
           }
         };
       }
@@ -331,17 +335,22 @@
       }
 
       reload() {
-        console.log("HomeView.reload");
+        console.log("HomeView.reload: forceReload = " + this.forceReload);
 
-        this.showRequestBtn = false;
-        this.loading = true;
+        if(this.forceReload === true) {
 
-        if(this.user) {
-          // If we have a user - get the users info to get the searchSettings.
-          this._loadUserInfo();
-        } else {
-          // If we have no user - just load the locally cached searchSettings.
-          this._loadCachedSearchSettings();
+          this.forceReload = false;
+
+          this.showRequestBtn = false;
+          this.loading = true;
+
+          if(this.user) {
+            // If we have a user - get the users info to get the searchSettings.
+            this._loadUserInfo();
+          } else {
+            // If we have no user - just load the locally cached searchSettings.
+            this._loadCachedSearchSettings();
+          }
         }
       }
 
@@ -353,7 +362,8 @@
         console.log("HomeView.searchFilterBtnTapped");
         
         const polynApp = document.getElementById("polynApp");
-        const chatView = polynApp.pushPageOnCurrentTab("searchfilter-view");
+        const searchFilterView = polynApp.pushPageOnCurrentTab("searchfilter-view");
+        searchFilterView.prevPage = this;
       }
 
       _userChanged(user) {
@@ -663,6 +673,7 @@
 
         const polynApp = document.getElementById("polynApp");
         const businessView = polynApp.pushPageOnCurrentTab("business-view");
+        // businessView.prevPage = this;
 
         const index = e.model.index;
         businessView.sellerInfo = this.sellers[index];

@@ -172,15 +172,15 @@ static get properties() {
         if(user != null) {
           this._loadRequests();
 
-// console.log("XXXX user.stsTokenManager: " + user.uid);
-// console.log("XXXX user.stsTokenManager: " + JSON.stringify(user.stsTokenManager, null, 4));
+// console.log("user.stsTokenManager: " + user.uid);
+// console.log("user.stsTokenManager: " + JSON.stringify(user.stsTokenManager, null, 4));
 // this.accessToken = user.stsTokenManager.accessToken;
 //this.$.getRequests.generateRequest();
 
         var self = this;
         user.getToken().then(token => { 
 
-          console.log("XXXX token: " + token);
+          console.log("token: " + token);
           self.accessToken = token;
           self.$.getRequests.generateRequest();
 

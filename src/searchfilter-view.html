@@ -128,6 +128,9 @@
             type: Boolean,
             notify: true,
             value: true
+          },
+          prevPage: {
+            type: Object
           }
         };
       }
@@ -302,6 +305,11 @@
 
                   self.loading = false;
 
+                  // Force prevPage (home-view) to reload.
+                  if(this.prevPage) {
+                    this.prevPage.forceReload = true;
+                  }
+
                   const polynApp = document.getElementById("polynApp");
                   polynApp.popPageOffCurrentTab();
                 }
@@ -330,6 +338,11 @@
           }
 
           this.searchSettings = searchSettings;
+
+          // Force prevPage (home-view) to reload.
+          if(this.prevPage) {
+            this.prevPage.forceReload = true;
+          }
 
           const polynApp = document.getElementById("polynApp");
           polynApp.popPageOffCurrentTab();

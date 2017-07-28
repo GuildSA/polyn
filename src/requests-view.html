@@ -178,6 +178,10 @@
           noChatsMessage: {
             type: String,
             value: ""
+          },
+          forceReload: {
+            type: Boolean,
+            value: false
           }
         };
       }
@@ -185,8 +189,13 @@
       reload() {
         console.log("RequestsView.reload");
 
-        if(this.user != null) {
-          this._loadRequests();
+        if(this.forceReload === true) {
+
+          this.forceReload = false;
+          
+          if(this.user != null) {
+            this._loadRequests();
+          }
         }
       }
 

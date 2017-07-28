@@ -337,7 +337,7 @@
             const poppedPage = this.tabViewStacks[selectedTab].pop();
 
             if(typeof poppedPage.poppedCallback === 'function') {
-              // If a page is being popped - this it's chance to cleanup anything.
+              // If a page is being popped - give it a chance to cleanup.
               poppedPage.poppedCallback();
             }
 
