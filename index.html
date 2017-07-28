@@ -9,8 +9,14 @@
     <meta name="description" content="Vinyl Records">
 
     <!--
-      If deploying to a non-root path, replace href="/" with the full path to the project root.
-      For example: href="/polymer-starter-kit/relative-path-example/"
+      The `<base>` tag below is present to support two advanced deployment options:
+      1) Differential serving. 2) Serving from a non-root path.
+
+      Instead of manually editing the `<base>` tag yourself, you should generally either:
+      a) Add a `basePath` property to the build configuration in your `polymer.json`.
+      b) Use the `--base-path` command-line option for `polymer build`.
+
+      Note: If you intend to serve from a non-root path, see [polymer-root-path] below.
     -->
     <base href="/">
 
@@ -67,6 +73,8 @@
         e.userChoice.then(function(choiceResult) {
 
           console.log(choiceResult.outcome);
+
+// TODO: How do we repsond to the user's choice here!
 
           if(choiceResult.outcome == 'dismissed') {
             console.log('User cancelled home screen install!');
