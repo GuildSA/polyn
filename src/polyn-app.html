@@ -121,10 +121,10 @@
 
     <analytics-view key="UA-100326488-1"></analytics-view>
 
-    <app-location route="{{route}}"></app-location>
+    <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
     <app-route
       route="{{route}}"
-      pattern="[[rootPattern]]:page"
+      pattern="[[rootPath]]:page"
       data="{{routeData}}"
       tail="{{subroute}}"></app-route>
 
@@ -220,9 +220,11 @@
             reflectToAttribute: true,
             observer: '_pageChanged',
           },
-          rootPattern: String,
           routeData: Object,
-          subroute: String
+          subroute: String,
+          // This shouldn't be neccessary, but the Analyzer isn't picking up
+          // Polymer.Element#rootPath
+          rootPath: String
         };
       }
 
@@ -230,14 +232,6 @@
         return [
           '_routePageChanged(routeData.page)', // If routeData on app-route changes - send routeData.page to  _routePageChanged
         ];
-      }
-
-      constructor() {
-        super();
-
-        // Get root pattern for app-route, for more info about `rootPath` see:
-        // https://www.polymer-project.org/2.0/docs/upgrade#urls-in-templates
-        this.rootPattern = (new URL(this.rootPath)).pathname;
       }
 
       ready() {
@@ -486,18 +480,6 @@
 
       _routePageChanged(page) {
         console.log("PolynApp._routePageChanged: " + page);
-
-        // Polymer 2.0 will call with `undefined` on initialization.
-        // Ignore until we are properly called with a string.
-        if(page === undefined) {
-          return;
-        }
-
-        // Polymer 2.0 will also call with `components` for some 
-        // unknown reason, so ignore it as well and redirect to Home.
-        if(page === "components") {
-          page = "home-view";
-        }
 
         // If no page was found in the route data, page will be an empty string.
         // Default to 'home-view' in that case.
