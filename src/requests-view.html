@@ -55,9 +55,10 @@
       }
 
       .request-title {
-        font-size: 1rem;
+        font-weight: bold;
         margin-left: 0px;
-        margin-top: 16px;
+        margin-top: 8px;
+        margin-bottom: 8px;
         color: #000000;
         white-space: nowrap;
         overflow: hidden;
@@ -67,7 +68,14 @@
       .request-desc {
         font-size: 0.5 rem;
         margin-left: 0px;
-        margin-bottom: 16px;
+        margin-bottom: 8px;
+      }
+
+      .request-shipping {
+        font-size: 0.5 rem;
+        color: #70C187;
+        margin-left: 0px;
+        margin-bottom: 0px;
       }
       
     </style>
@@ -99,13 +107,22 @@
          <div class="card" on-tap="_onTapRequest">
           <div class="horizontal justified layout">
             <div class="vertical layout">
-              <h2 class="request-title">[[request.title]]</h2>
-              <div class="request.desc">
+              <div class="request-title">
+                [[request.title]]
+              </div>
+              <div class="request-desc">
                 [[request.desc]]
               </div>
+
+              <template is="dom-if" if="[[request.shipping]]">
+               <div class="request-shipping">
+                Shipping Allowed
+              </div> 
+              </template>
+
             </div>
             <div class="close">
-              <paper-icon-button id="closeBtn" icon="custom-icons:close" on-tap="_onTapDelete"></paper-icon-button>
+              <paper-icon-button class="close" id="closeBtn" icon="custom-icons:close" on-tap="_onTapDelete"></paper-icon-button>
             </div>
           </div>
          </div>
@@ -231,7 +248,7 @@
               const childKey = childSnapshot.key;
               const childData = childSnapshot.val();
               //console.log("childKey = " + childKey);
-              //console.log("childData: " + JSON.stringify(childData, null, 4));
+console.log("childData: " + JSON.stringify(childData, null, 4));
 
               if(childData.viewed === false) {
                 ++badgeCount;
