@@ -34,11 +34,11 @@
 <link rel="lazy-import" href="chats-view.html">
 <link rel="lazy-import" href="analytics-view.html">
 
-<link rel="lazy-import" href="geofire-view.html">
+<!-- <link rel="lazy-import" href="sellerupload-view.html"> 
 <link rel="lazy-import" href="misctest-view.html">
+<link rel="lazy-import" href="geofire-view.html">
 <link rel="lazy-import" href="sellertest-view.html">
-<link rel="lazy-import" href="list-view.html">
-<link rel="lazy-import" href="sellerupload-view.html"> 
+<link rel="lazy-import" href="list-view.html"> -->
 
 <dom-module id="polyn-app">
   <template>
@@ -131,13 +131,13 @@
     <app-drawer-layout fullbleed narrow="{{narrow}}">
       <!-- Drawer content -->
        <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
-        <app-toolbar>Research</app-toolbar>
+        <app-toolbar>Settings</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="sellerupload-view" on-tap="_onTapSellerUploadView">Seller Upload</a>
-          <a name="list-view" on-tap="_onTapListTestView">Iron List Test</a>
+          <!-- <a name="sellerupload-view" on-tap="_onTapSellerUploadView">Seller Upload</a>
           <a name="misctest-view" on-tap="_onTapMiscTestView">Misc Test</a>
           <a name="geofire-view" on-tap="_onTapGeofireView">Geofire</a>
           <a name="sellertest-view" on-tap="_onTapSellerTestView">Seller Test</a>
+          <a name="list-view" on-tap="_onTapListTestView">Iron List</a> -->
         </iron-selector>
       </app-drawer> 
 
@@ -190,11 +190,12 @@
           <claimbusiness-view name="claimbusiness-view"></claimbusiness-view>
           <searchfilter-view name="searchfilter-view"></searchfilter-view>
           <error404-view name="error404-view"></error404-view>
+
+          <!-- <sellerupload-view name="sellerupload-view"></sellerupload-view>
           <misctest-view name="misctest-view"></misctest-view>
           <geofire-view name="geofire-view"></geofire-view>
           <sellertest-view name="sellertest-view"></sellertest-view>
-          <list-view name="list-view"></list-view>
-          <sellerupload-view name="sellerupload-view"></sellerupload-view>
+          <list-view name="list-view"></list-view> -->
         </iron-pages>
 
       </app-header-layout>
@@ -264,40 +265,42 @@
       //   }
       // }
 
-      _onTapMiscTestView() {
-        this.page = 'misctest-view';
-        if(!this.$.drawer.persistent) {
-          this.$.drawer.close();
-        }
-      }
+      // _onTapSellerUploadView() {
+      //   this.page = 'sellerupload-view';
+      //   if(!this.$.drawer.persistent) {
+      //     this.$.drawer.close();
+      //   }
+      // }
 
-      _onTapGeofireView() {
-        this.page = 'geofire-view';
-        if(!this.$.drawer.persistent) {
-          this.$.drawer.close();
-        }
-      }
+      // _onTapMiscTestView() {
+      //   this.page = 'misctest-view';
+      //   if(!this.$.drawer.persistent) {
+      //     this.$.drawer.close();
+      //   }
+      // }
 
-      _onTapSellerTestView() {
-        this.page = 'sellertest-view';
-        if(!this.$.drawer.persistent) {
-          this.$.drawer.close();
-        }
-      }
+      // _onTapGeofireView() {
+      //   this.page = 'geofire-view';
+      //   if(!this.$.drawer.persistent) {
+      //     this.$.drawer.close();
+      //   }
+      // }
 
-      _onTapListTestView() {
-        this.page = 'list-view';
-        if(!this.$.drawer.persistent) {
-          this.$.drawer.close();
-        }
-      }
+      // _onTapSellerTestView() {
+      //   this.page = 'sellertest-view';
+      //   if(!this.$.drawer.persistent) {
+      //     this.$.drawer.close();
+      //   }
+      // }
 
-      _onTapSellerUploadView() {
-        this.page = 'sellerupload-view';
-        if(!this.$.drawer.persistent) {
-          this.$.drawer.close();
-        }
-      }
+      // _onTapListTestView() {
+      //   this.page = 'list-view';
+      //   if(!this.$.drawer.persistent) {
+      //     this.$.drawer.close();
+      //   }
+      // }
+
+
 
       resetNavigation() {
         console.log("PolynApp.resetNavigation")
