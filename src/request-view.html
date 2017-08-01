@@ -121,11 +121,11 @@
             </paper-dropdown-menu>
 
             <template is="dom-if" if="[[showZip]]">
-              <paper-input id="zip" value="[[zipValue]]" label="Your Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]">
+              <paper-input id="zip" value="[[zipValue]]" label="Using the Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]">
               </paper-input>
             </template>
 
-            <paper-dropdown-menu id="distanceDropDown" label="Using a distance of..." on-iron-select="_distanceSelected">
+            <paper-dropdown-menu id="distanceDropDown" label="With a distance of..." on-iron-select="_distanceSelected">
               <paper-listbox id="distanceListBox" slot="dropdown-content" selected="1">
                 <paper-item>25 Miles</paper-item>
                 <paper-item>50 Miles</paper-item>
