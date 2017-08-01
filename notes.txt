@@ -9,6 +9,18 @@ Sellers
 
 ------------------------------------------------------------------------
 
+ -- polymer.json --
+
+  "fragments": [
+    ...
+    "src/misctest-view.html",
+    "src/sellertest-view.html",
+    "src/list-view.html",
+    "src/sellerupload-view.html"
+  ],
+
+------------------------------------------------------------------------
+
 
     .color-red {
       background-color: red;

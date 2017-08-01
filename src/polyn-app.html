@@ -130,16 +130,16 @@
 
     <app-drawer-layout fullbleed narrow="{{narrow}}">
       <!-- Drawer content -->
-       <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
+       <!-- <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
         <app-toolbar>Settings</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <!-- <a name="sellerupload-view" on-tap="_onTapSellerUploadView">Seller Upload</a>
+           <a name="sellerupload-view" on-tap="_onTapSellerUploadView">Seller Upload</a>
           <a name="misctest-view" on-tap="_onTapMiscTestView">Misc Test</a>
           <a name="geofire-view" on-tap="_onTapGeofireView">Geofire</a>
           <a name="sellertest-view" on-tap="_onTapSellerTestView">Seller Test</a>
-          <a name="list-view" on-tap="_onTapListTestView">Iron List</a> -->
+          <a name="list-view" on-tap="_onTapListTestView">Iron List</a> 
         </iron-selector>
-      </app-drawer> 
+      </app-drawer>  -->
 
       <!-- Main content -->
       <app-header-layout has-scrolling-region>
@@ -373,8 +373,8 @@
 
         } else {
 
-          // If there's no view to pop off, so just open the fly out menu!
-          this.$.drawer.open();
+          // // If there's no view to pop off, so just open the fly out menu!
+          // this.$.drawer.open();
         }
 
         this._updateNavState(selectedTab);
@@ -489,7 +489,7 @@
         this.page = page || 'home-view';
 
         // Close a non-persistent drawer when the page & route are changed.
-        if(!this.$.drawer.persistent) {
+        if(this.$.drawer && !this.$.drawer.persistent) {
           this.$.drawer.close();
         }
       }
