@@ -1,6 +1,6 @@
 {
   "name": "px-helpers-design",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "authors": [
     "General Electric"
   ],
@@ -39,11 +39,11 @@
   "resolutions": {
     "webcomponentsjs": "^0.7.24"
   },
-  "_release": "1.0.1",
+  "_release": "1.0.2",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.1",
-    "commit": "10436ef9d74d54c139416fd6c8b6bed9bbd1a00f"
+    "tag": "v1.0.2",
+    "commit": "e7a4474ac37db1dc47abc53e2fbff774740ab396"
   },
   "_source": "https://github.com/predixDev/px-helpers-design.git",
   "_target": "^1.0.0",
