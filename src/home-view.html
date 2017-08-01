@@ -227,7 +227,7 @@
 
     <paper-dialog id="requestZipDialog">
       <h2 class="dialog-title">Set Zip Code</h2>
-      <p>Enter a zip code for record stores near you.</p>
+      <p id="requestZipMessage"></p>
       <div id="zipCode">
         <paper-input id="zipDialogInput" label="Zip Code" type="number" allowed-pattern="[0-9]" pattern="[0-9]"></paper-input>
       </div>
@@ -468,6 +468,7 @@
             } else {
               // Something bad happened - prompt user for zip code.
               this.loading = false;
+              this.$.requestZipMessage.innerHTML = "Enter a zip code for record stores near you.";
               this.$.requestZipDialog.toggle();
             }
 
@@ -525,12 +526,20 @@
 
                 } else {
 
-                  // We were denied the user's current locatione and we did NOT get the 
+                  // We were denied the user's current location and we did NOT get the 
                   // location from the indexdb - prompt user for zip code.
-                  self.loading = false;
+                  self.$.requestZipMessage.innerHTML = "Please enter a zip code for record stores near you.";
                   self.$.requestZipDialog.toggle();
                 }
               });
+
+            } else {
+
+              // If we get an error becuase calculating the user's location too took long - prompt for zip code.
+              if(error.code === 3) {
+                self.$.requestZipMessage.innerHTML = "We were unable to get your current location. Please enter a zip code for record stores near you.";
+                self.$.requestZipDialog.toggle();
+              }
             }
         });
       }
