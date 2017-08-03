@@ -18,12 +18,13 @@
 <link rel="import" href="utility.html">
 <link rel="import" href="geofire.html">
 
-<!-- Why do these have to added manually for 'polymer build' to add them to Firebase? -->
+<!-- Why do these have to be added manually for 'polymer build' to add them to Firebase? -->
 <script src="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror-worker.js" defer></script>
 <script src="../bower_components/app-storage/app-indexeddb-mirror/common-worker-scope.js" defer></script>
 
 <dom-module id="home-view">
   <template>
+
     <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
         display: block;
@@ -181,14 +182,13 @@
         <!--<div class="layout horizontal center-justified" id="location">
         <paper-input id="zip" type="number" allowed-pattern="[0-9]" pattern="[0-9]">
           <paper-icon-button icon="custom-icons:near-me" slot="prefix"></paper-icon-button>
-        </paper-input>-->
-      </div>
+        </paper-input>
+      </div>-->
     </template>
     <!-- / Mobile Device Media Query -->
 
     <div class="main-container">
       <dom-repeat items="[[persistedSellers]]" as="seller" initial-count="2">
-      
         <template>
           <div class="card" on-tap="_onTapBusiness">
 
@@ -206,24 +206,22 @@
                 <div class="miles-away">
                   [[seller.distance]] miles away
                 </div>
-              </div>
-            </template>
-             <div class="short-description">
+              </template>
+              <div class="short-description">
                 <p>[[seller.desc]]</p>
              </div>
+            </div>
+
           </div>
         </template>
-
       </dom-repeat>
-      <!-- main container div -->
     </div>
-      <!-- /main container div -->
-      <template is="dom-if" if="[[showRequestBtn]]">
-        <div id="submit-request-container">
-          <paper-button id="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message">Create a Request</paper-button>
-        </div>
-      </template>
-    </div>
+
+    <template is="dom-if" if="[[showRequestBtn]]">
+      <div id="submit-request-container">
+        <paper-button id="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message">Create a Request</paper-button>
+      </div>
+    </template>
 
     <paper-dialog id="requestZipDialog">
       <h2 class="dialog-title">Set Zip Code</h2>
