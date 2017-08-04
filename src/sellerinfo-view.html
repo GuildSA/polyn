@@ -149,7 +149,7 @@
           },
           photoUrl: {
             type: String,
-            value: "/images/svg/VinylRecord.svg"
+            value: "/images/vinyl-records.svg"
           },
           photoThumbUrl: {
             type: String
@@ -414,7 +414,7 @@
         };
 
         // The photo is saved when ever it changes so we treat it a little different.
-        if(this.photoUrl && this.photoUrl.length > 0 && this.photoUrl !== "/images/svg/VinylRecord.svg") {
+        if(this.photoUrl && this.photoUrl.length > 0 && this.photoUrl !== "/images/vinyl-records.svg") {
           sellerData.photoUrl = this.sellersInfo.photoUrl;
         }
 
@@ -552,7 +552,7 @@
             };
 
             // You can't save a photo until you create the business.
-            // if(self.photoUrl && self.photoUrl.length > 0 && self.photoUrl !== "/images/svg/VinylRecord.svg") {
+            // if(self.photoUrl && self.photoUrl.length > 0 && self.photoUrl !== "/images/vinyl-records.svg") {
             //   newSellerData.photoUrl = self.photoUrl;
             // }
             //

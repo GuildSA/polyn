@@ -44,11 +44,13 @@
       }
 
       .business-img {
-        width: 150px;
-        height: 150px;
-        border-radius: 2.5%;
         border-color: var(--app-accent-color);
-      }
+        width: 100%;
+        background-size: cover;
+        height: 0;
+        padding: 0;
+        padding-bottom: 100%;
+      } 
 
       .seller-name {
         font-size: 1rem;
@@ -78,25 +80,6 @@
         grid-gap: 0px;
       }
 
-      #submit-request-container {
-        @apply --layout-horizontal;
-        @apply --layout-center;
-        @apply --layout-around-justified;
-        color: white;
-        background: #70C187;
-        border-radius: 5px;
-        width: 100%;
-        max-width: 400px;
-        margin: auto;
-        position: sticky;
-        position: -webkit-sticky;
-        bottom: 0px;
-      }
-
-      .business-img {
-        width: 100%;
-      }
-
       #zipCode {
         padding: 10px;
         --paper-input-container-focus-color: #70C187;
@@ -117,11 +100,10 @@
         }
 
         .business-img {
-          display: flex;
-          height: 10vh;
           width: 10vh;
-          border-radius: 0%;
+          height: 10vh;
           margin: 12px;
+          padding-bottom: 0;
         }
 
         .card {
@@ -136,10 +118,10 @@
           display: none;
         }
 
-        h1 {
+        h2 {
           color: grey;
           margin: 0;
-          padding: 10px;
+          padding-top: 8px;
         }
 
         #location {
@@ -178,12 +160,7 @@
     <!-- Mobile Device Media Query -->
     <iron-media-query query="(min-width:300px) and (max-width: 480px)" query-matches="{{mobileDevice}}"></iron-media-query>
     <template is="dom-if" if="{{mobileDevice}}">
-      <center><h1>Record Stores In Your Area</h1></center>
-        <!--<div class="layout horizontal center-justified" id="location">
-        <paper-input id="zip" type="number" allowed-pattern="[0-9]" pattern="[0-9]">
-          <paper-icon-button icon="custom-icons:near-me" slot="prefix"></paper-icon-button>
-        </paper-input>
-      </div>-->
+      <center><h2>Record Stores In Your Area</h2></center>
     </template>
     <!-- / Mobile Device Media Query -->
 
@@ -193,7 +170,7 @@
           <div class="card" on-tap="_onTapBusiness">
 
             <template is="dom-if" if="[[!seller.photoUrl]]">
-              <iron-image class="business-img" style="background-color: white;" sizing="cover" preload fade src="/images/svg/VinylRecord.svg"></iron-image>
+              <iron-image class="business-img" style="background-color: white;" sizing="cover" preload fade src="/images/vr-placeholder.png"></iron-image>
             </template>
 
             <template is="dom-if" if="[[seller.photoUrl]]">
@@ -218,8 +195,10 @@
     </div>
 
     <template is="dom-if" if="[[showRequestBtn]]">
-      <div id="submit-request-container">
-        <paper-button id="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message">Create a Request</paper-button>
+      <div class="bottom-bar">
+        <div id="create-request">
+          <paper-button id="sticky-btn" on-tap="_onTapCreateRequest" icon="custom-icons:message">Create a Request</paper-button>
+        </div>
       </div>
     </template>
 
