@@ -103,7 +103,7 @@
 
         <template is="dom-if" if="[[!user]]">
           <div class="layout horizontal center-justified">
-            <img src="/images/vinyl-records.svg" id="profileImage" alt="Anonymous Profile Image." >
+            <iron-image preload fade sizing="contain" src="/images/vinyl-records.svg" id="profileImage" alt="Anonymous Profile Image."></iron-image>
           </div>
           <div class="layout vertical">
             <paper-input id="email" label="Email"></paper-input>
@@ -115,7 +115,7 @@
 
         <template is="dom-if" if="[[user]]">
           <div class="layout horizontal center-justified">
-            <iron-image sizing="contain" id="profileImage" alt="User's' Profile Image." src="[[photoUrl]]" on-tap="_onTapProfilePhoto"></iron-image>
+            <iron-image preload fade sizing="contain" id="profileImage" alt="User's Profile Image." src="[[photoUrl]]" on-tap="_onTapProfilePhoto"></iron-image>
           </div>
           <div class="layout horizontal center-justified">
             <h1>Welcome [[displayName]]</h1>
