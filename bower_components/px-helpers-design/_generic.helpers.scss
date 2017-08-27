@@ -16,25 +16,33 @@
 
 @import "px-colors-design/_settings.colors.scss";
 
-/// Default breakpoints for palm, lap, lap-and-up, portable, desk, and retina. Predefine this map to override.
+/// Default breakpoints for palm, palm-and-up, lap, lap-and-up, portable, portable-and-up, desk, desk-and-up, and retina. Predefine this map to override.
 /// @group px-helpers-design:variables:style
 /// @type List [default]
 /// @todo n/a
 $breakpoints: (
-    "palm"          "screen and (max-width: 44.9375em)",
-    "lap"           "screen and (min-width: 45em) and (max-width: 63.9375em)",
-    "lap-and-up"    "screen and (min-width: 45em)",
-    "portable"      "screen and (max-width: 63.9375em)",
-    "desk"          "screen and (min-width: 64em)",
-    "retina"        "(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi), (min-resolution: 2dppx)"
+    // backwards compatible
+    "lap"              "screen and (min-width: 45em) and (max-width: 63.9375em)", // 675 - 960
+    "portable"         "screen and (max-width: 63.9375em)", // < 960
+    "desk"             "screen and (min-width: 64em)", // > 960
+
+    // recommended
+    "palm"             "screen and (max-width: 44.9375em)", // < 675
+    "lap-and-up"       "screen and (min-width: 45em)", // > 675
+    "desk-and-up"      "screen and (min-width: 64em)", // > 960
+    "large-and-up"     "screen and (min-width: 120em)", // > 1800
+    "retina"           "(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi), (min-resolution: 2dppx)"
 ) !default;
+// @NOTE: The desk-and-up breakpoint is the same as desk, but is useful to keep
+// the same naming convention for SIZE-and-up that the other breakpoints use
+// when defining a min-width query
 
 /// @name media-query
 /// @output Generates whole media queries from the breakpoints defined above
 /// @example
 ///   .foo {
 //      color: green;
-//      @include media-query(palm) {
+//      @include media-query(palm-and-up) {
 //        color: red;
 //      }
 //    }
@@ -62,7 +70,6 @@ $breakpoints: (
     }
 }
 
-
 /// @name accessibility
 /// @output Properties and values for hiding elements accessibly
 /// @example
@@ -74,6 +81,7 @@ $breakpoints: (
 ///   border: 0 !important;
 ///   padding: 0 !important;
 ///   clip: rect(0 0 0 0) !important;
+
 @mixin accessibility {
   position: absolute !important;
   overflow: hidden !important;
@@ -84,6 +92,7 @@ $breakpoints: (
   padding: 0 !important;
   clip: rect(0 0 0 0) !important;
 }
+
 
 /* Links
    ========================================================================== */

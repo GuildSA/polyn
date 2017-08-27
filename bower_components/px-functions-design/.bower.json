@@ -1,6 +1,6 @@
 {
   "name": "px-functions-design",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "authors": [
     "General Electric"
   ],
@@ -36,16 +36,17 @@
   },
   "devDependencies": {
     "px-starter-kit-design": "^1.0.0",
-    "px-sass-doc": "^1.0.0"
+    "px-sass-doc": "^1.0.0",
+    "px-demo": "^2.2.0"
   },
   "resolutions": {
     "webcomponentsjs": "^0.7.24"
   },
-  "_release": "2.0.0",
+  "_release": "2.0.2",
   "_resolution": {
     "type": "version",
-    "tag": "v2.0.0",
-    "commit": "ea3defe776a0452f6c19c35427c75d2788d5873a"
+    "tag": "v2.0.2",
+    "commit": "a56a4073ea53435c85b2bbabc813341b7c170b5a"
   },
   "_source": "https://github.com/predixDev/px-functions-design.git",
   "_target": "^2.0.0",

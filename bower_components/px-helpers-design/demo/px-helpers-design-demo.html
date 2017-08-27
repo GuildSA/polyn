@@ -8,7 +8,7 @@
 <link rel="import" href="../css/px-helpers-design-demo-styles.html" />
 
 <!-- Demo DOM module -->
-<dom-module id="local-element-demo">
+<dom-module id="px-helpers-design-demo">
   <template>
     <!-- 0: Import the styles-->
     <style include="px-helpers-design-demo-styles" is="custom-style"></style>
@@ -119,7 +119,7 @@ Only use a helper class if an element/component doesn’t already have a class t
 
 Many of these classes carry `!important` as you will always want them to win out over other selectors.
 
-This repository also contains mixins for responsive breakpoints and accessibility, please refer to the code for more information.
+**This repository also contains mixins for responsive breakpoints and accessibility. Please refer to the code for more information.**
 </section>
 
 <!-- 5: Set Usage HTML -->
@@ -193,6 +193,21 @@ This repository also contains mixins for responsive breakpoints and accessibilit
 <!-- Set hieght to 100% with !important -->
 <div class="full-height">...</div>
 
+
+<!-- Example of using the media-query mixin and $breakpoints default values in your Sass -->
+.foo {
+  color: green;
+  @include media-query(palm-and-up) {
+    color: red;
+  }
+  @include media-query(lap-and-up) {
+    color: blue;
+  }
+  @include media-query(desk-and-up) {
+    color: salmon;
+  }
+}
+
 ```
 </section>
 
@@ -204,7 +219,7 @@ This repository also contains mixins for responsive breakpoints and accessibilit
 <!-- 6: Handle selectedOptions, update demo -->
 <script>
   Polymer({
-    is: 'local-element-demo',
+    is: 'px-helpers-design-demo',
 
     attached : function(){
       var boundHandler = this._handleOptionsUpdated.bind(this);

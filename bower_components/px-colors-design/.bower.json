@@ -1,6 +1,6 @@
 {
   "name": "px-colors-design",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "authors": [
     "General Electric"
   ],
@@ -33,16 +33,17 @@
     "px-sass-doc": "^1.0.0",
     "px-dark-theme": "^2.0.0",
     "px-dark-demo-theme": "^2.0.0",
-    "px-layout-design": "^1.0.0"
+    "px-layout-design": "^1.0.0",
+    "px-demo": "^2.2.0"
   },
   "resolutions": {
     "webcomponentsjs": "^0.7.24"
   },
-  "_release": "1.0.2",
+  "_release": "1.0.4",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.2",
-    "commit": "258c5c50bd17dbc5b7d9f961119bb2c869ce6c0f"
+    "tag": "v1.0.4",
+    "commit": "ceaf6320cff9569a2d5ce8519152838085b37817"
   },
   "_source": "https://github.com/predixDev/px-colors-design.git",
   "_target": "^1.0.0",

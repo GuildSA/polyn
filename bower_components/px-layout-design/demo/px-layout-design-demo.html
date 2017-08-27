@@ -6,7 +6,7 @@
   <link rel="import" href="../css/px-layout-design-demo-styles.html" />
 
 <!-- Demo DOM module -->
-<dom-module id="local-element-demo">
+<dom-module id="px-layout-design-demo">
   <template>
   <!-- 0: Import the styles-->
   <style include="px-layout-design-demo-styles" is="custom-style"></style>
@@ -226,7 +226,7 @@
 <!-- 6: Handle selectedOptions, update demo -->
 <script>
   Polymer({
-    is: 'local-element-demo',
+    is: 'px-layout-design-demo',
 
     attached : function(){
       var boundHandler = this._handleOptionsUpdated.bind(this);
