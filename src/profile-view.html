@@ -484,7 +484,10 @@
           this.$.auth.createUserWithEmailAndPassword(email.value, password.value).then(function (user) {
 
             email.value = "";
+            email.invalid = false;
+
             password.value = "";
+            password.invalid = false;
 
           }).catch(function (err) {
               console.log("createUserWithEmailAndPassword error: " + JSON.stringify(err, null, 4));
@@ -494,8 +497,13 @@
               if(err.code === "auth/email-already-in-use") {
 
                 self.$.auth.signInWithEmailAndPassword(email.value, password.value).then(function (user) {
+                  
                   email.value = "";
+                  email.invalid = false;
+
                   password.value = "";
+                  password.invalid = false;
+
                 }).catch(function (err) {
                   console.log("signInWithEmailAndPassword error: " + JSON.stringify(err, null, 4));
                 });

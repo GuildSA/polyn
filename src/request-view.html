@@ -300,7 +300,10 @@
         console.log("RequestView._resetUI");
 
         this.$.titleText.value = "";
+        this.$.titleText.invalid = false;
+        
         this.$.descText.value = "";
+        this.$.descText.invalid = false;
 
         const searchListBox = this.shadowRoot.querySelector('#searchListBox');
         searchListBox.selectIndex(0);

@@ -2,11 +2,13 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="utility.html">
 
 <dom-module id="claimbusiness-view">
   <template>
@@ -58,6 +60,22 @@
         </div>
       </div>
     </div>
+
+    <paper-dialog id="errorDialog">
+      <h2 class="dialog-title">Oops...</h2>
+      <p id="errorMessage"></p>
+      <div class="buttons">
+        <paper-button dialog-confirm autofocus>OK</paper-button>
+      </div>
+    </paper-dialog>
+
+    <paper-dialog id="claimDialog">
+      <p id="claimMessage"></p>
+      <div class="buttons">
+        <paper-button on-tap="_onTapOk" dialog-confirm autofocus>OK</paper-button>
+      </div>
+    </paper-dialog>
+
   </template>
 
   <script>
@@ -68,6 +86,9 @@
 
       static get properties() {
         return {
+          user: {
+            type: Object
+          },
           sellerInfo: {
             type: Object
           },
@@ -85,10 +106,32 @@
       _onTapClaimBusiness() {
         console.log("ClaimBusinessView._onTapClaimBusiness");
 
+        if(!this.$.name.value || this.$.name.value.length === 0) {
+          Utility.showErrorToast("A name must be provided.");
+          return;
+        }
+
+        if(!this.$.email.value || this.$.email.value.length === 0) {
+          Utility.showErrorToast("An email must be provided.");
+          return;
+        }
+
+        if(!Utility.validateEmail(this.$.email.value)) {
+          Utility.showErrorToast("A valid email address must be provided.");
+          return;
+        }
+
+        if(!this.$.phone.value || this.$.phone.value.length === 0) {
+          Utility.showErrorToast("A phone number must be provided.");
+          return;
+        }
+
         const params = {
-          name: this.$.name,
-          email: this.$.email,
-          phone: this.$.phone
+          name: this.$.name.value,
+          email: this.$.email.value,
+          phone: this.$.phone.value,
+          userUid: this.user.uid,
+          sellerKey: this.sellerInfo.key
         };
 
         this.$.claimBusiness.params = params;
@@ -96,13 +139,35 @@
       }
 
       _handleClaimBusinessResponse(data) {
-        console.log("FunctionsView._handleClaimBusinessResponse");
+        console.log("ClaimBusinessView._handleClaimBusinessResponse");
         console.log("  status = " + data.detail.status);
+
+        this.$.claimMessage.innerHTML = "Your claim request has been received. Please give us a few days to process it.";
+        this.$.claimDialog.toggle();
       }
 
       _handleClaimBusinessError(e) {
-        console.log("FunctionsView._handleClaimBusinessError");
+        console.log("ClaimBusinessView._handleClaimBusinessError");
         console.log("  status = ", e.status, e.statusText);
+
+        this.$.errorMessage.innerHTML = "I'm sorry, but the claim request failed. Check your network and try again.";
+        this.$.errorDialog.toggle();
+      }
+
+      _onTapOk() {
+        console.log("ClaimBusinessView._onTapOk");
+
+        this.$.name.value = "";
+        this.$.name.invalid = false;
+
+        this.$.email.value = "";
+        this.$.email.invalid = false;
+        
+        this.$.phone.value = "";
+        this.$.phone.invalid = false;
+        
+        const polynApp = document.getElementById("polynApp");
+        polynApp.popPageOffCurrentTab();
       }
     }
 

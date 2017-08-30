@@ -94,15 +94,36 @@ exports.claimBusiness = functions.https.onRequest((req, res) => {
   const name = req.query.name;
   const email = req.query.email;
   const phone = req.query.phone;
+  const userUid = req.query.userUid;
+  const sellerKey = req.query.sellerKey;
 
   console.log("name: ", name);
   console.log("email: ", email);
   console.log("phone: ", phone);
+  console.log("userUid: ", userUid);
+  console.log("sellerKey: ", sellerKey);
 
-  cors(req, res, () => {
+  const claim = {
+    name: name,
+    email: email,
+    phone: phone,
+    userUid: userUid,
+    sellerKey: sellerKey
+  };
+
+  // Add the claim to the database just in case the email to the admin fails.
+  admin.database().ref('/claims').push(claim).then(snapshot => {
+
+    cors(req, res, () => {
 // TODO: Send email to admin to verify this business owner!
 // https://github.com/bojand/mailgun-js
-    res.status(200).end();
+      res.status(200).end();
+    });
+      
+  }, function(error) {
+    console.error(error);
+    // Failed to push new request!
+    res.status(500).end();
   });
 });
 

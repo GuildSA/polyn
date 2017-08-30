@@ -404,7 +404,7 @@ console.log("childData: " + JSON.stringify(childData, null, 4));
         if(this._getUserRole(requestInfo.buyerId) === "seller") {
 
           if(requestInfo.deleted) {
-            this.noChatsMessage = "Im sorry, but the buyer has deleted this request.";
+            this.noChatsMessage = "I'm sorry, but the buyer has deleted this request.";
             this.$.noChatsDialog.toggle();
             return;
           }
