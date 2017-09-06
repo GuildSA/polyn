@@ -70,12 +70,12 @@ export default {
       maxWidth = minLeft + Math.min(
         containerData.width,
         canvasData.width,
-        canvasData.left + canvasData.width
+        canvasData.left + canvasData.width,
       );
       maxHeight = minTop + Math.min(
         containerData.height,
         canvasData.height,
-        canvasData.top + canvasData.height
+        canvasData.top + canvasData.height,
       );
     }
 
@@ -85,11 +85,6 @@ export default {
       x: pointer.endX - pointer.startX,
       y: pointer.endY - pointer.startY,
     };
-
-    if (aspectRatio) {
-      range.X = range.y * aspectRatio;
-      range.Y = range.x / aspectRatio;
-    }
 
     switch (action) {
       // Move crop box
@@ -106,11 +101,15 @@ export default {
           break;
         }
 
+        if (right + range.x > maxWidth) {
+          range.x = maxWidth - right;
+        }
+
         width += range.x;
 
         if (aspectRatio) {
           height = width / aspectRatio;
-          top -= range.Y / 2;
+          top -= (range.x / aspectRatio) / 2;
         }
 
         if (width < 0) {
@@ -127,12 +126,16 @@ export default {
           break;
         }
 
+        if (top + range.y < minTop) {
+          range.y = minTop - top;
+        }
+
         height -= range.y;
         top += range.y;
 
         if (aspectRatio) {
           width = height * aspectRatio;
-          left += range.X / 2;
+          left += (range.y * aspectRatio) / 2;
         }
 
         if (height < 0) {
@@ -149,12 +152,16 @@ export default {
           break;
         }
 
+        if (left + range.x < minLeft) {
+          range.x = minLeft - left;
+        }
+
         width -= range.x;
         left += range.x;
 
         if (aspectRatio) {
           height = width / aspectRatio;
-          top += range.Y / 2;
+          top += (range.x / aspectRatio) / 2;
         }
 
         if (width < 0) {
@@ -171,11 +178,15 @@ export default {
           break;
         }
 
+        if (bottom + range.y > maxHeight) {
+          range.y = maxHeight - bottom;
+        }
+
         height += range.y;
 
         if (aspectRatio) {
           width = height * aspectRatio;
-          left -= range.X / 2;
+          left -= (range.y * aspectRatio) / 2;
         }
 
         if (height < 0) {
@@ -241,7 +252,7 @@ export default {
           height -= range.y;
           top += range.y;
           width = height * aspectRatio;
-          left += range.X;
+          left += range.y * aspectRatio;
         } else {
           if (range.x <= 0) {
             if (left > minLeft) {
@@ -417,7 +428,7 @@ export default {
 
         break;
 
-      // No default
+      default:
     }
 
     if (renderable) {
