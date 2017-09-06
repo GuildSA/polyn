@@ -328,6 +328,15 @@
             // If we have no user - just load the locally cached searchSettings.
             this._loadCachedSearchSettings();
           }
+
+        } else {
+
+          // If we don't have a valid user OR we have one but we still don't have 
+          // valid search settings - keep asking for it!
+          if(!this.user || (this.usersInfo && !this.usersInfo.searchSettings)) {
+            this._loadCachedSearchSettings();
+          }
+          
         }
       }
 
