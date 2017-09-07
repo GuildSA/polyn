@@ -1,21 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="257px" height="186px" viewBox="0 0 257 186" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
-    <title>Group</title>
+<svg width="268px" height="198px" viewBox="0 0 268 198" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.1 (29687) - http://www.bohemiancoding.com/sketch -->
+    <title>chat-bubbles</title>
     <desc>Created with Sketch.</desc>
-    <defs></defs>
+    <defs>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group" transform="translate(-16.000000, 0.000000)">
-            <g id="Chat-Bubble" fill="#FFFFFF">
-                <polygon id="Triangle" transform="translate(51.066770, 133.389353) rotate(222.000000) translate(-51.066770, -133.389353) " points="51.0667701 94.2881102 83.6403152 172.490596 18.4932249 172.490596"></polygon>
-                <ellipse id="Oval" cx="142.5" cy="73" rx="126.5" ry="73"></ellipse>
-            </g>
-            <g id="Chat-With-Dots" transform="translate(104.000000, 68.000000)">
-                <ellipse id="Oval-2" stroke="#E9E8E8" stroke-width="6" fill="#FFFFFF" cx="83" cy="51.5" rx="83" ry="51.5"></ellipse>
-                <polygon id="Triangle-2" stroke="#FFFFFF" fill="#FFFFFF" transform="translate(131.032054, 77.651137) rotate(29.000000) translate(-131.032054, -77.651137) " points="131.032054 56.1511374 174.032054 99.1511374 88.0320542 99.1511374"></polygon>
-                <ellipse id="Oval-3" fill="#E9E8E8" cx="40" cy="51.5" rx="9" ry="8.5"></ellipse>
-                <ellipse id="Oval-3" fill="#E9E8E8" cx="80" cy="51.5" rx="9" ry="8.5"></ellipse>
-                <ellipse id="Oval-3" fill="#E9E8E8" cx="120" cy="51.5" rx="9" ry="8.5"></ellipse>
+        <g id="chat-bubbles" transform="translate(-12.000000, 2.000000)">
+            <g id="Page-1">
+                <g id="Group" filter="url(#filter-1)">
+                    <g id="Chat-Bubble" fill="#FFFFFF">
+                        <polygon id="Triangle" transform="translate(51.066770, 133.389353) rotate(222.000000) translate(-51.066770, -133.389353) " points="51.0667701 94.28811 83.6403152 172.490596 18.4932249 172.490596"></polygon>
+                        <ellipse id="Oval" cx="142.5" cy="73" rx="126.5" ry="73"></ellipse>
+                    </g>
+                    <g id="Chat-With-Dots" filter="url(#filter-2)" transform="translate(104.000000, 68.000000)">
+                        <ellipse id="Oval-2" stroke="#E9E8E8" stroke-width="6" fill="#FFFFFF" cx="83" cy="51.5" rx="83" ry="51.5"></ellipse>
+                        <polygon id="Triangle-2" stroke="#FFFFFF" fill="#FFFFFF" transform="translate(131.032054, 77.651137) rotate(29.000000) translate(-131.032054, -77.651137) " points="131.032054 56.1511374 174.032054 99.1511374 88.032054 99.1511374"></polygon>
+                        <ellipse id="Oval-3" fill="#E9E8E8" cx="40" cy="51.5" rx="9" ry="8.5"></ellipse>
+                        <ellipse id="Oval-3" fill="#E9E8E8" cx="80" cy="51.5" rx="9" ry="8.5"></ellipse>
+                        <ellipse id="Oval-3" fill="#E9E8E8" cx="120" cy="51.5" rx="9" ry="8.5"></ellipse>
+                    </g>
+                </g>
             </g>
         </g>
     </g>
