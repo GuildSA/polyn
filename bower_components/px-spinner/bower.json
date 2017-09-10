@@ -1,6 +1,6 @@
 {
   "name": "px-spinner",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "main": [
     "px-spinner.html"
   ],
@@ -30,9 +30,11 @@
     "px-layout-design": "^1.0.0"
   },
   "devDependencies": {
-    "px-starter-kit-design": "^1.0.0",
     "px-theme": "^3.0.0",
-    "px-demo": "^2.0.0"
+    "px-demo": "^2.0.0",
+    "px-box-sizing-design": "^1.0.2",
+    "px-helpers-design": "^1.0.7",
+    "px-normalize-design": "^1.0.2"
   },
   "resolutions": {
     "webcomponentsjs": "^0.7.24"

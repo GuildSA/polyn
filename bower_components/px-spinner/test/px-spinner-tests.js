@@ -64,21 +64,38 @@ describe('Px-spinner should correctly detect browser capability and show correct
 });
 
 describe('Finished property should hide', function() {
-  it('finished property should add "hidden" css class to spinner', function() {
+   it('finished true should hide pxSpinner', function(done) {
     var spinnerFixture = fixture('PxSpinner');
     spinnerFixture.finished = true;
-    expect(spinnerFixture.classList.contains('hidden')).to.be.true;
+    flush(function() {
+      console.log(spinnerFixture)
+      expect(spinnerFixture.clientHeight).to.equal(0);
+      done();
+    });
   });
-  it('show method should remove "hidden" css class', function() {
+  it('finished false should show pxSpinner', function(done) {
     var spinnerFixture = fixture('PxSpinner');
-    spinnerFixture.finished = true;
-    spinnerFixture.show();
-    expect(spinnerFixture.classList.contains('hidden')).to.be.false;
+    spinnerFixture.finished = false;
+    flush(function() {
+      expect(spinnerFixture.clientHeight).to.be.closeTo(70,90);
+      done();
+    });
   });
-  it('hide method should add "hidden" css class', function() {
+  it('hide method should hide pxSpinner', function(done) {
     var spinnerFixture = fixture('PxSpinner');
     spinnerFixture.hide();
-    expect(spinnerFixture.classList.contains('hidden')).to.be.true;
+    flush(function() {
+      expect(spinnerFixture.clientHeight).to.equal(0);
+      done();
+    });
+  });
+  it('show method should show pxSpinner', function(done) {
+    var spinnerFixture = fixture('PxSpinner');
+    spinnerFixture.show();
+    flush(function() {
+      expect(spinnerFixture.clientHeight).to.be.closeTo(70,90);
+      done();
+    });
   });
 });
 
@@ -93,8 +110,8 @@ describe('Test size API', function(){
       });
     } else {
       flush(function(){
-        expect(Polymer.dom(spinnerFixture.root).querySelector('svg').attributes.width).to.equal('100');
-        expect(Polymer.dom(spinnerFixture.root).querySelector('svg').attributes.height).to.equal('100');
+        assert(Polymer.dom(spinnerFixture.root).querySelector('svg').attributes.width, '100');
+        assert(Polymer.dom(spinnerFixture.root).querySelector('svg').attributes.height, '100');
         done();
       });
       done();

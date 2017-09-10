@@ -1,6 +1,6 @@
 {
   "name": "px-spinner",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "main": [
     "px-spinner.html"
   ],
@@ -30,19 +30,21 @@
     "px-layout-design": "^1.0.0"
   },
   "devDependencies": {
-    "px-starter-kit-design": "^1.0.0",
     "px-theme": "^3.0.0",
-    "px-demo": "^2.0.0"
+    "px-demo": "^2.0.0",
+    "px-box-sizing-design": "^1.0.2",
+    "px-helpers-design": "^1.0.7",
+    "px-normalize-design": "^1.0.2"
   },
   "resolutions": {
     "webcomponentsjs": "^0.7.24"
   },
   "homepage": "https://github.com/PredixDev/px-spinner",
-  "_release": "2.0.4",
+  "_release": "2.1.0",
   "_resolution": {
     "type": "version",
-    "tag": "v2.0.4",
-    "commit": "e3a18b13aa76b61cb0f98857e5e024ab7f559f6b"
+    "tag": "v2.1.0",
+    "commit": "a68c147e537442b56f54363fdeb96045b9b10c98"
   },
   "_source": "https://github.com/PredixDev/px-spinner.git",
   "_target": "^2.0.0",
