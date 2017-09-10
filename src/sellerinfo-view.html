@@ -496,7 +496,10 @@
                 // Record the updated location of the business.
                 GeofireManager.addSellerToLocations("locations/", self.sellersCategory, self.usersInfo.sellerId, latitude, longitude);
                 //self.loading = false;
-                setTimeout(function() { self.loading = false; }, 500);
+                setTimeout(function() { 
+                  self.loading = false;
+                  Utility.showSuccessToast("Business information saved!");
+                }, 500);
               });
   
             } else {
@@ -642,6 +645,8 @@
                     // Reload these to update the UI.
                     self._loadUserInfo();
                     self.$.sellersinfo.path = "/sellers/" + newSellerKey;
+
+                    Utility.showSuccessToast("New business registered!");
 
                     self._verifySellerOnCategory(self.sellersCategory);
                   });
