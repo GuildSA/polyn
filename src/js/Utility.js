@@ -3,6 +3,7 @@ var Utility = (function() {
   "use strict";
 
   var _errorToast;
+  var _successToast;
 
   var validateEmail = function(email) {
     // https://stackoverflow.com/questions/46155/how-to-validate-email-address-in-javascript
@@ -34,6 +35,31 @@ var Utility = (function() {
     _errorToast.text = text;
     _errorToast.open();
   };
+
+  var showSuccessToast = function(text) {
+    
+      if(!_successToast) {
+  
+        var polynApp = document.getElementById("polynApp");
+  
+        if(polynApp) {
+  
+          _successToast = polynApp.$.successToast;
+  
+          if(!_successToast) {
+            log("Failed to get 'successToast'!")
+            return;
+          }
+  
+        } else {
+          log("Failed to get 'polynApp'!")
+          return;
+        }
+      }
+  
+      _successToast.text = text;
+      _successToast.open();
+    };
 
   //----------------------------------------------------------------------------
   // The getOrientation method parses the EXIF (exchangeable image file format)
@@ -262,6 +288,7 @@ var Utility = (function() {
   return {
     validateEmail: validateEmail,
     showErrorToast: showErrorToast,
+    showSuccessToast: showSuccessToast,
     getOrientation: getOrientation,
     resetOrientation: resetOrientation,
     getBase64: getBase64,
