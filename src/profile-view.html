@@ -142,6 +142,10 @@
         <template is="dom-if" if="[[user]]">
           <div class="layout vertical">
             
+            <template is="dom-if" if="[[usersInfo.sellerId]]">
+              <paper-button id="editName" class="sign-in" on-tap="_onTapEditName">Change Your Name</paper-button>
+            </template>
+
             <template is="dom-if" if="[[!usersInfo.sellerId]]">
               <paper-button id="registerBusiness" class="sign-in" on-tap="_onTapRegisterBusiness">Register Your Business</paper-button>
             </template>
@@ -162,6 +166,18 @@
       <p id="errorMessage"></p>
       <div class="buttons">
         <paper-button dialog-confirm autofocus>OK</paper-button>
+      </div>
+    </paper-dialog>
+
+    <paper-dialog id="chatNameDialog">
+      <h2 class="dialog-title">Set Chat Name</h2>
+      <p>Please set a name to use in chat conversations.</p>
+      <div id="chatName">
+        <paper-input id="chatNameInput" label="Chat Name"></paper-input>
+      </div>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button on-tap="_onTapSaveChatNameBtn" dialog-confirm autofocus>Ok</paper-button>
       </div>
     </paper-dialog>
 
@@ -194,7 +210,8 @@
             type: String
           },
           photoUrl: {
-            type: String
+            type: String,
+            value: "/images/anonymous-profile.png"
           },
           croppedImage: {
             type: Object,
@@ -290,7 +307,7 @@
 
             firebase.app("polyn-app").storage().ref("users/" + self.user.uid + "/photoThumb").put(thumbnailBlob).then(function(snapshot) {
               console.log("snapshot.downloadURL = " + snapshot.downloadURL);
-              self._setUsersProfilePhotoThumbURL(snapshot.downloadURL);
+              self._setUsersProfilePhotoThumbUrl(snapshot.downloadURL);
             });
           });
         });
@@ -412,7 +429,7 @@
                 self._setUsersProfilePhotoThumbUrl(user.providerData[0].photoURL);
 
 // TODO: Upload a copy of the image pulled from social including a thumbnail.
-// This is a lot harder tha it looks due to cross origin issues!
+// This is a lot harder than it looks due to cross origin issues!
 
                 // // Create a thumbnail version of the profile image.
                 // const blob = Utility.dataURLtoBlob(user.providerData[0].photoUrl);
@@ -442,14 +459,20 @@
           } else {
 
             // Force set these now, so the user can at least see something.
-            self.displayName = user.providerData[0].displayName;
             self.photoUrl = user.providerData[0].photoURL;
+
+            // Email based logins do not have a displayName or photoURL!
+            if(user.providerData[0].displayName) {
+              self.displayName = user.providerData[0].displayName; // Use social name.
+            } else {
+              self.displayName = user.providerData[0].email.split('@')[0] // Pulls 'name' from 'name@domain.com'
+            }
 
             // The user's info key does NOT exist - so add one.
             const info = {};
-            info.name = user.providerData[0].displayName;
             info.email = user.providerData[0].email;
-            info.photoUrl = user.providerData[0].photoURL;
+            info.name = self.displayName;
+            info.photoUrl = self.photoUrl;
             firebase.app("polyn-app").database().ref(refPath).update(info);
           }
         });
@@ -558,11 +581,38 @@
         return this.$.auth.signOut();
       }
 
+      _onTapEditName() {
+        console.log("ProfileView._onTapEditName");
+
+        this.$.chatNameInput.value = this.usersInfo.name;
+        this.$.chatNameDialog.toggle();
+      }
+
       _onTapRegisterBusiness() {
         console.log("ProfileView._onTapRegisterBusiness");
 
         const polynApp = document.getElementById("polynApp");
         const sellerInfoView = polynApp.pushPageOnCurrentTab("sellerinfo-view");
+      }
+
+      _onTapSaveChatNameBtn() {
+        console.log("HomeView._onTapSaveChatNameBtn");
+
+        const chatName = this.$.chatNameInput.value;
+
+        if(!chatName || chatName.length === 0) {
+          Utility.showErrorToast("A chat name must be provided.");
+          return;
+        }
+
+        if(chatName === this.usersInfo.name) {
+          return;
+        }
+
+        const refPath = "/users/" + this.user.uid + "/info/name";
+        firebase.app("polyn-app").database().ref(refPath).set(chatName).then(function() {
+          Utility.showSuccessToast("New chat name saved!");
+        });
       }
     }
 
