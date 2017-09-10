@@ -97,13 +97,13 @@
         </div>
 
         <div class="layout vertical center-justified">
-          <center> <h1>Create a New Request</h1> </center>
+          <center> <h1>Tell the record stores what you're looking for!</h1> </center>
 
-          <paper-input id="titleText" label="What can we find for you?" required auto-validate error-message="Please enter a title for what you are looking for" char-counter maxlength="140"> 
+          <paper-input id="titleText" label="Artist & Title" required auto-validate error-message="What record are you looking for?" char-counter maxlength="140"> 
             <iron-icon icon="custom-icons:search" slot="prefix"></iron-icon>
           </paper-input>
 
-          <paper-textarea id="descText" label="Enter a detailed description of your item..." auto-validate error-message="Please enter a description of the item you are looking for" suffix="optional">
+          <paper-textarea id="descText" label="Tell us more like condition or desired pricing" suffix="optional">
             <iron-icon icon="custom-icons:email" slot="prefix">
           </paper-textarea>
 
@@ -136,7 +136,7 @@
           </template>
 
           <paper-checkbox id="shipping" class="custom" on-change="_onChangedShipping">
-            I'm fine if the item has to be shipped.
+            I'm fine if the record has to be shipped.
           </paper-checkbox>
 
           <paper-button class="sign-in" on-tap="_onTapSubmitRequest" raised>Submit Request</paper-button>
@@ -197,7 +197,7 @@
           }
         };
       }
-
+      
       reload() {
         console.log("RequestView.reload");
 
@@ -314,7 +314,7 @@
         this.$.sendAll.checked = false;
         this.$.shipping.checked = false;
 
-        this.showLocationSettings = true;
+        this.showLocationSettings = false;
       }
 
       _onTapSubmitRequest() {

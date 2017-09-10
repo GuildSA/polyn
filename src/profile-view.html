@@ -609,8 +609,10 @@
           return;
         }
 
+        const self = this;
         const refPath = "/users/" + this.user.uid + "/info/name";
         firebase.app("polyn-app").database().ref(refPath).set(chatName).then(function() {
+          self.displayName = chatName
           Utility.showSuccessToast("New chat name saved!");
         });
       }

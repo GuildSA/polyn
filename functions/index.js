@@ -188,8 +188,11 @@ exports.sendRequestLocation = functions.https.onRequest((req, res) => {
 
               const usersInfo = snapshot.val();
 
+              //console.log("buyerId = " + buyerId)
+              //console.log("sellerKey = " + sellerKey)
+
               // Use the User's info to get their token and send a message.
-              if(usersInfo) {
+              if(usersInfo && buyerId != sellerKey) {
                 
                 // For our seller, add the request to the user's 'requests' key.
                 const request = {
@@ -297,8 +300,11 @@ exports.sendRequestAll = functions.https.onRequest((req, res) => {
 
             const usersInfo = snapshot.val();
 
+            //console.log("buyerId = " + buyerId)
+            //console.log("childData = " + childData)
+
             // Use the User's info to get their token and send a message.
-            if(usersInfo) {
+            if(usersInfo && buyerId != childData) {
               
               // For our seller, add the request to the user's 'requests' key.
               let request = {

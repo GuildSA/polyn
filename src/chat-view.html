@@ -377,6 +377,7 @@
       }
 
       _loadChats() {
+        console.log("ChatView._loadChats");
 
         if(this.chatMessagesId) {
 
@@ -423,7 +424,6 @@
           }
 
         } else {
-          setTimeout(function() { self.loading = false; }, 500);
 
           // Create a fake message from the buyer so the seller has something to read.
           const fakedMessage = {
@@ -438,6 +438,9 @@
           }
 
           this.push('chatMessages', fakedMessage);
+
+          // Fake a spinner for at least 0.5 seconds.
+          setTimeout(function() { self.loading = false; }, 500);
         }
       }
 
@@ -497,8 +500,8 @@
               self.chatMessagesId = chatInfo.chatId;
             }
 
-            // console.log("chatInfo: " + JSON.stringify(chatInfo, null, 4));
-            // console.log("chatId = " + self.chatMessagesId);
+            //console.log("chatInfo: " + JSON.stringify(chatInfo, null, 4));
+            //console.log("chatId = " + self.chatMessagesId);
 
             // As soon as we get the user and the chat info - get the other 
             // users info so we know who we're chatting with.
