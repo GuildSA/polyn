@@ -169,6 +169,15 @@
       </div>
     </paper-dialog>
 
+    <paper-dialog id="signOutDialog">
+      <h2 class="dialog-title">Signing Out</h2>
+      <p>Are you sure you want to sign out of the app?</p>
+      <div class="buttons">
+        <paper-button on-tap="_onTapSignOutBtn" dialog-confirm>Ok</paper-button>
+        <paper-button dialog-dismiss autofocus>Cancel</paper-button>
+      </div>
+    </paper-dialog>
+
     <paper-dialog id="chatNameDialog">
       <h2 class="dialog-title">Set Chat Name</h2>
       <p>Please set a name to use in chat conversations.</p>
@@ -573,6 +582,12 @@
 
       _onTapSignOut() {
         console.log("ProfileView._onTapSignOut");
+
+        this.$.signOutDialog.toggle();
+      }
+
+      _onTapSignOutBtn() {
+        console.log("ProfileView._onTapSignOutBtn");
 
         // Since the user is logging out - reset the UI's navigation.
         const polynApp = document.getElementById("polynApp");
