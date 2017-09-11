@@ -33,6 +33,7 @@
 <link rel="lazy-import" href="request-view.html">
 <link rel="lazy-import" href="chats-view.html">
 <link rel="lazy-import" href="analytics-view.html">
+<link rel="lazy-import" href="about-view.html">
 
 <!-- <link rel="lazy-import" href="sellerupload-view.html"> 
 <link rel="lazy-import" href="misctest-view.html">
@@ -124,7 +125,7 @@
 
     </style>
 
-    <analytics-view key="UA-100326488-1"></analytics-view>
+    <!-- <analytics-view key="UA-100326488-1"></analytics-view> -->
 
     <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
     <app-route
@@ -135,16 +136,17 @@
 
     <app-drawer-layout fullbleed narrow="{{narrow}}">
       <!-- Drawer content -->
-       <!-- <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
+       <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
         <app-toolbar>Settings</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-           <a name="sellerupload-view" on-tap="_onTapSellerUploadView">Seller Upload</a>
+          <a name="about-view" on-tap="_onTapAboutView">About App</a>
+          <!-- <a name="sellerupload-view" on-tap="_onTapSellerUploadView">Seller Upload</a>
           <a name="misctest-view" on-tap="_onTapMiscTestView">Misc Test</a>
           <a name="geofire-view" on-tap="_onTapGeofireView">Geofire</a>
           <a name="sellertest-view" on-tap="_onTapSellerTestView">Seller Test</a>
-          <a name="list-view" on-tap="_onTapListTestView">Iron List</a> 
+          <a name="list-view" on-tap="_onTapListTestView">Iron List</a>  -->
         </iron-selector>
-      </app-drawer>  -->
+      </app-drawer> 
 
       <!-- Main content -->
       <app-header-layout has-scrolling-region>
@@ -195,6 +197,7 @@
           <claimbusiness-view name="claimbusiness-view"></claimbusiness-view>
           <searchfilter-view name="searchfilter-view"></searchfilter-view>
           <error404-view name="error404-view"></error404-view>
+          <about-view name="about-view"></about-view>
 
           <!-- <sellerupload-view name="sellerupload-view"></sellerupload-view>
           <misctest-view name="misctest-view"></misctest-view>
@@ -270,6 +273,13 @@
       //     console.log("  Already Signed IN.");
       //   }
       // }
+
+      _onTapAboutView() {
+        this.page = 'about-view';
+        if(!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      }
 
       // _onTapSellerUploadView() {
       //   this.page = 'sellerupload-view';
