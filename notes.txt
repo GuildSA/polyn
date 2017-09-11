@@ -1,5 +1,32 @@
 
 
+ -- Build & Deploy Steps --
+
+Step 1:
+
+  In 'home-view.html' find ->  <link rel="import" href="shared-styles.html?v=x.x"> and update the v=x.x partå
+
+Step 2:
+
+  $ polymer build
+
+Step 3:
+
+  After build copy from -> /Users/kharris/Documents/Code/polyn/bower_components/firebase
+
+  firebase-auth.js
+  firebase-database.js
+
+  And paste them to -> /Users/kharris/Documents/Code/polyn/build/default/bower_components/firebase
+
+  $ cp bower_components/firebase/firebase-database.js build/default/bower_components/firebase/firebase-database.js
+  $ cp bower_components/firebase/firebase-auth.js build/default/bower_components/firebase/firebase-auth.js
+
+Step 4:
+
+  $ firebase deploy --only hosting
+
+------------------------------------------------------------------------
 
 Buyers
   Stop Searching and Start Finding!
