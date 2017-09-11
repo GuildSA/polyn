@@ -1,3 +1,18 @@
+
+Check List
+
+1. Create a new user
+  Gmail
+  Facebook
+  Email
+
+ 2. Create a request.
+
+
+BUGS
+
+
+
 --------------------------------------------------------------------------------
 
  -- App / Database --
@@ -17,7 +32,7 @@ Need cloud code to send emails when notifications can't be sent.
 Add paging to firebase calls that pull down a lot of data.
 
 Send email to admin to verify a new business owner asking to claim a business.
-  Temp Fix - Just add a new record to Firebase that we can check each day.
+  DONE - Temp Fix - Just add a new record to Firebase that we can check each day.
 
 DONE - The sellerinfo view needs to set the seller's location based on address given.
 DONE - Make use of the new geo location test code in the cloud function 'sendRequest'.

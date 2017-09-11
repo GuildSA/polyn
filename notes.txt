@@ -1,10 +1,9 @@
 
-
  -- Build & Deploy Steps --
 
 Step 1:
 
-  In 'home-view.html' find ->  <link rel="import" href="shared-styles.html?v=x.x"> and update the v=x.x partå
+  In 'home-view.html' find ->  <link rel="import" href="shared-styles.html?v=x.x"> and update the v=x.x part.
 
 Step 2:
 
