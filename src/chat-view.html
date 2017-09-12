@@ -379,9 +379,9 @@
       _loadChats() {
         console.log("ChatView._loadChats");
 
-        if(this.chatMessagesId) {
+        const self = this;
 
-          const self = this;
+        if(this.chatMessagesId) {
 
           self.loading = true;
 
