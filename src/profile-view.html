@@ -355,7 +355,7 @@
           }
         } else {
           this.displayName = "";
-          this.photoUrl = "";
+          this.photoUrl = "/images/anonymous-profile.png";
         }
       }
 
@@ -468,7 +468,11 @@
           } else {
 
             // Force set these now, so the user can at least see something.
-            self.photoUrl = user.providerData[0].photoURL;
+            if(user.providerData[0].photoURL) {
+              self.photoUrl = user.providerData[0].photoURL;
+            } else {
+              self.photoUrl = "/images/anonymous-profile.png";
+            }
 
             // Email based logins do not have a displayName or photoURL!
             if(user.providerData[0].displayName) {
