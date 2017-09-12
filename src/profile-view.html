@@ -142,9 +142,7 @@
         <template is="dom-if" if="[[user]]">
           <div class="layout vertical">
             
-            <template is="dom-if" if="[[usersInfo.sellerId]]">
-              <paper-button id="editName" class="sign-in" on-tap="_onTapEditName">Change Your Name</paper-button>
-            </template>
+            <paper-button id="editName" class="sign-in" on-tap="_onTapEditName">Change Your Name</paper-button>
 
             <template is="dom-if" if="[[!usersInfo.sellerId]]">
               <paper-button id="registerBusiness" class="sign-in" on-tap="_onTapRegisterBusiness">Register Your Business</paper-button>
