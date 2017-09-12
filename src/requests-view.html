@@ -182,6 +182,7 @@
           requests: {
             type: Array,
             value: []
+            //observer: '_requestsChanged'
           },
           loading: {
             type: Boolean,
@@ -206,14 +207,15 @@
       reload() {
         console.log("RequestsView.reload");
 
-        if(this.forceReload === true) {
-
-          this.forceReload = false;
+// TODO: We need a better way to prevent the view from refreshing every time it's selected.
+        //if(this.forceReload === true) {
+        //
+        //  this.forceReload = false;
           
           if(this.user != null) {
             this._loadRequests();
           }
-        }
+        //}
       }
 
       _userChanged(user) {
@@ -228,6 +230,14 @@
           this.loading = false;
         }
       }
+
+      // _requestsChanged() {
+      //   console.log("RequestsView._requestsChanged");
+
+      //   if(this.requests.length === 0) {
+      //     this.hasMessages = false
+      //   }
+      // }
 
       _loadRequests() {
         console.log("RequestsView._loadRequests");
