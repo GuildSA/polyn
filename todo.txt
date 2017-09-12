@@ -1,17 +1,24 @@
 
-Check List
+QA Check List
 
-1. Create a new user
+1. Test UI with no user.
+
+2. Create a new user
   Gmail
   Facebook
   Email
 
- 2. Create a request.
+3. Create a request.
+  Test Requests view logic.
+
+3. Claim a business.
+
+4. Assign business to owner.
 
 
 BUGS
 
-
+TEMP FIX: New requests do not show up until in messages until the browser is refreshed.
 
 --------------------------------------------------------------------------------
 
