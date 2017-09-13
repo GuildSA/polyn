@@ -13,7 +13,6 @@
     "src/chat-view.html",
     "src/business-view.html",
     "src/claimbusiness-view.html",
-    "src/analytics-view.html",
     "src/about-view.html",
     "src/error404-view.html"
   ],

@@ -12,7 +12,7 @@
 <link rel="import" href="../bower_components/px-spinner/px-spinner.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="shared-styles.html">
+<link rel="import" href="shared-styles.html?v=0.0">
 <link rel="import" href="utility.html">
 
 <dom-module id="chat-view">
@@ -149,12 +149,6 @@
       on-message="_onHandleMessage">
     </firebase-messaging>
 
-    <firebase-document
-      app-name="polyn-app"
-      path="/users/[[user.uid]]/info/token"
-      data="[[token]]">
-    </firebase-document>
-
     <app-indexeddb-mirror
       session="[[user.uid]]"
       key="chats/[[chatMessagesId]]"
@@ -288,6 +282,8 @@
       reload() {
         console.log("ChatView.reload");
 
+        this._requestNotificationPermission();
+
         if(this.chatMessages && !this.chatMessages.length > 0) {
           this._loadChatInfo();
         }
@@ -339,6 +335,8 @@
             }
           });
         });
+
+        this._requestNotificationPermission();
       }
 
       _onHandleMessage(payload) {
@@ -464,9 +462,9 @@
         }
 
         // If the user has no token - we should prompt for permisssion!
-        if(!usersInfo.token) {
-          this._requestNotificationPermission();
-        }
+        //if(!usersInfo.token) {
+        //  this._requestNotificationPermission();
+        //}
 
         this._loadChatInfo();
       }
@@ -539,10 +537,39 @@
       _requestNotificationPermission() {
         console.log("ChatView._requestNotificationPermission");
 
+        var self = this
+
         this.$.messaging.activate();
         this.$.messaging.requestPermission()
           .then(() => {
             console.log('Notification Message permission granted!');
+
+            //console.log("XXXXXX: " + JSON.stringify(self.usersInfo, null, 4));
+
+            if(self.usersInfo.tokens) {
+              
+              var tokenFound = false;
+
+              for(let key in self.usersInfo.tokens) {
+
+                const token = self.usersInfo.tokens[key];
+
+                if(token === self.token) {
+                  tokenFound = true;
+                }
+              }
+
+              if(!tokenFound) {
+                // We have some tokens but not this one yet!
+                var newTokenKey = firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/tokens").push().key;
+                firebase.app("polyn-app").database().ref("/users/" + self.user.uid + "/info/tokens/" + newTokenKey).set(self.token)
+              }
+
+            } else {
+              // We don't have any tokens so far - so save it!
+              var newTokenKey = firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/tokens").push().key;
+              firebase.app("polyn-app").database().ref("/users/" + self.user.uid + "/info/tokens/" + newTokenKey).set(self.token)
+            }
           })
           .catch((err) => {
             console.log('Notification Message permission denied!');
@@ -669,27 +696,35 @@
           chatMessage.photoUrl = photoUrl;
         }
 
-        // Write the new chat message under a new key, which is under the existing chat mnessage thread id.
+        // Write the new chat message under a new key, which is under the existing chat message thread id.
         firebase.app("polyn-app").database().ref("chats/" + this.chatMessagesId + "/" + newKey).set(chatMessage);
 
         // Empty the message input.
         this.$.message.value = "";
         this.chatPhotoUrl = null;
 
-        if(this.otherUsersInfo.token) {
+// KRH SENDING
 
-          const params = {
-            token: this.otherUsersInfo.token,
-            title: this.usersInfo.name + " sent you a message.",
-            body: text,
-            icon: "/images/vr-msg.png",
-            click_action: "https://vinylrecords.io/"
-          };
+        if(this.otherUsersInfo.tokens) {
 
-          console.log("  Sending message: " + JSON.stringify(params, null, 4));
+          for(let key in this.otherUsersInfo.tokens) {
 
-          this.$.sendMessage.params = params;
-          this.$.sendMessage.generateRequest();
+            const token = this.otherUsersInfo.tokens[key];
+
+            const params = {
+              token: token,
+              title: this.usersInfo.name + " sent you a message.",
+              body: text,
+              icon: "/images/vr-msg.png",
+              click_action: "https://vinylrecords.io/"
+            };
+
+            console.log("  Sending message: " + JSON.stringify(params, null, 4));
+
+            this.$.sendMessage.params = params;
+            this.$.sendMessage.generateRequest();
+          }
+
         } else {
           console.log("  No token found for: " + this.otherUsersInfo.name);
           this._markOtherUsersChatUnviewed();

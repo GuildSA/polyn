@@ -452,9 +452,9 @@
 
               }
 
-              // If we have a token - preserve it.
-              if(usersInfo.token) {
-                info.token = usersInfo.token;
+              // If we have tokens - preserve them.
+              if(usersInfo.tokens) {
+                info.tokens = usersInfo.tokens;
               }
 
               firebase.app("polyn-app").database().ref(refPath).update(info);

@@ -207,26 +207,34 @@ exports.sendRequestLocation = functions.https.onRequest((req, res) => {
 
                 admin.database().ref('/users/' + sellerKey + '/requests').push(request).then(snapshot => {
 
-                  console.log("token = " + usersInfo.token);
+                  if(usersInfo.tokens) {
 
-                  // If you use notification over data - setBackgroundMessageHandler will not fire.
-                  const payload = {
-                    //notification: {
-                    data: {
-                      title: title,
-                      body: desc,
-                      icon: "/images/vr-msg.png",
-                      clickAction: "https://vinylrecords.io/"
+                    for(let key in usersInfo.tokens) {
+                      
+                      const token = usersInfo.tokens[key];
+      
+console.log("token = " + token);
+                      
+                      // If you use notification over data - setBackgroundMessageHandler will not fire.
+                      const payload = {
+                        //notification: {
+                        data: {
+                          title: title,
+                          body: desc,
+                          icon: "/images/vr-msg.png",
+                          clickAction: "https://vinylrecords.io/"
+                        }
+                      };
+    
+                      admin.messaging().sendToDevice(token, payload)
+                      .then(function(response) {
+                        console.log("Successfully sent message:", response);
+                      })
+                      .catch(function(error) {
+                        console.log("Error sending message:", error);
+                      });
                     }
-                  };
-
-                  admin.messaging().sendToDevice(usersInfo.token, payload)
-                  .then(function(response) {
-                    console.log("Successfully sent message:", response);
-                  })
-                  .catch(function(error) {
-                    console.log("Error sending message:", error);
-                  });
+                  }
                 });
               } else {
                 console.log("usersInfo: null");
@@ -319,26 +327,34 @@ exports.sendRequestAll = functions.https.onRequest((req, res) => {
 
               admin.database().ref('/users/' + childData + '/requests').push(request).then(snapshot => {
 
-                console.log("token = " + usersInfo.token);
+                if(usersInfo.tokens) {
+                  
+                  for(let key in usersInfo.tokens) {
+                    
+                    const token = usersInfo.tokens[key];
+    
+console.log("token = " + token);
 
-                // If you use notification over data - setBackgroundMessageHandler will not fire.
-                const payload = {
-                  //notification: {
-                  data: {
-                    title: title,
-                    body: desc,
-                    icon: "/images/vr-msg.png",
-                    clickAction: "https://vinylrecords.io/"
+                    // If you use notification over data - setBackgroundMessageHandler will not fire.
+                    const payload = {
+                      //notification: {
+                      data: {
+                        title: title,
+                        body: desc,
+                        icon: "/images/vr-msg.png",
+                        clickAction: "https://vinylrecords.io/"
+                      }
+                    };
+    
+                    admin.messaging().sendToDevice(token, payload)
+                    .then(function(response) {
+                      console.log("Successfully sent message:", response);
+                    })
+                    .catch(function(error) {
+                      console.log("Error sending message:", error);
+                    });
                   }
-                };
-
-                admin.messaging().sendToDevice(usersInfo.token, payload)
-                .then(function(response) {
-                  console.log("Successfully sent message:", response);
-                })
-                .catch(function(error) {
-                  console.log("Error sending message:", error);
-                });
+                }
               });
             } else {
               // usersInfo was null!
