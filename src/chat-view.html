@@ -12,7 +12,7 @@
 <link rel="import" href="../bower_components/px-spinner/px-spinner.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="shared-styles.html?v=0.0">
+<link rel="import" href="shared-styles.html?v=0.3">
 <link rel="import" href="utility.html">
 
 <dom-module id="chat-view">
@@ -251,6 +251,11 @@
           otherUsersInfo: {
             type: Object
           },
+          token: {
+            type: String,
+            value: null,
+            readOnly: true
+          },
           requestId: {
             type: String
           },
@@ -281,8 +286,6 @@
 
       reload() {
         console.log("ChatView.reload");
-
-        this._requestNotificationPermission();
 
         if(this.chatMessages && !this.chatMessages.length > 0) {
           this._loadChatInfo();
@@ -335,13 +338,11 @@
             }
           });
         });
-
-        this._requestNotificationPermission();
       }
 
       _onHandleMessage(payload) {
         console.log("ChatView._onHandleMessage:");
-        console.log("  payload: " + JSON.stringify(payload, null, 4));
+        //console.log("  payload: " + JSON.stringify(payload, null, 4));
 
         // This method will only fire if the app recives a message while it 
         // has FOCUS - otherwise it is handled by setBackgroundMessageHandler 
@@ -454,8 +455,8 @@
       }
 
       _usersInfoChanged(usersInfo) {
-        //console.log("ChatView._usersInfoChanged");
-        console.log("ChatView._usersInfoChanged: " + JSON.stringify(usersInfo, null, 4));
+        console.log("ChatView._usersInfoChanged");
+        //console.log("ChatView._usersInfoChanged: " + JSON.stringify(usersInfo, null, 4));
 
         if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
           return;
@@ -463,7 +464,7 @@
 
         // If the user has no token - we should prompt for permisssion!
         //if(!usersInfo.token) {
-        //  this._requestNotificationPermission();
+          this._requestNotificationPermission();
         //}
 
         this._loadChatInfo();
@@ -544,7 +545,25 @@
           .then(() => {
             console.log('Notification Message permission granted!');
 
-            //console.log("XXXXXX: " + JSON.stringify(self.usersInfo, null, 4));
+// TODO: Revisit this when Safari finally supports Service Workers and FCM.
+            // console.log("token: " + self.token);
+
+            // if(!self.token) {
+            //
+            //   this.$.messaging.getToken()
+            //     .then((token) => {
+            //       if (token === null) {
+            //         console.log("getToken: User hasn't granted permission.");
+            //       } else {
+            //         console.log("getToken found token: " + token);
+            //       }
+            //     })
+            //     .catch((err) => {
+            //       console.log("getToken error: " + err);
+            //     })
+            //
+            //   return;
+            // }
 
             if(self.usersInfo.tokens) {
               
@@ -560,6 +579,7 @@
               }
 
               if(!tokenFound) {
+                //console.log("Found new token!")
                 // We have some tokens but not this one yet!
                 var newTokenKey = firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/tokens").push().key;
                 firebase.app("polyn-app").database().ref("/users/" + self.user.uid + "/info/tokens/" + newTokenKey).set(self.token)
@@ -567,6 +587,7 @@
 
             } else {
               // We don't have any tokens so far - so save it!
+              //console.log("Found first token!")
               var newTokenKey = firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/tokens").push().key;
               firebase.app("polyn-app").database().ref("/users/" + self.user.uid + "/info/tokens/" + newTokenKey).set(self.token)
             }
