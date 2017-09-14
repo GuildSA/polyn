@@ -404,8 +404,7 @@
           if(usersInfo) {
 
             // The user's info key exists - so update it if anything is missing.
-
-            console.log("  usersInfo: " + JSON.stringify(usersInfo, null, 4));
+            //console.log("  usersInfo: " + JSON.stringify(usersInfo, null, 4));
 
             const info = {};
 
@@ -441,15 +440,14 @@
                 // // Create a thumbnail version of the profile image.
                 // const blob = Utility.dataURLtoBlob(user.providerData[0].photoUrl);
                 // Utility.resizeImageToSpecificWidth(blob, 100, function(dataUrl) {
-
+                //
                 //   const thumbnailBlob = Utility.dataURLtoBlob(dataUrl);
-
+                //
                 //   firebase.app("polyn-app").storage().ref("users/" + self.user.uid + "/photoThumb").put(thumbnailBlob).then(function(snapshot) {
                 //     console.log("snapshot.downloadURL = " + snapshot.downloadURL);
                 //     self._setUsersProfilePhotoThumbUrl(snapshot.downloadURL);
                 //   });
                 // });
-
               }
 
               // If we have tokens - preserve them.

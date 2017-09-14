@@ -316,7 +316,8 @@
       }
 
       _sellersInfoChanged(sellersInfo) {
-        console.log("SellerInfoView._sellersInfoChanged: " + JSON.stringify(sellersInfo, null, 4));
+        console.log("SellerInfoView._sellersInfoChanged");
+        //console.log("SellerInfoView._sellersInfoChanged: " + JSON.stringify(sellersInfo, null, 4));
 
         if(!sellersInfo || Object.keys(sellersInfo).length === 0 && sellersInfo.constructor === Object) {
           return;

@@ -258,7 +258,7 @@
               const childKey = childSnapshot.key;
               const childData = childSnapshot.val();
               //console.log("childKey = " + childKey);
-console.log("childData: " + JSON.stringify(childData, null, 4));
+              //console.log("childData: " + JSON.stringify(childData, null, 4));
 
               if(childData.viewed === false) {
                 ++badgeCount;
@@ -379,7 +379,8 @@ console.log("childData: " + JSON.stringify(childData, null, 4));
       }
 
       _getUserRole(buyerId) {
-        console.log("RequestsView._getUserRole: buyerId = " + buyerId);
+        console.log("RequestsView._getUserRole");
+        //console.log("RequestsView._getUserRole: buyerId = " + buyerId);
 
         if(!this.user) {
           console.log("  User Role = 'unknown'");

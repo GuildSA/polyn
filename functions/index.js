@@ -170,7 +170,7 @@ exports.sendRequestLocation = functions.https.onRequest((req, res) => {
 
       const onKeyEnteredRegistration = geoQuery.on("key_entered", function(key, location) {
         console.log(key + " entered the query.");
-        console.log("location: " + JSON.stringify(location, null, 4));
+        //console.log("location: " + JSON.stringify(location, null, 4));
 
         // Use the location key to get the seller key under the target categoryPath.
         admin.database().ref('/requests/' + categoryPath + '/sellers/' + key).once('value').then(function(snapshot) {
@@ -181,7 +181,7 @@ exports.sendRequestLocation = functions.https.onRequest((req, res) => {
           const sellerKey = snapshot.val();
 
           if(sellerKey) {
-            console.log("sellerKey: " + JSON.stringify(sellerKey, null, 4));
+            //console.log("sellerKey: " + JSON.stringify(sellerKey, null, 4));
 
             // The sellerKey points to the User's ID so we can get their info.
             admin.database().ref('/users/' + sellerKey + '/info').once('value').then(function(snapshot) {

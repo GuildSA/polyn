@@ -147,7 +147,7 @@
           const self = this;
 
           this.$.searchSettingsIDB.getStoredValue("searchSettings").then((response) => {
-            console.log("searchSettings = " + JSON.stringify(response, null, 4));
+            //console.log("searchSettings = " + JSON.stringify(response, null, 4));
 
             if(response) {
               // We got the location from the indexdb - use it.
@@ -194,7 +194,8 @@
       }
 
       _usersInfoChanged(usersInfo) {
-        console.log("SearchFilterView._usersInfoChanged: " + JSON.stringify(usersInfo, null, 4));
+        console.log("SearchFilterView._usersInfoChanged");
+        //console.log("SearchFilterView._usersInfoChanged: " + JSON.stringify(usersInfo, null, 4));
 
         if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
           return;

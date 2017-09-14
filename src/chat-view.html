@@ -12,7 +12,7 @@
 <link rel="import" href="../bower_components/px-spinner/px-spinner.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="shared-styles.html?v=0.3">
+<link rel="import" href="shared-styles.html?v=0.4">
 <link rel="import" href="utility.html">
 
 <dom-module id="chat-view">
@@ -251,11 +251,11 @@
           otherUsersInfo: {
             type: Object
           },
-          token: {
-            type: String,
-            value: null,
-            readOnly: true
-          },
+          // Adding 'token' here seems logical but it seems to cause the token pulled by messaging to be null.
+          // token: {
+          //   type: String,
+          //   readOnly: true
+          // },
           requestId: {
             type: String
           },
@@ -302,12 +302,14 @@
         this.chatPhotoUrl = null;
         this.splice("chatMessages", 0, this.chatMessages.length);
 
-        self.loading = true;
+        this.loading = true;
       }
 
       connectedCallback() {
         super.connectedCallback();
         console.log("ChatView.connectedCallback")
+
+        this.tokenSaved = false;
 
         const self = this;
         const camera = this.$.camera;
@@ -462,10 +464,10 @@
           return;
         }
 
-        // If the user has no token - we should prompt for permisssion!
-        //if(!usersInfo.token) {
+        // If we haven't checked at least once - we should prompt for permisssion!
+        if(!this.tokenSaved) {
           this._requestNotificationPermission();
-        //}
+        }
 
         this._loadChatInfo();
       }
@@ -545,11 +547,11 @@
           .then(() => {
             console.log('Notification Message permission granted!');
 
-// TODO: Revisit this when Safari finally supports Service Workers and FCM.
-            // console.log("token: " + self.token);
+// TODO: Revisit this when Safari finally supports Service Workers and FCM. Stupid Apple!
+            console.log("token: " + self.token);
 
-            // if(!self.token) {
-            //
+            if(!self.token) {
+
             //   this.$.messaging.getToken()
             //     .then((token) => {
             //       if (token === null) {
@@ -561,9 +563,9 @@
             //     .catch((err) => {
             //       console.log("getToken error: " + err);
             //     })
-            //
-            //   return;
-            // }
+            
+              return;
+            }
 
             if(self.usersInfo.tokens) {
               
@@ -575,11 +577,12 @@
 
                 if(token === self.token) {
                   tokenFound = true;
+                  self.tokenSaved = true; // We have this device's token already - don't ask again for this session.
                 }
               }
 
               if(!tokenFound) {
-                //console.log("Found new token!")
+                console.log("Found new token!")
                 // We have some tokens but not this one yet!
                 var newTokenKey = firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/tokens").push().key;
                 firebase.app("polyn-app").database().ref("/users/" + self.user.uid + "/info/tokens/" + newTokenKey).set(self.token)
@@ -587,7 +590,7 @@
 
             } else {
               // We don't have any tokens so far - so save it!
-              //console.log("Found first token!")
+              console.log("Found first token!")
               var newTokenKey = firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/tokens").push().key;
               firebase.app("polyn-app").database().ref("/users/" + self.user.uid + "/info/tokens/" + newTokenKey).set(self.token)
             }
@@ -724,8 +727,6 @@
         this.$.message.value = "";
         this.chatPhotoUrl = null;
 
-// KRH SENDING
-
         if(this.otherUsersInfo.tokens) {
 
           for(let key in this.otherUsersInfo.tokens) {
@@ -740,7 +741,7 @@
               click_action: "https://vinylrecords.io/"
             };
 
-            console.log("  Sending message: " + JSON.stringify(params, null, 4));
+            //console.log("  Sending message: " + JSON.stringify(params, null, 4));
 
             this.$.sendMessage.params = params;
             this.$.sendMessage.generateRequest();
