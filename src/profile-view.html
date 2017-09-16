@@ -23,8 +23,6 @@
       }
 
       paper-button.sign-in {
-        background-color: #70C187;
-        color: white;
         margin-left: 24px;
         margin-right: 24px;
         margin-bottom: 8px;
@@ -46,11 +44,6 @@
         max-width: 400px;
       }
       
-      #continue-btn {
-        background-color: #70C187;
-        color: white; 
-      }
-
       #google-btn {
         background-color: #3D88EC; 
       }
@@ -126,7 +119,7 @@
 
         <template is="dom-if" if="[[!user]]">
           <div class="layout vertical">
-            <paper-button class="sign-in" id="continue-btn" on-tap="_onTapSignInUsingEmail">Continue</paper-button>
+            <paper-button class="sign-in" on-tap="_onTapSignInUsingEmail">Continue</paper-button>
             <div class="layout horizontal center-justified">
               <h4>OR</h4>
             </div>

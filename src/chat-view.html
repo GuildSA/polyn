@@ -70,7 +70,6 @@
       }
 
       #image-btn {
-        color: white;
         background: #FFA138;
       }
 
@@ -107,11 +106,6 @@
       paper-textarea {
         margin: 10px;
         width: 100%;
-      }
-
-      #send-btn {
-        background-color: #70C187;
-        color: white; 
       }
 
       .title {
@@ -214,7 +208,7 @@
           </div>
           <div class="flex layout horizontal right-justified">
             <paper-button id="image-btn" on-tap="_onTapImageBtn" raised type="submit"><iron-icon icon="custom-icons:insert-photo"></iron-icon></paper-button>
-            <paper-button id="send-btn" on-tap="_onTapSendDialogBtn" class="flex" raised type="submit"><iron-icon icon="custom-icons:send"></iron-icon></paper-button>
+            <paper-button on-tap="_onTapSendDialogBtn" class="flex" raised type="submit"><iron-icon icon="custom-icons:send"></iron-icon></paper-button>
           </div>
         </div>
 
