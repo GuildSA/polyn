@@ -1,34 +1,82 @@
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="about-view">
   <template>
-    <style include="shared-styles">
+    <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
-        display: block;
-        padding: 10px;
+        display: flex;
       }
 
-      .business-img {
-        border-color: var(--app-accent-color);
-        width: 100%;
-        background-size: cover;
-        height: 0;
-        padding: 0;
-        padding-bottom: 100%;
+      .profileImage {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
       }
+
+      .card {
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        hyphens: auto;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        max-width: 400px;
+      }
+
+      paper-button.email-us {
+        width: 100%;
+      }
+
     </style>
 
+<div class="flex layout horizontal center-justified">
+  <div class="layout vertical center-justified">
+
     <div class="card">
-      <iron-image class="business-img" sizing="cover" preload fade src="/images/vr-placeholder.png"></iron-image>
-      <p>Welcome to the beta release of <strong>VinylRecords.io</strong>!</p>
+
+      <div class="layout horizontal center-justified">
+        <iron-image class="profileImage" sizing="contain" preload fade src="/images/vr-placeholder.png"></iron-image>
+      </div>
+
+      <center><h2>Welcome to vinylrecords.io</h2></center>
+
       <p>The purpose of this little web app is quite simple. We want to help record stores that can’t afford to waste money of online ads get found, and we want to help the collectors of vinyl records find what they’re looking for without having to call or email every shop in town.</p>
+      
+      <center><h2>How it Works</h2></center>
+
       <p>Sounds great, right? But... how does it work? Well, the app maintains a list of all record stores that we know of. You can use this list to find out more about the stores near you. You can even alter the search to see record stores in other locations if you wish, but the real power of the app is the ability to send a Vinyl Request to all the stores simultaneously.</p>
+      
+      <center><h2>Vinyl Requests</h2></center>
+      
       <p>That’s right, instead of having to call or email each store individually about that awesome first pressing you’ve been searching for your whole life – you can simply send a Vinyl Request to all the stores at once! Each store will receive a notification describing what you’re looking for and if they have it, they can contact you back via a private chat within the app. It’s so simple even your grandmother can use it to find that Elvis Christmas album she keeps going on and on about.</p>
+      
+      <center><h2>Why not just Search?</h2></center>
+
+      <p>We feel that our approach is superior to the old process of searching the internet for a certain vinyl record. Searching might work fine if you just want to find the nearest record stores but when it comes to searching for an actual vinyl record – searching often comes up short. Sure, you may find the record you’re looking for listed on a store’s website or eBay store, but think of all the records that the stores haven’t gotten around to listing yet. The truth is, many stores are small operations and do have the time to catalogue and list every record online.</p>
+      
+      <p>In this case, the quickest way to find out is to simply ask, but asking typically involves calling or emailing each store in-turn which is a real hassle. Therefore, we decided it would be better to simply automate the process of asking all the stores and then connect the vinyl collectors with the stores that have the requested vinyl for sale. For the serious collector and the record store owner, who knows his or her inventory like the back of their hand, what could be easier?</p>
+
+      <center><h2>Help Out!</h2></center>
+      
       <p>Of course, for this magic to work we need record store owners to sign up, so if you’re collector and you notice that your favorite record store is un-claimed on the app, please tell them about us and convince them to sign up.</p>
+    
+      <p>If your favorite record store is already signed up, you can help out by telling other vinyl collectors about the app and encourgae them to make a few requests.</p>
+    
+      <center><h2>What About Bugs?</h2></center>
+
+      <p>Bugs? That's inconceivable! Well, actually, this web app is stil in beta, so yes there will be some bugs to deal with. Sorry about that i advance. If you run into a bug or just want to give us some suggestions, feel free to email us.</p>
+
+      <paper-button class="email-us" on-tap="_onTapEmail">Email Us</paper-button>
+
     </div>
+
+  </div>
+</div>
 
   </template>
 
@@ -37,6 +85,11 @@
     
     class AboutView extends Polymer.Element {
       static get is() { return 'about-view'; }
+
+      _onTapEmail() {
+        console.log("AboutView._onTapEmail");
+        window.location.href = "mailto:kharris@guildsa.com?subject=vinylrecords.io&body=Message%20goes%20here...";
+      }
     }
 
     window.customElements.define(AboutView.is, AboutView);
