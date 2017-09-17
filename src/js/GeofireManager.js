@@ -10,6 +10,7 @@ let GeofireManager = (function() {
   let _usersLocationCallback;
   let _usersLocationError;
   let _sellerFoundCallback;
+  let _queryComleteCallback;
   let _usersInfoKeyPath;
 
   // Uses the HTML5 geolocation API to get the current user's location.
@@ -149,7 +150,7 @@ let GeofireManager = (function() {
     return dist;
   }
 
-  let getSellersByLocation = function(sellersCategory, latitude, longitude, range, sellerFoundCallback) {
+  let getSellersByLocation = function(sellersCategory, latitude, longitude, range, sellerFoundCallback, queryComleteCallback) {
 
     console.log("  sellersCategory: " + sellersCategory);
     console.log("  latitude: " + latitude);
@@ -157,6 +158,7 @@ let GeofireManager = (function() {
     console.log("  range: " + range);
 
     _sellerFoundCallback = sellerFoundCallback;
+    _queryComleteCallback = queryComleteCallback
 
     const sellersByLocationRef = firebase.app("polyn-app").database().ref("locations/" + sellersCategory + "/");
     const geoFireSellersRef = new GeoFire(sellersByLocationRef);
@@ -172,9 +174,7 @@ let GeofireManager = (function() {
       //log("location: " + JSON.stringify(location, null, 4));
 
       if(_sellerFoundCallback) {
-
         const distance = getDistance(latitude, longitude, location[0], location[1], "M");
-
         _sellerFoundCallback(key, distance);
       }
     });
@@ -184,6 +184,10 @@ let GeofireManager = (function() {
       log("  The 'ready' event fired - cancelling query.");
 
       geoQuery.cancel();
+
+      if(_queryComleteCallback) {
+        _queryComleteCallback();
+      }
     })
   }
 
