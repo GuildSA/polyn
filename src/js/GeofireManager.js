@@ -45,40 +45,40 @@ let GeofireManager = (function() {
 
     const latitude = location.coords.latitude;
     const longitude = location.coords.longitude;
-    log("Retrieved user's location: [" + latitude + ", " + longitude + "]");
+    //log("Retrieved user's location: [" + latitude + ", " + longitude + "]");
 
-// TODO: Should we store the location at user's info location or not? Is there any benefit to this?
-    if(_usersInfoKeyPath) {
-
-      const locationKey = "location";
-      _geoFire.set(locationKey, [latitude, longitude]).then(function() {
-
-        log("Current user's location has been added to GeoFire");
-
-        // When the user disconnects from Firebase (e.g. closes the app, exits the browser),
-        // remove their GeoFire location entry
-        _firebaseRef.child(locationKey).onDisconnect().remove();
+// // TODO: Should we store the location at user's info location or not? Is there any benefit to this?
+//     if(_usersInfoKeyPath) {
+//
+//       const locationKey = "location";
+//       _geoFire.set(locationKey, [latitude, longitude]).then(function() {
+//
+//         log("Current user's location has been added to GeoFire");
+//
+//         // When the user disconnects from Firebase (e.g. closes the app, exits the browser),
+//         // remove their GeoFire location entry
+//         _firebaseRef.child(locationKey).onDisconnect().remove();
+//
+//         if(_usersLocationCallback) {
+//           _usersLocationCallback(location);
+//         }
+//
+//         log("Added handler to remove user from GeoFire when you leave this page.");
+//
+//       }).catch(function(error) {
+//         log("Error adding user location to GeoFire");
+//
+//         if(_usersLocationError) {
+//           _usersLocationError(error);
+//         }
+//       });
+//
+//     } else {
 
         if(_usersLocationCallback) {
           _usersLocationCallback(location);
         }
-
-        log("Added handler to remove user from GeoFire when you leave this page.");
-
-      }).catch(function(error) {
-        log("Error adding user location to GeoFire");
-
-        if(_usersLocationError) {
-          _usersLocationError(error);
-        }
-      });
-
-    } else {
-
-        if(_usersLocationCallback) {
-          _usersLocationCallback(location);
-        }
-    }
+    // }
   }
 
   // Handles any errors from trying to get the user's current location.
@@ -152,10 +152,10 @@ let GeofireManager = (function() {
 
   let getSellersByLocation = function(sellersCategory, latitude, longitude, range, sellerFoundCallback, queryComleteCallback) {
 
-    console.log("  sellersCategory: " + sellersCategory);
-    console.log("  latitude: " + latitude);
-    console.log("  longitude: " + longitude);
-    console.log("  range: " + range);
+    //console.log("  sellersCategory: " + sellersCategory);
+    //console.log("  latitude: " + latitude);
+    //console.log("  longitude: " + longitude);
+    //console.log("  range: " + range);
 
     _sellerFoundCallback = sellerFoundCallback;
     _queryComleteCallback = queryComleteCallback
