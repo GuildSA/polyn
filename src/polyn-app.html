@@ -32,6 +32,8 @@
 <link rel="lazy-import" href="request-view.html">
 <link rel="lazy-import" href="chats-view.html">
 <link rel="lazy-import" href="about-view.html">
+<!-- <link rel="lazy-import" href="help-view.html"> -->
+<link rel="lazy-import" href="reportbugs-view.html">
 
 <!-- <link rel="lazy-import" href="sellerupload-view.html"> 
 <link rel="lazy-import" href="misctest-view.html">
@@ -136,6 +138,8 @@
         <app-toolbar>More Stuff</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="about-view" on-tap="_onTapAboutView">About App</a>
+          <!-- <a name="help-view" on-tap="_onTapHelpView">Help</a> -->
+          <a name="reportbugs-view" on-tap="_onTapReportBugsView">Report Bugs</a>
           <!-- <a name="sellerupload-view" on-tap="_onTapSellerUploadView">Seller Upload</a>
           <a name="misctest-view" on-tap="_onTapMiscTestView">Misc Test</a>
           <a name="geofire-view" on-tap="_onTapGeofireView">Geofire</a>
@@ -194,6 +198,8 @@
           <searchfilter-view name="searchfilter-view"></searchfilter-view>
           <error404-view name="error404-view"></error404-view>
           <about-view name="about-view"></about-view>
+          <!-- <help-view name="help-view"></help-view> -->
+          <reportbugs-view name="reportbugs-view"></reportbugs-view>
 
           <!-- <sellerupload-view name="sellerupload-view"></sellerupload-view>
           <misctest-view name="misctest-view"></misctest-view>
@@ -272,6 +278,20 @@
 
       _onTapAboutView() {
         this.page = 'about-view';
+        if(!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      }
+
+      // _onTapHelpView() {
+      //   this.page = 'help-view';
+      //   if(!this.$.drawer.persistent) {
+      //     this.$.drawer.close();
+      //   }
+      // }
+
+      _onTapReportBugsView() {
+        this.page = 'reportbugs-view';
         if(!this.$.drawer.persistent) {
           this.$.drawer.close();
         }

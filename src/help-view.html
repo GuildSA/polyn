@@ -1,0 +1,73 @@
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<!-- <link rel="import" href="../bower_components/paper-button/paper-button.html"> -->
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="shared-styles.html?v=0.0">
+
+<dom-module id="help-view">
+  <template>
+    <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: flex;
+      }
+
+      .profileImage {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+      }
+
+      .card {
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        hyphens: auto;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        max-width: 400px;
+      }
+
+      paper-button.email-us {
+        width: 100%;
+      }
+
+    </style>
+
+<div class="flex layout horizontal center-justified">
+  <div class="layout vertical center-justified">
+
+    <div class="card">
+
+      <div class="layout horizontal center-justified">
+        <iron-image class="profileImage" sizing="contain" preload fade src="/images/vr-placeholder.png"></iron-image>
+      </div>
+
+      <center><h2>Help!</h2></center>
+
+      <p></p>
+
+      <!-- <paper-button class="email-us" on-tap="_onTapEmail">Write Angry Email</paper-button> -->
+
+    </div>
+
+  </div>
+</div>
+
+  </template>
+
+  <script>
+    "use strict";
+    
+    class HelpView extends Polymer.Element {
+      static get is() { return 'help-view'; }
+
+      // _onTapEmail() {
+      //   console.log("HelpView._onTapEmail");
+      //   window.location.href = "mailto:kharris@guildsa.com?subject=BUG%20REPORT:%20vinylrecords.io&body=I%20love%20the%20app,%20but...";
+      // }
+    }
+
+    window.customElements.define(HelpView.is, HelpView);
+  </script>
+</dom-module>
