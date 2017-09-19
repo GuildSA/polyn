@@ -319,6 +319,11 @@
               // If the buyer has already deleted the request - just delete the request from the sellers 'request' key.
               firebase.app("polyn-app").database().ref().child("users/" + self.user.uid + "/requests/" + requestInfo.key).remove().then(function() {
                 self.splice('requests', self.indexToDelete, 1);
+
+                if(self.requests.length === 0) {
+                  self.hasMessages = false;
+                }
+
               });
 
             } else {
@@ -330,6 +335,11 @@
                 // Finally, delete the request from the sellers 'request' key.
                 firebase.app("polyn-app").database().ref().child("users/" + self.user.uid + "/requests/" + requestInfo.key).remove().then(function() {
                   self.splice('requests', self.indexToDelete, 1);
+
+                  if(self.requests.length === 0) {
+                    self.hasMessages = false;
+                  }
+
                 });
               });
             }
@@ -371,6 +381,11 @@
             // Finally, remove the request from the live 'requests' key.
             firebase.app("polyn-app").database().ref().child("users/" + self.user.uid + "/requests/" + keyToRemove).remove().then(function() {
               self.splice('requests', self.indexToDelete, 1);
+
+              if(self.requests.length === 0) {
+                self.hasMessages = false;
+              }
+
             });
           });
         }
