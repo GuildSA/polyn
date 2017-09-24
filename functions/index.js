@@ -72,7 +72,7 @@ exports.sendMessage = functions.https.onRequest((req, res) => {
       title: title,
       body: body,
       icon: "/images/vr-msg.png",
-      clickAction: "https://vinylrecords.io/"
+      click_action: "https://vinylrecords.io"
     }
   };
   
@@ -222,7 +222,7 @@ console.log("token = " + token);
                           title: title,
                           body: desc,
                           icon: "/images/vr-msg.png",
-                          clickAction: "https://vinylrecords.io/"
+                          click_action: "https://vinylrecords.io"
                         }
                       };
     
@@ -332,8 +332,7 @@ exports.sendRequestAll = functions.https.onRequest((req, res) => {
                   for(let key in usersInfo.tokens) {
                     
                     const token = usersInfo.tokens[key];
-    
-console.log("token = " + token);
+                    //console.log("token = " + token);
 
                     // If you use notification over data - setBackgroundMessageHandler will not fire.
                     const payload = {
@@ -342,7 +341,7 @@ console.log("token = " + token);
                         title: title,
                         body: desc,
                         icon: "/images/vr-msg.png",
-                        clickAction: "https://vinylrecords.io/"
+                        click_action: "https://vinylrecords.io"
                       }
                     };
     
