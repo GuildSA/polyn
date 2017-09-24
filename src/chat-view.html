@@ -12,7 +12,7 @@
 <link rel="import" href="../bower_components/px-spinner/px-spinner.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="shared-styles.html?v=0.4">
+<link rel="import" href="shared-styles.html?v=0.5">
 <link rel="import" href="utility.html">
 
 <dom-module id="chat-view">
@@ -459,7 +459,7 @@
         }
 
         // If we haven't checked at least once - we should prompt for permisssion!
-        if(!this.tokenSaved) {
+        if(this.tokenSaved === false) {
           this._requestNotificationPermission();
         }
 
