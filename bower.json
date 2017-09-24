@@ -5,8 +5,8 @@
   ],
   "license": "",
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.2",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.11",
+    "polymer": "Polymer/polymer#^2.1.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.13",
     "web-animations-js": "^2.2.5",
     "app-layout": "PolymerElements/app-layout#^2.0.0",
     "app-route": "PolymerElements/app-route#^2.0.0",
@@ -41,10 +41,10 @@
     "paper-checkbox": "PolymerElements/paper-checkbox#^2.0.1"
   },
   "devDependencies": {
-    "web-component-tester": "6.1.5"
+    "web-component-tester": "6.2.0"
   },
   "private": true,
   "resolutions": {
-    "firebase": "^4.1.1"
+    "firebase": "^4.4.0"
   }
 }

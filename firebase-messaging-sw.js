@@ -3,8 +3,8 @@ console.log("!!! SERVICE WORKER LOADING: Firebase Messaging");
 // Give the service worker access to Firebase Messaging.
 // Note that you can only use Firebase Messaging here, other Firebase libraries
 // are not available in the service worker.
-importScripts('https://www.gstatic.com/firebasejs/4.3.1/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/4.3.1/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/4.4.0/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/4.4.0/firebase-messaging.js');
 
 // Initialize the Firebase app in the service worker by passing in the
 // messagingSenderId. This came from the app's dashboard settings under Cloud Messaging.
