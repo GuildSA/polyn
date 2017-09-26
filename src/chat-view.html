@@ -136,12 +136,12 @@
       data="{{usersInfo}}">
     </firebase-document>
 
-    <firebase-messaging
+    <!-- <firebase-messaging
       id="messaging"
       app-name="polyn-app"
       token="{{token}}"
       on-message="_onHandleMessage">
-    </firebase-messaging>
+    </firebase-messaging> -->
 
     <app-indexeddb-mirror
       session="[[user.uid]]"
@@ -303,7 +303,7 @@
         super.connectedCallback();
         console.log("ChatView.connectedCallback")
 
-        this.tokenSaved = false;
+        // this.tokenSaved = false;
 
         const self = this;
         const camera = this.$.camera;
@@ -458,10 +458,10 @@
           return;
         }
 
-        // If we haven't checked at least once - we should prompt for permisssion!
-        if(this.tokenSaved === false) {
-          this._requestNotificationPermission();
-        }
+        // // If we haven't checked at least once - we should prompt for permisssion!
+        // if(this.tokenSaved === false) {
+        //   this._requestNotificationPermission();
+        // }
 
         this._loadChatInfo();
       }
@@ -531,68 +531,68 @@
         });
       }
 
-      _requestNotificationPermission() {
-        console.log("ChatView._requestNotificationPermission");
+//       _requestNotificationPermission() {
+//         console.log("ChatView._requestNotificationPermission");
 
-        var self = this
+//         var self = this
 
-        this.$.messaging.activate();
-        this.$.messaging.requestPermission()
-          .then(() => {
-            console.log('Notification Message permission granted!');
+//         this.$.messaging.activate();
+//         this.$.messaging.requestPermission()
+//           .then(() => {
+//             console.log('Notification Message permission granted!');
 
-// TODO: Revisit this when Safari finally supports Service Workers and FCM. Stupid Apple!
-            console.log("token: " + self.token);
+// // TODO: Revisit this when Safari finally supports Service Workers and FCM. Stupid Apple!
+//             console.log("token: " + self.token);
 
-            if(!self.token) {
+//             if(!self.token) {
 
-            //   this.$.messaging.getToken()
-            //     .then((token) => {
-            //       if (token === null) {
-            //         console.log("getToken: User hasn't granted permission.");
-            //       } else {
-            //         console.log("getToken found token: " + token);
-            //       }
-            //     })
-            //     .catch((err) => {
-            //       console.log("getToken error: " + err);
-            //     })
+//             //   this.$.messaging.getToken()
+//             //     .then((token) => {
+//             //       if (token === null) {
+//             //         console.log("getToken: User hasn't granted permission.");
+//             //       } else {
+//             //         console.log("getToken found token: " + token);
+//             //       }
+//             //     })
+//             //     .catch((err) => {
+//             //       console.log("getToken error: " + err);
+//             //     })
             
-              return;
-            }
+//               return;
+//             }
 
-            if(self.usersInfo.tokens) {
+//             if(self.usersInfo.tokens) {
               
-              var tokenFound = false;
+//               var tokenFound = false;
 
-              for(let key in self.usersInfo.tokens) {
+//               for(let key in self.usersInfo.tokens) {
 
-                const token = self.usersInfo.tokens[key];
+//                 const token = self.usersInfo.tokens[key];
 
-                if(token === self.token) {
-                  tokenFound = true;
-                  self.tokenSaved = true; // We have this device's token already - don't ask again for this session.
-                }
-              }
+//                 if(token === self.token) {
+//                   tokenFound = true;
+//                   self.tokenSaved = true; // We have this device's token already - don't ask again for this session.
+//                 }
+//               }
 
-              if(!tokenFound) {
-                console.log("Found new token!")
-                // We have some tokens but not this one yet!
-                var newTokenKey = firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/tokens").push().key;
-                firebase.app("polyn-app").database().ref("/users/" + self.user.uid + "/info/tokens/" + newTokenKey).set(self.token)
-              }
+//               if(!tokenFound) {
+//                 console.log("Found new token!")
+//                 // We have some tokens but not this one yet!
+//                 var newTokenKey = firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/tokens").push().key;
+//                 firebase.app("polyn-app").database().ref("/users/" + self.user.uid + "/info/tokens/" + newTokenKey).set(self.token)
+//               }
 
-            } else {
-              // We don't have any tokens so far - so save it!
-              console.log("Found first token!")
-              var newTokenKey = firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/tokens").push().key;
-              firebase.app("polyn-app").database().ref("/users/" + self.user.uid + "/info/tokens/" + newTokenKey).set(self.token)
-            }
-          })
-          .catch((err) => {
-            console.log('Notification Message permission denied!');
-          });
-      }
+//             } else {
+//               // We don't have any tokens so far - so save it!
+//               console.log("Found first token!")
+//               var newTokenKey = firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/tokens").push().key;
+//               firebase.app("polyn-app").database().ref("/users/" + self.user.uid + "/info/tokens/" + newTokenKey).set(self.token)
+//             }
+//           })
+//           .catch((err) => {
+//             console.log('Notification Message permission denied!');
+//           });
+//       }
 
       _onTapImageBtn() {
         console.log("ChatView._onTapImageBtn");

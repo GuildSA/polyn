@@ -100,6 +100,19 @@
       persisted-data="{{persistedRequests}}">
     </app-indexeddb-mirror>
 
+    <firebase-document
+      app-name="polyn-app"
+      id="usersinfo"
+      data="{{usersInfo}}">
+    </firebase-document>
+
+    <firebase-messaging
+      id="messaging"
+      app-name="polyn-app"
+      token="{{token}}"
+      on-message="_onHandleMessage">
+    </firebase-messaging>
+
     <dom-repeat items="[[persistedRequests]]" as="request" initial-count="5">
       <template>
          <div class="card" on-tap="_onTapRequest">
@@ -173,6 +186,10 @@
             type: Object,
             observer: '_userChanged'
           },
+          usersInfo: {
+            type: Object,
+            observer: '_usersInfoChanged'
+          },
           hasMessages: {
             type: String,
             value: false
@@ -180,7 +197,6 @@
           requests: {
             type: Array,
             value: []
-            //observer: '_requestsChanged'
           },
           loading: {
             type: Boolean,
@@ -201,7 +217,14 @@
           }
         };
       }
-  
+
+      connectedCallback() {
+        super.connectedCallback();
+        console.log("RequestsView.connectedCallback")
+
+        this.tokenSaved = false;
+      }
+
       reload() {
         console.log("RequestsView.reload");
 
@@ -220,8 +243,14 @@
         console.log("RequestsView._userChanged: " + user);
         //console.log("user: " + JSON.stringify(user, null, 4));
 
-        if(user != null) {
-          this._loadRequests();
+        if(user && user.uid) {
+
+          // As soon as we get the user - get the users info so we can 
+          // learn more about them!
+          this.$.usersinfo.path = "/users/" + user.uid + "/info";
+
+          //this._loadRequests();
+
         } else {
           this.splice("requests", 0, this.requests.length);
           this.hasMessages = false;
@@ -229,13 +258,23 @@
         }
       }
 
-      // _requestsChanged() {
-      //   console.log("RequestsView._requestsChanged");
+      _usersInfoChanged(usersInfo) {
+        console.log("RequestsView._usersInfoChanged");
+        //console.log("RequestsView._usersInfoChanged: " + JSON.stringify(usersInfo, null, 4));
 
-      //   if(this.requests.length === 0) {
-      //     this.hasMessages = false
-      //   }
-      // }
+        if(!usersInfo || Object.keys(usersInfo).length === 0 && usersInfo.constructor === Object) {
+          return;
+        }
+
+        // If it's a seller and we haven't checked at least once - we should prompt for permisssion!
+        // We do this for sellers even when they have no requests becuase they're more likely to 
+        // accept the permisssion and we need them hooked up to recieve messages from buyers.
+        if(usersInfo.sellerId != null && this.tokenSaved === false) {
+          this._requestNotificationPermission();
+        }
+
+        this._loadRequests();
+      }
 
       _loadRequests() {
         console.log("RequestsView._loadRequests");
@@ -270,6 +309,12 @@
 
             if(self.requests.length > 0) {
               self.hasMessages = true;
+
+              // If it's NOT a seller and they have at least one request and we haven't 
+              // checked at least once - we should prompt for permisssion now!
+              if(self.usersInfo.sellerId === undefined && self.tokenSaved === false) {
+                self._requestNotificationPermission();
+              }
             }
 
             const polynApp = document.getElementById("polynApp");
@@ -278,6 +323,56 @@
             // No matter how fast it loads - show the spinner for at least 0.5 seconds.
             setTimeout(function() { self.loading = false; }, 500);
         });
+      }
+
+      _requestNotificationPermission() {
+        console.log("RequestsView._requestNotificationPermission");
+
+        var self = this
+
+        this.$.messaging.activate();
+        this.$.messaging.requestPermission()
+          .then(() => {
+            console.log('Notification Message permission granted!');
+
+// TODO: Revisit this when Safari finally supports Service Workers and FCM. Stupid Apple!
+            console.log("token: " + self.token);
+
+            if(!self.token) {
+              return;
+            }
+
+            if(self.usersInfo.tokens) {
+              
+              var tokenFound = false;
+
+              for(let key in self.usersInfo.tokens) {
+
+                const token = self.usersInfo.tokens[key];
+
+                if(token === self.token) {
+                  tokenFound = true;
+                  self.tokenSaved = true; // We have this device's token already - don't ask again for this session.
+                }
+              }
+
+              if(!tokenFound) {
+                console.log("Found new token!")
+                // We have some tokens but not this one yet!
+                var newTokenKey = firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/tokens").push().key;
+                firebase.app("polyn-app").database().ref("/users/" + self.user.uid + "/info/tokens/" + newTokenKey).set(self.token)
+              }
+
+            } else {
+              // We don't have any tokens so far - so save it!
+              console.log("Found first token!")
+              var newTokenKey = firebase.app("polyn-app").database().ref().child("/users/" + self.user.uid + "/info/tokens").push().key;
+              firebase.app("polyn-app").database().ref("/users/" + self.user.uid + "/info/tokens/" + newTokenKey).set(self.token)
+            }
+          })
+          .catch((err) => {
+            console.log('Notification Message permission denied!');
+          });
       }
 
       _onTapDelete(e) {
