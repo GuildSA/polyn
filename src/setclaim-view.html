@@ -1,0 +1,181 @@
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="setclaim-view">
+  <template>
+
+    <style include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: flex;
+      }
+
+      paper-input {
+        margin-left: 24px;
+        margin-right: 24px;
+        margin-bottom: 8px;
+         --paper-input-container-focus-color: #70C187;
+      }
+
+    </style>
+
+    <firebase-auth
+      id="auth"
+      app-name="polyn-app"
+      signed-in="{{signedIn}}"
+      user="{{user}}"
+      status-known="{{statusKnown}}"
+      on-error="_handleError">
+    </firebase-auth>
+
+    <div class="flex layout vertical">
+
+      <div class="card">
+
+        <div class="layout vertical">
+          <paper-input id="userid" label="User ID"></paper-input>
+          <paper-input id="sellerkey" label="Seller Key"></paper-input>
+          <paper-button id="registerbusiness" class="sign-in" on-tap="_onTapSetClaim">Set Claim</paper-button>
+        </div>
+
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    "use strict";
+
+    class SetClaimView extends Polymer.Element {
+
+      static get is() { return 'setclaim-view'; }
+
+      static get properties() {
+        return {
+          signedIn: {
+            type: Object
+          },
+          user: {
+            type: Object
+          },
+          statusKnown:{
+            type: Object
+          }
+        };
+      }
+
+      _handleError(e, err) {
+          alert(err);
+      }
+
+      _onTapSetClaim() {
+        console.log("SetClaimView._onTapSetClaim");
+
+        if(!this.$.userid.value || this.$.userid.value.length === 0) {
+          Utility.showErrorToast("A User ID number must be provided.");
+          return;
+        }
+
+        if(!this.$.sellerkey.value || this.$.sellerkey.value.length === 0) {
+          Utility.showErrorToast("A Seller ID number must be provided.");
+          return;
+        }
+
+// userid = lOLWtcRTYvZ6UlpHz3AvvkCPhfb2
+// sellerkey = -KuaroCjLcv2P31dyEF1
+
+        // Step 1: Set the sellerKey on the user!
+        firebase.app("polyn-app").database().ref("/users/" + this.$.userid.value + "/info/sellerId").set(this.$.sellerkey.value);
+        
+        // Step 2: Set the business as claimed.
+        firebase.app("polyn-app").database().ref("/sellers/" + this.$.sellerkey.value + "/claimed").set(true);
+        
+        // Step 3: Add the new seller under its category.
+        this._addSellerToCategory("collectables/sub/vinylRecords", this.$.userid.value)
+      }
+
+      _addSellerToCategory(targetCategory, userId) {
+        console.log("SetClaimView._addSellerToCategory: " + targetCategory);
+
+        if(!userId) {
+          console.log("  Error: User ID is not defined!");
+        }
+
+        const self = this;
+
+        // Get the 'info' key under the user's id, so we can check for a 'sellerId'.
+        const refPathCategories = "/users/" + userId + "/info/categories";
+
+        firebase.app("polyn-app").database().ref(refPathCategories).once('value').then(function(snapshot) {
+
+          const categories = snapshot.val();
+          //console.log("  categories: " + JSON.stringify(categories, null, 4));
+
+          if(categories === null) {
+
+            // info/categories doesn't even exist - just add it to the user!
+            self._writeSellerToCategory(targetCategory, userId);
+
+          } else {
+
+            var foundCategory = false;
+
+            for(let key in categories) {
+
+              if(categories.hasOwnProperty(key)) {
+                //console.log("  path = " + categories[key].path);
+                //console.log("  sellersKey = " + categories[key].sellersKey);
+                if(categories[key].path === targetCategory) {
+                  foundCategory = true;
+                }
+              }
+            }
+
+            if(foundCategory) {
+              console.log("  The users is already subscribed to this category!");
+            } else {
+              self._writeSellerToCategory(targetCategory, userId);
+            }
+          }
+        });
+      }
+
+      _writeSellerToCategory(targetCategory, userId) {
+        console.log("SetClaimView._writeSellerToCategory: " + targetCategory);
+
+        if(!userId) {
+          console.log("  Error: User ID is not defined!");
+        }
+
+        const self = this;
+
+        // Add the user's id under the category that they wish to listen to!
+        const refPathRequestCategory = "requests/" + targetCategory + "/sellers";
+        const newSellersKey = firebase.app("polyn-app").database().ref().child(refPathRequestCategory).push().key;
+        console.log("  newSellersKey: " + newSellersKey);
+
+        firebase.app("polyn-app").database().ref(refPathRequestCategory + "/" + newSellersKey).set(userId);
+
+        const refPathCategories = "/users/" + userId + "/info/categories";
+        const newCategoryKey = firebase.app("polyn-app").database().ref().child(refPathCategories).push().key;
+
+        const categoryData = {
+          path: targetCategory,
+          sellersKey: newSellersKey
+        };
+
+        firebase.app("polyn-app").database().ref(refPathCategories + "/" + newCategoryKey).set(categoryData).then(function() {
+          console.log(" " + userId + " was added to category!");
+        });
+      }
+    }
+
+    window.customElements.define(SetClaimView.is, SetClaimView);
+  </script>
+</dom-module>

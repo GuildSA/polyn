@@ -328,7 +328,7 @@
       _requestNotificationPermission() {
         console.log("RequestsView._requestNotificationPermission");
 
-        var self = this
+        const self = this
 
         this.$.messaging.activate();
         this.$.messaging.requestPermission()

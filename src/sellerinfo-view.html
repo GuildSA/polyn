@@ -647,7 +647,7 @@
 
                     Utility.showSuccessToast("New business registered!");
 
-                    self._verifySellerOnCategory(self.sellersCategory);
+                    self._addSellerToCategory(self.sellersCategory);
                   });
 
                 } else {
@@ -668,8 +668,8 @@
         });
       }
 
-     _verifySellerOnCategory(targetCategory) {
-        console.log("ProfileView._verifySellerOnCategory: " + targetCategory);
+     _addSellerToCategory(targetCategory) {
+        console.log("ProfileView._addSellerToCategory: " + targetCategory);
 
         if(!this.user.uid) {
           console.log("  Error: User is not defined!");
@@ -689,7 +689,7 @@
           if(categories === null) {
 
             // info/categories doesn't even exist - just add it to the user!
-            self._addSellerToCategory(targetCategory);
+            self._writeSellerToCategory(targetCategory);
 
           } else {
 
@@ -710,14 +710,14 @@
               console.log("  The users is already subscribed to this category!");
               self.loading = false;
             } else {
-              self._addSellerToCategory(targetCategory);
+              self._writeSellerToCategory(targetCategory);
             }
           }
         });
       }
 
-      _addSellerToCategory(targetCategory) {
-        console.log("ProfileView._addSellerToCategory: " + targetCategory);
+      _writeSellerToCategory(targetCategory) {
+        console.log("ProfileView._writeSellerToCategory: " + targetCategory);
 
         if(!this.user.uid) {
           console.log("  Error: User is not defined!");

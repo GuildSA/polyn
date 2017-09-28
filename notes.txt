@@ -215,7 +215,7 @@ static get properties() {
 // this.accessToken = user.stsTokenManager.accessToken;
 //this.$.getRequests.generateRequest();
 
-        var self = this;
+        const self = this;
         user.getToken().then(token => { 
 
           console.log("token: " + token);
@@ -682,7 +682,7 @@ cp -rn node_modules build/default/
 //           console.log("ProfileView._linkGoogleAccount");
 //
 //           var provider = new firebase.auth.GoogleAuthProvider();
-//           var self = this;
+//           const self = this;
 //
 //           self.user.linkWithPopup(provider).then(function(result) {
 //             console.log("  result: " + JSON.stringify(result, null, 4));

@@ -210,7 +210,7 @@
               const refPathSellerId = refPathInfo + "/sellerId";
               firebase.app("polyn-app").database().ref(refPathSellerId).set(newSellerKey);
 
-              self._verifySellerOnCategory(targetCategory);
+              self._addSellerToCategory(targetCategory);
             });
           } else {
             console.log("  " + self.user.uid + " has already been added as a seller.");
@@ -218,8 +218,8 @@
         });
       }
 
-     _verifySellerOnCategory(targetCategory) {
-        console.log("SellerTest._verifySellerOnCategory: " + targetCategory);
+     _addSellerToCategory(targetCategory) {
+        console.log("SellerTest._addSellerToCategory: " + targetCategory);
 
         if(!this.user.uid) {
           console.log("  Error: User is not defined!");
@@ -238,11 +238,11 @@
           if(categories === null) {
 
             // info/categories doesn't even exist - just add it to the user!
-            self._addSellerToCategory(targetCategory);
+            self._writeSellerToCategory(targetCategory);
 
           } else {
 
-            const foundCategory = false;
+            var foundCategory = false;
 
             for(let key in categories) {
 
@@ -258,7 +258,7 @@
             if(foundCategory) {
               console.log("  The users is already subscribed to this category!");
             } else {
-              self._addSellerToCategory(targetCategory);
+              self._writeSellerToCategory(targetCategory);
             }
           }
         });
@@ -266,11 +266,11 @@
 
       _onTapAddToCategory() {
         console.log("SellerTest._onTapAddToCategory");
-        this._verifySellerOnCategory("collectables/sub/vinylRecords");
+        this._addSellerToCategory("collectables/sub/vinylRecords");
       }
 
-      _addSellerToCategory(targetCategory) {
-        console.log("SellerTest._addSellerToCategory: " + targetCategory);
+      _writeSellerToCategory(targetCategory) {
+        console.log("SellerTest._writeSellerToCategory: " + targetCategory);
 
         if(!this.user.uid) {
           console.log("  Error: User is not defined!");
