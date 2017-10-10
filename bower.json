@@ -5,8 +5,8 @@
   ],
   "license": "",
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.1.0",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.13",
+    "polymer": "Polymer/polymer#^2.1.1",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.14",
     "web-animations-js": "^2.2.5",
     "app-layout": "PolymerElements/app-layout#^2.0.0",
     "app-route": "PolymerElements/app-route#^2.0.0",
@@ -32,7 +32,7 @@
     "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^2.0.0",
     "paper-item": "PolymerElements/paper-item#^2.0.0",
     "paper-listbox": "PolymerElements/paper-listbox#^2.0.0",
-    "polymerfire": "^2.2.0",
+    "polymerfire": "^2.2.1",
     "geofire": "^4.1.2",
     "cropperjs": "^1.0.0",
     "google-apis": "2.0-preview",
@@ -41,7 +41,7 @@
     "paper-checkbox": "PolymerElements/paper-checkbox#^2.0.1"
   },
   "devDependencies": {
-    "web-component-tester": "6.2.0"
+    "web-component-tester": "6.3.0"
   },
   "private": true,
   "resolutions": {
