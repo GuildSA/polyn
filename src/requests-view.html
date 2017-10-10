@@ -307,21 +307,25 @@
               self.push('requests', childData);
             });
 
-            if(self.requests.length > 0) {
-              self.hasMessages = true;
-
-              // If it's NOT a seller and they have at least one request and we haven't 
-              // checked at least once - we should prompt for permisssion now!
-              if(self.usersInfo.sellerId === undefined && self.tokenSaved === false) {
-                self._requestNotificationPermission();
-              }
-            }
-
             const polynApp = document.getElementById("polynApp");
             polynApp.setRequestBadgeCount(badgeCount);
 
             // No matter how fast it loads - show the spinner for at least 0.5 seconds.
-            setTimeout(function() { self.loading = false; }, 500);
+            setTimeout(function() {
+
+              self.loading = false;
+
+              if(self.requests.length > 0) {
+                self.hasMessages = true;
+
+                // If it's NOT a seller and they have at least one request and we haven't 
+                // checked at least once - we should prompt for permisssion now!
+                if(self.usersInfo.sellerId === undefined && self.tokenSaved === false) {
+                  self._requestNotificationPermission();
+                }
+              }
+
+            }, 500);
         });
       }
 
